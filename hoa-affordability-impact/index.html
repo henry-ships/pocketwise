@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOA Fee Affordability Impact Calculator | How HOA Fees Affect Your Mortgage</title>
+  <meta name="description" content="Calculate how HOA fees affect your home buying power and housing affordability. See your housing cost ratio with and without HOA fees and understand the true impact on your budget.">
+  <meta name="keywords" content="HOA fees affordability calculator, how HOA fees affect mortgage, condo HOA cost calculator, HOA impact buying power, housing cost ratio calculator">
+  <link rel="canonical" href="https://pocketwise.app/hoa-affordability-impact/">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="HOA Fee Affordability Impact Calculator">
+  <meta property="og:description" content="Calculate how HOA fees reduce your home buying power and impact your housing affordability ratio.">
+  <meta property="og:type" content="website">
+  
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do HOA fees affect my mortgage approval?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "HOA fees are included in your total monthly housing costs when lenders calculate your debt-to-income (DTI) ratio. Higher HOA fees mean less of your income can go toward the mortgage payment itself, reducing the home price you can afford. Lenders typically want your total housing costs (including HOA fees) to stay below 28% of gross income."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do HOA fees count toward the 28% housing ratio?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. The 28% housing ratio (front-end DTI) includes all housing-related expenses: mortgage principal and interest, property taxes, homeowners insurance, private mortgage insurance if applicable, AND HOA fees. Every dollar spent on HOA fees reduces the amount available for your mortgage payment."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much do HOA fees reduce my buying power?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A general rule: every $100/month in HOA fees reduces your buying power by approximately $15,000-$20,000 depending on current mortgage rates. At 7% interest, $300/month in HOA fees could reduce your purchasing power by $45,000-$55,000."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I avoid homes with HOA fees?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Not necessarily. HOA fees often cover expenses you'd pay anyway: exterior maintenance, landscaping, pool upkeep, insurance, and amenities. The key is understanding the true cost and what's included. A $400 HOA that covers water, insurance, and maintenance might actually save money compared to paying these separately on a non-HOA property."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What's a typical HOA fee for a condo?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "HOA fees vary widely based on location and amenities. Nationally, condo HOA fees average $200-$400 per month. Luxury buildings with amenities like pools, gyms, and doormen can charge $800-$2,000+ monthly. Single-family home HOAs are typically lower at $100-$300 per month."
+        }
+      }
+    ]
+  }
+  </script>
+  
+  <style>
+    /* Stacked Bar Chart */
+    .lw-stacked-bar-container {
+      margin: 24px 0;
+    }
+    .lw-stacked-bar {
+      display: flex;
+      height: 48px;
+      border-radius: var(--lw-radius);
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+    }
+    .lw-stacked-segment {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 10px;
+      transition: width 0.5s ease, flex 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .lw-stacked-segment span {
+      font-size: 11px;
+      font-weight: 600;
+      color: white;
+      white-space: nowrap;
+      padding: 0 6px;
+    }
+    .lw-seg-mortgage { background: var(--lw-sky); }
+    .lw-seg-taxes { background: var(--lw-teal); }
+    .lw-seg-insurance { background: var(--lw-emerald); }
+    .lw-seg-hoa { background: var(--lw-rose); }
+    .lw-seg-remaining { background: var(--lw-slate-200); }
+    
+    .lw-stacked-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 14px;
+      justify-content: center;
+    }
+    .lw-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+    }
+    .lw-legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .lw-legend-dot.mortgage { background: var(--lw-sky); }
+    .lw-legend-dot.taxes { background: var(--lw-teal); }
+    .lw-legend-dot.insurance { background: var(--lw-emerald); }
+    .lw-legend-dot.hoa { background: var(--lw-rose); }
+    .lw-legend-dot.remaining { background: var(--lw-slate-200); }
+    
+    /* Gauge */
+    .lw-gauge-container {
+      width: 240px;
+      margin: 0 auto 16px;
+      position: relative;
+    }
+    .lw-gauge-svg {
+      width: 100%;
+      height: auto;
+    }
+    .lw-gauge-bg {
+      fill: none;
+      stroke: var(--lw-slate-100);
+      stroke-width: 20;
+    }
+    .lw-gauge-fill {
+      fill: none;
+      stroke-width: 20;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.8s ease, stroke 0.3s ease;
+    }
+    .lw-gauge-needle {
+      transition: transform 0.8s ease;
+      transform-origin: 120px 120px;
+    }
+    .lw-gauge-center-text {
+      text-anchor: middle;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      fill: var(--lw-navy);
+    }
+    .lw-gauge-labels {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 10px;
+      margin-top: -8px;
+    }
+    .lw-gauge-label {
+      font-size: 11px;
+      color: var(--lw-text-muted);
+      font-weight: 500;
+    }
+    .lw-gauge-status {
+      text-align: center;
+      margin-top: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: var(--lw-radius-full);
+      display: inline-block;
+    }
+    .lw-gauge-status.good {
+      background: var(--lw-emerald-50);
+      color: var(--lw-emerald-dark);
+    }
+    .lw-gauge-status.warning {
+      background: var(--lw-amber-50);
+      color: #B45309;
+    }
+    .lw-gauge-status.danger {
+      background: var(--lw-rose-50);
+      color: var(--lw-rose-dark);
+    }
+    
+    /* Comparison Card */
+    .lw-comparison {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      padding: 20px;
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      margin: 20px 0;
+    }
+    .lw-comparison-box {
+      text-align: center;
+      padding: 16px;
+      background: var(--lw-card);
+      border-radius: var(--lw-radius);
+      border: 1px solid var(--lw-border-light);
+    }
+    .lw-comparison-label {
+      font-size: 11px;
+      color: var(--lw-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .lw-comparison-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .lw-comparison-sub {
+      font-size: 12px;
+      color: var(--lw-text-muted);
+      margin-top: 2px;
+    }
+    .lw-comparison-arrow {
+      font-size: 24px;
+      color: var(--lw-slate-400);
+    }
+    .lw-comparison-box.highlight {
+      border-color: var(--lw-rose);
+      background: var(--lw-rose-50);
+    }
+    .lw-comparison-box.highlight .lw-comparison-value {
+      color: var(--lw-rose-dark);
+    }
+    
+    /* Decision Box */
+    .lw-decision {
+      padding: 20px 24px;
+      border-radius: var(--lw-radius);
+      margin: 20px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .lw-decision.warning {
+      background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+      border: 1px solid #F59E0B;
+    }
+    .lw-decision.danger {
+      background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+      border: 1px solid var(--lw-rose);
+    }
+    .lw-decision.good {
+      background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+      border: 1px solid var(--lw-emerald);
+    }
+    .lw-decision-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .lw-decision-content {
+      flex: 1;
+    }
+    .lw-decision-title {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--lw-navy);
+      margin-bottom: 4px;
+    }
+    .lw-decision-text {
+      font-size: 14px;
+      color: var(--lw-slate-700);
+      line-height: 1.5;
+    }
+    
+    /* Insight Box */
+    .lw-insight {
+      background: var(--lw-sky-50);
+      border-left: 4px solid var(--lw-sky);
+      padding: 16px 20px;
+      border-radius: 0 var(--lw-radius) var(--lw-radius) 0;
+      margin: 20px 0;
+    }
+    .lw-insight-title {
+      font-weight: 600;
+      color: var(--lw-sky-dark);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .lw-insight-text {
+      color: var(--lw-slate-700);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    
+    /* Input Grid */
+    .lw-input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 600px) {
+      .lw-input-grid {
+        grid-template-columns: 1fr;
+      }
+      .lw-comparison {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .lw-comparison-arrow {
+        transform: rotate(90deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">P</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">All Calculators</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="toggleMenu()" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu" id="mobileMenu">
+      <a href="/">All Calculators</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- Hero -->
+    <header class="lw-hero">
+      <span class="lw-badge">Housing Affordability</span>
+      <h1>HOA Fee <span class="accent">Affordability Impact</span></h1>
+      <p class="subtitle">See how HOA fees affect your housing cost ratio and reduce your home buying power. Make informed decisions about condo and community living.</p>
+    </header>
+
+    <!-- Calculator Card -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">🏠</div>
+        <div>
+          <div class="lw-card-title">Enter Your Housing Details</div>
+          <div class="lw-card-subtitle">All fields update results in real-time</div>
+        </div>
+      </div>
+
+      <div class="lw-input-grid">
+        <div class="lw-form-group">
+          <label class="lw-label">Monthly HOA Fee</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" class="lw-input" id="hoaFee" value="350" min="0" step="25" placeholder="350">
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">Gross Monthly Income</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" class="lw-input" id="monthlyIncome" value="8000" min="0" step="100" placeholder="8000">
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">Mortgage Payment (P&I) <span class="lw-label-hint">Principal & Interest only</span></label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" class="lw-input" id="mortgagePayment" value="1500" min="0" step="50" placeholder="1500">
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">Property Taxes <span class="lw-label-hint">Monthly</span></label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" class="lw-input" id="propertyTax" value="250" min="0" step="25" placeholder="250">
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">Homeowners Insurance <span class="lw-label-hint">Monthly</span></label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" class="lw-input" id="insurance" value="150" min="0" step="10" placeholder="150">
+          </div>
+        </div>
+
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label">Target Housing Ratio</label>
+            <span class="lw-range-value" id="targetRatioDisplay">28%</span>
+          </div>
+          <input type="range" class="lw-range" id="targetRatio" value="28" min="20" max="36" step="1">
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsSection">
+      <!-- Primary Result -->
+      <div class="lw-result-hero">
+        <div class="lw-result-label">Total Monthly Housing Cost</div>
+        <div class="lw-result-number">
+          <span class="currency">$</span><span id="totalHousingCost">2,250</span>
+        </div>
+        <div class="lw-result-sub">Including <span id="hoaAmount">$350</span> HOA fee</div>
+      </div>
+
+      <!-- Housing Cost Breakdown -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon amber">📊</div>
+          <div>
+            <div class="lw-card-title">Housing Cost Breakdown</div>
+            <div class="lw-card-subtitle">How your monthly budget is allocated</div>
+          </div>
+        </div>
+
+        <div class="lw-stacked-bar-container">
+          <div class="lw-stacked-bar" id="stackedBar">
+            <div class="lw-stacked-segment lw-seg-mortgage" id="segMortgage" style="flex: 1500;"><span>P&I</span></div>
+            <div class="lw-stacked-segment lw-seg-taxes" id="segTaxes" style="flex: 250;"><span>Tax</span></div>
+            <div class="lw-stacked-segment lw-seg-insurance" id="segInsurance" style="flex: 150;"><span>Ins</span></div>
+            <div class="lw-stacked-segment lw-seg-hoa" id="segHoa" style="flex: 350;"><span>HOA</span></div>
+          </div>
+          <div class="lw-stacked-legend">
+            <div class="lw-legend-item"><span class="lw-legend-dot mortgage"></span> Mortgage: <strong id="legendMortgage">$1,500</strong></div>
+            <div class="lw-legend-item"><span class="lw-legend-dot taxes"></span> Taxes: <strong id="legendTaxes">$250</strong></div>
+            <div class="lw-legend-item"><span class="lw-legend-dot insurance"></span> Insurance: <strong id="legendInsurance">$150</strong></div>
+            <div class="lw-legend-item"><span class="lw-legend-dot hoa"></span> HOA: <strong id="legendHoa">$350</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Affordability Gauge -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon green">📈</div>
+          <div>
+            <div class="lw-card-title">Housing Affordability Gauge</div>
+            <div class="lw-card-subtitle">Your housing cost as a percentage of income</div>
+          </div>
+        </div>
+
+        <div class="lw-gauge-container">
+          <svg class="lw-gauge-svg" viewBox="0 0 240 140">
+            <!-- Background Arc -->
+            <path class="lw-gauge-bg" d="M 30 120 A 90 90 0 0 1 210 120" />
+            <!-- Colored Fill Arc -->
+            <path class="lw-gauge-fill" id="gaugeFill" d="M 30 120 A 90 90 0 0 1 210 120" stroke="url(#gaugeGradient)" stroke-dasharray="283" stroke-dashoffset="283" />
+            <!-- Gradient Definition -->
+            <defs>
+              <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#10B981" />
+                <stop offset="50%" stop-color="#F59E0B" />
+                <stop offset="100%" stop-color="#F43F5E" />
+              </linearGradient>
+            </defs>
+            <!-- Center Text -->
+            <text x="120" y="105" class="lw-gauge-center-text" font-size="32" id="gaugePercent">28%</text>
+            <text x="120" y="125" class="lw-gauge-center-text" font-size="12" fill="#64748B">with HOA</text>
+          </svg>
+          <div class="lw-gauge-labels">
+            <span class="lw-gauge-label">20%</span>
+            <span class="lw-gauge-label">28%</span>
+            <span class="lw-gauge-label">36%+</span>
+          </div>
+        </div>
+        <div class="lw-text-center">
+          <span class="lw-gauge-status" id="gaugeStatus">Within Guidelines</span>
+        </div>
+
+        <!-- Comparison: With vs Without HOA -->
+        <div class="lw-comparison">
+          <div class="lw-comparison-box">
+            <div class="lw-comparison-label">Without HOA</div>
+            <div class="lw-comparison-value" id="ratioWithoutHoa">23.8%</div>
+            <div class="lw-comparison-sub">Housing ratio</div>
+          </div>
+          <div class="lw-comparison-arrow">→</div>
+          <div class="lw-comparison-box highlight">
+            <div class="lw-comparison-label">With HOA</div>
+            <div class="lw-comparison-value" id="ratioWithHoa">28.1%</div>
+            <div class="lw-comparison-sub">Housing ratio</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Buying Power Impact -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon rose">💰</div>
+          <div>
+            <div class="lw-card-title">Buying Power Impact</div>
+            <div class="lw-card-subtitle">What the HOA fee costs you in home price</div>
+          </div>
+        </div>
+
+        <div class="lw-comparison">
+          <div class="lw-comparison-box">
+            <div class="lw-comparison-label">Could Afford (No HOA)</div>
+            <div class="lw-comparison-value" style="color: var(--lw-emerald);" id="affordWithoutHoa">$320,000</div>
+            <div class="lw-comparison-sub">Home price capacity</div>
+          </div>
+          <div class="lw-comparison-arrow">→</div>
+          <div class="lw-comparison-box highlight">
+            <div class="lw-comparison-label">Can Afford (With HOA)</div>
+            <div class="lw-comparison-value" id="affordWithHoa">$265,000</div>
+            <div class="lw-comparison-sub">Home price capacity</div>
+          </div>
+        </div>
+
+        <div class="lw-decision" id="decisionBox">
+          <div class="lw-decision-icon">⚠️</div>
+          <div class="lw-decision-content">
+            <div class="lw-decision-title" id="decisionTitle">HOA Reduces Your Buying Power</div>
+            <div class="lw-decision-text" id="decisionText">The $350/month HOA fee reduces your home buying power by approximately $55,000. This means you'll need to look at homes priced $55,000 lower to maintain the same monthly housing payment.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- What This Means -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon violet">💡</div>
+          <div>
+            <div class="lw-card-title">What This Means</div>
+            <div class="lw-card-subtitle">Understanding your results</div>
+          </div>
+        </div>
+
+        <div class="lw-insight">
+          <div class="lw-insight-title">Your Situation</div>
+          <div class="lw-insight-text" id="insightText">
+            Your total housing costs of $2,250/month represent 28.1% of your gross income. Adding the $350 HOA fee increases your housing ratio by 4.4 percentage points. While still within the recommended 28% guideline, you're at the upper limit.
+          </div>
+        </div>
+
+        <div class="lw-result-grid lw-mt-24">
+          <div class="lw-result-item">
+            <div class="lw-result-item-label">HOA % of Housing</div>
+            <div class="lw-result-item-value sky" id="hoaPercent">15.6%</div>
+          </div>
+          <div class="lw-result-item">
+            <div class="lw-result-item-label">Annual HOA Cost</div>
+            <div class="lw-result-item-value" id="annualHoa">$4,200</div>
+          </div>
+          <div class="lw-result-item">
+            <div class="lw-result-item-label">5-Year HOA Total</div>
+            <div class="lw-result-item-value rose" id="fiveYearHoa">$21,000</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Decision Guidance -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon blue">🎯</div>
+          <div>
+            <div class="lw-card-title">Decision Guidance</div>
+            <div class="lw-card-subtitle">Recommendations based on your numbers</div>
+          </div>
+        </div>
+
+        <div id="guidanceList">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <div class="lw-content">
+      <h2>How HOA Fees Impact Your Home Affordability</h2>
+      <p>Homeowners Association (HOA) fees are an often-overlooked factor in home affordability. While you might qualify for a certain mortgage amount, adding HOA fees can push your total housing costs beyond comfortable limits. Understanding this impact is crucial when shopping for condos, townhomes, or homes in planned communities.</p>
+
+      <h3>The 28% Housing Rule and HOA Fees</h3>
+      <p>Lenders typically use the 28% rule (also called the front-end DTI ratio) to determine housing affordability. This guideline states that your total housing costs shouldn't exceed 28% of your gross monthly income. Critically, <strong>HOA fees count toward this 28% limit</strong>.</p>
+      <p>Your total housing cost includes:</p>
+      <ul>
+        <li><strong>Principal & Interest:</strong> Your base mortgage payment</li>
+        <li><strong>Property Taxes:</strong> Local tax obligations</li>
+        <li><strong>Homeowners Insurance:</strong> Required coverage</li>
+        <li><strong>PMI:</strong> If your down payment is less than 20%</li>
+        <li><strong>HOA Fees:</strong> Monthly association dues</li>
+      </ul>
+
+      <h3>How HOA Fees Reduce Buying Power</h3>
+      <p>Every dollar spent on HOA fees is a dollar that can't go toward your mortgage. At current mortgage rates, a $300/month HOA fee can reduce your purchasing power by $45,000-$60,000. This happens because lenders calculate how much mortgage you can afford <em>after</em> accounting for HOA obligations.</p>
+
+      <h3>Are HOA Fees Worth It?</h3>
+      <p>HOA fees aren't inherently good or bad—they're a tradeoff. Before dismissing a property due to high HOA fees, consider what's included:</p>
+      <ul>
+        <li><strong>Exterior maintenance:</strong> Roof, siding, painting</li>
+        <li><strong>Landscaping:</strong> Lawn care, snow removal</li>
+        <li><strong>Amenities:</strong> Pool, gym, clubhouse</li>
+        <li><strong>Utilities:</strong> Water, trash, sometimes cable/internet</li>
+        <li><strong>Insurance:</strong> Master policy for common areas</li>
+      </ul>
+      <p>A $400 HOA that covers these expenses might actually save money compared to paying them separately on a non-HOA property.</p>
+
+      <h2>Tips for Evaluating HOA Properties</h2>
+      <ol>
+        <li><strong>Review HOA financials:</strong> Check reserve funds and recent assessments</li>
+        <li><strong>Read the CC&Rs:</strong> Understand rules and restrictions</li>
+        <li><strong>Check fee history:</strong> How often do fees increase?</li>
+        <li><strong>Compare total costs:</strong> Include what the HOA covers vs. what you'd pay separately</li>
+        <li><strong>Factor in lifestyle:</strong> Do you want/need the amenities?</li>
+      </ol>
+
+      <!-- FAQ Section -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">How do HOA fees affect my mortgage approval?</button>
+          <div class="lw-faq-a">
+            <p>HOA fees are included in your total monthly housing costs when lenders calculate your debt-to-income (DTI) ratio. Higher HOA fees mean less of your income can go toward the mortgage payment itself, reducing the home price you can afford. Lenders typically want your total housing costs (including HOA fees) to stay below 28% of gross income.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Do HOA fees count toward the 28% housing ratio?</button>
+          <div class="lw-faq-a">
+            <p>Yes. The 28% housing ratio (front-end DTI) includes all housing-related expenses: mortgage principal and interest, property taxes, homeowners insurance, private mortgage insurance if applicable, AND HOA fees. Every dollar spent on HOA fees reduces the amount available for your mortgage payment.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">How much do HOA fees reduce my buying power?</button>
+          <div class="lw-faq-a">
+            <p>A general rule: every $100/month in HOA fees reduces your buying power by approximately $15,000-$20,000 depending on current mortgage rates. At 7% interest, $300/month in HOA fees could reduce your purchasing power by $45,000-$55,000.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Should I avoid homes with HOA fees?</button>
+          <div class="lw-faq-a">
+            <p>Not necessarily. HOA fees often cover expenses you'd pay anyway: exterior maintenance, landscaping, pool upkeep, insurance, and amenities. The key is understanding the true cost and what's included. A $400 HOA that covers water, insurance, and maintenance might actually save money compared to paying these separately on a non-HOA property.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">What's a typical HOA fee for a condo?</button>
+          <div class="lw-faq-a">
+            <p>HOA fees vary widely based on location and amenities. Nationally, condo HOA fees average $200-$400 per month. Luxury buildings with amenities like pools, gyms, and doormen can charge $800-$2,000+ monthly. Single-family home HOAs are typically lower at $100-$300 per month.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Tools -->
+    <div class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/mortgage-payment-calculator/" class="lw-related-link"><span class="dot"></span> Mortgage Payment Calculator</a>
+        <a href="/home-affordability-calculator/" class="lw-related-link"><span class="dot"></span> Home Affordability Calculator</a>
+        <a href="/dti-calculator/" class="lw-related-link"><span class="dot"></span> DTI Calculator</a>
+        <a href="/piti-calculator/" class="lw-related-link"><span class="dot"></span> PITI Calculator</a>
+        <a href="/rent-vs-buy-calculator/" class="lw-related-link"><span class="dot"></span> Rent vs Buy Calculator</a>
+        <a href="/closing-costs-calculator/" class="lw-related-link"><span class="dot"></span> Closing Costs Calculator</a>
+      </div>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="lw-disclaimer">
+      <p>This calculator provides estimates for educational purposes only. Actual mortgage approval and housing affordability depend on many factors including credit score, employment history, and current market conditions. Consult with a licensed lender for personalized advice.</p>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="lw-footer">
+    <p>&copy; 2025 PocketWise. <a href="/">Home</a></p>
+  </footer>
+
+  <script>
+    // Format currency
+    function formatCurrency(amount) {
+      return amount.toLocaleString('en-US', { maximumFractionDigits: 0 });
+    }
+
+    // Format percentage
+    function formatPercent(value, decimals = 1) {
+      return value.toFixed(decimals) + '%';
+    }
+
+    // Get input value
+    function getVal(id) {
+      return parseFloat(document.getElementById(id).value) || 0;
+    }
+
+    // Calculate buying power reduction (simplified mortgage calculation)
+    function calculateBuyingPower(monthlyPayment, rate = 0.07, years = 30) {
+      const n = years * 12;
+      const r = rate / 12;
+      if (monthlyPayment <= 0) return 0;
+      // PV = PMT * [(1 - (1 + r)^-n) / r]
+      const pv = monthlyPayment * ((1 - Math.pow(1 + r, -n)) / r);
+      return Math.round(pv);
+    }
+
+    // Update gauge
+    function updateGauge(percent) {
+      const gaugeFill = document.getElementById('gaugeFill');
+      const gaugePercent = document.getElementById('gaugePercent');
+      const gaugeStatus = document.getElementById('gaugeStatus');
+      
+      // Arc length is approximately 283 (semi-circle)
+      const maxPercent = 40;
+      const minPercent = 15;
+      const range = maxPercent - minPercent;
+      const normalizedPercent = Math.min(Math.max((percent - minPercent) / range, 0), 1);
+      const dashOffset = 283 * (1 - normalizedPercent);
+      
+      gaugeFill.style.strokeDashoffset = dashOffset;
+      gaugePercent.textContent = formatPercent(percent);
+      
+      // Update status
+      if (percent <= 25) {
+        gaugeStatus.textContent = 'Comfortable';
+        gaugeStatus.className = 'lw-gauge-status good';
+      } else if (percent <= 28) {
+        gaugeStatus.textContent = 'Within Guidelines';
+        gaugeStatus.className = 'lw-gauge-status good';
+      } else if (percent <= 32) {
+        gaugeStatus.textContent = 'Stretched';
+        gaugeStatus.className = 'lw-gauge-status warning';
+      } else {
+        gaugeStatus.textContent = 'Over Limit';
+        gaugeStatus.className = 'lw-gauge-status danger';
+      }
+    }
+
+    // Main calculation
+    function calculate() {
+      const hoaFee = getVal('hoaFee');
+      const monthlyIncome = getVal('monthlyIncome');
+      const mortgagePayment = getVal('mortgagePayment');
+      const propertyTax = getVal('propertyTax');
+      const insurance = getVal('insurance');
+      const targetRatio = getVal('targetRatio');
+
+      // Total housing costs
+      const housingWithHoa = mortgagePayment + propertyTax + insurance + hoaFee;
+      const housingWithoutHoa = mortgagePayment + propertyTax + insurance;
+
+      // Housing ratios
+      const ratioWithHoa = monthlyIncome > 0 ? (housingWithHoa / monthlyIncome) * 100 : 0;
+      const ratioWithoutHoa = monthlyIncome > 0 ? (housingWithoutHoa / monthlyIncome) * 100 : 0;
+      const ratioDifference = ratioWithHoa - ratioWithoutHoa;
+
+      // Buying power calculation
+      // Available monthly budget at target ratio
+      const targetHousingBudget = monthlyIncome * (targetRatio / 100);
+      const availableForMortgageWithHoa = targetHousingBudget - propertyTax - insurance - hoaFee;
+      const availableForMortgageWithoutHoa = targetHousingBudget - propertyTax - insurance;
+      
+      const buyingPowerWithHoa = calculateBuyingPower(Math.max(availableForMortgageWithHoa, 0));
+      const buyingPowerWithoutHoa = calculateBuyingPower(Math.max(availableForMortgageWithoutHoa, 0));
+      const buyingPowerReduction = buyingPowerWithoutHoa - buyingPowerWithHoa;
+
+      // HOA as percentage of housing
+      const hoaPercentOfHousing = housingWithHoa > 0 ? (hoaFee / housingWithHoa) * 100 : 0;
+
+      // Update primary result
+      document.getElementById('totalHousingCost').textContent = formatCurrency(housingWithHoa);
+      document.getElementById('hoaAmount').textContent = '$' + formatCurrency(hoaFee);
+
+      // Update stacked bar
+      const total = housingWithHoa || 1;
+      document.getElementById('segMortgage').style.flex = mortgagePayment;
+      document.getElementById('segTaxes').style.flex = propertyTax;
+      document.getElementById('segInsurance').style.flex = insurance;
+      document.getElementById('segHoa').style.flex = hoaFee;
+
+      // Update legend
+      document.getElementById('legendMortgage').textContent = '$' + formatCurrency(mortgagePayment);
+      document.getElementById('legendTaxes').textContent = '$' + formatCurrency(propertyTax);
+      document.getElementById('legendInsurance').textContent = '$' + formatCurrency(insurance);
+      document.getElementById('legendHoa').textContent = '$' + formatCurrency(hoaFee);
+
+      // Update gauge
+      updateGauge(ratioWithHoa);
+
+      // Update comparison ratios
+      document.getElementById('ratioWithoutHoa').textContent = formatPercent(ratioWithoutHoa);
+      document.getElementById('ratioWithHoa').textContent = formatPercent(ratioWithHoa);
+
+      // Update buying power
+      document.getElementById('affordWithoutHoa').textContent = '$' + formatCurrency(buyingPowerWithoutHoa);
+      document.getElementById('affordWithHoa').textContent = '$' + formatCurrency(buyingPowerWithHoa);
+
+      // Update stats
+      document.getElementById('hoaPercent').textContent = formatPercent(hoaPercentOfHousing);
+      document.getElementById('annualHoa').textContent = '$' + formatCurrency(hoaFee * 12);
+      document.getElementById('fiveYearHoa').textContent = '$' + formatCurrency(hoaFee * 60);
+
+      // Update decision box
+      const decisionBox = document.getElementById('decisionBox');
+      const decisionTitle = document.getElementById('decisionTitle');
+      const decisionText = document.getElementById('decisionText');
+      const decisionIcon = decisionBox.querySelector('.lw-decision-icon');
+
+      if (ratioWithHoa > targetRatio) {
+        decisionBox.className = 'lw-decision danger';
+        decisionIcon.textContent = '🚨';
+        decisionTitle.textContent = 'HOA Pushes You Over Budget';
+        decisionText.textContent = `The $${formatCurrency(hoaFee)}/month HOA fee pushes your housing ratio to ${formatPercent(ratioWithHoa)}, exceeding your ${targetRatio}% target. You'd need to reduce other housing costs by $${formatCurrency(housingWithHoa - targetHousingBudget)}/month or increase income to stay within guidelines.`;
+      } else if (buyingPowerReduction > 30000) {
+        decisionBox.className = 'lw-decision warning';
+        decisionIcon.textContent = '⚠️';
+        decisionTitle.textContent = 'HOA Significantly Reduces Buying Power';
+        decisionText.textContent = `The $${formatCurrency(hoaFee)}/month HOA fee reduces your home buying power by approximately $${formatCurrency(buyingPowerReduction)}. You'll need to look at homes priced $${formatCurrency(buyingPowerReduction)} lower to maintain the same housing ratio.`;
+      } else if (hoaFee === 0) {
+        decisionBox.className = 'lw-decision good';
+        decisionIcon.textContent = '✓';
+        decisionTitle.textContent = 'No HOA Impact';
+        decisionText.textContent = `Without HOA fees, your full housing budget of $${formatCurrency(targetHousingBudget)}/month is available for mortgage, taxes, and insurance. Your current housing ratio is ${formatPercent(ratioWithoutHoa)}.`;
+      } else {
+        decisionBox.className = 'lw-decision good';
+        decisionIcon.textContent = '✓';
+        decisionTitle.textContent = 'HOA Impact is Manageable';
+        decisionText.textContent = `The $${formatCurrency(hoaFee)}/month HOA fee adds ${formatPercent(ratioDifference)} to your housing ratio but keeps you within your ${targetRatio}% target. Your buying power is reduced by $${formatCurrency(buyingPowerReduction)}.`;
+      }
+
+      // Update insight text
+      const insightText = document.getElementById('insightText');
+      insightText.textContent = `Your total housing costs of $${formatCurrency(housingWithHoa)}/month represent ${formatPercent(ratioWithHoa)} of your gross income. Adding the $${formatCurrency(hoaFee)} HOA fee increases your housing ratio by ${formatPercent(ratioDifference)} percentage points. ${ratioWithHoa <= targetRatio ? `You're within the recommended ${targetRatio}% guideline` : `You've exceeded the ${targetRatio}% guideline by ${formatPercent(ratioWithHoa - targetRatio)}`}.`;
+
+      // Update guidance
+      updateGuidance(ratioWithHoa, ratioWithoutHoa, targetRatio, hoaFee, buyingPowerReduction, hoaPercentOfHousing);
+    }
+
+    // Update guidance list
+    function updateGuidance(ratioWithHoa, ratioWithoutHoa, targetRatio, hoaFee, buyingPowerReduction, hoaPercent) {
+      const guidanceList = document.getElementById('guidanceList');
+      const items = [];
+
+      if (ratioWithHoa > targetRatio) {
+        items.push({
+          icon: '🔴',
+          text: `Your housing ratio of ${formatPercent(ratioWithHoa)} exceeds the ${targetRatio}% target. Consider properties with lower HOA fees or a lower purchase price.`
+        });
+      }
+
+      if (ratioWithHoa <= 28 && ratioWithHoa > 25) {
+        items.push({
+          icon: '🟡',
+          text: `You're at the upper limit of the 28% guideline. This leaves little buffer for unexpected expenses or income changes.`
+        });
+      }
+
+      if (ratioWithHoa <= 25) {
+        items.push({
+          icon: '🟢',
+          text: `Your housing ratio of ${formatPercent(ratioWithHoa)} leaves a healthy buffer in your budget. You have room for unexpected costs.`
+        });
+      }
+
+      if (hoaPercent > 20) {
+        items.push({
+          icon: '💡',
+          text: `HOA fees represent ${formatPercent(hoaPercent)} of your housing costs—that's significant. Make sure you're getting value from the amenities and services included.`
+        });
+      }
+
+      if (buyingPowerReduction > 50000) {
+        items.push({
+          icon: '💰',
+          text: `The HOA reduces buying power by $${formatCurrency(buyingPowerReduction)}. Compare this to non-HOA properties where you might get a larger/nicer home for the same monthly cost.`
+        });
+      }
+
+      if (hoaFee >= 300) {
+        items.push({
+          icon: '📋',
+          text: `With a $${formatCurrency(hoaFee)}/month HOA, carefully review what's included. Higher fees should cover substantial amenities or maintenance that would otherwise be your responsibility.`
+        });
+      }
+
+      items.push({
+        icon: '📊',
+        text: `Over 5 years, you'll pay $${formatCurrency(hoaFee * 60)} in HOA fees. Factor potential fee increases of 3-5% annually when budgeting long-term.`
+      });
+
+      guidanceList.innerHTML = items.map(item => `
+        <div class="lw-insight" style="border-left-color: var(--lw-slate-300);">
+          <div style="display: flex; gap: 10px; align-items: flex-start;">
+            <span style="font-size: 18px;">${item.icon}</span>
+            <div class="lw-insight-text" style="margin: 0;">${item.text}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Update target ratio display
+    function updateTargetRatioDisplay() {
+      document.getElementById('targetRatioDisplay').textContent = getVal('targetRatio') + '%';
+      calculate();
+    }
+
+    // Toggle mobile menu
+    function toggleMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    // FAQ accordion
+    document.querySelectorAll('.lw-faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const wasOpen = item.classList.contains('open');
+        document.querySelectorAll('.lw-faq-item').forEach(i => i.classList.remove('open'));
+        if (!wasOpen) item.classList.add('open');
+      });
+    });
+
+    // Event listeners
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('input', () => {
+        if (input.id === 'targetRatio') {
+          updateTargetRatioDisplay();
+        } else {
+          calculate();
+        }
+      });
+    });
+
+    // Initial calculation
+    calculate();
+  </script>
+</body>
+</html>

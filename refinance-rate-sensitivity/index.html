@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Refinance Rate-Drop Sensitivity Calculator — Should I Wait to Refinance? | PocketWise</title>
+  <meta name="description" content="Should you refinance now or wait for lower rates? See how much you'd save at different rate drops (0.25%, 0.5%, 0.75%, 1%) and find your break-even threshold.">
+  <meta name="keywords" content="should I wait to refinance, refinance now or wait, mortgage rate drop calculator, refinance sensitivity analysis, when to refinance mortgage">
+  <link rel="canonical" href="https://pocketwise.io/refinance-rate-sensitivity/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* Scenario Cards Grid */
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .scenario-card {
+      background: var(--lw-card);
+      border-radius: var(--lw-radius);
+      padding: 20px 16px;
+      text-align: center;
+      border: 2px solid var(--lw-border-light);
+      transition: all var(--lw-transition);
+      cursor: pointer;
+    }
+    .scenario-card:hover {
+      border-color: var(--lw-sky);
+      transform: translateY(-2px);
+    }
+    .scenario-card.active {
+      border-color: var(--lw-sky);
+      background: var(--lw-sky-50);
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+    }
+    .scenario-card.best {
+      border-color: var(--lw-emerald);
+      background: var(--lw-emerald-50);
+    }
+    .scenario-card.best::before {
+      content: '★ Best Value';
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--lw-emerald-dark);
+      margin-bottom: 8px;
+    }
+    .scenario-rate-drop {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--lw-navy);
+      margin-bottom: 4px;
+    }
+    .scenario-new-rate {
+      font-size: 13px;
+      color: var(--lw-text-muted);
+      margin-bottom: 12px;
+    }
+    .scenario-savings {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .scenario-savings.positive { color: var(--lw-emerald); }
+    .scenario-savings.negative { color: var(--lw-rose); }
+    .scenario-label {
+      font-size: 11px;
+      color: var(--lw-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Savings Chart */
+    .savings-chart-container {
+      position: relative;
+      height: 280px;
+      margin: 20px 0;
+    }
+    .savings-chart-svg {
+      width: 100%;
+      height: 100%;
+    }
+    .chart-grid-line {
+      stroke: var(--lw-slate-200);
+      stroke-width: 1;
+      stroke-dasharray: 4,4;
+    }
+    .chart-axis-line {
+      stroke: var(--lw-slate-300);
+      stroke-width: 2;
+    }
+    .chart-bar {
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+    }
+    .chart-bar:hover {
+      filter: brightness(1.1);
+    }
+    .chart-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      fill: var(--lw-text-muted);
+    }
+    .chart-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      fill: var(--lw-navy);
+    }
+
+    /* Decision Box */
+    .decision-box {
+      background: linear-gradient(135deg, var(--lw-navy) 0%, var(--lw-slate-800) 100%);
+      border-radius: var(--lw-radius-lg);
+      padding: 32px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .decision-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(14, 165, 233, 0.15) 0%, transparent 60%);
+    }
+    .decision-box * { position: relative; }
+    .decision-label {
+      font-size: 12px;
+      color: var(--lw-slate-400);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .decision-threshold {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: white;
+      text-align: center;
+      line-height: 1.3;
+    }
+    .decision-threshold .highlight {
+      color: var(--lw-sky-light);
+    }
+    .decision-sub {
+      font-size: 15px;
+      color: var(--lw-slate-400);
+      text-align: center;
+      margin-top: 12px;
+      line-height: 1.6;
+    }
+
+    /* Threshold Indicator */
+    .threshold-meter {
+      margin: 24px 0;
+    }
+    .threshold-track {
+      width: 100%;
+      height: 12px;
+      background: linear-gradient(90deg, var(--lw-rose-light) 0%, var(--lw-amber-light) 50%, var(--lw-emerald-light) 100%);
+      border-radius: 6px;
+      position: relative;
+    }
+    .threshold-marker {
+      position: absolute;
+      top: -8px;
+      width: 4px;
+      height: 28px;
+      background: var(--lw-navy);
+      border-radius: 2px;
+      transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .threshold-marker::after {
+      content: attr(data-label);
+      position: absolute;
+      top: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--lw-navy);
+      background: var(--lw-card);
+      padding: 3px 10px;
+      border-radius: var(--lw-radius-full);
+      border: 1px solid var(--lw-border);
+      box-shadow: var(--lw-shadow-sm);
+    }
+    .threshold-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+    .threshold-label {
+      font-size: 11px;
+      color: var(--lw-text-muted);
+      font-weight: 500;
+    }
+
+    /* Comparison Table */
+    .comparison-highlight {
+      background: var(--lw-emerald-50) !important;
+    }
+    .comparison-highlight td {
+      font-weight: 600;
+    }
+
+    /* Input Row */
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    /* Insight Cards */
+    .insight-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .insight-card {
+      background: var(--lw-card);
+      border-radius: var(--lw-radius);
+      padding: 20px;
+      border: 1px solid var(--lw-border-light);
+    }
+    .insight-card-icon {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    .insight-card-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--lw-navy);
+      margin-bottom: 4px;
+    }
+    .insight-card-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .insight-card-value.green { color: var(--lw-emerald); }
+    .insight-card-value.sky { color: var(--lw-sky-dark); }
+    .insight-card-value.amber { color: var(--lw-amber); }
+    .insight-card-value.rose { color: var(--lw-rose); }
+    .insight-card-desc {
+      font-size: 13px;
+      color: var(--lw-text-muted);
+      margin-top: 4px;
+    }
+
+    /* Verdict Box */
+    .verdict-box {
+      text-align: center;
+      padding: 28px 24px;
+      border-radius: var(--lw-radius-lg);
+      margin-bottom: 24px;
+      border: 2px solid;
+    }
+    .verdict-box.wait {
+      background: var(--lw-amber-50);
+      border-color: rgba(245, 158, 11, 0.25);
+    }
+    .verdict-box.now {
+      background: var(--lw-emerald-50);
+      border-color: rgba(16, 185, 129, 0.25);
+    }
+    .verdict-box.unclear {
+      background: var(--lw-slate-50);
+      border-color: var(--lw-slate-200);
+    }
+    .verdict-icon {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+    .verdict-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .verdict-box.wait .verdict-title { color: #B45309; }
+    .verdict-box.now .verdict-title { color: var(--lw-emerald-dark); }
+    .verdict-box.unclear .verdict-title { color: var(--lw-slate-700); }
+    .verdict-text {
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+      line-height: 1.6;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* Custom Rate Drop Slider */
+    .custom-drop-section {
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .custom-drop-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .custom-drop-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--lw-slate-700);
+    }
+    .custom-drop-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--lw-sky-dark);
+    }
+
+    @media (max-width: 768px) {
+      .scenario-grid { grid-template-columns: repeat(2, 1fr); }
+      .input-row { grid-template-columns: 1fr; }
+      .insight-grid { grid-template-columns: 1fr; }
+      .decision-threshold { font-size: 22px; }
+    }
+    @media (max-width: 480px) {
+      .scenario-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .scenario-card { padding: 16px 12px; }
+      .scenario-rate-drop { font-size: 18px; }
+      .scenario-savings { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">L</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/mortgage-calculator/">Mortgage</a></li>
+        <li><a href="/refinance-calculator/">Refinance</a></li>
+        <li><a href="/compound-interest-calculator/">Investing</a></li>
+        <li><a href="/debt-payoff-calculator/">Debt</a></li>
+        <li><a href="/">All Tools</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu">
+      <a href="/">All Tools</a>
+      <a href="/mortgage-calculator/">Mortgage Calculator</a>
+      <a href="/refinance-calculator/">Refinance Calculator</a>
+      <a href="/auto-loan-calculator/">Auto Loan Calculator</a>
+      <a href="/personal-loan-calculator/">Personal Loan Calculator</a>
+      <a href="/compound-interest-calculator/">Compound Interest Calculator</a>
+      <a href="/debt-payoff-calculator/">Debt Payoff Calculator</a>
+      <a href="/home-affordability-calculator/">Home Affordability</a>
+      <a href="/loan-comparison-tool/">Loan Comparison</a>
+      <a href="/amortization-schedule/">Amortization Schedule</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- HERO -->
+    <div class="lw-hero">
+      <span class="lw-badge amber">Rate Sensitivity</span>
+      <h1>Refinance Now or <span class="accent">Wait</span>?</h1>
+      <p class="subtitle">See how much you'd save at different rate drops. Find your break-even threshold and decide whether waiting for lower rates is worth it.</p>
+    </div>
+
+    <!-- TOOL INTERFACE -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">🏠</div>
+        <div>
+          <div class="lw-card-title">Your Current Mortgage</div>
+          <div class="lw-card-subtitle">Enter your existing loan details</div>
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="balance">Remaining Balance</label>
+            <span class="lw-range-value" id="balanceDisplay">$300,000</span>
+          </div>
+          <input type="range" class="lw-range" id="balance" min="50000" max="1500000" step="5000" value="300000">
+        </div>
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="currentRate">Current Interest Rate</label>
+            <span class="lw-range-value" id="currentRateDisplay">7.25%</span>
+          </div>
+          <input type="range" class="lw-range" id="currentRate" min="3" max="12" step="0.125" value="7.25">
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="remainingTerm">Remaining Term</label>
+            <span class="lw-range-value" id="remainingTermDisplay">300 months (25 yrs)</span>
+          </div>
+          <input type="range" class="lw-range" id="remainingTerm" min="12" max="360" step="12" value="300">
+        </div>
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="closingCosts">Expected Closing Costs</label>
+            <span class="lw-range-value" id="closingCostsDisplay">$6,000</span>
+          </div>
+          <input type="range" class="lw-range" id="closingCosts" min="0" max="25000" step="500" value="6000">
+        </div>
+      </div>
+
+      <div class="lw-form-group" style="margin-top: 8px;">
+        <div class="lw-label">Current Monthly Payment <span class="lw-label-hint">(calculated)</span></div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; color: var(--lw-navy);" id="currentPayment">$2,046</div>
+      </div>
+    </div>
+
+    <!-- DECISION BOX -->
+    <div class="decision-box" id="decisionBox">
+      <div class="decision-label">Your Break-Even Threshold</div>
+      <div class="decision-threshold" id="decisionThreshold">
+        Waiting only helps if rates fall by at least <span class="highlight" id="thresholdRate">0.50%</span>
+      </div>
+      <div class="decision-sub" id="decisionSub">At smaller drops, refinancing costs more than you'd save over 5 years.</div>
+    </div>
+
+    <!-- SCENARIO CARDS -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon amber">📊</div>
+        <div>
+          <div class="lw-card-title">Rate Drop Scenarios</div>
+          <div class="lw-card-subtitle">Compare savings at different hypothetical rate drops</div>
+        </div>
+      </div>
+
+      <div class="scenario-grid" id="scenarioGrid">
+        <!-- Scenarios will be populated by JS -->
+      </div>
+
+      <!-- Custom Slider -->
+      <div class="custom-drop-section">
+        <div class="custom-drop-header">
+          <span class="custom-drop-label">Custom Rate Drop</span>
+          <span class="custom-drop-value" id="customDropValue">-0.50%</span>
+        </div>
+        <input type="range" class="lw-range" id="customDrop" min="0" max="3" step="0.125" value="0.5">
+        <div class="lw-flex lw-justify-between" style="margin-top: 8px;">
+          <span style="font-size: 12px; color: var(--lw-text-muted);">No drop</span>
+          <span style="font-size: 12px; color: var(--lw-text-muted);">-3.00%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SAVINGS CHART -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">📈</div>
+        <div>
+          <div class="lw-card-title">Savings Curve</div>
+          <div class="lw-card-subtitle">5-year net savings at each rate drop scenario</div>
+        </div>
+      </div>
+
+      <div class="savings-chart-container">
+        <svg class="savings-chart-svg" id="savingsChart" viewBox="0 0 600 280" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+
+      <!-- Threshold Meter -->
+      <div class="threshold-meter">
+        <div class="threshold-track">
+          <div class="threshold-marker" id="thresholdMarker" data-label="-0.50%" style="left: 25%;"></div>
+        </div>
+        <div class="threshold-labels">
+          <span class="threshold-label">0% (No drop)</span>
+          <span class="threshold-label">-1.00%</span>
+          <span class="threshold-label">-2.00%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- INSIGHTS GRID -->
+    <div class="insight-grid">
+      <div class="insight-card">
+        <div class="insight-card-icon">💰</div>
+        <div class="insight-card-title">Savings at -0.50% Drop</div>
+        <div class="insight-card-value green" id="savings50">$8,240</div>
+        <div class="insight-card-desc">5-year net savings</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-card-icon">⏱️</div>
+        <div class="insight-card-title">Break-Even at -0.50%</div>
+        <div class="insight-card-value sky" id="breakEven50">18 months</div>
+        <div class="insight-card-desc">Time to recoup closing costs</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-card-icon">📉</div>
+        <div class="insight-card-title">Monthly Savings at -0.50%</div>
+        <div class="insight-card-value green" id="monthly50">$89</div>
+        <div class="insight-card-desc">Lower payment each month</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-card-icon">🎯</div>
+        <div class="insight-card-title">Minimum Drop to Break Even</div>
+        <div class="insight-card-value amber" id="minDrop">0.38%</div>
+        <div class="insight-card-desc">In 5 years</div>
+      </div>
+    </div>
+
+    <!-- VERDICT BOX -->
+    <div class="verdict-box now" id="verdictBox">
+      <div class="verdict-icon" id="verdictIcon">✅</div>
+      <div class="verdict-title" id="verdictTitle">Refinance Now Makes Sense</div>
+      <div class="verdict-text" id="verdictText">Even at current rates, refinancing saves you money if you stay 3+ years. Waiting for rates to drop further is optional upside, not required.</div>
+    </div>
+
+    <!-- DETAILED COMPARISON TABLE -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon violet">📋</div>
+        <div>
+          <div class="lw-card-title">Detailed Scenario Comparison</div>
+          <div class="lw-card-subtitle">See exactly how each rate drop affects your finances</div>
+        </div>
+      </div>
+
+      <div class="lw-table-wrap">
+        <table class="lw-table">
+          <thead>
+            <tr>
+              <th>Rate Drop</th>
+              <th>New Rate</th>
+              <th>New Payment</th>
+              <th>Monthly Savings</th>
+              <th>Break-Even</th>
+              <th>5-Year Net</th>
+            </tr>
+          </thead>
+          <tbody id="comparisonBody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- WHAT THIS MEANS -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">💡</div>
+        <div>
+          <div class="lw-card-title">What This Means</div>
+          <div class="lw-card-subtitle">Understanding your rate sensitivity</div>
+        </div>
+      </div>
+
+      <div id="meaningText" style="color: var(--lw-text-secondary); line-height: 1.7;">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <div class="lw-content">
+      <h2>Should I Wait to Refinance or Do It Now?</h2>
+      <p>The age-old refinancing question isn't just "should I refinance?" — it's "should I refinance <em>now</em>, or wait for rates to drop further?" This calculator answers that question with precision. By showing you exactly how much you'd save at different rate scenarios, you can make a data-driven decision about whether waiting is worth the gamble.</p>
+
+      <h3>How the Rate-Drop Sensitivity Calculator Works</h3>
+      <p>This tool takes your current mortgage details and calculates your potential savings across multiple hypothetical rate scenarios: -0.25%, -0.50%, -0.75%, -1.00%, and beyond. For each scenario, we compute your new monthly payment, the break-even point (how long until your savings exceed closing costs), and your net 5-year savings. The visual chart makes it easy to see the "savings curve" — how your returns accelerate as rates drop further.</p>
+
+      <h3>Understanding Your Break-Even Threshold</h3>
+      <p>Your break-even threshold is the minimum rate drop required for refinancing to make financial sense over a given time horizon (we use 5 years as the standard). If your threshold is 0.50%, that means any rate drop smaller than 0.50% won't save you enough to offset closing costs within 5 years. If rates have already dropped by more than your threshold, refinancing now is mathematically justified — waiting is purely speculative upside.</p>
+
+      <h3>The Opportunity Cost of Waiting</h3>
+      <p>Every month you wait is a month you're <em>not</em> saving money. If you can refinance today at a rate that saves you $150/month, waiting 6 months for a potentially better rate costs you $900 in foregone savings. The question becomes: do you expect rates to drop enough in the next 6 months to offset that $900 plus generate additional savings? Our calculator helps you quantify this trade-off precisely.</p>
+
+      <h3>When to Refinance Now vs. Wait</h3>
+      <p><strong>Refinance now if:</strong></p>
+      <ul>
+        <li>Your current rate is already significantly above available rates (1%+)</li>
+        <li>You plan to stay in the home long past the break-even point</li>
+        <li>Rate forecasts are uncertain or trending sideways</li>
+        <li>You have immediate cash flow needs that lower payments would address</li>
+      </ul>
+      <p><strong>Consider waiting if:</strong></p>
+      <ul>
+        <li>Rates are actively trending downward with clear signals of further drops</li>
+        <li>The current rate drop is near your break-even threshold (marginal savings)</li>
+        <li>You might sell the home within 2-3 years regardless</li>
+        <li>Closing costs are unusually high, extending your break-even period</li>
+      </ul>
+
+      <h3>The Math Behind Rate Sensitivity</h3>
+      <p>Your monthly payment sensitivity to interest rates depends heavily on your loan balance and term. On a $300,000 30-year mortgage, each 0.25% rate reduction saves approximately $40-50 per month. On a $500,000 mortgage, that same 0.25% saves $70-80/month. Larger balances mean greater sensitivity to rate changes — and potentially greater rewards from waiting. Conversely, smaller balances may not justify the risk of waiting since the absolute dollar savings are smaller.</p>
+
+      <!-- FAQ ACCORDION -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">How much should rates drop before I refinance?</button>
+          <div class="lw-faq-a">
+            <p>The traditional rule of thumb is 0.5% to 1%, but the real answer depends on your closing costs, loan balance, and how long you plan to stay. Use this calculator to find your personal break-even threshold. If available rates are already below your threshold, refinancing now makes sense — any further drop is bonus savings.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">What if I refinance and rates drop further afterward?</button>
+          <div class="lw-faq-a">
+            <p>You can refinance again! There's no rule limiting how many times you can refinance. However, each refinance has closing costs, so you need rates to drop enough from your new rate to justify another round. Some lenders offer "no-closing-cost" refinances that make serial refinancing more viable.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">How do I know if rates will keep dropping?</button>
+          <div class="lw-faq-a">
+            <p>You don't — and neither does anyone else with certainty. Mortgage rates are influenced by Federal Reserve policy, inflation, economic growth, and global factors. Most financial advisors recommend refinancing when the math works rather than trying to time the market. If refinancing saves you money today, lock it in; you can always refinance again if rates drop significantly more.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Should I factor in the time value of money?</button>
+          <div class="lw-faq-a">
+            <p>Technically, yes — a dollar saved today is worth more than a dollar saved in 5 years. However, for most homeowners, the difference is marginal compared to the uncertainty of rate movements. This calculator uses nominal (non-discounted) savings for simplicity and conservatism. If you want to be extra rigorous, discount future savings by 2-3% annually.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">What about rate lock periods?</button>
+          <div class="lw-faq-a">
+            <p>Most lenders offer 30-60 day rate locks for free, with longer locks (90+ days) sometimes carrying a fee. If you're confident rates will drop in the next 2-3 months, you might wait. But if you're locking today at an attractive rate, you're protected if rates rise instead. A rate lock eliminates the timing risk entirely.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED TOOLS -->
+    <div class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/refinance-calculator/" class="lw-related-link"><span class="dot"></span> Refinance Calculator</a>
+        <a href="/mortgage-calculator/" class="lw-related-link"><span class="dot"></span> Mortgage Calculator</a>
+        <a href="/amortization-schedule/" class="lw-related-link"><span class="dot"></span> Amortization Schedule</a>
+        <a href="/loan-comparison-tool/" class="lw-related-link"><span class="dot"></span> Loan Comparison Tool</a>
+        <a href="/apr-calculator/" class="lw-related-link"><span class="dot"></span> APR Calculator</a>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <p class="lw-disclaimer">
+      <em>This calculator is for educational purposes only. Results are estimates based on simplified assumptions and should not be considered financial advice. Actual refinancing terms, rates, and savings depend on credit score, property value, and lender criteria. Consult a qualified mortgage professional for personalized guidance.</em>
+    </p>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="lw-footer">
+    <p>© 2026 PocketWise. Free financial calculators for everyone.</p>
+  </footer>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // --- Utility functions ---
+    function fmt(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:0, maximumFractionDigits:0}).format(n); }
+    function fmtFull(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:2, maximumFractionDigits:2}).format(n); }
+    function fmtPct(n, d) { d = d !== undefined ? d : 2; return n.toFixed(d) + '%'; }
+    function pmt(rate, nper, pv) { 
+      if (rate === 0) return pv / nper; 
+      return pv * (rate * Math.pow(1+rate, nper)) / (Math.pow(1+rate, nper) - 1); 
+    }
+
+    // --- Elements ---
+    var balance = document.getElementById('balance');
+    var currentRate = document.getElementById('currentRate');
+    var remainingTerm = document.getElementById('remainingTerm');
+    var closingCosts = document.getElementById('closingCosts');
+    var customDrop = document.getElementById('customDrop');
+
+    var allInputs = [balance, currentRate, remainingTerm, closingCosts, customDrop];
+    allInputs.forEach(function(el) {
+      el.addEventListener('input', calculate);
+    });
+
+    // Standard rate drop scenarios
+    var standardDrops = [0.25, 0.50, 0.75, 1.00];
+
+    function formatMonths(m) {
+      m = Math.round(m);
+      if (m <= 0) return 'Immediate';
+      if (m > 600) return 'Never';
+      var y = Math.floor(m / 12);
+      var mo = m % 12;
+      if (y === 0) return m + ' mo';
+      if (mo === 0) return y + (y === 1 ? ' yr' : ' yrs');
+      return y + 'y ' + mo + 'm';
+    }
+
+    function calculateScenario(bal, curRate, term, costs, dropPct) {
+      var curMonthlyRate = curRate / 100 / 12;
+      var curPmt = pmt(curMonthlyRate, term, bal);
+
+      var newRate = curRate - dropPct;
+      if (newRate < 0.5) newRate = 0.5; // Floor at 0.5%
+      var newMonthlyRate = newRate / 100 / 12;
+      var newPmt = pmt(newMonthlyRate, term, bal);
+
+      var monthlySavings = curPmt - newPmt;
+      var breakEvenMonths = monthlySavings > 0 ? Math.ceil(costs / monthlySavings) : Infinity;
+
+      // 5-year net savings
+      var months5yr = Math.min(60, term);
+      var grossSavings5yr = monthlySavings * months5yr;
+      var netSavings5yr = grossSavings5yr - costs;
+
+      return {
+        dropPct: dropPct,
+        newRate: newRate,
+        curPmt: curPmt,
+        newPmt: newPmt,
+        monthlySavings: monthlySavings,
+        breakEvenMonths: breakEvenMonths,
+        grossSavings5yr: grossSavings5yr,
+        netSavings5yr: netSavings5yr
+      };
+    }
+
+    function findMinBreakEvenDrop(bal, curRate, term, costs) {
+      // Binary search for minimum drop that breaks even in 5 years
+      var lo = 0, hi = 5, mid;
+      for (var i = 0; i < 30; i++) {
+        mid = (lo + hi) / 2;
+        var scenario = calculateScenario(bal, curRate, term, costs, mid);
+        if (scenario.netSavings5yr >= 0) {
+          hi = mid;
+        } else {
+          lo = mid;
+        }
+      }
+      return mid;
+    }
+
+    function calculate() {
+      var bal = parseFloat(balance.value);
+      var curRate = parseFloat(currentRate.value);
+      var term = parseInt(remainingTerm.value);
+      var costs = parseFloat(closingCosts.value);
+      var customDropVal = parseFloat(customDrop.value);
+
+      // Update displays
+      document.getElementById('balanceDisplay').textContent = fmt(bal);
+      document.getElementById('currentRateDisplay').textContent = fmtPct(curRate);
+      document.getElementById('remainingTermDisplay').textContent = term + ' months (' + Math.round(term/12) + ' yrs)';
+      document.getElementById('closingCostsDisplay').textContent = fmt(costs);
+      document.getElementById('customDropValue').textContent = '-' + fmtPct(customDropVal);
+
+      // Current payment
+      var curMonthlyRate = curRate / 100 / 12;
+      var curPmt = pmt(curMonthlyRate, term, bal);
+      document.getElementById('currentPayment').textContent = fmtFull(curPmt);
+
+      // Calculate all scenarios
+      var scenarios = standardDrops.map(function(d) {
+        return calculateScenario(bal, curRate, term, costs, d);
+      });
+
+      var customScenario = calculateScenario(bal, curRate, term, costs, customDropVal);
+
+      // Find min drop for break-even in 5 years
+      var minDrop = findMinBreakEvenDrop(bal, curRate, term, costs);
+
+      // Find best scenario (highest net 5-year savings)
+      var bestIdx = 0;
+      scenarios.forEach(function(s, i) {
+        if (s.netSavings5yr > scenarios[bestIdx].netSavings5yr) bestIdx = i;
+      });
+
+      // --- Update Scenario Cards ---
+      var gridHtml = '';
+      scenarios.forEach(function(s, i) {
+        var isBest = i === bestIdx && s.netSavings5yr > 0;
+        var cardClass = 'scenario-card' + (isBest ? ' best' : '');
+        var savingsClass = s.netSavings5yr >= 0 ? 'positive' : 'negative';
+        
+        gridHtml += '<div class="' + cardClass + '" data-drop="' + s.dropPct + '">' +
+          '<div class="scenario-rate-drop">-' + fmtPct(s.dropPct) + '</div>' +
+          '<div class="scenario-new-rate">New rate: ' + fmtPct(s.newRate) + '</div>' +
+          '<div class="scenario-savings ' + savingsClass + '">' + (s.netSavings5yr >= 0 ? '+' : '') + fmt(Math.round(s.netSavings5yr)) + '</div>' +
+          '<div class="scenario-label">5-Year Net</div>' +
+        '</div>';
+      });
+      document.getElementById('scenarioGrid').innerHTML = gridHtml;
+
+      // --- Update Decision Box ---
+      var thresholdEl = document.getElementById('thresholdRate');
+      thresholdEl.textContent = fmtPct(minDrop);
+      
+      var decisionSub = document.getElementById('decisionSub');
+      if (minDrop <= 0.05) {
+        decisionSub.textContent = 'Even with no rate drop, refinancing would save you money over 5 years.';
+      } else if (minDrop > 2) {
+        decisionSub.textContent = 'Rates would need to drop significantly for refinancing to make sense. Consider negotiating lower closing costs.';
+      } else {
+        decisionSub.textContent = 'At smaller drops, refinancing costs more than you\'d save over 5 years.';
+      }
+
+      // --- Update Insights ---
+      var scen50 = calculateScenario(bal, curRate, term, costs, 0.50);
+      document.getElementById('savings50').textContent = (scen50.netSavings5yr >= 0 ? '+' : '') + fmt(Math.round(scen50.netSavings5yr));
+      document.getElementById('savings50').className = 'insight-card-value ' + (scen50.netSavings5yr >= 0 ? 'green' : 'rose');
+      
+      document.getElementById('breakEven50').textContent = formatMonths(scen50.breakEvenMonths);
+      document.getElementById('monthly50').textContent = (scen50.monthlySavings >= 0 ? '+' : '') + fmt(Math.round(scen50.monthlySavings));
+      document.getElementById('monthly50').className = 'insight-card-value ' + (scen50.monthlySavings >= 0 ? 'green' : 'rose');
+      document.getElementById('minDrop').textContent = fmtPct(minDrop);
+
+      // --- Update Verdict ---
+      var verdictBox = document.getElementById('verdictBox');
+      var verdictIcon = document.getElementById('verdictIcon');
+      var verdictTitle = document.getElementById('verdictTitle');
+      var verdictText = document.getElementById('verdictText');
+
+      // Check if refinancing at current rates makes sense (0% drop)
+      var scenarioCurrent = calculateScenario(bal, curRate, term, costs, 0);
+      var scenarioSmall = calculateScenario(bal, curRate, term, costs, 0.25);
+
+      if (minDrop <= 0.1) {
+        // Already worth it even without rate drop
+        verdictBox.className = 'verdict-box now';
+        verdictIcon.textContent = '✅';
+        verdictTitle.textContent = 'Refinance Now — No Need to Wait';
+        verdictText.textContent = 'Current rates are already low enough that refinancing makes financial sense. Waiting for further drops is optional upside, not required. Lock in your savings now.';
+      } else if (minDrop <= 0.5) {
+        // Need a small drop
+        verdictBox.className = 'verdict-box wait';
+        verdictIcon.textContent = '⏳';
+        verdictTitle.textContent = 'Wait for a Small Rate Drop';
+        verdictText.textContent = 'You need rates to fall by at least ' + fmtPct(minDrop) + ' for refinancing to pay off in 5 years. If rates are trending down, waiting a few months could be worthwhile. Monitor closely.';
+      } else if (minDrop <= 1.0) {
+        // Need a moderate drop
+        verdictBox.className = 'verdict-box wait';
+        verdictIcon.textContent = '🤔';
+        verdictTitle.textContent = 'Waiting Might Make Sense';
+        verdictText.textContent = 'A ' + fmtPct(minDrop) + ' rate drop is needed to break even. That\'s meaningful but achievable if rates are declining. Consider your timeline and risk tolerance.';
+      } else {
+        // Need significant drop
+        verdictBox.className = 'verdict-box unclear';
+        verdictIcon.textContent = '📉';
+        verdictTitle.textContent = 'Significant Drop Required';
+        verdictText.textContent = 'Rates would need to fall ' + fmtPct(minDrop) + ' for refinancing to make sense. That\'s a large move. Consider reducing closing costs or waiting for a major rate environment shift.';
+      }
+
+      // --- Update Comparison Table ---
+      var allScenarios = [
+        calculateScenario(bal, curRate, term, costs, 0),
+        ...scenarios,
+        calculateScenario(bal, curRate, term, costs, 1.25),
+        calculateScenario(bal, curRate, term, costs, 1.50)
+      ];
+
+      var tableHtml = '';
+      allScenarios.forEach(function(s) {
+        var isHighlight = s.dropPct >= minDrop && s.dropPct < minDrop + 0.25;
+        var rowClass = isHighlight ? ' class="comparison-highlight"' : '';
+        var netClass = s.netSavings5yr >= 0 ? 'color: var(--lw-emerald);' : 'color: var(--lw-rose);';
+        
+        tableHtml += '<tr' + rowClass + '>' +
+          '<td class="num">' + (s.dropPct === 0 ? 'Current' : '-' + fmtPct(s.dropPct)) + '</td>' +
+          '<td class="num">' + fmtPct(s.newRate) + '</td>' +
+          '<td class="num">' + fmtFull(s.newPmt) + '</td>' +
+          '<td class="num" style="' + (s.monthlySavings > 0 ? 'color: var(--lw-emerald);' : '') + '">' + (s.monthlySavings > 0 ? '+' : '') + fmt(Math.round(s.monthlySavings)) + '</td>' +
+          '<td class="num">' + formatMonths(s.breakEvenMonths) + '</td>' +
+          '<td class="num" style="' + netClass + ' font-weight: 600;">' + (s.netSavings5yr >= 0 ? '+' : '') + fmt(Math.round(s.netSavings5yr)) + '</td>' +
+        '</tr>';
+      });
+      document.getElementById('comparisonBody').innerHTML = tableHtml;
+
+      // --- Update Savings Chart ---
+      drawSavingsChart(bal, curRate, term, costs, minDrop);
+
+      // --- Update Threshold Marker ---
+      var markerPct = Math.min((minDrop / 2) * 100, 95);
+      var thresholdMarker = document.getElementById('thresholdMarker');
+      thresholdMarker.style.left = markerPct + '%';
+      thresholdMarker.setAttribute('data-label', '-' + fmtPct(minDrop));
+
+      // --- Update Meaning Text ---
+      updateMeaning(bal, curRate, term, costs, minDrop, scen50, customScenario);
+    }
+
+    function drawSavingsChart(bal, curRate, term, costs, minDrop) {
+      var svg = document.getElementById('savingsChart');
+      var W = 600, H = 280;
+      var padLeft = 70, padRight = 20, padTop = 30, padBottom = 50;
+      var chartW = W - padLeft - padRight;
+      var chartH = H - padTop - padBottom;
+
+      // Generate data points
+      var dataPoints = [];
+      for (var drop = 0; drop <= 2; drop += 0.125) {
+        var s = calculateScenario(bal, curRate, term, costs, drop);
+        dataPoints.push({ drop: drop, net: s.netSavings5yr });
+      }
+
+      // Find min/max
+      var minVal = Math.min.apply(null, dataPoints.map(function(d) { return d.net; }));
+      var maxVal = Math.max.apply(null, dataPoints.map(function(d) { return d.net; }));
+      var range = maxVal - minVal;
+      if (range === 0) range = 1000;
+      var padY = range * 0.1;
+      minVal -= padY;
+      maxVal += padY;
+      range = maxVal - minVal;
+
+      // Zero line Y
+      var zeroY = padTop + chartH - ((0 - minVal) / range) * chartH;
+
+      var html = '';
+
+      // Grid lines
+      var gridSteps = 5;
+      for (var i = 0; i <= gridSteps; i++) {
+        var y = padTop + (chartH / gridSteps) * i;
+        var val = maxVal - (range / gridSteps) * i;
+        html += '<line x1="' + padLeft + '" y1="' + y + '" x2="' + (W - padRight) + '" y2="' + y + '" class="chart-grid-line"/>';
+        html += '<text x="' + (padLeft - 8) + '" y="' + (y + 4) + '" class="chart-label" text-anchor="end">' + fmt(Math.round(val)) + '</text>';
+      }
+
+      // Zero line (bolder)
+      if (zeroY >= padTop && zeroY <= padTop + chartH) {
+        html += '<line x1="' + padLeft + '" y1="' + zeroY + '" x2="' + (W - padRight) + '" y2="' + zeroY + '" stroke="#64748B" stroke-width="2"/>';
+      }
+
+      // Axes
+      html += '<line x1="' + padLeft + '" y1="' + padTop + '" x2="' + padLeft + '" y2="' + (H - padBottom) + '" class="chart-axis-line"/>';
+      html += '<line x1="' + padLeft + '" y1="' + (H - padBottom) + '" x2="' + (W - padRight) + '" y2="' + (H - padBottom) + '" class="chart-axis-line"/>';
+
+      // Bars
+      var barWidth = chartW / dataPoints.length * 0.7;
+      var barGap = chartW / dataPoints.length * 0.3;
+      
+      dataPoints.forEach(function(d, i) {
+        var x = padLeft + (chartW / dataPoints.length) * i + barGap / 2;
+        var barH = Math.abs((d.net / range) * chartH);
+        var y, barColor;
+        
+        if (d.net >= 0) {
+          y = zeroY - barH;
+          barColor = 'url(#greenGrad)';
+        } else {
+          y = zeroY;
+          barColor = 'url(#roseGrad)';
+        }
+        
+        html += '<rect x="' + x + '" y="' + y + '" width="' + barWidth + '" height="' + barH + '" fill="' + barColor + '" rx="3" class="chart-bar"/>';
+
+        // X-axis labels (every other for clarity)
+        if (i % 2 === 0 || i === dataPoints.length - 1) {
+          html += '<text x="' + (x + barWidth/2) + '" y="' + (H - padBottom + 20) + '" class="chart-label" text-anchor="middle">-' + d.drop.toFixed(2) + '%</text>';
+        }
+      });
+
+      // Break-even marker line
+      var beX = padLeft + (minDrop / 2) * chartW;
+      if (beX >= padLeft && beX <= W - padRight) {
+        html += '<line x1="' + beX + '" y1="' + padTop + '" x2="' + beX + '" y2="' + (H - padBottom) + '" stroke="#0F172A" stroke-width="2" stroke-dasharray="6,4"/>';
+        html += '<text x="' + beX + '" y="' + (padTop - 8) + '" class="chart-value" text-anchor="middle" fill="#0F172A">Break-even</text>';
+      }
+
+      // Gradients
+      html = '<defs>' +
+        '<linearGradient id="greenGrad" x1="0%" y1="0%" x2="0%" y2="100%">' +
+          '<stop offset="0%" style="stop-color:#34D399;stop-opacity:1"/>' +
+          '<stop offset="100%" style="stop-color:#10B981;stop-opacity:1"/>' +
+        '</linearGradient>' +
+        '<linearGradient id="roseGrad" x1="0%" y1="0%" x2="0%" y2="100%">' +
+          '<stop offset="0%" style="stop-color:#F43F5E;stop-opacity:1"/>' +
+          '<stop offset="100%" style="stop-color:#FB7185;stop-opacity:1"/>' +
+        '</linearGradient>' +
+      '</defs>' + html;
+
+      // Axis labels
+      html += '<text x="' + (W/2) + '" y="' + (H - 5) + '" class="chart-label" text-anchor="middle" font-weight="600">Rate Drop</text>';
+      html += '<text x="15" y="' + (H/2) + '" class="chart-label" text-anchor="middle" font-weight="600" transform="rotate(-90, 15, ' + (H/2) + ')">5-Year Net Savings</text>';
+
+      svg.innerHTML = html;
+    }
+
+    function updateMeaning(bal, curRate, term, costs, minDrop, scen50, customScenario) {
+      var meaningEl = document.getElementById('meaningText');
+      var html = '';
+
+      html += '<p><strong>Your Rate Sensitivity:</strong> With a ' + fmt(bal) + ' mortgage at ' + fmtPct(curRate) + ', ';
+      
+      if (minDrop <= 0.1) {
+        html += 'refinancing is already worthwhile at current rates. Every 0.25% additional drop saves you approximately ' + fmt(Math.round(scen50.monthlySavings * 0.5)) + ' more per month.</p>';
+      } else {
+        html += 'you need rates to drop by at least ' + fmtPct(minDrop) + ' for refinancing to pay off within 5 years. ';
+        html += 'At a 0.50% drop, you\'d save ' + fmt(Math.round(scen50.monthlySavings)) + '/month and net ' + fmt(Math.round(scen50.netSavings5yr)) + ' over 5 years.</p>';
+      }
+
+      html += '<p><strong>Closing Costs Impact:</strong> Your ' + fmt(costs) + ' closing costs require ';
+      html += formatMonths(scen50.breakEvenMonths) + ' to recoup at a 0.50% rate drop. ';
+      
+      if (costs > bal * 0.03) {
+        html += 'Your closing costs are on the higher side (over 3% of balance). Negotiating these down could significantly improve your break-even timeline.</p>';
+      } else if (costs < bal * 0.015) {
+        html += 'Your closing costs are relatively low, which means smaller rate drops can still be worthwhile.</p>';
+      } else {
+        html += 'This is typical for your loan size.</p>';
+      }
+
+      html += '<p><strong>Decision Framework:</strong> ';
+      if (minDrop <= 0.25) {
+        html += 'With such a low threshold, the decision is clear — refinance when convenient. Waiting for lower rates is pure upside speculation, not a mathematical requirement.</p>';
+      } else if (minDrop <= 0.75) {
+        html += 'Monitor rate trends. If rates are falling, waiting 2-3 months might be worthwhile. But if rates stall or reverse, you risk missing the window entirely. Consider locking if rates approach your ' + fmtPct(minDrop) + ' threshold.</p>';
+      } else {
+        html += 'The math is marginal at current rate differentials. Focus on reducing closing costs, or wait for a more significant rate environment shift. Refinancing under these conditions carries more risk than reward.</p>';
+      }
+
+      meaningEl.innerHTML = html;
+    }
+
+    // Initial calculation
+    calculate();
+  })();
+  </script>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How much should rates drop before I refinance?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The traditional rule of thumb is 0.5% to 1%, but the real answer depends on your closing costs, loan balance, and how long you plan to stay. Use a rate-drop sensitivity calculator to find your personal break-even threshold. If available rates are already below your threshold, refinancing now makes sense."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What if I refinance and rates drop further afterward?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can refinance again! There's no rule limiting how many times you can refinance. However, each refinance has closing costs, so you need rates to drop enough from your new rate to justify another round. Some lenders offer no-closing-cost refinances that make serial refinancing more viable."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I know if rates will keep dropping?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You don't — and neither does anyone else with certainty. Mortgage rates are influenced by Federal Reserve policy, inflation, economic growth, and global factors. Most financial advisors recommend refinancing when the math works rather than trying to time the market."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I factor in the time value of money when calculating refinance savings?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Technically, yes — a dollar saved today is worth more than a dollar saved in 5 years. However, for most homeowners, the difference is marginal compared to the uncertainty of rate movements. Most calculators use nominal savings for simplicity and conservatism."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What about rate lock periods when refinancing?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most lenders offer 30-60 day rate locks for free, with longer locks sometimes carrying a fee. A rate lock eliminates the timing risk entirely — you're protected if rates rise during the refinancing process."
+        }
+      }
+    ]
+  }
+  </script>
+</body>
+</html>

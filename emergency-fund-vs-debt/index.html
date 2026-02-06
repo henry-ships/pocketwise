@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emergency Fund vs Debt Planner — Should You Save or Pay Off Debt First? | PocketWise</title>
+  <meta name="description" content="Free emergency fund vs debt calculator. Find out whether to build your emergency fund first, pay off debt, or split your money. See timelines and interest costs for each strategy.">
+  <meta name="keywords" content="emergency fund vs debt, save or pay off debt first, emergency fund calculator, debt vs savings decision, should I save or pay debt, emergency fund planner">
+  <link rel="canonical" href="https://pocketwise.io/emergency-fund-vs-debt/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .strategy-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .strategy-card {
+      background: var(--lw-card);
+      border-radius: var(--lw-radius-lg);
+      padding: 24px 20px;
+      border: 2px solid var(--lw-border-light);
+      transition: all var(--lw-transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .strategy-card.recommended {
+      border-color: var(--lw-emerald);
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.15);
+    }
+    .strategy-card.recommended::before {
+      content: '✓ RECOMMENDED';
+      position: absolute;
+      top: 12px;
+      right: -32px;
+      background: var(--lw-emerald);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 40px;
+      transform: rotate(45deg);
+      letter-spacing: 0.5px;
+    }
+    .strategy-name {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--lw-navy);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .strategy-icon {
+      font-size: 20px;
+    }
+    .strategy-desc {
+      font-size: 13px;
+      color: var(--lw-text-muted);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .strategy-metrics {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .strategy-metric {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius-sm);
+    }
+    .strategy-metric-label {
+      font-size: 12px;
+      color: var(--lw-text-secondary);
+      font-weight: 500;
+    }
+    .strategy-metric-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--lw-navy);
+    }
+    .strategy-metric-value.green { color: var(--lw-emerald); }
+    .strategy-metric-value.rose { color: var(--lw-rose); }
+    .strategy-metric-value.amber { color: var(--lw-amber); }
+
+    /* Timeline Visualization */
+    .timeline-section {
+      margin-top: 24px;
+    }
+    .timeline-bar-container {
+      margin-bottom: 20px;
+    }
+    .timeline-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .timeline-strategy-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--lw-slate-700);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .timeline-total {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--lw-text-muted);
+    }
+    .timeline-bar {
+      height: 32px;
+      background: var(--lw-slate-100);
+      border-radius: var(--lw-radius-full);
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+    .timeline-segment {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: white;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .timeline-segment.fund {
+      background: linear-gradient(90deg, var(--lw-sky), var(--lw-sky-light));
+    }
+    .timeline-segment.debt {
+      background: linear-gradient(90deg, var(--lw-teal), var(--lw-teal-light));
+    }
+    .timeline-segment.split-fund {
+      background: linear-gradient(90deg, var(--lw-sky), #38BDF8);
+    }
+    .timeline-segment.split-debt {
+      background: linear-gradient(90deg, var(--lw-violet), var(--lw-violet-light));
+    }
+
+    /* Risk Assessment */
+    .risk-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .risk-item {
+      background: var(--lw-card);
+      border-radius: var(--lw-radius);
+      padding: 16px;
+      border: 1px solid var(--lw-border-light);
+      text-align: center;
+    }
+    .risk-level {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    .risk-strategy {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--lw-slate-700);
+      margin-bottom: 4px;
+    }
+    .risk-label {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--lw-radius-full);
+      display: inline-block;
+    }
+    .risk-label.low {
+      background: var(--lw-emerald-50);
+      color: var(--lw-emerald-dark);
+    }
+    .risk-label.medium {
+      background: var(--lw-amber-50);
+      color: #B45309;
+    }
+    .risk-label.high {
+      background: var(--lw-rose-50);
+      color: var(--lw-rose-dark);
+    }
+    .risk-desc {
+      font-size: 12px;
+      color: var(--lw-text-muted);
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    /* Decision Box */
+    .decision-box {
+      background: linear-gradient(135deg, var(--lw-navy) 0%, var(--lw-slate-800) 100%);
+      border-radius: var(--lw-radius-lg);
+      padding: 28px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .decision-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 30% 0%, rgba(16, 185, 129, 0.15) 0%, transparent 50%);
+    }
+    .decision-box * { position: relative; }
+    .decision-title {
+      font-size: 13px;
+      color: var(--lw-slate-400);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .decision-text {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+      line-height: 1.4;
+      margin-bottom: 16px;
+    }
+    .decision-text .highlight {
+      color: var(--lw-emerald-light);
+    }
+    .decision-sub {
+      font-size: 14px;
+      color: var(--lw-slate-400);
+      line-height: 1.6;
+    }
+
+    /* What This Means */
+    .meaning-box {
+      background: var(--lw-emerald-50);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: var(--lw-radius);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .meaning-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--lw-emerald-dark);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .meaning-text {
+      font-size: 14px;
+      color: var(--lw-slate-700);
+      line-height: 1.7;
+    }
+
+    /* Interest Comparison */
+    .interest-compare {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .interest-item {
+      background: var(--lw-card);
+      border-radius: var(--lw-radius);
+      padding: 16px;
+      text-align: center;
+      border: 1px solid var(--lw-border-light);
+    }
+    .interest-item.best {
+      border-color: var(--lw-emerald);
+      background: var(--lw-emerald-50);
+    }
+    .interest-strategy {
+      font-size: 12px;
+      color: var(--lw-text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .interest-amount {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--lw-rose);
+    }
+    .interest-item.best .interest-amount {
+      color: var(--lw-emerald-dark);
+    }
+    .interest-diff {
+      font-size: 12px;
+      color: var(--lw-emerald);
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    /* Allocation Preview */
+    .allocation-preview {
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      padding: 16px;
+      margin-top: 16px;
+    }
+    .allocation-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--lw-slate-600);
+      margin-bottom: 12px;
+    }
+    .allocation-bars {
+      display: flex;
+      gap: 12px;
+    }
+    .allocation-bar-group {
+      flex: 1;
+    }
+    .allocation-bar-label {
+      font-size: 11px;
+      color: var(--lw-text-muted);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .allocation-bar {
+      height: 8px;
+      background: var(--lw-slate-200);
+      border-radius: var(--lw-radius-full);
+      overflow: hidden;
+    }
+    .allocation-fill {
+      height: 100%;
+      border-radius: var(--lw-radius-full);
+      transition: width 0.5s ease;
+    }
+    .allocation-fill.fund { background: var(--lw-sky); }
+    .allocation-fill.debt { background: var(--lw-teal); }
+
+    /* Split Amount Slider */
+    .split-slider-group {
+      background: var(--lw-sky-50);
+      border-radius: var(--lw-radius);
+      padding: 16px;
+      margin-top: 12px;
+      border: 1px solid rgba(14, 165, 233, 0.15);
+    }
+    .split-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .split-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--lw-slate-700);
+    }
+    .split-values {
+      display: flex;
+      gap: 16px;
+      font-size: 13px;
+    }
+    .split-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+    }
+    .split-value.fund { color: var(--lw-sky-dark); }
+    .split-value.debt { color: var(--lw-teal-dark); }
+
+    @media (max-width: 768px) {
+      .strategy-cards,
+      .risk-grid,
+      .interest-compare {
+        grid-template-columns: 1fr;
+      }
+      .strategy-card.recommended::before {
+        right: -28px;
+        font-size: 9px;
+        padding: 3px 35px;
+      }
+      .decision-text {
+        font-size: 18px;
+      }
+      .allocation-bars {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <span class="lw-logo-icon">P</span>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">All Tools</a></li>
+        <li><a href="/debt-payoff/">Debt Payoff</a></li>
+        <li><a href="/savings-goal/">Savings Goal</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu" id="mobileMenu">
+      <a href="/">All Tools</a>
+      <a href="/debt-payoff/">Debt Payoff</a>
+      <a href="/savings-goal/">Savings Goal</a>
+    </div>
+  </nav>
+
+  <main class="lw-main wide">
+    <!-- Hero -->
+    <header class="lw-hero">
+      <span class="lw-badge">SMART MONEY DECISION</span>
+      <h1>Emergency Fund <span class="accent">vs</span> Debt Planner</h1>
+      <p class="subtitle">Should you build your emergency fund first or pay off debt? See the best strategy for your situation with timeline and interest comparisons.</p>
+    </header>
+
+    <!-- Calculator Section -->
+    <div class="lw-grid-2" style="gap: 24px;">
+      <!-- Input Card -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon blue">📊</div>
+          <div>
+            <div class="lw-card-title">Your Financial Situation</div>
+            <div class="lw-card-subtitle">Enter your current numbers</div>
+          </div>
+        </div>
+
+        <!-- Monthly Expenses -->
+        <div class="lw-form-group">
+          <label class="lw-label">Monthly Essential Expenses <span class="lw-label-hint">(rent, food, utilities, insurance)</span></label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="monthlyExpenses" class="lw-input" placeholder="3,000" value="3000" min="0">
+          </div>
+        </div>
+
+        <!-- Current Emergency Fund -->
+        <div class="lw-form-group">
+          <label class="lw-label">Current Emergency Fund</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="currentFund" class="lw-input" placeholder="2,000" value="2000" min="0">
+          </div>
+        </div>
+
+        <!-- Target Months -->
+        <div class="lw-form-group">
+          <label class="lw-label">Target Emergency Fund <span class="lw-label-hint">(months of expenses)</span></label>
+          <div class="lw-toggle-group">
+            <button class="lw-toggle-btn" data-months="3">3 Months</button>
+            <button class="lw-toggle-btn active" data-months="6">6 Months</button>
+            <button class="lw-toggle-btn" data-months="9">9 Months</button>
+            <button class="lw-toggle-btn" data-months="12">12 Months</button>
+          </div>
+        </div>
+
+        <!-- Debt Balance -->
+        <div class="lw-form-group">
+          <label class="lw-label">Total Debt Balance</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="debtBalance" class="lw-input" placeholder="15,000" value="15000" min="0">
+          </div>
+        </div>
+
+        <!-- Debt APR -->
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" style="margin-bottom:0;">Debt APR</label>
+            <span class="lw-range-value" id="aprDisplay">18.0%</span>
+          </div>
+          <input type="range" id="debtApr" class="lw-range" min="0" max="35" step="0.5" value="18">
+        </div>
+
+        <!-- Monthly Available -->
+        <div class="lw-form-group">
+          <label class="lw-label">Monthly Amount for Savings/Debt <span class="lw-label-hint">(extra after expenses)</span></label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="monthlyAvailable" class="lw-input" placeholder="500" value="500" min="0">
+          </div>
+        </div>
+
+        <!-- Split Allocation Slider -->
+        <div class="split-slider-group" id="splitSliderGroup">
+          <div class="split-header">
+            <span class="split-label">Split Allocation (for Split Strategy)</span>
+            <div class="split-values">
+              <span class="split-value fund" id="splitFundValue">$250/mo → Fund</span>
+              <span class="split-value debt" id="splitDebtValue">$250/mo → Debt</span>
+            </div>
+          </div>
+          <input type="range" id="splitRatio" class="lw-range" min="10" max="90" step="5" value="50">
+          <div class="allocation-bars" style="margin-top: 12px;">
+            <div class="allocation-bar-group">
+              <div class="allocation-bar-label">
+                <span>🛡️ Emergency Fund</span>
+                <span id="splitFundPercent">50%</span>
+              </div>
+              <div class="allocation-bar">
+                <div class="allocation-fill fund" id="splitFundBar" style="width: 50%;"></div>
+              </div>
+            </div>
+            <div class="allocation-bar-group">
+              <div class="allocation-bar-label">
+                <span>💳 Debt Payment</span>
+                <span id="splitDebtPercent">50%</span>
+              </div>
+              <div class="allocation-bar">
+                <div class="allocation-fill debt" id="splitDebtBar" style="width: 50%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Status Card -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon amber">📍</div>
+          <div>
+            <div class="lw-card-title">Your Current Status</div>
+            <div class="lw-card-subtitle">Where you stand right now</div>
+          </div>
+        </div>
+
+        <div class="lw-result-grid" style="grid-template-columns: 1fr; gap: 12px;">
+          <div class="lw-result-item">
+            <div class="lw-result-item-label">Emergency Fund Target</div>
+            <div class="lw-result-item-value sky" id="targetFundDisplay">$18,000</div>
+            <div style="font-size: 12px; color: var(--lw-text-muted); margin-top: 4px;" id="targetMonthsDisplay">6 months of expenses</div>
+          </div>
+          <div class="lw-result-item">
+            <div class="lw-result-item-label">Amount Still Needed</div>
+            <div class="lw-result-item-value" id="fundGapDisplay">$16,000</div>
+          </div>
+          <div class="lw-result-item">
+            <div class="lw-result-item-label">Current Fund Coverage</div>
+            <div class="lw-result-item-value" id="currentCoverageDisplay">0.7 months</div>
+          </div>
+          <div class="lw-result-item">
+            <div class="lw-result-item-label">Debt-to-Available Ratio</div>
+            <div class="lw-result-item-value" id="debtRatioDisplay">30x</div>
+            <div style="font-size: 12px; color: var(--lw-text-muted); margin-top: 4px;" id="debtRatioDesc">Months to pay off with full payment</div>
+          </div>
+        </div>
+
+        <div class="allocation-preview">
+          <div class="allocation-title">📈 Fund Progress to Target</div>
+          <div class="lw-progress" style="height: 12px;">
+            <div class="lw-progress-fill" id="fundProgressBar" style="width: 11%;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--lw-text-muted); margin-top: 6px;">
+            <span id="fundProgressStart">$2,000</span>
+            <span id="fundProgressEnd">$18,000 target</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsSection">
+      <!-- Decision Box -->
+      <div class="decision-box" id="decisionBox">
+        <div class="decision-title">🎯 Our Recommendation</div>
+        <div class="decision-text" id="decisionText">
+          Build your emergency fund to <span class="highlight">$9,000 (3 months)</span> first, then attack your debt aggressively.
+        </div>
+        <div class="decision-sub" id="decisionSub">
+          This balanced approach protects you from emergencies while minimizing interest costs. You'll have a safety net in 14 months, then be debt-free 18 months after that.
+        </div>
+      </div>
+
+      <!-- What This Means -->
+      <div class="meaning-box">
+        <div class="meaning-title">💡 What This Means</div>
+        <div class="meaning-text" id="meaningText">
+          With your current debt at 18% APR, every dollar of debt costs you $0.18 per year. But without an emergency fund, one unexpected expense could force you to add more high-interest debt. The recommended strategy gives you a safety buffer quickly while limiting how much extra interest you pay.
+        </div>
+      </div>
+
+      <!-- Strategy Comparison Cards -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon violet">⚖️</div>
+          <div>
+            <div class="lw-card-title">Strategy Comparison</div>
+            <div class="lw-card-subtitle">See how each approach plays out</div>
+          </div>
+        </div>
+
+        <div class="strategy-cards" id="strategyCards">
+          <!-- Fund First -->
+          <div class="strategy-card" id="strategyFundFirst">
+            <div class="strategy-name"><span class="strategy-icon">🛡️</span> Fund First</div>
+            <div class="strategy-desc">Build full emergency fund, then pay off debt</div>
+            <div class="strategy-metrics">
+              <div class="strategy-metric">
+                <span class="strategy-metric-label">Fund Complete</span>
+                <span class="strategy-metric-value" id="fundFirstFundTime">32 mo</span>
+              </div>
+              <div class="strategy-metric">
+                <span class="strategy-metric-label">Debt Free</span>
+                <span class="strategy-metric-value" id="fundFirstDebtTime">68 mo</span>
+              </div>
+              <div class="strategy-metric">
+                <span class="strategy-metric-label">Total Interest</span>
+                <span class="strategy-metric-value rose" id="fundFirstInterest">$8,420</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Debt First -->
+          <div class="strategy-card" id="strategyDebtFirst">
+            <div class="strategy-name"><span class="strategy-icon">💳</span> Debt First</div>
+            <div class="strategy-desc">Pay off all debt, then build emergency fund</div>
+            <div class="strategy-metrics">
+              <div class="strategy-metric">
+                <span class="strategy-metric-label">Debt Free</span>
+                <span class="strategy-metric-value" id="debtFirstDebtTime">36 mo</span>
+              </div>
+              <div class="strategy-metric">
+                <span class="strategy-metric-label">Fund Complete</span>
+                <span class="strategy-metric-value" id="debtFirstFundTime">68 mo</span>
+              </div>
+              <div class="strategy-metric">
+                <span class="strategy-metric-label">Total Interest</span>
+                <span class="strategy-metric-value green" id="debtFirstInterest">$4,890</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Split -->
+          <div class="strategy-card recommended" id="strategySplit">
+            <div class="strategy-name"><span class="strategy-icon">🎯</span> Split Strategy</div>
+            <div class="strategy-desc">Split between fund and debt each month</div>
+            <div class="strategy-metrics">
+              <div class="strategy-metric">
+                <span class="strategy-metric-label">Fund Complete</span>
+                <span class="strategy-metric-value" id="splitFundTime">64 mo</span>
+              </div>
+              <div class="strategy-metric">
+                <span class="strategy-metric-label">Debt Free</span>
+                <span class="strategy-metric-value" id="splitDebtTime">72 mo</span>
+              </div>
+              <div class="strategy-metric">
+                <span class="strategy-metric-label">Total Interest</span>
+                <span class="strategy-metric-value amber" id="splitInterest">$6,540</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timeline Visualization -->
+        <div class="timeline-section">
+          <h4 style="font-size: 15px; font-weight: 600; color: var(--lw-slate-700); margin-bottom: 16px;">📅 Timeline Comparison</h4>
+          
+          <div class="timeline-bar-container">
+            <div class="timeline-label-row">
+              <span class="timeline-strategy-name">🛡️ Fund First</span>
+              <span class="timeline-total" id="fundFirstTotal">68 months total</span>
+            </div>
+            <div class="timeline-bar" id="fundFirstTimeline">
+              <div class="timeline-segment fund" id="fundFirstFundSeg" style="width: 47%;">Build Fund</div>
+              <div class="timeline-segment debt" id="fundFirstDebtSeg" style="width: 53%;">Pay Debt</div>
+            </div>
+          </div>
+
+          <div class="timeline-bar-container">
+            <div class="timeline-label-row">
+              <span class="timeline-strategy-name">💳 Debt First</span>
+              <span class="timeline-total" id="debtFirstTotal">68 months total</span>
+            </div>
+            <div class="timeline-bar" id="debtFirstTimeline">
+              <div class="timeline-segment debt" id="debtFirstDebtSeg" style="width: 53%;">Pay Debt</div>
+              <div class="timeline-segment fund" id="debtFirstFundSeg" style="width: 47%;">Build Fund</div>
+            </div>
+          </div>
+
+          <div class="timeline-bar-container">
+            <div class="timeline-label-row">
+              <span class="timeline-strategy-name">🎯 Split Strategy</span>
+              <span class="timeline-total" id="splitTotal">72 months total</span>
+            </div>
+            <div class="timeline-bar" id="splitTimeline">
+              <div class="timeline-segment split-fund" id="splitFundSeg" style="width: 89%;">Fund: 64mo</div>
+              <div class="timeline-segment split-debt" id="splitDebtSeg" style="width: 11%;">+8</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interest Cost Comparison -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon rose">💸</div>
+          <div>
+            <div class="lw-card-title">Interest Cost Comparison</div>
+            <div class="lw-card-subtitle">How much you'll pay in total interest</div>
+          </div>
+        </div>
+
+        <div class="interest-compare" id="interestCompare">
+          <div class="interest-item" id="interestFundFirst">
+            <div class="interest-strategy">Fund First</div>
+            <div class="interest-amount" id="interestFundFirstAmt">$8,420</div>
+            <div class="interest-diff" id="interestFundFirstDiff" style="color: var(--lw-rose);">+$3,530 more</div>
+          </div>
+          <div class="interest-item" id="interestDebtFirst">
+            <div class="interest-strategy">Debt First</div>
+            <div class="interest-amount" id="interestDebtFirstAmt">$4,890</div>
+            <div class="interest-diff" id="interestDebtFirstDiff">Lowest cost</div>
+          </div>
+          <div class="interest-item" id="interestSplit">
+            <div class="interest-strategy">Split Strategy</div>
+            <div class="interest-amount" id="interestSplitAmt">$6,540</div>
+            <div class="interest-diff" id="interestSplitDiff" style="color: var(--lw-amber);">+$1,650 more</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Risk Assessment -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon amber">⚠️</div>
+          <div>
+            <div class="lw-card-title">Risk Assessment</div>
+            <div class="lw-card-subtitle">Emergency vulnerability for each strategy</div>
+          </div>
+        </div>
+
+        <div class="risk-grid">
+          <div class="risk-item">
+            <div class="risk-level">🛡️</div>
+            <div class="risk-strategy">Fund First</div>
+            <span class="risk-label low">LOW RISK</span>
+            <div class="risk-desc">Protected from emergencies early. Higher interest cost is the tradeoff.</div>
+          </div>
+          <div class="risk-item">
+            <div class="risk-level">⚠️</div>
+            <div class="risk-strategy">Debt First</div>
+            <span class="risk-label high">HIGH RISK</span>
+            <div class="risk-desc">Vulnerable to emergencies while paying debt. One setback could add more debt.</div>
+          </div>
+          <div class="risk-item">
+            <div class="risk-level">⚖️</div>
+            <div class="risk-strategy">Split Strategy</div>
+            <span class="risk-label medium">MEDIUM RISK</span>
+            <div class="risk-desc">Balanced approach. Growing safety net while reducing debt over time.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Decision Guidance -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon green">🧭</div>
+          <div>
+            <div class="lw-card-title">Decision Guidance</div>
+            <div class="lw-card-subtitle">When each strategy makes sense</div>
+          </div>
+        </div>
+
+        <div style="display: grid; gap: 16px;">
+          <div style="padding: 16px; background: var(--lw-sky-50); border-radius: var(--lw-radius); border-left: 4px solid var(--lw-sky);">
+            <strong style="color: var(--lw-sky-dark);">Choose Fund First if:</strong>
+            <ul style="margin: 8px 0 0 20px; color: var(--lw-text-secondary); font-size: 14px; line-height: 1.7;">
+              <li>Your job is unstable or income is irregular</li>
+              <li>You have no other safety net (family, credit access)</li>
+              <li>You have health issues or older car/home that may need repairs</li>
+              <li>Your debt APR is relatively low (&lt;10%)</li>
+            </ul>
+          </div>
+          <div style="padding: 16px; background: var(--lw-emerald-50); border-radius: var(--lw-radius); border-left: 4px solid var(--lw-emerald);">
+            <strong style="color: var(--lw-emerald-dark);">Choose Debt First if:</strong>
+            <ul style="margin: 8px 0 0 20px; color: var(--lw-text-secondary); font-size: 14px; line-height: 1.7;">
+              <li>You have very stable income and job security</li>
+              <li>You already have at least 1-2 months of expenses saved</li>
+              <li>Your debt APR is very high (&gt;20%)</li>
+              <li>You have access to 0% credit if truly needed</li>
+            </ul>
+          </div>
+          <div style="padding: 16px; background: #F3F0FF; border-radius: var(--lw-radius); border-left: 4px solid var(--lw-violet);">
+            <strong style="color: #6D28D9;">Choose Split Strategy if:</strong>
+            <ul style="margin: 8px 0 0 20px; color: var(--lw-text-secondary); font-size: 14px; line-height: 1.7;">
+              <li>You want psychological peace of mind on both fronts</li>
+              <li>Your situation is "normal" — moderate debt, moderate risk</li>
+              <li>You want to build the saving habit while paying debt</li>
+              <li>Your current emergency fund is minimal or non-existent</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <section class="lw-content">
+      <h2>Should You Build an Emergency Fund or Pay Off Debt First?</h2>
+      <p>The "emergency fund vs debt" debate is one of the most common personal finance dilemmas. Both are critically important for financial health, but when you have limited money, you need a strategy that makes sense for your unique situation.</p>
+      
+      <p>The traditional advice was simple: pay off all debt first, then save. But financial experts now recognize this approach can backfire. Without savings, a single emergency—a car repair, medical bill, or job loss—can force you right back into debt, often at even higher interest rates.</p>
+
+      <h3>The Case for Emergency Fund First</h3>
+      <p>Building your emergency fund before aggressively paying debt provides financial security:</p>
+      <ul>
+        <li><strong>Protection from the unexpected:</strong> Job loss, medical emergencies, and car repairs don't wait for you to be debt-free</li>
+        <li><strong>Breaks the debt cycle:</strong> Without savings, emergencies become new debt</li>
+        <li><strong>Reduces financial stress:</strong> A cash cushion provides peace of mind</li>
+        <li><strong>Better decision-making:</strong> You won't make panic choices when emergencies hit</li>
+      </ul>
+
+      <h3>The Case for Paying Debt First</h3>
+      <p>Mathematically, paying high-interest debt first often makes the most sense:</p>
+      <ul>
+        <li><strong>Interest rate arbitrage:</strong> Credit card debt at 20% APR costs more than savings earns</li>
+        <li><strong>Faster debt elimination:</strong> Every extra dollar goes to principal, not interest</li>
+        <li><strong>Lower total cost:</strong> You'll pay less in interest over time</li>
+        <li><strong>Improved credit score:</strong> Lower utilization boosts your score faster</li>
+      </ul>
+
+      <h3>The Balanced Approach: Why We Often Recommend Splitting</h3>
+      <p>For most people in most situations, a hybrid approach works best. Build a starter emergency fund (often called a "baby emergency fund" of $1,000-$2,000 or 1-2 months of expenses), then attack debt while continuing to build savings at a slower pace.</p>
+      
+      <p>This approach acknowledges both the mathematical reality of compound interest and the psychological reality of financial stress. It's not about perfection—it's about progress and protection.</p>
+
+      <h2>How Much Emergency Fund Do You Need?</h2>
+      <p>The standard recommendation is 3-6 months of essential expenses, but the right number depends on your situation:</p>
+      <ul>
+        <li><strong>3 months:</strong> Stable job, dual income household, low expenses</li>
+        <li><strong>6 months:</strong> Single income, moderate job stability, some variable expenses</li>
+        <li><strong>9-12 months:</strong> Self-employed, commission-based income, single parent, or high-cost area</li>
+      </ul>
+
+      <h2>What Counts as "Essential Expenses"?</h2>
+      <p>Your emergency fund should cover the bare minimum you need to survive:</p>
+      <ul>
+        <li>Rent or mortgage payment</li>
+        <li>Utilities (electric, water, gas, internet)</li>
+        <li>Groceries (not dining out)</li>
+        <li>Insurance premiums (health, car, renters)</li>
+        <li>Minimum debt payments</li>
+        <li>Transportation costs</li>
+        <li>Medications and essential healthcare</li>
+      </ul>
+
+      <!-- FAQ Section -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Should I save or pay off credit card debt first?</button>
+          <div class="lw-faq-a">
+            <p>For high-interest credit card debt (18%+ APR), build a small emergency fund of $1,000-$2,000 first, then focus most of your money on debt. Once your debt is paid off, build your full emergency fund. The high interest cost of credit card debt usually outweighs the benefits of a larger emergency fund, but having zero savings leaves you too vulnerable.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">How much should I have in my emergency fund before paying off debt?</button>
+          <div class="lw-faq-a">
+            <p>Start with at least $1,000 or 1 month of essential expenses—whichever is higher. This "starter" emergency fund prevents small emergencies from becoming new debt. Once you're debt-free, build up to 3-6 months of expenses for full protection.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">What if my debt has low interest (under 10%)?</button>
+          <div class="lw-faq-a">
+            <p>With low-interest debt (like federal student loans, some car loans, or 0% promotional rates), building your emergency fund first often makes more sense. The interest cost is minimal, and you gain significant peace of mind and protection from emergencies.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Should I use my emergency fund to pay off debt?</button>
+          <div class="lw-faq-a">
+            <p>Generally, no. Your emergency fund exists to prevent future debt. Using it to pay current debt leaves you unprotected. The exception: if you have very high-interest debt and a very large emergency fund, you might use the excess above 3 months to pay debt faster.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Where should I keep my emergency fund?</button>
+          <div class="lw-faq-a">
+            <p>Keep your emergency fund in a high-yield savings account. It should be easily accessible (no penalties for withdrawal) but separate from your checking account to avoid temptation. Look for accounts offering 4-5% APY to earn some return while keeping your money liquid and safe.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="lw-related">
+      <h2>Related Financial Tools</h2>
+      <div class="lw-related-grid">
+        <a href="/debt-payoff/" class="lw-related-link">
+          <span class="dot"></span>Debt Payoff Calculator
+        </a>
+        <a href="/savings-goal/" class="lw-related-link">
+          <span class="dot"></span>Savings Goal Calculator
+        </a>
+        <a href="/budget-breakdown/" class="lw-related-link">
+          <span class="dot"></span>Budget Breakdown Tool
+        </a>
+        <a href="/compound-interest/" class="lw-related-link">
+          <span class="dot"></span>Compound Interest Calculator
+        </a>
+        <a href="/credit-card-payoff/" class="lw-related-link">
+          <span class="dot"></span>Credit Card Payoff Calculator
+        </a>
+        <a href="/net-worth/" class="lw-related-link">
+          <span class="dot"></span>Net Worth Calculator
+        </a>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <div class="lw-disclaimer">
+      <p>This calculator is for informational purposes only and does not constitute financial advice. Results are estimates based on the information you provide. Consult a qualified financial advisor for personalized guidance.</p>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="lw-footer">
+    <p>© 2025 PocketWise. Free financial tools for everyone.</p>
+    <p style="margin-top: 8px;"><a href="/">Home</a> · <a href="/about/">About</a> · <a href="/privacy/">Privacy</a></p>
+  </footer>
+
+  <!-- FAQ Schema JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Should I save or pay off credit card debt first?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For high-interest credit card debt (18%+ APR), build a small emergency fund of $1,000-$2,000 first, then focus most of your money on debt. Once your debt is paid off, build your full emergency fund. The high interest cost of credit card debt usually outweighs the benefits of a larger emergency fund, but having zero savings leaves you too vulnerable."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much should I have in my emergency fund before paying off debt?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Start with at least $1,000 or 1 month of essential expenses—whichever is higher. This 'starter' emergency fund prevents small emergencies from becoming new debt. Once you're debt-free, build up to 3-6 months of expenses for full protection."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What if my debt has low interest (under 10%)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "With low-interest debt (like federal student loans, some car loans, or 0% promotional rates), building your emergency fund first often makes more sense. The interest cost is minimal, and you gain significant peace of mind and protection from emergencies."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I use my emergency fund to pay off debt?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Generally, no. Your emergency fund exists to prevent future debt. Using it to pay current debt leaves you unprotected. The exception: if you have very high-interest debt and a very large emergency fund, you might use the excess above 3 months to pay debt faster."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where should I keep my emergency fund?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Keep your emergency fund in a high-yield savings account. It should be easily accessible (no penalties for withdrawal) but separate from your checking account to avoid temptation. Look for accounts offering 4-5% APY to earn some return while keeping your money liquid and safe."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script>
+    // State
+    let targetMonths = 6;
+
+    // DOM Elements
+    const monthlyExpensesInput = document.getElementById('monthlyExpenses');
+    const currentFundInput = document.getElementById('currentFund');
+    const debtBalanceInput = document.getElementById('debtBalance');
+    const debtAprInput = document.getElementById('debtApr');
+    const monthlyAvailableInput = document.getElementById('monthlyAvailable');
+    const splitRatioInput = document.getElementById('splitRatio');
+
+    // Format currency
+    function formatCurrency(amount) {
+      return '$' + Math.round(amount).toLocaleString();
+    }
+
+    // Format months as "X mo" or "X yr Y mo"
+    function formatMonths(months) {
+      months = Math.ceil(months);
+      if (months < 24) {
+        return months + ' mo';
+      }
+      const years = Math.floor(months / 12);
+      const remainingMonths = months % 12;
+      if (remainingMonths === 0) {
+        return years + ' yr';
+      }
+      return years + 'yr ' + remainingMonths + 'mo';
+    }
+
+    // Calculate debt payoff with monthly payment
+    function calculateDebtPayoff(balance, apr, monthlyPayment) {
+      if (balance <= 0) return { months: 0, totalInterest: 0 };
+      if (monthlyPayment <= 0) return { months: Infinity, totalInterest: Infinity };
+      
+      const monthlyRate = apr / 100 / 12;
+      let remaining = balance;
+      let months = 0;
+      let totalInterest = 0;
+      
+      while (remaining > 0 && months < 600) { // Cap at 50 years
+        const interest = remaining * monthlyRate;
+        totalInterest += interest;
+        
+        const principal = Math.min(monthlyPayment - interest, remaining);
+        if (principal <= 0) {
+          // Payment doesn't cover interest
+          return { months: Infinity, totalInterest: Infinity };
+        }
+        
+        remaining -= principal;
+        months++;
+      }
+      
+      return { months, totalInterest };
+    }
+
+    // Calculate fund build time
+    function calculateFundBuildTime(currentFund, targetFund, monthlyContribution) {
+      if (currentFund >= targetFund) return 0;
+      if (monthlyContribution <= 0) return Infinity;
+      return Math.ceil((targetFund - currentFund) / monthlyContribution);
+    }
+
+    // Calculate interest accrued during period
+    function calculateInterestDuringPeriod(balance, apr, months, minPayment = 0) {
+      if (balance <= 0 || months <= 0) return 0;
+      
+      const monthlyRate = apr / 100 / 12;
+      let remaining = balance;
+      let totalInterest = 0;
+      
+      for (let i = 0; i < months && remaining > 0; i++) {
+        const interest = remaining * monthlyRate;
+        totalInterest += interest;
+        
+        // If making minimum payment, reduce principal
+        if (minPayment > 0) {
+          const principal = Math.max(0, minPayment - interest);
+          remaining = Math.max(0, remaining - principal);
+        }
+      }
+      
+      return totalInterest;
+    }
+
+    // Main calculation
+    function calculate() {
+      const monthlyExpenses = parseFloat(monthlyExpensesInput.value) || 0;
+      const currentFund = parseFloat(currentFundInput.value) || 0;
+      const debtBalance = parseFloat(debtBalanceInput.value) || 0;
+      const debtApr = parseFloat(debtAprInput.value) || 0;
+      const monthlyAvailable = parseFloat(monthlyAvailableInput.value) || 0;
+      const splitRatio = parseFloat(splitRatioInput.value) || 50;
+
+      const targetFund = monthlyExpenses * targetMonths;
+      const fundGap = Math.max(0, targetFund - currentFund);
+
+      // Update status displays
+      document.getElementById('aprDisplay').textContent = debtApr.toFixed(1) + '%';
+      document.getElementById('targetFundDisplay').textContent = formatCurrency(targetFund);
+      document.getElementById('targetMonthsDisplay').textContent = targetMonths + ' months of expenses';
+      document.getElementById('fundGapDisplay').textContent = formatCurrency(fundGap);
+      
+      const currentCoverage = monthlyExpenses > 0 ? currentFund / monthlyExpenses : 0;
+      document.getElementById('currentCoverageDisplay').textContent = currentCoverage.toFixed(1) + ' months';
+      
+      const debtRatio = monthlyAvailable > 0 ? debtBalance / monthlyAvailable : 0;
+      document.getElementById('debtRatioDisplay').textContent = Math.round(debtRatio) + 'x';
+      
+      const fundProgress = targetFund > 0 ? (currentFund / targetFund) * 100 : 0;
+      document.getElementById('fundProgressBar').style.width = Math.min(100, fundProgress) + '%';
+      document.getElementById('fundProgressStart').textContent = formatCurrency(currentFund);
+      document.getElementById('fundProgressEnd').textContent = formatCurrency(targetFund) + ' target';
+
+      // Update split slider displays
+      const fundAmount = monthlyAvailable * (splitRatio / 100);
+      const debtAmount = monthlyAvailable * ((100 - splitRatio) / 100);
+      document.getElementById('splitFundValue').textContent = formatCurrency(fundAmount) + '/mo → Fund';
+      document.getElementById('splitDebtValue').textContent = formatCurrency(debtAmount) + '/mo → Debt';
+      document.getElementById('splitFundPercent').textContent = splitRatio + '%';
+      document.getElementById('splitDebtPercent').textContent = (100 - splitRatio) + '%';
+      document.getElementById('splitFundBar').style.width = splitRatio + '%';
+      document.getElementById('splitDebtBar').style.width = (100 - splitRatio) + '%';
+
+      // === Strategy 1: Fund First ===
+      const fundFirstFundMonths = calculateFundBuildTime(currentFund, targetFund, monthlyAvailable);
+      // During fund building, debt grows
+      const fundFirstDebtAfterFund = debtBalance * Math.pow(1 + debtApr / 100 / 12, fundFirstFundMonths);
+      const fundFirstDebtPayoff = calculateDebtPayoff(fundFirstDebtAfterFund, debtApr, monthlyAvailable);
+      const fundFirstTotalMonths = fundFirstFundMonths + fundFirstDebtPayoff.months;
+      // Interest = interest during fund building + interest during payoff
+      const fundFirstInterestDuringFund = fundFirstDebtAfterFund - debtBalance;
+      const fundFirstTotalInterest = fundFirstInterestDuringFund + fundFirstDebtPayoff.totalInterest;
+
+      // === Strategy 2: Debt First ===
+      const debtFirstDebtPayoff = calculateDebtPayoff(debtBalance, debtApr, monthlyAvailable);
+      const debtFirstFundMonths = calculateFundBuildTime(currentFund, targetFund, monthlyAvailable);
+      const debtFirstTotalMonths = debtFirstDebtPayoff.months + debtFirstFundMonths;
+      const debtFirstTotalInterest = debtFirstDebtPayoff.totalInterest;
+
+      // === Strategy 3: Split ===
+      let splitFundMonths = 0;
+      let splitDebtMonths = 0;
+      let splitTotalInterest = 0;
+      let splitFundBalance = currentFund;
+      let splitDebtBalance = debtBalance;
+      let months = 0;
+      const maxMonths = 600;
+
+      while ((splitFundBalance < targetFund || splitDebtBalance > 0) && months < maxMonths) {
+        months++;
+        
+        // Add interest to debt
+        const monthlyInterest = splitDebtBalance * (debtApr / 100 / 12);
+        splitTotalInterest += monthlyInterest;
+        splitDebtBalance += monthlyInterest;
+
+        // Apply payments based on split
+        if (splitFundBalance < targetFund) {
+          splitFundBalance += fundAmount;
+          if (splitFundBalance >= targetFund && splitFundMonths === 0) {
+            splitFundMonths = months;
+          }
+        }
+
+        if (splitDebtBalance > 0) {
+          // If fund is complete, all money goes to debt
+          const debtPayment = splitFundBalance >= targetFund ? monthlyAvailable : debtAmount;
+          splitDebtBalance = Math.max(0, splitDebtBalance - debtPayment);
+          if (splitDebtBalance === 0 && splitDebtMonths === 0) {
+            splitDebtMonths = months;
+          }
+        }
+      }
+
+      if (splitFundMonths === 0) splitFundMonths = months;
+      if (splitDebtMonths === 0) splitDebtMonths = months;
+      const splitTotalMonths = Math.max(splitFundMonths, splitDebtMonths);
+
+      // Update strategy cards
+      document.getElementById('fundFirstFundTime').textContent = formatMonths(fundFirstFundMonths);
+      document.getElementById('fundFirstDebtTime').textContent = formatMonths(fundFirstTotalMonths);
+      document.getElementById('fundFirstInterest').textContent = formatCurrency(fundFirstTotalInterest);
+
+      document.getElementById('debtFirstDebtTime').textContent = formatMonths(debtFirstDebtPayoff.months);
+      document.getElementById('debtFirstFundTime').textContent = formatMonths(debtFirstTotalMonths);
+      document.getElementById('debtFirstInterest').textContent = formatCurrency(debtFirstTotalInterest);
+
+      document.getElementById('splitFundTime').textContent = formatMonths(splitFundMonths);
+      document.getElementById('splitDebtTime').textContent = formatMonths(splitDebtMonths);
+      document.getElementById('splitInterest').textContent = formatCurrency(splitTotalInterest);
+
+      // Update timeline visualization
+      const maxTime = Math.max(fundFirstTotalMonths, debtFirstTotalMonths, splitTotalMonths, 1);
+      
+      // Fund First timeline
+      const fundFirstFundPct = (fundFirstFundMonths / maxTime) * 100;
+      const fundFirstDebtPct = (fundFirstDebtPayoff.months / maxTime) * 100;
+      document.getElementById('fundFirstFundSeg').style.width = fundFirstFundPct + '%';
+      document.getElementById('fundFirstFundSeg').textContent = fundFirstFundMonths > 6 ? formatMonths(fundFirstFundMonths) : '';
+      document.getElementById('fundFirstDebtSeg').style.width = fundFirstDebtPct + '%';
+      document.getElementById('fundFirstDebtSeg').textContent = fundFirstDebtPayoff.months > 6 ? formatMonths(fundFirstDebtPayoff.months) : '';
+      document.getElementById('fundFirstTotal').textContent = formatMonths(fundFirstTotalMonths) + ' total';
+
+      // Debt First timeline
+      const debtFirstDebtPct = (debtFirstDebtPayoff.months / maxTime) * 100;
+      const debtFirstFundPct = (debtFirstFundMonths / maxTime) * 100;
+      document.getElementById('debtFirstDebtSeg').style.width = debtFirstDebtPct + '%';
+      document.getElementById('debtFirstDebtSeg').textContent = debtFirstDebtPayoff.months > 6 ? formatMonths(debtFirstDebtPayoff.months) : '';
+      document.getElementById('debtFirstFundSeg').style.width = debtFirstFundPct + '%';
+      document.getElementById('debtFirstFundSeg').textContent = debtFirstFundMonths > 6 ? formatMonths(debtFirstFundMonths) : '';
+      document.getElementById('debtFirstTotal').textContent = formatMonths(debtFirstTotalMonths) + ' total';
+
+      // Split timeline (show as parallel tracks concept)
+      const splitFundPct = Math.min(100, (splitFundMonths / maxTime) * 100);
+      const splitRemaining = Math.max(0, splitDebtMonths - splitFundMonths);
+      const splitRemainPct = (splitRemaining / maxTime) * 100;
+      document.getElementById('splitFundSeg').style.width = splitFundPct + '%';
+      document.getElementById('splitFundSeg').textContent = 'Fund: ' + formatMonths(splitFundMonths);
+      document.getElementById('splitDebtSeg').style.width = splitRemainPct + '%';
+      document.getElementById('splitDebtSeg').textContent = splitRemaining > 0 ? '+' + splitRemaining : '';
+      document.getElementById('splitTotal').textContent = formatMonths(splitTotalMonths) + ' total';
+
+      // Update interest comparison
+      const lowestInterest = Math.min(fundFirstTotalInterest, debtFirstTotalInterest, splitTotalInterest);
+      
+      document.getElementById('interestFundFirstAmt').textContent = formatCurrency(fundFirstTotalInterest);
+      document.getElementById('interestDebtFirstAmt').textContent = formatCurrency(debtFirstTotalInterest);
+      document.getElementById('interestSplitAmt').textContent = formatCurrency(splitTotalInterest);
+
+      // Interest differences
+      const fundFirstDiff = fundFirstTotalInterest - lowestInterest;
+      const debtFirstDiff = debtFirstTotalInterest - lowestInterest;
+      const splitDiff = splitTotalInterest - lowestInterest;
+
+      updateInterestDiff('interestFundFirst', 'interestFundFirstDiff', fundFirstDiff, fundFirstTotalInterest === lowestInterest);
+      updateInterestDiff('interestDebtFirst', 'interestDebtFirstDiff', debtFirstDiff, debtFirstTotalInterest === lowestInterest);
+      updateInterestDiff('interestSplit', 'interestSplitDiff', splitDiff, splitTotalInterest === lowestInterest);
+
+      // Determine recommendation
+      determineRecommendation(
+        debtApr, currentCoverage, debtBalance, monthlyAvailable,
+        fundFirstTotalInterest, debtFirstTotalInterest, splitTotalInterest,
+        fundFirstTotalMonths, debtFirstTotalMonths, splitTotalMonths,
+        targetMonths, monthlyExpenses, fundAmount, debtAmount
+      );
+    }
+
+    function updateInterestDiff(itemId, diffId, diff, isBest) {
+      const item = document.getElementById(itemId);
+      const diffEl = document.getElementById(diffId);
+      
+      if (isBest) {
+        item.classList.add('best');
+        diffEl.textContent = 'Lowest cost';
+        diffEl.style.color = 'var(--lw-emerald)';
+      } else {
+        item.classList.remove('best');
+        diffEl.textContent = '+' + formatCurrency(diff) + ' more';
+        diffEl.style.color = 'var(--lw-rose)';
+      }
+    }
+
+    function determineRecommendation(
+      apr, currentCoverage, debtBalance, monthlyAvailable,
+      fundFirstInterest, debtFirstInterest, splitInterest,
+      fundFirstMonths, debtFirstMonths, splitMonths,
+      targetMonths, monthlyExpenses, fundAmount, debtAmount
+    ) {
+      // Remove all recommendations first
+      document.querySelectorAll('.strategy-card').forEach(card => {
+        card.classList.remove('recommended');
+      });
+
+      let recommendation = 'split';
+      let decisionText = '';
+      let decisionSub = '';
+      let meaningText = '';
+
+      // Decision logic based on APR and current coverage
+      if (debtBalance <= 0) {
+        // No debt - just build fund
+        recommendation = 'fund';
+        decisionText = 'Focus on building your emergency fund to <span class="highlight">' + formatCurrency(monthlyExpenses * targetMonths) + ' (' + targetMonths + ' months)</span>.';
+        decisionSub = 'Without debt to worry about, put all your available money toward your emergency fund. You\'ll reach your target in about ' + formatMonths(fundFirstMonths) + '.';
+        meaningText = 'You\'re in a great position! No debt means you can focus entirely on building financial security. Your emergency fund will protect you from unexpected expenses and give you peace of mind.';
+      } else if (currentCoverage >= 1 && apr > 15) {
+        // Already have 1+ months AND high APR - attack debt
+        recommendation = 'debt';
+        decisionText = 'Attack your debt aggressively. You already have <span class="highlight">' + currentCoverage.toFixed(1) + ' months</span> of expenses saved.';
+        decisionSub = 'With ' + apr.toFixed(1) + '% APR debt, every dollar toward debt saves you significant interest. Your current emergency fund provides enough buffer. You\'ll be debt-free in ' + formatMonths(debtFirstMonths) + '.';
+        meaningText = 'Your current ' + formatCurrency(monthlyExpenses * currentCoverage) + ' emergency fund gives you a reasonable safety buffer. At ' + apr.toFixed(1) + '% APR, your debt is costing you about ' + formatCurrency(debtBalance * apr / 100) + ' per year in interest. Attacking it aggressively will save you ' + formatCurrency(fundFirstInterest - debtFirstInterest) + ' in interest compared to building your fund first.';
+      } else if (apr > 20 && currentCoverage >= 0.5) {
+        // Very high APR and have some savings - prioritize debt
+        recommendation = 'debt';
+        decisionText = 'Prioritize your <span class="highlight">' + apr.toFixed(1) + '% APR debt</span> — it\'s costing you significantly.';
+        decisionSub = 'High-interest debt should be attacked aggressively. You have ' + currentCoverage.toFixed(1) + ' months saved which provides some buffer. Be debt-free in ' + formatMonths(debtFirstMonths) + ', then build your fund.';
+        meaningText = 'With debt at ' + apr.toFixed(1) + '% APR, you\'re effectively losing money every month you carry this balance. While building an emergency fund is important, the math strongly favors paying down this expensive debt first. Each $100 you put toward debt saves you $' + (apr / 12).toFixed(2) + ' per month in interest.';
+      } else if (apr < 8) {
+        // Low APR - fund first makes sense
+        recommendation = 'fund';
+        decisionText = 'Build your emergency fund first. Your debt at <span class="highlight">' + apr.toFixed(1) + '% APR</span> is manageable.';
+        decisionSub = 'Low-interest debt isn\'t as urgent. Focus on reaching ' + targetMonths + ' months of expenses saved, then pay off debt. Extra interest cost is only ' + formatCurrency(fundFirstInterest - debtFirstInterest) + '.';
+        meaningText = 'At ' + apr.toFixed(1) + '% APR, your debt isn\'t growing very fast. The extra interest you\'ll pay by building your emergency fund first is relatively small — about ' + formatCurrency((fundFirstInterest - debtFirstInterest) / fundFirstMonths) + ' per month. The security of having a full emergency fund is worth this modest cost.';
+      } else if (currentCoverage < 0.5) {
+        // Very little savings - must build some buffer
+        recommendation = 'split';
+        const miniTarget = Math.min(3, targetMonths);
+        const miniAmount = monthlyExpenses * miniTarget;
+        decisionText = 'Build to <span class="highlight">' + formatCurrency(miniAmount) + ' (' + miniTarget + ' months)</span> while paying debt with a split approach.';
+        decisionSub = 'You need some safety net before going all-in on debt. Split ' + formatCurrency(fundAmount) + '/month to savings and ' + formatCurrency(debtAmount) + '/month to debt until you hit ' + miniTarget + ' months saved.';
+        meaningText = 'With only ' + currentCoverage.toFixed(1) + ' months of expenses saved, you\'re vulnerable to any unexpected expense. A single car repair or medical bill could force you into more debt. The split approach builds your safety net while making progress on debt — it\'s a balanced strategy for your situation.';
+      } else {
+        // Default: split is usually the balanced approach
+        recommendation = 'split';
+        decisionText = 'Split your money: <span class="highlight">' + formatCurrency(fundAmount) + '</span> to fund, <span class="highlight">' + formatCurrency(debtAmount) + '</span> to debt each month.';
+        decisionSub = 'This balanced approach builds your safety net while attacking debt. Your fund reaches target in ' + formatMonths(splitMonths) + ' and you\'ll pay ' + formatCurrency(splitInterest) + ' in interest.';
+        meaningText = 'The split strategy is often the wisest choice when you\'re balancing multiple financial priorities. You\'re building protection against emergencies (which could otherwise add to your debt) while still making steady progress paying off what you owe. Yes, you\'ll pay ' + formatCurrency(splitInterest - debtFirstInterest) + ' more in interest than the pure debt-first approach, but you\'ll have much more financial security along the way.';
+      }
+
+      // Apply recommendation styling
+      if (recommendation === 'fund') {
+        document.getElementById('strategyFundFirst').classList.add('recommended');
+      } else if (recommendation === 'debt') {
+        document.getElementById('strategyDebtFirst').classList.add('recommended');
+      } else {
+        document.getElementById('strategySplit').classList.add('recommended');
+      }
+
+      document.getElementById('decisionText').innerHTML = decisionText;
+      document.getElementById('decisionSub').textContent = decisionSub;
+      document.getElementById('meaningText').textContent = meaningText;
+    }
+
+    // Event listeners
+    function addInputListeners() {
+      const inputs = [monthlyExpensesInput, currentFundInput, debtBalanceInput, debtAprInput, monthlyAvailableInput, splitRatioInput];
+      inputs.forEach(input => {
+        input.addEventListener('input', calculate);
+      });
+    }
+
+    // Target months toggle
+    document.querySelectorAll('.lw-toggle-btn[data-months]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.lw-toggle-btn[data-months]').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        targetMonths = parseInt(this.dataset.months);
+        calculate();
+      });
+    });
+
+    // FAQ accordion
+    document.querySelectorAll('.lw-faq-q').forEach(q => {
+      q.addEventListener('click', function() {
+        const item = this.parentElement;
+        item.classList.toggle('open');
+      });
+    });
+
+    // Mobile menu toggle
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    // Initialize
+    addInputListeners();
+    calculate();
+  </script>
+</body>
+</html>

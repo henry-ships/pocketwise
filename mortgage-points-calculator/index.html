@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mortgage Points Calculator | Are Points Worth It? | LendWise</title>
+  <meta name="description" content="Free mortgage points calculator to determine if buying points is worth it. Calculate break-even period, monthly savings, and compare scenarios with our buying points mortgage calculator.">
+  <meta name="keywords" content="are mortgage points worth it, mortgage points break even, buying points mortgage calculator, mortgage points calculator, discount points calculator">
+  <link rel="canonical" href="https://lendwise.app/mortgage-points-calculator/">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <meta property="og:title" content="Mortgage Points Calculator | Are Points Worth It?">
+  <meta property="og:description" content="Find out if buying mortgage points makes sense for you. Calculate your break-even period and potential savings.">
+  <meta property="og:type" content="website">
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Are mortgage points worth it?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Mortgage points are worth it if you plan to keep your loan longer than the break-even period. This is typically 3-7 years depending on your loan terms. If you might refinance or sell sooner, points may not pay off."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I calculate the break-even point for mortgage points?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Divide the total cost of points by your monthly savings. For example, if points cost $6,000 and save you $100/month, your break-even is 60 months (5 years). After that, you save money every month."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much does one mortgage point cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "One mortgage point typically costs 1% of your loan amount. On a $300,000 loan, one point would cost $3,000. Each point usually reduces your interest rate by 0.25%, though this varies by lender."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I negotiate the cost of mortgage points?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, both the cost per point and the rate reduction can vary between lenders. Shopping around and negotiating can get you better terms on discount points."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are mortgage points tax deductible?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For a purchase loan, points are generally fully deductible in the year paid if certain conditions are met. For refinances, points are typically deducted over the life of the loan. Consult a tax professional for your specific situation."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    /* Points slider specific styles */
+    .points-slider-wrap {
+      padding: 0 8px;
+    }
+    .points-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--lw-text-muted);
+    }
+    .points-labels span {
+      width: 28px;
+      text-align: center;
+    }
+    
+    /* Timeline visualization */
+    .timeline-container {
+      margin: 24px 0;
+      padding: 20px;
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+    }
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .timeline-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--lw-slate-700);
+    }
+    .timeline-years {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--lw-text-muted);
+    }
+    .timeline-track {
+      height: 40px;
+      background: linear-gradient(90deg, var(--lw-rose-50) 0%, var(--lw-emerald-50) 100%);
+      border-radius: var(--lw-radius);
+      position: relative;
+      overflow: hidden;
+    }
+    .timeline-marker {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--lw-navy);
+      transform: translateX(-50%);
+      transition: left 0.5s ease;
+    }
+    .timeline-marker::before {
+      content: attr(data-label);
+      position: absolute;
+      top: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--lw-navy);
+      white-space: nowrap;
+    }
+    .timeline-zones {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 12px;
+    }
+    .zone-loss { color: var(--lw-rose); }
+    .zone-gain { color: var(--lw-emerald); }
+    
+    /* Comparison table enhancements */
+    .comparison-highlight {
+      background: var(--lw-emerald-50) !important;
+    }
+    .comparison-highlight td {
+      background: var(--lw-emerald-50) !important;
+    }
+    .best-badge {
+      display: inline-block;
+      background: var(--lw-emerald);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: var(--lw-radius-full);
+      margin-left: 6px;
+      text-transform: uppercase;
+    }
+    
+    /* Decision card */
+    .decision-card {
+      background: linear-gradient(135deg, var(--lw-sky-50) 0%, var(--lw-teal) 200%);
+      border: 2px solid var(--lw-sky);
+      border-radius: var(--lw-radius-lg);
+      padding: 24px;
+      margin-top: 24px;
+    }
+    .decision-card.positive {
+      background: linear-gradient(135deg, var(--lw-emerald-50) 0%, var(--lw-emerald) 300%);
+      border-color: var(--lw-emerald);
+    }
+    .decision-card.negative {
+      background: linear-gradient(135deg, var(--lw-rose-50) 0%, var(--lw-rose) 300%);
+      border-color: var(--lw-rose);
+    }
+    .decision-card.neutral {
+      background: linear-gradient(135deg, var(--lw-amber-50) 0%, var(--lw-amber) 300%);
+      border-color: var(--lw-amber);
+    }
+    .decision-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+    .decision-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--lw-navy);
+      margin-bottom: 8px;
+    }
+    .decision-text {
+      font-size: 15px;
+      color: var(--lw-text-secondary);
+      line-height: 1.6;
+    }
+    
+    /* Quick stat row */
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .quick-stat {
+      background: var(--lw-slate-50);
+      padding: 16px;
+      border-radius: var(--lw-radius);
+      text-align: center;
+    }
+    .quick-stat-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--lw-text-muted);
+      margin-bottom: 4px;
+    }
+    .quick-stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--lw-navy);
+    }
+    
+    @media (max-width: 480px) {
+      .quick-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <span class="lw-logo-icon">L</span>
+        LendWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">All Calculators</a></li>
+        <li><a href="/mortgage-calculator/">Mortgage</a></li>
+        <li><a href="/refinance-calculator/">Refinance</a></li>
+        <li><a href="/mortgage-points-calculator/" class="active">Points</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu" id="mobileMenu">
+      <a href="/">All Calculators</a>
+      <a href="/mortgage-calculator/">Mortgage Calculator</a>
+      <a href="/refinance-calculator/">Refinance Calculator</a>
+      <a href="/mortgage-points-calculator/">Points Calculator</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- Hero -->
+    <header class="lw-hero">
+      <span class="lw-badge">Mortgage Points</span>
+      <h1>Are Mortgage Points <span class="accent">Worth It?</span></h1>
+      <p class="subtitle">Calculate if buying discount points makes sense for your loan. See your break-even period and potential savings.</p>
+    </header>
+
+    <!-- Calculator Card -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">💰</div>
+        <div>
+          <div class="lw-card-title">Mortgage Points Calculator</div>
+          <div class="lw-card-subtitle">Find your break-even point</div>
+        </div>
+      </div>
+
+      <!-- Loan Amount -->
+      <div class="lw-form-group">
+        <label class="lw-label">Loan Amount</label>
+        <div class="lw-input-prefix">
+          <span class="prefix">$</span>
+          <input type="text" class="lw-input" id="loanAmount" value="300,000" inputmode="numeric">
+        </div>
+      </div>
+
+      <!-- Base Rate -->
+      <div class="lw-form-group">
+        <label class="lw-label">Base Interest Rate <span class="lw-label-hint">(without points)</span></label>
+        <div class="lw-input-suffix">
+          <input type="text" class="lw-input" id="baseRate" value="7.0" inputmode="decimal">
+          <span class="suffix">%</span>
+        </div>
+      </div>
+
+      <!-- Points Slider -->
+      <div class="lw-range-group">
+        <div class="lw-range-header">
+          <label class="lw-label" style="margin-bottom: 0;">Points to Buy</label>
+          <span class="lw-range-value" id="pointsDisplay">1 point</span>
+        </div>
+        <div class="points-slider-wrap">
+          <input type="range" class="lw-range" id="pointsSlider" min="0" max="6" step="1" value="2">
+          <div class="points-labels">
+            <span>0</span>
+            <span>0.5</span>
+            <span>1</span>
+            <span>1.5</span>
+            <span>2</span>
+            <span>2.5</span>
+            <span>3</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <!-- Cost Per Point -->
+        <div class="lw-form-group">
+          <label class="lw-label">Cost Per Point <span class="lw-label-hint">(% of loan)</span></label>
+          <div class="lw-input-suffix">
+            <input type="text" class="lw-input" id="costPerPoint" value="1.0" inputmode="decimal">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+
+        <!-- Rate Reduction -->
+        <div class="lw-form-group">
+          <label class="lw-label">Rate Reduction <span class="lw-label-hint">(per point)</span></label>
+          <div class="lw-input-suffix">
+            <input type="text" class="lw-input" id="rateReduction" value="0.25" inputmode="decimal">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loan Term -->
+      <div class="lw-form-group">
+        <label class="lw-label">Loan Term</label>
+        <div class="lw-toggle-group">
+          <button class="lw-toggle-btn" data-term="15">15 years</button>
+          <button class="lw-toggle-btn active" data-term="30">30 years</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="results">
+      <!-- Primary Result -->
+      <div class="lw-result-hero">
+        <div class="lw-result-label">Break-Even Period</div>
+        <div class="lw-result-number" id="breakEvenResult">
+          <span id="breakEvenYears">4.2</span><span class="period"> years</span>
+        </div>
+        <div class="lw-result-sub" id="breakEvenMonths">50 months to recoup your investment</div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="quick-stats">
+        <div class="quick-stat">
+          <div class="quick-stat-label">Upfront Cost</div>
+          <div class="quick-stat-value" id="upfrontCost">$3,000</div>
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-label">Monthly Savings</div>
+          <div class="quick-stat-value" id="monthlySavings">$60</div>
+        </div>
+      </div>
+
+      <!-- Result Grid -->
+      <div class="lw-result-grid">
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">New Rate</div>
+          <div class="lw-result-item-value sky" id="newRate">6.75%</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">5-Year Savings</div>
+          <div class="lw-result-item-value green" id="savings5yr">$600</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Lifetime Savings</div>
+          <div class="lw-result-item-value" id="lifetimeSavings">$18,600</div>
+        </div>
+      </div>
+
+      <!-- Visual Break-Even Timeline -->
+      <div class="timeline-container">
+        <div class="timeline-header">
+          <span class="timeline-title">📅 Break-Even Timeline</span>
+          <span class="timeline-years" id="timelineYears">30-year loan</span>
+        </div>
+        <div class="timeline-track">
+          <div class="timeline-marker" id="timelineMarker" data-label="Break-even" style="left: 14%;"></div>
+        </div>
+        <div class="timeline-zones">
+          <span class="zone-loss">← Losing money</span>
+          <span class="zone-gain">Making money →</span>
+        </div>
+      </div>
+
+      <!-- Decision Card -->
+      <div class="decision-card" id="decisionCard">
+        <div class="decision-icon" id="decisionIcon">🤔</div>
+        <div class="decision-title" id="decisionTitle">Points Make Sense If...</div>
+        <div class="decision-text" id="decisionText">
+          You plan to keep this loan for at least <strong>4.2 years</strong>. If you might sell or refinance sooner, skip the points.
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison Table -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">📊</div>
+        <div>
+          <div class="lw-card-title">Points Comparison</div>
+          <div class="lw-card-subtitle">See how different point amounts compare</div>
+        </div>
+      </div>
+      
+      <div class="lw-table-wrap">
+        <table class="lw-table" id="comparisonTable">
+          <thead>
+            <tr>
+              <th>Points</th>
+              <th>Upfront Cost</th>
+              <th>Rate</th>
+              <th>Monthly</th>
+              <th>Break-Even</th>
+            </tr>
+          </thead>
+          <tbody id="comparisonBody">
+            <!-- Filled by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- What This Means -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon amber">💡</div>
+        <div>
+          <div class="lw-card-title">What This Means</div>
+          <div class="lw-card-subtitle">Understanding your results</div>
+        </div>
+      </div>
+      
+      <div id="explanationContent">
+        <p style="color: var(--lw-text-secondary); line-height: 1.7; margin-bottom: 16px;">
+          <strong style="color: var(--lw-navy);">Buying <span id="explainPoints">1 point</span></strong> will cost you <strong id="explainCost">$3,000</strong> upfront but reduce your interest rate from <strong id="explainOldRate">7.0%</strong> to <strong id="explainNewRate">6.75%</strong>.
+        </p>
+        <p style="color: var(--lw-text-secondary); line-height: 1.7; margin-bottom: 16px;">
+          This saves you <strong id="explainMonthlySave">$60</strong> per month on your mortgage payment. After <strong id="explainBreakEven">50 months</strong>, you'll have saved enough to cover the cost of the points.
+        </p>
+        <p style="color: var(--lw-text-secondary); line-height: 1.7;">
+          <span id="explainOutcome">Over the full 30-year loan, buying points would save you $18,600 compared to not buying points.</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <section class="lw-content">
+      <h2>Are Mortgage Points Worth It?</h2>
+      <p>
+        Mortgage points (also called discount points) are fees you pay upfront to lower your interest rate. Each point typically costs 1% of your loan amount and reduces your rate by about 0.25%. But are they worth it?
+      </p>
+      <p>
+        The answer depends entirely on how long you plan to keep your mortgage. Points are essentially prepaid interest—you pay more now to pay less later. If you sell or refinance before your break-even point, you lose money.
+      </p>
+
+      <h3>How to Calculate If Points Are Worth It</h3>
+      <p>
+        The mortgage points break-even calculation is simple:
+      </p>
+      <ol>
+        <li><strong>Calculate the cost:</strong> Multiply points by loan amount (1 point on $300,000 = $3,000)</li>
+        <li><strong>Find monthly savings:</strong> Compare payments with and without points</li>
+        <li><strong>Divide:</strong> Cost ÷ Monthly Savings = Break-even months</li>
+      </ol>
+      <p>
+        For example, if points cost $3,000 and save you $60/month, your break-even is 50 months (4.2 years). Keep the loan longer than that, and you come out ahead.
+      </p>
+
+      <h3>When Buying Points Makes Sense</h3>
+      <ul>
+        <li><strong>You're staying put:</strong> Planning to stay in your home 7+ years? Points often pay off</li>
+        <li><strong>Rates are high:</strong> The higher your base rate, the more valuable the reduction</li>
+        <li><strong>You have cash:</strong> Only buy points with money you don't need for emergencies</li>
+        <li><strong>Tax benefits:</strong> Points may be tax-deductible (consult your tax advisor)</li>
+      </ul>
+
+      <h3>When to Skip Mortgage Points</h3>
+      <ul>
+        <li><strong>Short-term ownership:</strong> Moving in 3-5 years? You probably won't break even</li>
+        <li><strong>Rates might drop:</strong> If you'll refinance when rates fall, skip points now</li>
+        <li><strong>Tight on cash:</strong> That money might be better as a larger down payment</li>
+        <li><strong>ARM loans:</strong> Adjustable rates make points riskier since rates will change</li>
+      </ul>
+
+      <h2>Frequently Asked Questions</h2>
+      <div class="lw-faq">
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Are mortgage points worth it?</button>
+          <div class="lw-faq-a">
+            <p>Mortgage points are worth it if you plan to keep your loan longer than the break-even period. This is typically 3-7 years depending on your loan terms. If you might refinance or sell sooner, points may not pay off.</p>
+          </div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">How do I calculate the break-even point for mortgage points?</button>
+          <div class="lw-faq-a">
+            <p>Divide the total cost of points by your monthly savings. For example, if points cost $6,000 and save you $100/month, your break-even is 60 months (5 years). After that, you save money every month.</p>
+          </div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">How much does one mortgage point cost?</button>
+          <div class="lw-faq-a">
+            <p>One mortgage point typically costs 1% of your loan amount. On a $300,000 loan, one point would cost $3,000. Each point usually reduces your interest rate by 0.25%, though this varies by lender.</p>
+          </div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Can I negotiate the cost of mortgage points?</button>
+          <div class="lw-faq-a">
+            <p>Yes, both the cost per point and the rate reduction can vary between lenders. Shopping around and negotiating can get you better terms on discount points.</p>
+          </div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Are mortgage points tax deductible?</button>
+          <div class="lw-faq-a">
+            <p>For a purchase loan, points are generally fully deductible in the year paid if certain conditions are met. For refinances, points are typically deducted over the life of the loan. Consult a tax professional for your specific situation.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Calculators -->
+    <section class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/mortgage-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Mortgage Calculator
+        </a>
+        <a href="/refinance-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Refinance Calculator
+        </a>
+        <a href="/affordability-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Affordability Calculator
+        </a>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <div class="lw-disclaimer">
+      For educational purposes only. Not financial advice. Actual costs and savings depend on your lender's terms. Points, rates, and tax implications vary.
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="lw-footer">
+    <a href="/">← Back to LendWise</a>
+  </footer>
+
+  <script>
+    // ===== UTILITY FUNCTIONS =====
+    function parseNumber(str) {
+      return parseFloat(str.replace(/[^0-9.-]/g, '')) || 0;
+    }
+
+    function formatCurrency(num) {
+      return '$' + Math.round(num).toLocaleString('en-US');
+    }
+
+    function formatCurrencyDetailed(num) {
+      if (Math.abs(num) >= 1000) {
+        return '$' + Math.round(num).toLocaleString('en-US');
+      }
+      return '$' + num.toFixed(2);
+    }
+
+    // Format number input with commas
+    function formatInput(input) {
+      const value = input.value.replace(/[^0-9]/g, '');
+      if (value) {
+        input.value = parseInt(value).toLocaleString('en-US');
+      }
+    }
+
+    // ===== MORTGAGE CALCULATION =====
+    function calculateMonthlyPayment(principal, annualRate, years) {
+      const monthlyRate = annualRate / 100 / 12;
+      const numPayments = years * 12;
+      if (monthlyRate === 0) return principal / numPayments;
+      return principal * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1);
+    }
+
+    // ===== GET INPUT VALUES =====
+    function getValues() {
+      const loanAmount = parseNumber(document.getElementById('loanAmount').value);
+      const baseRate = parseFloat(document.getElementById('baseRate').value) || 0;
+      const sliderVal = parseInt(document.getElementById('pointsSlider').value);
+      const points = sliderVal * 0.5; // 0, 0.5, 1, 1.5, 2, 2.5, 3
+      const costPerPoint = parseFloat(document.getElementById('costPerPoint').value) || 1;
+      const rateReduction = parseFloat(document.getElementById('rateReduction').value) || 0.25;
+      const termBtn = document.querySelector('.lw-toggle-btn.active');
+      const loanTerm = termBtn ? parseInt(termBtn.dataset.term) : 30;
+
+      return { loanAmount, baseRate, points, costPerPoint, rateReduction, loanTerm };
+    }
+
+    // ===== MAIN CALCULATION =====
+    function calculate() {
+      const { loanAmount, baseRate, points, costPerPoint, rateReduction, loanTerm } = getValues();
+
+      // Calculate new rate
+      const newRate = Math.max(0, baseRate - (points * rateReduction));
+
+      // Calculate payments
+      const paymentWithoutPoints = calculateMonthlyPayment(loanAmount, baseRate, loanTerm);
+      const paymentWithPoints = calculateMonthlyPayment(loanAmount, newRate, loanTerm);
+      const monthlySavings = paymentWithoutPoints - paymentWithPoints;
+
+      // Calculate costs
+      const upfrontCost = loanAmount * (costPerPoint / 100) * points;
+
+      // Break-even calculation
+      let breakEvenMonths = 0;
+      let breakEvenYears = 0;
+      if (monthlySavings > 0) {
+        breakEvenMonths = Math.ceil(upfrontCost / monthlySavings);
+        breakEvenYears = breakEvenMonths / 12;
+      }
+
+      // Savings calculations
+      const totalMonths = loanTerm * 12;
+      const fiveYearMonths = Math.min(60, totalMonths);
+      const fiveYearSavings = (monthlySavings * fiveYearMonths) - upfrontCost;
+      const lifetimeSavings = (monthlySavings * totalMonths) - upfrontCost;
+
+      // Update UI
+      updateDisplay({
+        loanAmount, baseRate, newRate, points, upfrontCost,
+        monthlySavings, breakEvenMonths, breakEvenYears,
+        fiveYearSavings, lifetimeSavings, loanTerm, paymentWithPoints
+      });
+
+      // Update comparison table
+      updateComparisonTable(loanAmount, baseRate, costPerPoint, rateReduction, loanTerm);
+    }
+
+    // ===== UPDATE DISPLAY =====
+    function updateDisplay(data) {
+      const {
+        loanAmount, baseRate, newRate, points, upfrontCost,
+        monthlySavings, breakEvenMonths, breakEvenYears,
+        fiveYearSavings, lifetimeSavings, loanTerm, paymentWithPoints
+      } = data;
+
+      // Points display
+      const pointsText = points === 1 ? '1 point' : points + ' points';
+      document.getElementById('pointsDisplay').textContent = pointsText;
+
+      // If 0 points selected, show special state
+      if (points === 0) {
+        document.getElementById('breakEvenYears').textContent = 'N/A';
+        document.getElementById('breakEvenMonths').textContent = 'Select points to see break-even';
+        document.getElementById('upfrontCost').textContent = '$0';
+        document.getElementById('monthlySavings').textContent = '$0';
+        document.getElementById('newRate').textContent = baseRate.toFixed(2) + '%';
+        document.getElementById('savings5yr').textContent = '$0';
+        document.getElementById('lifetimeSavings').textContent = '$0';
+        
+        // Timeline
+        document.getElementById('timelineMarker').style.left = '0%';
+        document.getElementById('timelineMarker').setAttribute('data-label', 'No points');
+        
+        // Decision
+        updateDecision('neutral', '🤷', 'No Points Selected', 
+          'Adjust the slider above to see if buying points makes sense for your situation.');
+        
+        // Explanation
+        document.getElementById('explainPoints').textContent = '0 points';
+        document.getElementById('explainCost').textContent = '$0';
+        document.getElementById('explainOldRate').textContent = baseRate.toFixed(2) + '%';
+        document.getElementById('explainNewRate').textContent = baseRate.toFixed(2) + '%';
+        document.getElementById('explainMonthlySave').textContent = '$0';
+        document.getElementById('explainBreakEven').textContent = 'N/A';
+        document.getElementById('explainOutcome').textContent = 'Use the slider to explore how buying points could lower your rate.';
+        
+        return;
+      }
+
+      // Primary result
+      document.getElementById('breakEvenYears').textContent = breakEvenYears.toFixed(1);
+      document.getElementById('breakEvenMonths').textContent = 
+        breakEvenMonths + ' months to recoup your investment';
+
+      // Quick stats
+      document.getElementById('upfrontCost').textContent = formatCurrency(upfrontCost);
+      document.getElementById('monthlySavings').textContent = formatCurrencyDetailed(monthlySavings);
+
+      // Result grid
+      document.getElementById('newRate').textContent = newRate.toFixed(2) + '%';
+      document.getElementById('savings5yr').textContent = 
+        (fiveYearSavings >= 0 ? '' : '-') + formatCurrency(Math.abs(fiveYearSavings));
+      document.getElementById('savings5yr').className = 
+        'lw-result-item-value ' + (fiveYearSavings >= 0 ? 'green' : 'rose');
+      document.getElementById('lifetimeSavings').textContent = formatCurrency(lifetimeSavings);
+
+      // Timeline
+      document.getElementById('timelineYears').textContent = loanTerm + '-year loan';
+      const timelinePercent = Math.min(95, Math.max(5, (breakEvenYears / loanTerm) * 100));
+      document.getElementById('timelineMarker').style.left = timelinePercent + '%';
+      document.getElementById('timelineMarker').setAttribute('data-label', breakEvenYears.toFixed(1) + ' yrs');
+
+      // Decision guidance
+      updateDecisionGuidance(breakEvenYears, lifetimeSavings, loanTerm);
+
+      // Explanation section
+      document.getElementById('explainPoints').textContent = pointsText;
+      document.getElementById('explainCost').textContent = formatCurrency(upfrontCost);
+      document.getElementById('explainOldRate').textContent = baseRate.toFixed(2) + '%';
+      document.getElementById('explainNewRate').textContent = newRate.toFixed(2) + '%';
+      document.getElementById('explainMonthlySave').textContent = formatCurrencyDetailed(monthlySavings);
+      document.getElementById('explainBreakEven').textContent = breakEvenMonths + ' months';
+      document.getElementById('explainOutcome').textContent = 
+        lifetimeSavings > 0 
+          ? `Over the full ${loanTerm}-year loan, buying points would save you ${formatCurrency(lifetimeSavings)} compared to not buying points.`
+          : `You would need to keep this loan longer than ${loanTerm} years to benefit from buying points.`;
+    }
+
+    // ===== DECISION GUIDANCE =====
+    function updateDecisionGuidance(breakEvenYears, lifetimeSavings, loanTerm) {
+      let type, icon, title, text;
+
+      if (breakEvenYears <= 3) {
+        type = 'positive';
+        icon = '✅';
+        title = 'Points Are a Strong Choice';
+        text = `With a break-even of just <strong>${breakEvenYears.toFixed(1)} years</strong>, buying points is likely worth it. Even if you refinance in 5-7 years, you'll come out ahead.`;
+      } else if (breakEvenYears <= 5) {
+        type = 'positive';
+        icon = '👍';
+        title = 'Points Probably Make Sense';
+        text = `You'll break even in <strong>${breakEvenYears.toFixed(1)} years</strong>. If you're confident you'll stay in this home or keep this loan at least that long, points are a good investment.`;
+      } else if (breakEvenYears <= 7) {
+        type = 'neutral';
+        icon = '🤔';
+        title = 'Points Only If You\'re Staying Long-Term';
+        text = `You need <strong>${breakEvenYears.toFixed(1)} years</strong> to break even. Only buy points if you're very confident you won't sell or refinance before then.`;
+      } else {
+        type = 'negative';
+        icon = '⚠️';
+        title = 'Points Probably Don\'t Make Sense';
+        text = `A <strong>${breakEvenYears.toFixed(1)}-year</strong> break-even is a long time. Most people sell or refinance before then. Consider skipping points or buying fewer.`;
+      }
+
+      updateDecision(type, icon, title, text);
+    }
+
+    function updateDecision(type, icon, title, text) {
+      const card = document.getElementById('decisionCard');
+      card.className = 'decision-card ' + type;
+      document.getElementById('decisionIcon').textContent = icon;
+      document.getElementById('decisionTitle').textContent = title;
+      document.getElementById('decisionText').innerHTML = text;
+    }
+
+    // ===== COMPARISON TABLE =====
+    function updateComparisonTable(loanAmount, baseRate, costPerPoint, rateReduction, loanTerm) {
+      const tbody = document.getElementById('comparisonBody');
+      tbody.innerHTML = '';
+
+      const pointsOptions = [0, 1, 2];
+      const currentPoints = parseFloat(document.getElementById('pointsSlider').value) * 0.5;
+      let bestOption = null;
+      let bestSavings = -Infinity;
+
+      // First pass: find best option for 5-year hold
+      pointsOptions.forEach(pts => {
+        const cost = loanAmount * (costPerPoint / 100) * pts;
+        const newRate = Math.max(0, baseRate - (pts * rateReduction));
+        const basePayment = calculateMonthlyPayment(loanAmount, baseRate, loanTerm);
+        const newPayment = calculateMonthlyPayment(loanAmount, newRate, loanTerm);
+        const monthlySave = basePayment - newPayment;
+        const fiveYearNet = (monthlySave * 60) - cost;
+        if (fiveYearNet > bestSavings) {
+          bestSavings = fiveYearNet;
+          bestOption = pts;
+        }
+      });
+
+      // Second pass: build rows
+      pointsOptions.forEach(pts => {
+        const cost = loanAmount * (costPerPoint / 100) * pts;
+        const newRate = Math.max(0, baseRate - (pts * rateReduction));
+        const basePayment = calculateMonthlyPayment(loanAmount, baseRate, loanTerm);
+        const newPayment = calculateMonthlyPayment(loanAmount, newRate, loanTerm);
+        const monthlySave = basePayment - newPayment;
+        const breakEvenMo = monthlySave > 0 ? Math.ceil(cost / monthlySave) : 0;
+
+        const row = document.createElement('tr');
+        const isBest = pts === bestOption && pts > 0;
+        if (isBest) row.className = 'comparison-highlight';
+
+        row.innerHTML = `
+          <td class="num">${pts} ${pts === 1 ? 'point' : 'points'}${isBest ? '<span class="best-badge">Best</span>' : ''}</td>
+          <td class="num">${formatCurrency(cost)}</td>
+          <td class="num">${newRate.toFixed(2)}%</td>
+          <td class="num">${formatCurrency(newPayment)}/mo</td>
+          <td class="num">${pts === 0 ? '—' : (breakEvenMo > 0 ? (breakEvenMo / 12).toFixed(1) + ' yrs' : '—')}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // ===== EVENT LISTENERS =====
+    document.getElementById('loanAmount').addEventListener('input', function() {
+      formatInput(this);
+      calculate();
+    });
+
+    document.getElementById('baseRate').addEventListener('input', calculate);
+    document.getElementById('pointsSlider').addEventListener('input', calculate);
+    document.getElementById('costPerPoint').addEventListener('input', calculate);
+    document.getElementById('rateReduction').addEventListener('input', calculate);
+
+    // Term toggle buttons
+    document.querySelectorAll('.lw-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.lw-toggle-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        calculate();
+      });
+    });
+
+    // FAQ accordion
+    document.querySelectorAll('.lw-faq-q').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const item = this.parentElement;
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.lw-faq-item').forEach(i => i.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+
+    // Mobile menu
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    // Initial calculation
+    calculate();
+  </script>
+</body>
+</html>

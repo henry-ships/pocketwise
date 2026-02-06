@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Property Tax Impact Estimator — Calculate How Taxes Affect Your Mortgage | PocketWise</title>
+  <meta name="description" content="Free property tax calculator. See how property taxes impact your monthly housing costs and mortgage payment. Compare rates by state and plan for annual increases.">
+  <meta name="keywords" content="property tax cost calculator, how much are property taxes, property tax impact on mortgage, home affordability with taxes">
+  <link rel="canonical" href="https://pocketwise.io/property-tax-impact/">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!-- FAQ Schema JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How are property taxes calculated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Property taxes are calculated by multiplying your home's assessed value by your local tax rate. The assessed value may differ from market value—many localities assess at 80-100% of market value. The tax rate is set by local governments and can vary significantly by county, city, and school district."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much do property taxes add to my monthly mortgage payment?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Property taxes typically add 15-30% to your base mortgage payment, depending on your location. In high-tax states like New Jersey or Illinois, it can add 25-35%. In low-tax states like Hawaii or Alabama, it may only add 8-15%. Lenders often require these taxes to be included in your monthly escrow payment."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What states have the highest property taxes?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "New Jersey has the highest effective property tax rate at approximately 2.23%, followed by Illinois (2.08%), New Hampshire (1.93%), Connecticut (1.79%), and Vermont (1.76%). These rates can significantly impact housing affordability in these states."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do property taxes increase every year?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, property taxes typically increase annually due to rising home values and local budget needs. Average annual increases range from 2-5%, though some states cap annual increases. California's Proposition 13 limits increases to 2% per year, while other states have no limits."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I deduct property taxes on my federal return?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, property taxes are deductible if you itemize, but the SALT (State and Local Tax) deduction is currently capped at $10,000 per year ($5,000 if married filing separately). This includes state income taxes, so high-income earners in high-tax states may not be able to deduct their full property tax amount."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    .lw-state-ref-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .lw-state-ref-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius-sm);
+      font-size: 13px;
+    }
+    .lw-state-ref-item .state {
+      color: var(--lw-text-secondary);
+      font-weight: 500;
+    }
+    .lw-state-ref-item .rate {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: var(--lw-navy);
+    }
+    .lw-state-ref-item.high .rate { color: var(--lw-rose); }
+    .lw-state-ref-item.low .rate { color: var(--lw-emerald); }
+    
+    .lw-visual-breakdown {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .lw-stacked-bar {
+      height: 48px;
+      border-radius: var(--lw-radius);
+      overflow: hidden;
+      display: flex;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+    }
+    .lw-stacked-segment {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+      transition: width 0.6s ease;
+      min-width: 80px;
+    }
+    .lw-stacked-segment.mortgage {
+      background: linear-gradient(135deg, var(--lw-sky), var(--lw-sky-dark));
+    }
+    .lw-stacked-segment.tax {
+      background: linear-gradient(135deg, var(--lw-amber), #D97706);
+    }
+    
+    .lw-legend {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 12px;
+    }
+    .lw-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+    }
+    .lw-legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+    .lw-legend-dot.mortgage { background: var(--lw-sky); }
+    .lw-legend-dot.tax { background: var(--lw-amber); }
+    
+    .lw-insight-callout {
+      background: linear-gradient(135deg, var(--lw-amber-50), #FEF3C7);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      border-radius: var(--lw-radius);
+      padding: 20px;
+      margin: 24px 0;
+    }
+    .lw-insight-callout .title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      color: #92400E;
+      margin-bottom: 8px;
+    }
+    .lw-insight-callout p {
+      color: #78350F;
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0;
+    }
+    
+    .lw-decision-box {
+      background: linear-gradient(135deg, var(--lw-emerald-50), #D1FAE5);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: var(--lw-radius);
+      padding: 24px;
+      text-align: center;
+      margin-top: 24px;
+    }
+    .lw-decision-box .verdict {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--lw-emerald-dark);
+      margin-bottom: 8px;
+    }
+    .lw-decision-box .detail {
+      font-size: 14px;
+      color: #047857;
+    }
+    
+    .lw-projection-table {
+      margin-top: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .lw-state-ref-grid {
+        grid-template-columns: 1fr;
+      }
+      .lw-stacked-segment {
+        min-width: 60px;
+        font-size: 11px;
+      }
+      .lw-legend {
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <span class="lw-logo-icon">P</span>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">All Tools</a></li>
+        <li><a href="/home-affordability/">Home Affordability</a></li>
+        <li><a href="/mortgage-calculator/">Mortgage Calc</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')">☰</button>
+    </div>
+    <div class="lw-mobile-menu">
+      <a href="/">All Tools</a>
+      <a href="/home-affordability/">Home Affordability</a>
+      <a href="/mortgage-calculator/">Mortgage Calculator</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- Hero -->
+    <div class="lw-hero">
+      <span class="lw-badge amber">🏠 Property Costs</span>
+      <h1>Property Tax <span class="accent">Impact</span> Estimator</h1>
+      <p class="subtitle">See exactly how property taxes affect your monthly housing costs and total home affordability.</p>
+    </div>
+
+    <!-- Calculator Card -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon amber">📋</div>
+        <div>
+          <div class="lw-card-title">Calculate Your Property Tax Impact</div>
+          <div class="lw-card-subtitle">Enter your home details below</div>
+        </div>
+      </div>
+
+      <!-- Home Price -->
+      <div class="lw-form-group">
+        <label class="lw-label">Home Price</label>
+        <div class="lw-input-prefix">
+          <span class="prefix">$</span>
+          <input type="text" class="lw-input" id="homePrice" value="350,000" inputmode="numeric" placeholder="350,000">
+        </div>
+      </div>
+
+      <!-- Monthly Mortgage (for comparison) -->
+      <div class="lw-form-group">
+        <label class="lw-label">Monthly Mortgage Payment <span class="lw-label-hint">(principal & interest only)</span></label>
+        <div class="lw-input-prefix">
+          <span class="prefix">$</span>
+          <input type="text" class="lw-input" id="mortgagePayment" value="2,100" inputmode="numeric" placeholder="2,100">
+        </div>
+      </div>
+
+      <!-- Tax Rate with State Presets -->
+      <div class="lw-form-group">
+        <label class="lw-label">Local Property Tax Rate</label>
+        <div class="lw-grid-2">
+          <div class="lw-input-suffix">
+            <input type="text" class="lw-input" id="taxRate" value="1.10" inputmode="decimal" placeholder="1.10">
+            <span class="suffix">%</span>
+          </div>
+          <select class="lw-select" id="stateSelect">
+            <option value="">Choose a state...</option>
+            <option value="2.23">New Jersey (2.23%)</option>
+            <option value="2.08">Illinois (2.08%)</option>
+            <option value="1.93">New Hampshire (1.93%)</option>
+            <option value="1.79">Connecticut (1.79%)</option>
+            <option value="1.76">Vermont (1.76%)</option>
+            <option value="1.72">Wisconsin (1.72%)</option>
+            <option value="1.68">Texas (1.68%)</option>
+            <option value="1.56">Nebraska (1.56%)</option>
+            <option value="1.53">Ohio (1.53%)</option>
+            <option value="1.50">Pennsylvania (1.50%)</option>
+            <option value="1.40">New York (1.40%)</option>
+            <option value="1.27">Michigan (1.27%)</option>
+            <option value="1.10" selected>National Average (1.10%)</option>
+            <option value="1.04">Florida (1.04%)</option>
+            <option value="0.99">Georgia (0.99%)</option>
+            <option value="0.93">North Carolina (0.93%)</option>
+            <option value="0.89">Virginia (0.89%)</option>
+            <option value="0.77">Tennessee (0.77%)</option>
+            <option value="0.76">California (0.76%)</option>
+            <option value="0.63">Arizona (0.63%)</option>
+            <option value="0.56">Colorado (0.56%)</option>
+            <option value="0.48">South Carolina (0.48%)</option>
+            <option value="0.31">Hawaii (0.31%)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Reassessment Rate (Optional) -->
+      <div class="lw-form-group">
+        <label class="lw-label">Annual Reassessment Rate <span class="lw-label-hint">(optional, for projections)</span></label>
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <span></span>
+            <span class="lw-range-value" id="reassessDisplay">3%</span>
+          </div>
+          <input type="range" class="lw-range" id="reassessRate" min="0" max="8" step="0.5" value="3">
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsSection">
+      <!-- Primary Result -->
+      <div class="lw-result-hero">
+        <div class="lw-result-label">Annual Property Tax</div>
+        <div class="lw-result-number">
+          <span class="currency">$</span><span id="annualTax">3,850</span>
+        </div>
+        <div class="lw-result-sub">Based on $350,000 home value at 1.10% rate</div>
+      </div>
+
+      <!-- Result Grid -->
+      <div class="lw-result-grid">
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Monthly Tax</div>
+          <div class="lw-result-item-value" id="monthlyTax">$321</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">% of Mortgage</div>
+          <div class="lw-result-item-value sky" id="taxPercent">15.3%</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Total Monthly</div>
+          <div class="lw-result-item-value" id="totalMonthly">$2,421</div>
+        </div>
+      </div>
+
+      <!-- Visual Breakdown -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon blue">📊</div>
+          <div>
+            <div class="lw-card-title">Monthly Payment Breakdown</div>
+            <div class="lw-card-subtitle">How property taxes affect your housing cost</div>
+          </div>
+        </div>
+        
+        <div class="lw-visual-breakdown">
+          <div class="lw-stacked-bar">
+            <div class="lw-stacked-segment mortgage" id="mortgageBar" style="width: 86.7%">
+              <span id="mortgageBarLabel">$2,100 Mortgage</span>
+            </div>
+            <div class="lw-stacked-segment tax" id="taxBar" style="width: 13.3%">
+              <span id="taxBarLabel">$321 Tax</span>
+            </div>
+          </div>
+          <div class="lw-legend">
+            <div class="lw-legend-item">
+              <div class="lw-legend-dot mortgage"></div>
+              <span>Mortgage (P&I)</span>
+            </div>
+            <div class="lw-legend-item">
+              <div class="lw-legend-dot tax"></div>
+              <span>Property Tax</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Decision Box -->
+        <div class="lw-decision-box" id="decisionBox">
+          <div class="verdict">Taxes add 15.3% to your monthly payment</div>
+          <div class="detail">Your effective housing cost is $2,421/month, not just your $2,100 mortgage.</div>
+        </div>
+      </div>
+
+      <!-- What This Means -->
+      <div class="lw-insight-callout">
+        <div class="title">💡 What This Means</div>
+        <p id="insightText">
+          With a 1.10% property tax rate (national average), you'll pay $3,850 per year in property taxes. This adds $321 to your monthly housing cost—a 15.3% increase over your base mortgage payment. When budgeting for a home, always include property taxes to avoid payment shock.
+        </p>
+      </div>
+
+      <!-- 5-Year Projection -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon green">📈</div>
+          <div>
+            <div class="lw-card-title">5-Year Tax Projection</div>
+            <div class="lw-card-subtitle">How your taxes may grow with reassessment</div>
+          </div>
+        </div>
+        
+        <div class="lw-projection-table">
+          <div class="lw-table-wrap">
+            <table class="lw-table">
+              <thead>
+                <tr>
+                  <th>Year</th>
+                  <th>Assessed Value</th>
+                  <th>Annual Tax</th>
+                  <th>Monthly Tax</th>
+                  <th>Increase</th>
+                </tr>
+              </thead>
+              <tbody id="projectionBody">
+                <!-- Filled by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- State Reference -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon violet">🗺️</div>
+          <div>
+            <div class="lw-card-title">Property Tax Rates by State</div>
+            <div class="lw-card-subtitle">Compare your rate to other states</div>
+          </div>
+        </div>
+        
+        <div class="lw-state-ref-grid">
+          <div class="lw-state-ref-item high">
+            <span class="state">🔴 New Jersey</span>
+            <span class="rate">2.23%</span>
+          </div>
+          <div class="lw-state-ref-item high">
+            <span class="state">🔴 Illinois</span>
+            <span class="rate">2.08%</span>
+          </div>
+          <div class="lw-state-ref-item high">
+            <span class="state">🔴 Texas</span>
+            <span class="rate">1.68%</span>
+          </div>
+          <div class="lw-state-ref-item">
+            <span class="state">⚪ National Avg</span>
+            <span class="rate">1.10%</span>
+          </div>
+          <div class="lw-state-ref-item">
+            <span class="state">⚪ Florida</span>
+            <span class="rate">1.04%</span>
+          </div>
+          <div class="lw-state-ref-item">
+            <span class="state">⚪ California</span>
+            <span class="rate">0.76%</span>
+          </div>
+          <div class="lw-state-ref-item low">
+            <span class="state">🟢 Colorado</span>
+            <span class="rate">0.56%</span>
+          </div>
+          <div class="lw-state-ref-item low">
+            <span class="state">🟢 Hawaii</span>
+            <span class="rate">0.31%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <div class="lw-content">
+      <h2>Understanding Property Taxes and Your Mortgage</h2>
+      <p>
+        Property taxes are one of the most overlooked costs of homeownership. While buyers focus on the mortgage payment, property taxes can add 15-35% to your monthly housing cost depending on where you live. This calculator helps you understand the true impact of property taxes on your budget.
+      </p>
+
+      <h3>How Property Taxes Are Calculated</h3>
+      <p>
+        Your annual property tax is determined by multiplying your home's <strong>assessed value</strong> by your local <strong>tax rate</strong> (also called the millage rate). The assessed value may be lower than market value—most localities assess at 80-100% of market value, though this varies widely.
+      </p>
+      <p>
+        Tax rates are set by local governments and fund schools, police, fire departments, and other public services. Rates can vary dramatically even within the same metropolitan area based on the specific county, city, and school district.
+      </p>
+
+      <h3>Why Property Taxes Matter for Affordability</h3>
+      <p>
+        When you apply for a mortgage, lenders look at your <strong>total monthly housing cost</strong>—not just the principal and interest. This includes property taxes and homeowner's insurance (often called PITI: Principal, Interest, Taxes, Insurance). High property taxes can significantly reduce how much home you can afford.
+      </p>
+      <p>
+        For example, a $400,000 home in Texas (1.68% rate) costs $560/month in property taxes, while the same home in Colorado (0.56% rate) costs only $187/month. That $373 difference affects your debt-to-income ratio and purchasing power.
+      </p>
+
+      <h3>Property Tax Escrow</h3>
+      <p>
+        Most lenders require you to pay property taxes through an <strong>escrow account</strong>. Each month, 1/12 of your annual tax bill is added to your mortgage payment. The lender holds these funds and pays your property taxes when due (usually twice per year).
+      </p>
+      <p>
+        This protects the lender—unpaid property taxes can result in a tax lien that takes priority over their mortgage. It also helps homeowners budget by spreading the tax burden across 12 monthly payments.
+      </p>
+
+      <h3>Annual Increases and Reassessment</h3>
+      <p>
+        Property taxes typically increase each year for two reasons: <strong>rising home values</strong> increase your assessed value, and <strong>local budget needs</strong> may increase the tax rate. Average annual increases range from 2-5%, though some years may see larger jumps.
+      </p>
+      <p>
+        Some states limit annual assessment increases. California's Proposition 13 caps increases at 2% per year until the property is sold. Other states have no limits, meaning a hot housing market can lead to dramatic tax increases.
+      </p>
+
+      <h2>State-by-State Property Tax Comparison</h2>
+      <p>
+        Property tax rates vary enormously by state. The highest-tax states include New Jersey (2.23%), Illinois (2.08%), and New Hampshire (1.93%). The lowest include Hawaii (0.31%), Alabama (0.37%), and Colorado (0.56%).
+      </p>
+      <p>
+        However, <strong>effective tax rates don't tell the whole story</strong>. Low-rate states often have higher home values, so actual dollar amounts may be similar. Also consider that low property tax states may have higher income or sales taxes to compensate.
+      </p>
+
+      <h3>High Tax vs. Low Tax States</h3>
+      <p>
+        In high-tax states, property taxes significantly impact affordability. A $350,000 home in New Jersey costs about $7,800/year in property taxes ($650/month), while the same value home in Hawaii costs only $1,085/year ($90/month)—a difference of $560 per month.
+      </p>
+      <p>
+        When comparing homes across state lines, always factor in property taxes. A cheaper home in a high-tax state may actually cost more monthly than a pricier home in a low-tax state.
+      </p>
+
+      <!-- FAQ Section -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">How are property taxes calculated?</button>
+          <div class="lw-faq-a">
+            <p>Property taxes are calculated by multiplying your home's assessed value by your local tax rate. The assessed value may differ from market value—many localities assess at 80-100% of market value. The tax rate is set by local governments and can vary significantly by county, city, and school district.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">How much do property taxes add to my monthly mortgage payment?</button>
+          <div class="lw-faq-a">
+            <p>Property taxes typically add 15-30% to your base mortgage payment, depending on your location. In high-tax states like New Jersey or Illinois, it can add 25-35%. In low-tax states like Hawaii or Alabama, it may only add 8-15%. Lenders often require these taxes to be included in your monthly escrow payment.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">What states have the highest property taxes?</button>
+          <div class="lw-faq-a">
+            <p>New Jersey has the highest effective property tax rate at approximately 2.23%, followed by Illinois (2.08%), New Hampshire (1.93%), Connecticut (1.79%), and Vermont (1.76%). These rates can significantly impact housing affordability in these states.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Do property taxes increase every year?</button>
+          <div class="lw-faq-a">
+            <p>Yes, property taxes typically increase annually due to rising home values and local budget needs. Average annual increases range from 2-5%, though some states cap annual increases. California's Proposition 13 limits increases to 2% per year, while other states have no limits.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Can I deduct property taxes on my federal return?</button>
+          <div class="lw-faq-a">
+            <p>Yes, property taxes are deductible if you itemize, but the SALT (State and Local Tax) deduction is currently capped at $10,000 per year ($5,000 if married filing separately). This includes state income taxes, so high-income earners in high-tax states may not be able to deduct their full property tax amount.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Tools -->
+    <div class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/home-affordability/" class="lw-related-link">
+          <span class="dot"></span>
+          Home Affordability Calculator
+        </a>
+        <a href="/mortgage-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Mortgage Payment Calculator
+        </a>
+        <a href="/closing-costs/" class="lw-related-link">
+          <span class="dot"></span>
+          Closing Costs Estimator
+        </a>
+      </div>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="lw-disclaimer">
+      Property tax rates are approximate and vary by locality. Actual rates depend on your specific county, city, and school district. Consult your local tax assessor for exact rates.
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="lw-footer">
+    <p><a href="/">← Back to All Tools</a></p>
+    <p>© 2025 PocketWise. Free financial calculators for everyone.</p>
+  </footer>
+
+  <script>
+    // Utility functions
+    function parseNum(str) {
+      return parseFloat(String(str).replace(/[^0-9.-]/g, '')) || 0;
+    }
+
+    function formatCurrency(num, decimals = 0) {
+      return num.toLocaleString('en-US', { 
+        minimumFractionDigits: decimals, 
+        maximumFractionDigits: decimals 
+      });
+    }
+
+    function formatInput(input) {
+      const val = parseNum(input.value);
+      if (!isNaN(val) && val > 0) {
+        input.value = formatCurrency(val);
+      }
+    }
+
+    // DOM elements
+    const homePriceInput = document.getElementById('homePrice');
+    const mortgageInput = document.getElementById('mortgagePayment');
+    const taxRateInput = document.getElementById('taxRate');
+    const stateSelect = document.getElementById('stateSelect');
+    const reassessSlider = document.getElementById('reassessRate');
+    const reassessDisplay = document.getElementById('reassessDisplay');
+
+    // Result elements
+    const annualTaxEl = document.getElementById('annualTax');
+    const monthlyTaxEl = document.getElementById('monthlyTax');
+    const taxPercentEl = document.getElementById('taxPercent');
+    const totalMonthlyEl = document.getElementById('totalMonthly');
+    const mortgageBarEl = document.getElementById('mortgageBar');
+    const taxBarEl = document.getElementById('taxBar');
+    const mortgageBarLabelEl = document.getElementById('mortgageBarLabel');
+    const taxBarLabelEl = document.getElementById('taxBarLabel');
+    const decisionBoxEl = document.getElementById('decisionBox');
+    const insightTextEl = document.getElementById('insightText');
+    const projectionBodyEl = document.getElementById('projectionBody');
+    const resultSubEl = document.querySelector('.lw-result-sub');
+
+    // Main calculation
+    function calculate() {
+      const homePrice = parseNum(homePriceInput.value);
+      const mortgage = parseNum(mortgageInput.value);
+      const taxRate = parseFloat(taxRateInput.value) || 0;
+      const reassessRate = parseFloat(reassessSlider.value) || 0;
+
+      // Calculate property tax
+      const annualTax = homePrice * (taxRate / 100);
+      const monthlyTax = annualTax / 12;
+      const totalMonthly = mortgage + monthlyTax;
+      const taxPercent = mortgage > 0 ? (monthlyTax / mortgage) * 100 : 0;
+
+      // Update primary result
+      annualTaxEl.textContent = formatCurrency(annualTax);
+      resultSubEl.textContent = `Based on $${formatCurrency(homePrice)} home value at ${taxRate}% rate`;
+
+      // Update result grid
+      monthlyTaxEl.textContent = '$' + formatCurrency(monthlyTax);
+      taxPercentEl.textContent = taxPercent.toFixed(1) + '%';
+      totalMonthlyEl.textContent = '$' + formatCurrency(totalMonthly);
+
+      // Update visual breakdown
+      const mortgagePercent = totalMonthly > 0 ? (mortgage / totalMonthly) * 100 : 100;
+      const taxBarPercent = 100 - mortgagePercent;
+      
+      mortgageBarEl.style.width = mortgagePercent + '%';
+      taxBarEl.style.width = taxBarPercent + '%';
+      mortgageBarLabelEl.textContent = '$' + formatCurrency(mortgage) + ' Mortgage';
+      taxBarLabelEl.textContent = '$' + formatCurrency(monthlyTax) + ' Tax';
+
+      // Update decision box
+      const verdictEl = decisionBoxEl.querySelector('.verdict');
+      const detailEl = decisionBoxEl.querySelector('.detail');
+      verdictEl.textContent = `Taxes add ${taxPercent.toFixed(1)}% to your monthly payment`;
+      detailEl.textContent = `Your effective housing cost is $${formatCurrency(totalMonthly)}/month, not just your $${formatCurrency(mortgage)} mortgage.`;
+
+      // Update insight text
+      const rateDesc = taxRate > 1.5 ? 'above average' : taxRate < 0.8 ? 'below average' : 'around average';
+      insightTextEl.textContent = `With a ${taxRate}% property tax rate (${rateDesc}), you'll pay $${formatCurrency(annualTax)} per year in property taxes. This adds $${formatCurrency(monthlyTax)} to your monthly housing cost—a ${taxPercent.toFixed(1)}% increase over your base mortgage payment. When budgeting for a home, always include property taxes to avoid payment shock.`;
+
+      // Update 5-year projection
+      let projectionHTML = '';
+      let currentValue = homePrice;
+      let prevTax = annualTax;
+      
+      for (let year = 1; year <= 5; year++) {
+        if (year > 1) {
+          currentValue = currentValue * (1 + reassessRate / 100);
+        }
+        const yearTax = currentValue * (taxRate / 100);
+        const yearMonthlyTax = yearTax / 12;
+        const increase = year === 1 ? 0 : ((yearTax - prevTax) / prevTax) * 100;
+        
+        projectionHTML += `
+          <tr>
+            <td>Year ${year}</td>
+            <td class="num">$${formatCurrency(currentValue)}</td>
+            <td class="num">$${formatCurrency(yearTax)}</td>
+            <td class="num">$${formatCurrency(yearMonthlyTax)}</td>
+            <td class="num">${year === 1 ? '—' : '+' + increase.toFixed(1) + '%'}</td>
+          </tr>
+        `;
+        prevTax = yearTax;
+      }
+      projectionBodyEl.innerHTML = projectionHTML;
+    }
+
+    // Event listeners
+    homePriceInput.addEventListener('input', calculate);
+    homePriceInput.addEventListener('blur', function() {
+      formatInput(this);
+      calculate();
+    });
+
+    mortgageInput.addEventListener('input', calculate);
+    mortgageInput.addEventListener('blur', function() {
+      formatInput(this);
+      calculate();
+    });
+
+    taxRateInput.addEventListener('input', function() {
+      stateSelect.value = '';
+      calculate();
+    });
+
+    stateSelect.addEventListener('change', function() {
+      if (this.value) {
+        taxRateInput.value = this.value;
+        calculate();
+      }
+    });
+
+    reassessSlider.addEventListener('input', function() {
+      reassessDisplay.textContent = this.value + '%';
+      calculate();
+    });
+
+    // FAQ toggle
+    document.querySelectorAll('.lw-faq-q').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const item = this.parentElement;
+        const wasOpen = item.classList.contains('open');
+        
+        // Close all
+        document.querySelectorAll('.lw-faq-item').forEach(i => i.classList.remove('open'));
+        
+        // Toggle current
+        if (!wasOpen) {
+          item.classList.add('open');
+        }
+      });
+    });
+
+    // Initial calculation
+    calculate();
+  </script>
+</body>
+</html>

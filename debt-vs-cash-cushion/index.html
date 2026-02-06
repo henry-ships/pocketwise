@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debt vs Cash Cushion Analyzer | Should You Pay Off Debt or Keep Cash?</title>
+  <meta name="description" content="Should you pay off debt or keep cash? This free analyzer calculates the optimal balance between your emergency fund and debt repayment based on your job stability and financial situation.">
+  <meta name="keywords" content="pay off debt or keep cash, debt vs emergency fund, cash cushion vs debt, how much cash to keep, emergency fund while in debt">
+  <link rel="canonical" href="https://lendwise.co/debt-vs-cash-cushion/">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Should I pay off debt or keep cash in savings?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The answer depends on your job stability, debt interest rate, and monthly expenses. Generally, you should maintain 3-6 months of expenses in cash for emergencies before aggressively paying debt. If your job is unstable, lean toward more cash; if your debt APR is very high (over 15%), consider paying it down faster while keeping at least 1-2 months cushion."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much cash should I keep while paying off debt?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Financial experts recommend keeping 3-6 months of living expenses in cash even while paying off debt. However, this varies based on job security: 1-2 months if very stable, 3-4 months if moderately stable, and 5-6+ months if your income is unstable or you're self-employed."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the opportunity cost of keeping cash instead of paying debt?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The opportunity cost equals your debt's interest rate minus what you'd earn on savings. If you have 18% APR debt and earn 4% on savings, keeping $10,000 in cash costs you roughly 14% ($1,400) per year in lost interest savings. However, this must be balanced against the risk of not having emergency funds."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is it better to have an emergency fund or pay off credit cards?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Build a starter emergency fund of $1,000-2,000 first, then aggressively pay high-interest credit card debt, then build your full emergency fund. This hybrid approach protects you from minor emergencies while minimizing the interest you pay on expensive debt."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does job stability affect the debt vs savings decision?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Job stability is crucial in this decision. If you work in a volatile industry, are a contractor, or have concerns about job security, prioritize cash reserves (4-6 months). If you have a stable government job or tenure, you can be more aggressive with debt payoff while keeping 2-3 months in cash."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">L</div>
+        LendWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">All Tools</a></li>
+        <li><a href="/emergency-fund-calculator/">Emergency Fund</a></li>
+        <li><a href="/debt-payoff-calculator/">Debt Payoff</a></li>
+        <li><a href="/savings-goal-calculator/">Savings Goal</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
+    </div>
+  </nav>
+  <div class="lw-mobile-menu" id="mobileMenu">
+    <a href="/">All Tools</a>
+    <a href="/emergency-fund-calculator/">Emergency Fund</a>
+    <a href="/debt-payoff-calculator/">Debt Payoff</a>
+    <a href="/savings-goal-calculator/">Savings Goal</a>
+  </div>
+
+  <main class="lw-main">
+    <!-- Hero -->
+    <header class="lw-hero">
+      <span class="lw-badge">POCKETWISE TOOL</span>
+      <h1>Debt vs <span class="accent">Cash Cushion</span> Analyzer</h1>
+      <p class="subtitle">Should you pay off debt or keep cash? Get a personalized recommendation based on your job stability, interest rates, and financial situation.</p>
+    </header>
+
+    <!-- Calculator Card -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">💰</div>
+        <div>
+          <div class="lw-card-title">Your Financial Snapshot</div>
+          <div class="lw-card-subtitle">Enter your current situation</div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Monthly Income <span class="lw-label-hint">(after tax)</span></label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" class="lw-input" id="monthlyIncome" value="5000" min="0" step="100">
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">Monthly Expenses</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" class="lw-input" id="monthlyExpenses" value="3500" min="0" step="100">
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Current Cash on Hand</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" class="lw-input" id="currentCash" value="8000" min="0" step="100">
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">Total Debt Balance</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" class="lw-input" id="debtBalance" value="15000" min="0" step="100">
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Debt APR <span class="lw-label-hint">(average)</span></label>
+          <div class="lw-input-suffix">
+            <input type="number" class="lw-input" id="debtAPR" value="18.99" min="0" max="50" step="0.01">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">Minimum Monthly Payment</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" class="lw-input" id="minPayment" value="350" min="0" step="10">
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-range-group">
+        <div class="lw-range-header">
+          <label class="lw-label">Job Stability Rating</label>
+          <span class="lw-range-value" id="stabilityDisplay">3 — Moderate</span>
+        </div>
+        <input type="range" class="lw-range" id="jobStability" min="1" max="5" value="3">
+        <div class="stability-labels">
+          <span>Very Unstable</span>
+          <span>Very Stable</span>
+        </div>
+      </div>
+
+      <div class="lw-form-group">
+        <label class="lw-label">Savings Account APY <span class="lw-label-hint">(what you earn on cash)</span></label>
+        <div class="lw-input-suffix">
+          <input type="number" class="lw-input" id="savingsAPY" value="4.5" min="0" max="10" step="0.1">
+          <span class="suffix">%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Primary Result -->
+    <div class="lw-result-hero" id="resultHero">
+      <div class="lw-result-label">Recommendation</div>
+      <div class="lw-result-number" id="primaryResult">Keep $7,000</div>
+      <div class="lw-result-sub" id="resultSubtext">That's 2.0 months of expenses • Apply $1,000 to debt</div>
+    </div>
+
+    <!-- Visual Allocation -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">📊</div>
+        <div>
+          <div class="lw-card-title">Cash Allocation Breakdown</div>
+          <div class="lw-card-subtitle">How to split your current cash</div>
+        </div>
+      </div>
+
+      <div class="allocation-visual" id="allocationVisual">
+        <div class="allocation-bar">
+          <div class="allocation-segment cash-segment" id="cashSegment" style="width: 87.5%">
+            <span class="segment-label">Keep as Cash</span>
+            <span class="segment-amount">$7,000</span>
+          </div>
+          <div class="allocation-segment debt-segment" id="debtSegment" style="width: 12.5%">
+            <span class="segment-label">Pay Debt</span>
+            <span class="segment-amount">$1,000</span>
+          </div>
+        </div>
+        <div class="allocation-legend">
+          <div class="legend-item">
+            <span class="legend-dot cash"></span>
+            <span>Cash Reserve (<span id="cashPercent">87.5</span>%)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot debt"></span>
+            <span>Debt Payment (<span id="debtPercent">12.5</span>%)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-result-grid lw-mt-24">
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Cash Reserve</div>
+          <div class="lw-result-item-value sky" id="recommendedCash">$7,000</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Months Covered</div>
+          <div class="lw-result-item-value" id="monthsCovered">2.0</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Apply to Debt</div>
+          <div class="lw-result-item-value green" id="applyToDebt">$1,000</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Risk Assessment -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon amber">⚠️</div>
+        <div>
+          <div class="lw-card-title">Risk Assessment</div>
+          <div class="lw-card-subtitle">Based on your job stability</div>
+        </div>
+      </div>
+
+      <div class="risk-meter">
+        <div class="risk-track">
+          <div class="risk-fill" id="riskFill" style="width: 50%"></div>
+          <div class="risk-marker" id="riskMarker" style="left: 50%"></div>
+        </div>
+        <div class="risk-labels">
+          <span>Lower Risk<br><small>More cash</small></span>
+          <span>Balanced</span>
+          <span>Higher Risk<br><small>More to debt</small></span>
+        </div>
+      </div>
+
+      <div class="risk-explanation" id="riskExplanation">
+        <div class="risk-title">📋 Moderate Risk Profile</div>
+        <p>With a job stability rating of 3/5, we recommend maintaining <strong>2-3 months</strong> of expenses in cash. This provides a reasonable safety net while still allowing meaningful debt reduction.</p>
+      </div>
+
+      <div class="scenario-cards">
+        <div class="scenario-card" id="scenarioGood">
+          <div class="scenario-icon">✓</div>
+          <div class="scenario-title">If Things Go Well</div>
+          <div class="scenario-text">You'll pay off debt in <strong id="payoffGood">43 months</strong> and save <strong id="interestSavedGood">$2,847</strong> in interest</div>
+        </div>
+        <div class="scenario-card bad" id="scenarioBad">
+          <div class="scenario-icon">!</div>
+          <div class="scenario-title">If Emergency Hits</div>
+          <div class="scenario-text">Your cash cushion covers <strong id="emergencyCoverage">2.0 months</strong> — time to find solutions</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Opportunity Cost Analysis -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon rose">📉</div>
+        <div>
+          <div class="lw-card-title">Opportunity Cost Analysis</div>
+          <div class="lw-card-subtitle">The real cost of holding cash vs paying debt</div>
+        </div>
+      </div>
+
+      <div class="cost-comparison">
+        <div class="cost-item">
+          <div class="cost-label">Interest you pay on debt (per year)</div>
+          <div class="cost-value negative" id="debtInterestCost">-$2,849</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-label">Interest earned on cash (per year)</div>
+          <div class="cost-value positive" id="cashInterestEarned">+$315</div>
+        </div>
+        <div class="cost-divider"></div>
+        <div class="cost-item total">
+          <div class="cost-label">Net annual cost of this strategy</div>
+          <div class="cost-value" id="netAnnualCost">$2,534</div>
+        </div>
+      </div>
+
+      <div class="opportunity-insight" id="opportunityInsight">
+        <strong>💡 What This Means:</strong> Keeping $7,000 in cash costs you approximately <strong id="monthlyCost">$211</strong>/month in opportunity cost (debt interest minus savings interest). However, this "insurance" protects you from needing to take on more high-interest debt during emergencies.
+      </div>
+    </div>
+
+    <!-- Decision Guidance -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon violet">🎯</div>
+        <div>
+          <div class="lw-card-title">Your Action Plan</div>
+          <div class="lw-card-subtitle">Step-by-step guidance</div>
+        </div>
+      </div>
+
+      <div class="action-steps" id="actionSteps">
+        <div class="action-step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <div class="step-title">Set aside your emergency fund</div>
+            <div class="step-detail">Keep <strong id="step1Amount">$7,000</strong> in a high-yield savings account earning <span id="step1APY">4.5%</span> APY</div>
+          </div>
+        </div>
+        <div class="action-step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <div class="step-title">Make a lump sum debt payment</div>
+            <div class="step-detail">Apply <strong id="step2Amount">$1,000</strong> to your highest-rate debt immediately</div>
+          </div>
+        </div>
+        <div class="action-step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <div class="step-title">Set up monthly debt attacks</div>
+            <div class="step-detail">With <strong id="step3Surplus">$1,500</strong>/month surplus, pay minimum (<strong id="step3Min">$350</strong>) plus extra when possible</div>
+          </div>
+        </div>
+        <div class="action-step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <div class="step-title">Reassess quarterly</div>
+            <div class="step-detail">As job stability improves or debt decreases, shift more toward debt payoff</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="decision-summary" id="decisionSummary">
+        <div class="summary-title">📌 Bottom Line</div>
+        <p id="summaryText">Keep $7,000 (2.0 months expenses) as your cash cushion. Apply $1,000 to debt now. Your moderate job stability justifies this balanced approach — you're protected from emergencies while still making progress on debt.</p>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <div class="lw-content">
+      <h2>Should You Pay Off Debt or Keep Cash? A Complete Guide</h2>
+      <p>One of the most common financial dilemmas is deciding between paying off debt aggressively or maintaining a healthy cash cushion. The answer isn't one-size-fits-all — it depends on your unique situation, including job stability, interest rates, and personal risk tolerance.</p>
+
+      <h3>The Case for Keeping Cash</h3>
+      <p>Emergency funds exist for a reason. Without accessible cash, unexpected expenses often lead to more debt — usually at even higher interest rates. Consider keeping more cash if:</p>
+      <ul>
+        <li><strong>Job instability:</strong> Contractors, freelancers, or those in volatile industries need larger cushions</li>
+        <li><strong>Health concerns:</strong> Ongoing medical expenses or conditions that might affect work</li>
+        <li><strong>Single income household:</strong> No backup earner if you lose your job</li>
+        <li><strong>Old car or home:</strong> Major repairs could strike anytime</li>
+      </ul>
+
+      <h3>The Case for Paying Off Debt</h3>
+      <p>High-interest debt (especially credit cards) compounds quickly. Every dollar kept in a 4% savings account while carrying 20% debt costs you 16% annually. Prioritize debt payoff if:</p>
+      <ul>
+        <li><strong>Very stable job:</strong> Government work, tenure, or long-term contracts</li>
+        <li><strong>High debt APR:</strong> Credit cards over 15-20% are emergencies themselves</li>
+        <li><strong>Access to credit:</strong> If you have unused 0% cards or a HELOC for true emergencies</li>
+        <li><strong>Dual income:</strong> Partner can cover basics if one income stops</li>
+      </ul>
+
+      <h3>The Balanced Approach</h3>
+      <p>Most financial experts recommend a hybrid strategy:</p>
+      <ol>
+        <li>Build a "starter" emergency fund ($1,000-2,000)</li>
+        <li>Attack high-interest debt aggressively</li>
+        <li>Build full emergency fund (3-6 months)</li>
+        <li>Continue debt payoff and saving simultaneously</li>
+      </ol>
+
+      <h3>How Job Stability Affects Your Decision</h3>
+      <p>Your job stability rating is perhaps the most important factor. Here's a general guide:</p>
+      <ul>
+        <li><strong>Rating 1-2 (Unstable):</strong> Keep 4-6 months expenses; pay minimums on debt until cushion is built</li>
+        <li><strong>Rating 3 (Moderate):</strong> Keep 2-4 months; split extra money between savings and debt</li>
+        <li><strong>Rating 4-5 (Stable):</strong> Keep 1-3 months; aggressively attack debt with surplus</li>
+      </ul>
+
+      <h2>Frequently Asked Questions</h2>
+      <div class="lw-faq">
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">Should I pay off debt or keep cash in savings?</button>
+          <div class="lw-faq-a">
+            <p>The answer depends on your job stability, debt interest rate, and monthly expenses. Generally, you should maintain 3-6 months of expenses in cash for emergencies before aggressively paying debt. If your job is unstable, lean toward more cash; if your debt APR is very high (over 15%), consider paying it down faster while keeping at least 1-2 months cushion.</p>
+          </div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">How much cash should I keep while paying off debt?</button>
+          <div class="lw-faq-a">
+            <p>Financial experts recommend keeping 3-6 months of living expenses in cash even while paying off debt. However, this varies based on job security: 1-2 months if very stable, 3-4 months if moderately stable, and 5-6+ months if your income is unstable or you're self-employed.</p>
+          </div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">What is the opportunity cost of keeping cash instead of paying debt?</button>
+          <div class="lw-faq-a">
+            <p>The opportunity cost equals your debt's interest rate minus what you'd earn on savings. If you have 18% APR debt and earn 4% on savings, keeping $10,000 in cash costs you roughly 14% ($1,400) per year in lost interest savings. However, this must be balanced against the risk of not having emergency funds.</p>
+          </div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">Is it better to have an emergency fund or pay off credit cards?</button>
+          <div class="lw-faq-a">
+            <p>Build a starter emergency fund of $1,000-2,000 first, then aggressively pay high-interest credit card debt, then build your full emergency fund. This hybrid approach protects you from minor emergencies while minimizing the interest you pay on expensive debt.</p>
+          </div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">How does job stability affect the debt vs savings decision?</button>
+          <div class="lw-faq-a">
+            <p>Job stability is crucial in this decision. If you work in a volatile industry, are a contractor, or have concerns about job security, prioritize cash reserves (4-6 months). If you have a stable government job or tenure, you can be more aggressive with debt payoff while keeping 2-3 months in cash.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Tools -->
+    <div class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/emergency-fund-calculator/" class="lw-related-link">
+          <span class="dot"></span> Emergency Fund Calculator
+        </a>
+        <a href="/debt-payoff-calculator/" class="lw-related-link">
+          <span class="dot"></span> Debt Payoff Calculator
+        </a>
+        <a href="/debt-payoff-optimizer/" class="lw-related-link">
+          <span class="dot"></span> Debt Payoff Optimizer
+        </a>
+        <a href="/savings-goal-calculator/" class="lw-related-link">
+          <span class="dot"></span> Savings Goal Calculator
+        </a>
+        <a href="/debt-to-income-calculator/" class="lw-related-link">
+          <span class="dot"></span> Debt-to-Income Calculator
+        </a>
+        <a href="/loan-consolidation-calculator/" class="lw-related-link">
+          <span class="dot"></span> Loan Consolidation Calculator
+        </a>
+      </div>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="lw-disclaimer">
+      This calculator provides estimates for educational purposes only. Individual financial situations vary. Consider consulting a financial advisor for personalized advice.
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="lw-footer">
+    <p><a href="/">LendWise</a> — Free financial calculators to help you make smarter money decisions.</p>
+  </footer>
+
+  <style>
+    /* Custom styles for this tool */
+    .stability-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--lw-text-muted);
+      margin-top: 8px;
+    }
+
+    /* Allocation Visual */
+    .allocation-bar {
+      display: flex;
+      height: 56px;
+      border-radius: var(--lw-radius);
+      overflow: hidden;
+      margin-bottom: 16px;
+      background: var(--lw-slate-100);
+    }
+    .allocation-segment {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: width 0.6s ease;
+      min-width: 80px;
+    }
+    .cash-segment {
+      background: linear-gradient(135deg, var(--lw-sky) 0%, var(--lw-teal) 100%);
+      color: white;
+    }
+    .debt-segment {
+      background: linear-gradient(135deg, var(--lw-emerald) 0%, var(--lw-emerald-dark) 100%);
+      color: white;
+    }
+    .segment-label {
+      font-size: 11px;
+      font-weight: 600;
+      opacity: 0.9;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .segment-amount {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .allocation-legend {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+    }
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .legend-dot.cash { background: var(--lw-sky); }
+    .legend-dot.debt { background: var(--lw-emerald); }
+
+    /* Risk Meter */
+    .risk-meter {
+      margin-bottom: 24px;
+    }
+    .risk-track {
+      height: 12px;
+      background: linear-gradient(90deg, var(--lw-sky) 0%, var(--lw-amber) 50%, var(--lw-rose) 100%);
+      border-radius: var(--lw-radius-full);
+      position: relative;
+      margin-bottom: 8px;
+    }
+    .risk-fill {
+      display: none;
+    }
+    .risk-marker {
+      position: absolute;
+      top: -4px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border: 3px solid var(--lw-navy);
+      border-radius: 50%;
+      transform: translateX(-50%);
+      transition: left 0.5s ease;
+      box-shadow: var(--lw-shadow);
+    }
+    .risk-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--lw-text-muted);
+      text-align: center;
+    }
+    .risk-labels small {
+      display: block;
+      font-size: 10px;
+      opacity: 0.7;
+    }
+
+    .risk-explanation {
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      padding: 16px 20px;
+      margin-bottom: 20px;
+    }
+    .risk-title {
+      font-weight: 600;
+      color: var(--lw-navy);
+      margin-bottom: 6px;
+    }
+    .risk-explanation p {
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* Scenario Cards */
+    .scenario-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .scenario-card {
+      background: var(--lw-emerald-50);
+      border-radius: var(--lw-radius);
+      padding: 16px;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    .scenario-card.bad {
+      background: var(--lw-amber-50);
+      border-color: rgba(245, 158, 11, 0.2);
+    }
+    .scenario-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--lw-emerald);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .scenario-card.bad .scenario-icon {
+      background: var(--lw-amber);
+    }
+    .scenario-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--lw-navy);
+      margin-bottom: 4px;
+    }
+    .scenario-text {
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Cost Comparison */
+    .cost-comparison {
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .cost-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+    }
+    .cost-label {
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+    }
+    .cost-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .cost-value.negative { color: var(--lw-rose); }
+    .cost-value.positive { color: var(--lw-emerald); }
+    .cost-divider {
+      height: 1px;
+      background: var(--lw-slate-200);
+      margin: 8px 0;
+    }
+    .cost-item.total .cost-label {
+      font-weight: 600;
+      color: var(--lw-navy);
+    }
+    .cost-item.total .cost-value {
+      font-size: 20px;
+      color: var(--lw-navy);
+    }
+
+    .opportunity-insight {
+      background: var(--lw-sky-50);
+      border-radius: var(--lw-radius);
+      padding: 16px 20px;
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+      line-height: 1.6;
+      border-left: 4px solid var(--lw-sky);
+    }
+
+    /* Action Steps */
+    .action-steps {
+      margin-bottom: 24px;
+    }
+    .action-step {
+      display: flex;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--lw-border-light);
+    }
+    .action-step:last-child {
+      border-bottom: none;
+    }
+    .step-number {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--lw-sky);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .step-title {
+      font-weight: 600;
+      color: var(--lw-navy);
+      margin-bottom: 4px;
+    }
+    .step-detail {
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+    }
+
+    .decision-summary {
+      background: linear-gradient(135deg, var(--lw-navy) 0%, var(--lw-slate-800) 100%);
+      border-radius: var(--lw-radius);
+      padding: 24px;
+      color: white;
+    }
+    .summary-title {
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+    .decision-summary p {
+      font-size: 15px;
+      line-height: 1.7;
+      margin: 0;
+      opacity: 0.9;
+    }
+
+    @media (max-width: 768px) {
+      .scenario-cards {
+        grid-template-columns: 1fr;
+      }
+      .allocation-segment {
+        min-width: 60px;
+      }
+      .segment-label {
+        font-size: 10px;
+      }
+      .segment-amount {
+        font-size: 14px;
+      }
+    }
+  </style>
+
+  <script>
+    // Format currency
+    function formatCurrency(num) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(num);
+    }
+
+    // Get stability label
+    function getStabilityLabel(rating) {
+      const labels = {
+        1: 'Very Unstable',
+        2: 'Unstable',
+        3: 'Moderate',
+        4: 'Stable',
+        5: 'Very Stable'
+      };
+      return labels[rating] || 'Moderate';
+    }
+
+    // Get recommended months based on job stability
+    function getRecommendedMonths(stability) {
+      // Higher stability = fewer months needed
+      const monthsMap = {
+        1: 6,   // Very unstable - need 6 months
+        2: 4.5, // Unstable - need 4-5 months
+        3: 3,   // Moderate - need 3 months
+        4: 2,   // Stable - need 2 months
+        5: 1.5  // Very stable - need 1.5 months
+      };
+      return monthsMap[stability] || 3;
+    }
+
+    // Calculate payoff time with extra payments
+    function calculatePayoffTime(balance, apr, minPayment, extraPayment) {
+      if (balance <= 0) return { months: 0, totalInterest: 0 };
+      
+      const monthlyRate = apr / 100 / 12;
+      let remaining = balance;
+      let months = 0;
+      let totalInterest = 0;
+      const payment = minPayment + extraPayment;
+      
+      while (remaining > 0 && months < 600) {
+        const interest = remaining * monthlyRate;
+        totalInterest += interest;
+        remaining = remaining + interest - payment;
+        months++;
+        
+        if (payment <= interest && months > 12) {
+          return { months: Infinity, totalInterest: Infinity };
+        }
+      }
+      
+      return { months, totalInterest };
+    }
+
+    // Main calculation function
+    function calculate() {
+      // Get inputs
+      const monthlyIncome = parseFloat(document.getElementById('monthlyIncome').value) || 0;
+      const monthlyExpenses = parseFloat(document.getElementById('monthlyExpenses').value) || 0;
+      const currentCash = parseFloat(document.getElementById('currentCash').value) || 0;
+      const debtBalance = parseFloat(document.getElementById('debtBalance').value) || 0;
+      const debtAPR = parseFloat(document.getElementById('debtAPR').value) || 0;
+      const minPayment = parseFloat(document.getElementById('minPayment').value) || 0;
+      const jobStability = parseInt(document.getElementById('jobStability').value) || 3;
+      const savingsAPY = parseFloat(document.getElementById('savingsAPY').value) || 4.5;
+
+      // Update stability display
+      document.getElementById('stabilityDisplay').textContent = 
+        `${jobStability} — ${getStabilityLabel(jobStability)}`;
+
+      // Calculate recommended cash reserve
+      const recommendedMonths = getRecommendedMonths(jobStability);
+      let recommendedCash = monthlyExpenses * recommendedMonths;
+      
+      // Cap at current cash (can't recommend more than you have)
+      recommendedCash = Math.min(recommendedCash, currentCash);
+      
+      // Ensure at least 1 month minimum if they have enough
+      const minCash = Math.min(monthlyExpenses, currentCash);
+      recommendedCash = Math.max(recommendedCash, minCash);
+      
+      // Calculate debt application
+      let applyToDebt = currentCash - recommendedCash;
+      
+      // Don't apply more than debt balance
+      applyToDebt = Math.min(applyToDebt, debtBalance);
+      applyToDebt = Math.max(0, applyToDebt);
+      
+      // Recalculate recommended cash after adjustment
+      const finalCash = currentCash - applyToDebt;
+      const actualMonths = monthlyExpenses > 0 ? finalCash / monthlyExpenses : 0;
+
+      // Update primary result
+      document.getElementById('primaryResult').textContent = `Keep ${formatCurrency(finalCash)}`;
+      document.getElementById('resultSubtext').textContent = 
+        `That's ${actualMonths.toFixed(1)} months of expenses • Apply ${formatCurrency(applyToDebt)} to debt`;
+
+      // Update allocation visual
+      const cashPercent = currentCash > 0 ? (finalCash / currentCash * 100) : 100;
+      const debtPercent = 100 - cashPercent;
+      
+      const cashSegment = document.getElementById('cashSegment');
+      const debtSegment = document.getElementById('debtSegment');
+      
+      cashSegment.style.width = Math.max(cashPercent, 10) + '%';
+      debtSegment.style.width = Math.max(debtPercent, 10) + '%';
+      
+      cashSegment.querySelector('.segment-amount').textContent = formatCurrency(finalCash);
+      debtSegment.querySelector('.segment-amount').textContent = formatCurrency(applyToDebt);
+      
+      document.getElementById('cashPercent').textContent = cashPercent.toFixed(1);
+      document.getElementById('debtPercent').textContent = debtPercent.toFixed(1);
+
+      // Update result grid
+      document.getElementById('recommendedCash').textContent = formatCurrency(finalCash);
+      document.getElementById('monthsCovered').textContent = actualMonths.toFixed(1);
+      document.getElementById('applyToDebt').textContent = formatCurrency(applyToDebt);
+
+      // Update risk meter (position based on how aggressive the recommendation is)
+      // Low stability = low position (more cash), high stability = high position (more to debt)
+      const riskPosition = ((jobStability - 1) / 4) * 100;
+      document.getElementById('riskMarker').style.left = riskPosition + '%';
+
+      // Update risk explanation
+      const riskExplanation = document.getElementById('riskExplanation');
+      let riskTitle, riskText;
+      
+      if (jobStability <= 2) {
+        riskTitle = '🛡️ Conservative Profile';
+        riskText = `With a job stability rating of ${jobStability}/5, we recommend maintaining <strong>${recommendedMonths} months</strong> of expenses in cash. Job uncertainty means you need a larger safety net, even if it means slower debt payoff.`;
+      } else if (jobStability <= 3) {
+        riskTitle = '📋 Moderate Risk Profile';
+        riskText = `With a job stability rating of ${jobStability}/5, we recommend maintaining <strong>${recommendedMonths} months</strong> of expenses in cash. This provides a reasonable safety net while still allowing meaningful debt reduction.`;
+      } else {
+        riskTitle = '⚡ Aggressive Profile';
+        riskText = `With a job stability rating of ${jobStability}/5, you can be more aggressive with debt payoff. Keep <strong>${recommendedMonths} months</strong> of expenses in cash and put the rest toward eliminating that ${debtAPR}% debt.`;
+      }
+      
+      riskExplanation.innerHTML = `<div class="risk-title">${riskTitle}</div><p>${riskText}</p>`;
+
+      // Calculate scenarios
+      const newDebtBalance = debtBalance - applyToDebt;
+      const monthlySurplus = Math.max(0, monthlyIncome - monthlyExpenses);
+      const extraMonthlyPayment = Math.max(0, monthlySurplus - minPayment);
+      
+      const payoffResult = calculatePayoffTime(newDebtBalance, debtAPR, minPayment, extraMonthlyPayment * 0.5);
+      
+      document.getElementById('payoffGood').textContent = 
+        payoffResult.months === Infinity ? '10+ years' : `${payoffResult.months} months`;
+      document.getElementById('interestSavedGood').textContent = formatCurrency(applyToDebt * debtAPR / 100);
+      document.getElementById('emergencyCoverage').textContent = `${actualMonths.toFixed(1)} months`;
+
+      // Calculate opportunity cost
+      const annualDebtInterest = newDebtBalance * (debtAPR / 100);
+      const annualSavingsInterest = finalCash * (savingsAPY / 100);
+      const netAnnualCost = annualDebtInterest - annualSavingsInterest;
+      const monthlyCost = netAnnualCost / 12;
+
+      document.getElementById('debtInterestCost').textContent = `-${formatCurrency(annualDebtInterest)}`;
+      document.getElementById('cashInterestEarned').textContent = `+${formatCurrency(annualSavingsInterest)}`;
+      document.getElementById('netAnnualCost').textContent = formatCurrency(netAnnualCost);
+      document.getElementById('monthlyCost').textContent = formatCurrency(Math.abs(monthlyCost));
+
+      // Update opportunity insight
+      const opportunityInsight = document.getElementById('opportunityInsight');
+      if (netAnnualCost > 0) {
+        opportunityInsight.innerHTML = `<strong>💡 What This Means:</strong> Keeping ${formatCurrency(finalCash)} in cash costs you approximately <strong>${formatCurrency(Math.abs(monthlyCost))}</strong>/month in opportunity cost (debt interest minus savings interest). However, this "insurance" protects you from needing to take on more high-interest debt during emergencies.`;
+      } else {
+        opportunityInsight.innerHTML = `<strong>💡 What This Means:</strong> Your savings rate (${savingsAPY}%) is higher than your effective debt cost after the lump payment. You're earning more than you're paying — a great position!`;
+      }
+
+      // Update action steps
+      document.getElementById('step1Amount').textContent = formatCurrency(finalCash);
+      document.getElementById('step1APY').textContent = savingsAPY;
+      document.getElementById('step2Amount').textContent = formatCurrency(applyToDebt);
+      document.getElementById('step3Surplus').textContent = formatCurrency(monthlySurplus);
+      document.getElementById('step3Min').textContent = formatCurrency(minPayment);
+
+      // Update decision summary
+      const summaryText = document.getElementById('summaryText');
+      let summary;
+      
+      if (applyToDebt === 0) {
+        summary = `Keep all ${formatCurrency(finalCash)} as your cash cushion (${actualMonths.toFixed(1)} months expenses). Given your situation, building/maintaining emergency funds should be your priority before attacking debt.`;
+      } else if (applyToDebt === currentCash) {
+        summary = `Apply your entire ${formatCurrency(applyToDebt)} to debt immediately. Your high job stability and high debt APR make aggressive payoff the smart choice. Rebuild your emergency fund from your ${formatCurrency(monthlySurplus)}/month surplus.`;
+      } else {
+        summary = `Keep ${formatCurrency(finalCash)} (${actualMonths.toFixed(1)} months expenses) as your cash cushion. Apply ${formatCurrency(applyToDebt)} to debt now. Your ${getStabilityLabel(jobStability).toLowerCase()} job stability justifies this balanced approach — you're protected from emergencies while still making progress on debt.`;
+      }
+      
+      summaryText.textContent = summary;
+    }
+
+    // FAQ toggle
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      const wasOpen = item.classList.contains('open');
+      
+      // Close all
+      document.querySelectorAll('.lw-faq-item').forEach(i => i.classList.remove('open'));
+      
+      // Open clicked if it was closed
+      if (!wasOpen) {
+        item.classList.add('open');
+      }
+    }
+
+    // Mobile menu toggle
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    // Add event listeners
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('input', calculate);
+      input.addEventListener('change', calculate);
+    });
+
+    // Initial calculation
+    calculate();
+  </script>
+</body>
+</html>

@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Extra Mortgage Payment Calculator — Pay Off Your Mortgage Early | PocketWise</title>
+  <meta name="description" content="Calculate how much you can save by making extra mortgage payments. See interest saved, time shaved off your loan, and new payoff date with our free calculator.">
+  <meta name="keywords" content="extra mortgage payment calculator, pay extra on mortgage or invest, lump sum vs monthly mortgage payment, mortgage prepayment calculator, pay off mortgage early">
+  <link rel="canonical" href="https://pocketwise.io/extra-mortgage-payment/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .lw-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    
+    /* Timeline visualization */
+    .lw-timeline-wrap { margin: 24px 0; }
+    .lw-timeline-labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--lw-text-muted); margin-bottom: 8px; }
+    .lw-timeline { position: relative; height: 48px; background: var(--lw-slate-100); border-radius: var(--lw-radius); overflow: hidden; }
+    .lw-timeline-bar { position: absolute; left: 0; height: 24px; border-radius: var(--lw-radius-sm); transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; }
+    .lw-timeline-bar.original { top: 0; background: linear-gradient(90deg, var(--lw-slate-400), var(--lw-slate-500)); }
+    .lw-timeline-bar.accelerated { top: 24px; background: linear-gradient(90deg, var(--lw-emerald), var(--lw-teal)); }
+    .lw-timeline-bar-label { font-size: 11px; font-weight: 600; color: white; white-space: nowrap; }
+    .lw-timeline-legend { display: flex; gap: 24px; justify-content: center; margin-top: 12px; font-size: 13px; color: var(--lw-text-secondary); }
+    .lw-timeline-legend-item { display: flex; align-items: center; gap: 6px; }
+    .lw-timeline-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .lw-timeline-legend-dot.original { background: var(--lw-slate-500); }
+    .lw-timeline-legend-dot.accelerated { background: var(--lw-emerald); }
+    
+    /* Comparison bars */
+    .lw-compare-section { margin: 24px 0; }
+    .lw-compare-row { display: grid; grid-template-columns: 120px 1fr 100px; gap: 12px; align-items: center; margin-bottom: 16px; }
+    .lw-compare-label { font-size: 13px; font-weight: 500; color: var(--lw-text-secondary); text-align: right; }
+    .lw-compare-track { height: 24px; background: var(--lw-slate-100); border-radius: var(--lw-radius-full); overflow: hidden; position: relative; }
+    .lw-compare-fill { height: 100%; border-radius: var(--lw-radius-full); transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+    .lw-compare-fill.original { background: linear-gradient(90deg, var(--lw-slate-400), var(--lw-slate-500)); }
+    .lw-compare-fill.new { background: linear-gradient(90deg, var(--lw-emerald), var(--lw-teal)); }
+    .lw-compare-value { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600; color: var(--lw-navy); }
+    
+    /* Decision card */
+    .lw-decision { background: linear-gradient(135deg, var(--lw-emerald-50) 0%, rgba(16,185,129,0.05) 100%); border: 1px solid rgba(16,185,129,0.2); border-radius: var(--lw-radius-lg); padding: 24px; margin: 24px 0; }
+    .lw-decision-icon { font-size: 28px; margin-bottom: 12px; }
+    .lw-decision-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 700; color: var(--lw-emerald-dark); margin-bottom: 8px; }
+    .lw-decision-text { font-size: 15px; color: var(--lw-text-secondary); line-height: 1.6; }
+    .lw-decision-highlight { font-weight: 600; color: var(--lw-emerald-dark); }
+    
+    /* What this means section */
+    .lw-meaning { background: var(--lw-sky-50); border: 1px solid rgba(14,165,233,0.15); border-radius: var(--lw-radius); padding: 20px; margin: 20px 0; }
+    .lw-meaning-title { font-size: 14px; font-weight: 600; color: var(--lw-sky-dark); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .lw-meaning-text { font-size: 14px; color: var(--lw-text-secondary); line-height: 1.65; }
+    
+    /* Amortization impact */
+    .lw-amort-impact { margin: 20px 0; }
+    .lw-amort-impact-header { display: grid; grid-template-columns: 60px 1fr 100px 100px 110px; gap: 8px; font-size: 11px; font-weight: 600; color: var(--lw-slate-600); text-transform: uppercase; letter-spacing: 0.5px; padding: 0 0 12px; border-bottom: 2px solid var(--lw-border); }
+    .lw-amort-impact-row { display: grid; grid-template-columns: 60px 1fr 100px 100px 110px; gap: 8px; padding: 10px 0; border-bottom: 1px solid var(--lw-border-light); align-items: center; font-size: 13px; }
+    .lw-amort-num { font-family: 'JetBrains Mono', monospace; font-weight: 500; color: var(--lw-navy); font-size: 13px; }
+    .lw-amort-bar { height: 6px; border-radius: 3px; background: var(--lw-slate-100); overflow: hidden; }
+    .lw-amort-bar-inner { display: flex; height: 100%; }
+    .lw-amort-bar-p { background: var(--lw-emerald); transition: width 0.6s ease; }
+    .lw-amort-bar-i { background: var(--lw-rose-light); transition: width 0.6s ease; }
+    .lw-amort-saved { color: var(--lw-emerald); font-size: 12px; font-weight: 600; }
+    
+    @media (max-width: 768px) {
+      .lw-form-row { grid-template-columns: 1fr; }
+      .lw-compare-row { grid-template-columns: 80px 1fr 80px; }
+      .lw-amort-impact-header, .lw-amort-impact-row { grid-template-columns: 50px 1fr 80px 80px; font-size: 12px; }
+      .lw-amort-impact-header .saved-col, .lw-amort-impact-row .saved-col { display: none; }
+    }
+    @media (max-width: 480px) {
+      .lw-timeline-legend { flex-direction: column; gap: 8px; align-items: flex-start; padding-left: 16px; }
+      .lw-compare-row { grid-template-columns: 1fr; gap: 6px; }
+      .lw-compare-label { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">L</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/mortgage-calculator/">Mortgage</a></li>
+        <li><a href="/auto-loan-calculator/">Auto</a></li>
+        <li><a href="/compound-interest-calculator/">Investing</a></li>
+        <li><a href="/debt-payoff-calculator/">Debt</a></li>
+        <li><a href="/">All Tools</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu">
+      <a href="/">All Tools</a>
+      <a href="/mortgage-calculator/">Mortgage Calculator</a>
+      <a href="/auto-loan-calculator/">Auto Loan Calculator</a>
+      <a href="/personal-loan-calculator/">Personal Loan Calculator</a>
+      <a href="/compound-interest-calculator/">Compound Interest Calculator</a>
+      <a href="/debt-payoff-calculator/">Debt Payoff Calculator</a>
+      <a href="/credit-card-payoff-calculator/">Credit Card Payoff</a>
+      <a href="/home-affordability-calculator/">Home Affordability</a>
+      <a href="/refinance-calculator/">Refinance Calculator</a>
+      <a href="/extra-mortgage-payment/">Extra Mortgage Payment</a>
+      <a href="/loan-comparison-tool/">Loan Comparison</a>
+      <a href="/amortization-schedule/">Amortization Schedule</a>
+      <a href="/debt-to-income-calculator/">Debt-to-Income</a>
+      <a href="/apr-calculator/">APR Calculator</a>
+      <a href="/savings-goal-calculator/">Savings Goal Calculator</a>
+      <a href="/investment-return-calculator/">Investment Returns</a>
+      <a href="/emergency-fund-calculator/">Emergency Fund</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- HERO -->
+    <div class="lw-hero">
+      <span class="lw-badge green">🏠 Mortgage Savings</span>
+      <h1>Extra Mortgage <span class="accent">Payment Planner</span></h1>
+      <p class="subtitle">See how extra payments can save you thousands in interest and help you pay off your mortgage years earlier.</p>
+    </div>
+
+    <!-- TOOL INTERFACE -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">📋</div>
+        <div>
+          <div class="lw-card-title">Current Mortgage Details</div>
+          <div class="lw-card-subtitle">Enter your existing mortgage information</div>
+        </div>
+      </div>
+
+      <div class="lw-range-group">
+        <div class="lw-range-header">
+          <label class="lw-label" for="loanBalance">Current Loan Balance</label>
+          <span class="lw-range-value lw-mono" id="loanBalanceVal">$250,000</span>
+        </div>
+        <input type="range" class="lw-range" id="loanBalance" min="10000" max="1500000" step="5000" value="250000">
+      </div>
+
+      <div class="lw-form-row">
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="interestRate">Interest Rate</label>
+            <span class="lw-range-value lw-mono" id="interestRateVal">6.50%</span>
+          </div>
+          <input type="range" class="lw-range" id="interestRate" min="1" max="12" step="0.125" value="6.5">
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label" for="remainingTerm">Remaining Term <span class="lw-label-hint">(years)</span></label>
+          <div class="lw-input-suffix">
+            <input type="number" class="lw-input lw-mono" id="remainingTerm" value="25" min="1" max="40" step="1">
+            <span class="suffix">yrs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXTRA PAYMENT SECTION -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">💰</div>
+        <div>
+          <div class="lw-card-title">Extra Payment Strategy</div>
+          <div class="lw-card-subtitle">Choose how you want to pay extra</div>
+        </div>
+      </div>
+
+      <div class="lw-toggle-group" id="paymentModeToggle">
+        <button class="lw-toggle-btn active" data-mode="monthly">Monthly Extra</button>
+        <button class="lw-toggle-btn" data-mode="lumpsum">One-Time Lump Sum</button>
+      </div>
+
+      <!-- Monthly Extra Payment -->
+      <div id="monthlySection">
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="extraMonthly">Extra Monthly Payment</label>
+            <span class="lw-range-value lw-mono" id="extraMonthlyVal">$200</span>
+          </div>
+          <input type="range" class="lw-range" id="extraMonthly" min="0" max="2000" step="25" value="200">
+        </div>
+      </div>
+
+      <!-- Lump Sum Payment -->
+      <div id="lumpSumSection" class="lw-hidden">
+        <div class="lw-form-group">
+          <label class="lw-label" for="lumpSumAmount">Lump Sum Amount</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" class="lw-input lw-mono" id="lumpSumAmount" value="10000" min="0" step="1000">
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label" for="lumpSumTiming">When will you make this payment?</label>
+          <select class="lw-select" id="lumpSumTiming">
+            <option value="0">Immediately (this month)</option>
+            <option value="6">In 6 months</option>
+            <option value="12">In 1 year</option>
+            <option value="24">In 2 years</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRIMARY RESULTS -->
+    <div class="lw-result-hero" id="resultHero">
+      <div class="lw-result-label">Total Interest Savings</div>
+      <div class="lw-result-number lw-animate-number"><span class="currency">$</span><span id="interestSaved">47,231</span></div>
+      <div class="lw-result-sub" id="resultSub">Payoff accelerated by 4 years, 7 months</div>
+    </div>
+
+    <div class="lw-result-grid" id="resultGrid">
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Time Saved</div>
+        <div class="lw-result-item-value green" id="timeSaved">4y 7m</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">New Payoff Date</div>
+        <div class="lw-result-item-value sky" id="newPayoffDate">Mar 2046</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">New Monthly Payment</div>
+        <div class="lw-result-item-value" id="newMonthlyPayment">$1,817</div>
+      </div>
+    </div>
+
+    <!-- WHAT THIS MEANS -->
+    <div class="lw-meaning">
+      <div class="lw-meaning-title">💡 What This Means</div>
+      <div class="lw-meaning-text" id="meaningText">
+        By adding $200 to your monthly payment, you'll pay off your mortgage 4 years and 7 months early. That's $47,231 you won't pay in interest — money that stays in your pocket instead of going to the bank.
+      </div>
+    </div>
+
+    <!-- DECISION GUIDANCE -->
+    <div class="lw-decision" id="decisionCard">
+      <div class="lw-decision-icon">✅</div>
+      <div class="lw-decision-title">The Bottom Line</div>
+      <div class="lw-decision-text" id="decisionText">
+        Extra payments save <span class="lw-decision-highlight" id="decisionSavings">$47,231</span> in interest and shorten your loan by <span class="lw-decision-highlight" id="decisionTime">4 years, 7 months</span>. You'll own your home free and clear by <span class="lw-decision-highlight" id="decisionDate">March 2046</span>.
+      </div>
+    </div>
+
+    <!-- VISUAL TIMELINE -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon violet">📅</div>
+        <div>
+          <div class="lw-card-title">Payoff Timeline</div>
+          <div class="lw-card-subtitle">Compare original vs accelerated payoff</div>
+        </div>
+      </div>
+      
+      <div class="lw-timeline-wrap">
+        <div class="lw-timeline-labels">
+          <span>Today</span>
+          <span id="originalPayoffLabel">Feb 2051</span>
+        </div>
+        <div class="lw-timeline">
+          <div class="lw-timeline-bar original" id="originalBar" style="width:100%">
+            <span class="lw-timeline-bar-label" id="originalBarLabel">25 years</span>
+          </div>
+          <div class="lw-timeline-bar accelerated" id="acceleratedBar" style="width:82%">
+            <span class="lw-timeline-bar-label" id="acceleratedBarLabel">20y 5m</span>
+          </div>
+        </div>
+        <div class="lw-timeline-legend">
+          <div class="lw-timeline-legend-item">
+            <span class="lw-timeline-legend-dot original"></span>
+            <span>Original Schedule (<span id="legendOriginalYears">25 years</span>)</span>
+          </div>
+          <div class="lw-timeline-legend-item">
+            <span class="lw-timeline-legend-dot accelerated"></span>
+            <span>With Extra Payments (<span id="legendNewYears">20y 5m</span>)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTEREST COMPARISON -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon rose">📊</div>
+        <div>
+          <div class="lw-card-title">Total Cost Comparison</div>
+          <div class="lw-card-subtitle">See how much less you'll pay overall</div>
+        </div>
+      </div>
+      
+      <div class="lw-compare-section">
+        <div class="lw-compare-row">
+          <div class="lw-compare-label">Original Interest</div>
+          <div class="lw-compare-track">
+            <div class="lw-compare-fill original" id="originalInterestBar" style="width:100%"></div>
+          </div>
+          <div class="lw-compare-value" id="originalInterestVal">$256,418</div>
+        </div>
+        <div class="lw-compare-row">
+          <div class="lw-compare-label">New Interest</div>
+          <div class="lw-compare-track">
+            <div class="lw-compare-fill new" id="newInterestBar" style="width:82%"></div>
+          </div>
+          <div class="lw-compare-value" id="newInterestVal">$209,187</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AMORTIZATION IMPACT -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">📈</div>
+        <div>
+          <div class="lw-card-title">Amortization Impact</div>
+          <div class="lw-card-subtitle">Year-by-year breakdown with extra payments</div>
+        </div>
+      </div>
+      
+      <div class="lw-amort-impact">
+        <div class="lw-amort-impact-header">
+          <span>Year</span>
+          <span>Principal vs Interest</span>
+          <span>Balance</span>
+          <span>Paid Off</span>
+          <span class="saved-col">vs Original</span>
+        </div>
+        <div id="amortImpact"></div>
+      </div>
+      <div class="lw-mt-16 lw-text-center">
+        <a href="/amortization-schedule/" class="lw-btn lw-btn-ghost">View Full Amortization Schedule →</a>
+      </div>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <div class="lw-content">
+      <h2>How Extra Mortgage Payments Save You Money</h2>
+      <p>Making extra payments on your mortgage is one of the most powerful ways to build wealth and achieve financial freedom faster. Every extra dollar you pay goes directly toward reducing your principal balance, which means less interest accrues over the life of your loan. The earlier you start making extra payments, the more you'll save.</p>
+      <p>Our extra mortgage payment calculator shows you exactly how much you can save with either regular monthly additions or one-time lump sum payments. The results might surprise you — even an extra $100 per month can shave years off your mortgage and save tens of thousands in interest.</p>
+
+      <h2>Monthly Extra Payments vs. Lump Sum: Which Is Better?</h2>
+      <p>Both strategies can significantly reduce your mortgage costs, but they work differently:</p>
+      <ul>
+        <li><strong>Extra Monthly Payments</strong> — Consistent, budget-friendly approach that builds momentum over time. Ideal if you have steady extra income each month. The compounding effect is powerful because you're continuously reducing your principal.</li>
+        <li><strong>Lump Sum Payments</strong> — Great for windfalls like tax refunds, bonuses, or inheritances. A single large payment immediately drops your principal, reducing all future interest calculations. Especially effective early in your mortgage when interest charges are highest.</li>
+        <li><strong>Combination Strategy</strong> — Many homeowners use both: consistent extra monthly payments plus occasional lump sums when extra cash is available. This maximizes flexibility and savings.</li>
+      </ul>
+
+      <h3>When to Pay Extra vs. Invest Instead</h3>
+      <p>The "pay extra on mortgage or invest" debate depends on your specific situation. Consider paying extra on your mortgage if:</p>
+      <ul>
+        <li>Your mortgage interest rate is relatively high (above 5-6%)</li>
+        <li>You value the guaranteed "return" of eliminating debt</li>
+        <li>You want the security of owning your home outright</li>
+        <li>You're risk-averse and prefer certainty</li>
+      </ul>
+      <p>Consider investing instead if:</p>
+      <ul>
+        <li>Your mortgage rate is very low (below 4%)</li>
+        <li>You haven't maximized tax-advantaged accounts (401k, IRA)</li>
+        <li>You have a long time horizon and can tolerate market volatility</li>
+        <li>You need liquidity (extra mortgage payments are less accessible)</li>
+      </ul>
+
+      <h2>How to Make Extra Mortgage Payments</h2>
+      <p>Most lenders make it easy to pay extra, but it's important to specify that additional funds should go toward principal, not toward future payments. Here's how:</p>
+      <ul>
+        <li><strong>Online Portal</strong> — Most lenders have an option to make additional principal payments online. Look for "additional principal" or "extra payment" options.</li>
+        <li><strong>Written Instructions</strong> — Include a note with your payment specifying "Apply to principal only."</li>
+        <li><strong>Bi-weekly Payments</strong> — Some lenders offer bi-weekly payment programs that result in one extra monthly payment per year.</li>
+        <li><strong>Check Your Statement</strong> — After making extra payments, verify your statement shows the principal balance decreased by the full extra amount.</li>
+      </ul>
+
+      <h3>Prepayment Penalty Warning</h3>
+      <p>Before making extra payments, check if your mortgage has a prepayment penalty. Most conventional mortgages don't, but some loans — especially certain FHA loans or mortgages from smaller lenders — may charge a fee for paying off early. Read your loan documents or call your lender to confirm.</p>
+
+      <!-- FAQ -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">How much can I save with extra mortgage payments?</button>
+          <div class="lw-faq-a"><p>The savings depend on your loan balance, interest rate, remaining term, and extra payment amount. On a $250,000 mortgage at 6.5%, adding just $200/month can save over $45,000 in interest and cut nearly 5 years off your loan. Use our calculator to see your specific savings.</p></div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Is it better to pay extra monthly or make a lump sum payment?</button>
+          <div class="lw-faq-a"><p>Both strategies save money. Lump sum payments are more effective early in your mortgage when interest is highest. Monthly extra payments build consistent savings over time. Mathematically, the sooner you pay extra — in any form — the more you save.</p></div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Should I pay extra on my mortgage or invest the money?</button>
+          <div class="lw-faq-a"><p>It depends on your mortgage rate, investment options, and risk tolerance. If your mortgage rate is above 5-6% and you value guaranteed returns, extra payments make sense. If your rate is very low and you have tax-advantaged investment accounts available, investing may yield higher long-term returns. Many financial advisors suggest a balanced approach.</p></div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Do extra payments go toward principal or interest?</button>
+          <div class="lw-faq-a"><p>Extra payments should go entirely toward principal, not interest. Always specify "apply to principal" when making extra payments. This directly reduces your balance, which reduces all future interest charges. Check your statement to confirm proper application.</p></div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Is there a penalty for paying off my mortgage early?</button>
+          <div class="lw-faq-a"><p>Most conventional mortgages don't have prepayment penalties, but some do — especially certain FHA loans or mortgages from smaller lenders. Check your loan documents or contact your lender before making large extra payments to confirm no penalties apply.</p></div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">When is the best time to make extra payments?</button>
+          <div class="lw-faq-a"><p>The earlier, the better. In the first years of a mortgage, most of your payment goes to interest. Extra principal payments early on have the biggest impact because they reduce the balance that interest is calculated on for all remaining years.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED TOOLS -->
+    <div class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/mortgage-calculator/" class="lw-related-link"><span class="dot"></span> Mortgage Calculator</a>
+        <a href="/refinance-calculator/" class="lw-related-link"><span class="dot"></span> Refinance Calculator</a>
+        <a href="/amortization-schedule/" class="lw-related-link"><span class="dot"></span> Amortization Schedule</a>
+        <a href="/home-affordability-calculator/" class="lw-related-link"><span class="dot"></span> Home Affordability Calculator</a>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <p class="lw-disclaimer">
+      <em>This calculator is for educational purposes only. Results are estimates based on the information provided and should not be considered financial advice. Actual savings may vary based on lender terms, payment timing, and other factors. Consult a qualified financial advisor for personalized guidance.</em>
+    </p>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="lw-footer">
+    <p>© 2026 PocketWise. Free financial calculators for everyone.</p>
+  </footer>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // === Utility Functions ===
+    function fmt(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:0, maximumFractionDigits:0}).format(n); }
+    function fmtPct(n) { return n.toFixed(2) + '%'; }
+    function pmtCalc(rate, nper, pv) {
+      if (rate === 0) return pv / nper;
+      return pv * (rate * Math.pow(1 + rate, nper)) / (Math.pow(1 + rate, nper) - 1);
+    }
+    function formatMonths(totalMonths) {
+      var years = Math.floor(totalMonths / 12);
+      var months = Math.round(totalMonths % 12);
+      if (months === 12) { years++; months = 0; }
+      if (years === 0) return months + 'm';
+      if (months === 0) return years + 'y';
+      return years + 'y ' + months + 'm';
+    }
+    function formatMonthsLong(totalMonths) {
+      var years = Math.floor(totalMonths / 12);
+      var months = Math.round(totalMonths % 12);
+      if (months === 12) { years++; months = 0; }
+      var parts = [];
+      if (years > 0) parts.push(years + ' year' + (years !== 1 ? 's' : ''));
+      if (months > 0) parts.push(months + ' month' + (months !== 1 ? 's' : ''));
+      return parts.join(', ') || '0 months';
+    }
+    function addMonthsToDate(months) {
+      var d = new Date();
+      d.setMonth(d.getMonth() + months);
+      return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    }
+
+    // === DOM References ===
+    var loanBalance = document.getElementById('loanBalance');
+    var loanBalanceVal = document.getElementById('loanBalanceVal');
+    var interestRate = document.getElementById('interestRate');
+    var interestRateVal = document.getElementById('interestRateVal');
+    var remainingTerm = document.getElementById('remainingTerm');
+    var extraMonthly = document.getElementById('extraMonthly');
+    var extraMonthlyVal = document.getElementById('extraMonthlyVal');
+    var lumpSumAmount = document.getElementById('lumpSumAmount');
+    var lumpSumTiming = document.getElementById('lumpSumTiming');
+
+    var paymentModeToggle = document.getElementById('paymentModeToggle');
+    var monthlySection = document.getElementById('monthlySection');
+    var lumpSumSection = document.getElementById('lumpSumSection');
+
+    var paymentMode = 'monthly';
+
+    // === Event Listeners ===
+    paymentModeToggle.addEventListener('click', function(e) {
+      var btn = e.target.closest('.lw-toggle-btn');
+      if (!btn) return;
+      paymentModeToggle.querySelectorAll('.lw-toggle-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      paymentMode = btn.dataset.mode;
+      
+      if (paymentMode === 'monthly') {
+        monthlySection.classList.remove('lw-hidden');
+        lumpSumSection.classList.add('lw-hidden');
+      } else {
+        monthlySection.classList.add('lw-hidden');
+        lumpSumSection.classList.remove('lw-hidden');
+      }
+      calculate();
+    });
+
+    loanBalance.addEventListener('input', function() {
+      loanBalanceVal.textContent = fmt(parseFloat(loanBalance.value));
+      calculate();
+    });
+    interestRate.addEventListener('input', function() {
+      interestRateVal.textContent = fmtPct(parseFloat(interestRate.value));
+      calculate();
+    });
+    remainingTerm.addEventListener('input', calculate);
+    extraMonthly.addEventListener('input', function() {
+      extraMonthlyVal.textContent = fmt(parseFloat(extraMonthly.value));
+      calculate();
+    });
+    lumpSumAmount.addEventListener('input', calculate);
+    lumpSumTiming.addEventListener('change', calculate);
+
+    // === Calculation Engine ===
+    function calculate() {
+      var balance = parseFloat(loanBalance.value) || 0;
+      var rate = (parseFloat(interestRate.value) || 0) / 100;
+      var monthlyRate = rate / 12;
+      var termYears = parseInt(remainingTerm.value) || 25;
+      var termMonths = termYears * 12;
+      
+      // Calculate base monthly payment
+      var basePayment = pmtCalc(monthlyRate, termMonths, balance);
+      
+      // Calculate original scenario (no extra payments)
+      var originalResult = calculateScenario(balance, monthlyRate, basePayment, termMonths, 0, 0, 0);
+      
+      // Calculate accelerated scenario
+      var extra = 0;
+      var lumpSum = 0;
+      var lumpSumMonth = 0;
+      
+      if (paymentMode === 'monthly') {
+        extra = parseFloat(extraMonthly.value) || 0;
+      } else {
+        lumpSum = parseFloat(lumpSumAmount.value) || 0;
+        lumpSumMonth = parseInt(lumpSumTiming.value) || 0;
+      }
+      
+      var acceleratedResult = calculateScenario(balance, monthlyRate, basePayment, termMonths, extra, lumpSum, lumpSumMonth);
+      
+      // Calculate savings
+      var interestSaved = originalResult.totalInterest - acceleratedResult.totalInterest;
+      var monthsSaved = originalResult.months - acceleratedResult.months;
+      
+      if (interestSaved < 0) interestSaved = 0;
+      if (monthsSaved < 0) monthsSaved = 0;
+      
+      // Update primary results
+      document.getElementById('interestSaved').textContent = new Intl.NumberFormat('en-US').format(Math.round(interestSaved));
+      document.getElementById('resultSub').textContent = 'Payoff accelerated by ' + formatMonthsLong(monthsSaved);
+      document.getElementById('timeSaved').textContent = formatMonths(monthsSaved);
+      document.getElementById('newPayoffDate').textContent = addMonthsToDate(acceleratedResult.months);
+      document.getElementById('newMonthlyPayment').textContent = fmt(basePayment + extra);
+      
+      // Update meaning text
+      var meaningText;
+      if (paymentMode === 'monthly' && extra > 0) {
+        meaningText = 'By adding ' + fmt(extra) + ' to your monthly payment, you\'ll pay off your mortgage ' + 
+          formatMonthsLong(monthsSaved) + ' early. That\'s ' + fmt(interestSaved) + 
+          ' you won\'t pay in interest — money that stays in your pocket instead of going to the bank.';
+      } else if (paymentMode === 'lumpsum' && lumpSum > 0) {
+        var timingText = lumpSumMonth === 0 ? 'now' : 'in ' + (lumpSumMonth >= 12 ? (lumpSumMonth / 12) + ' year' + (lumpSumMonth > 12 ? 's' : '') : lumpSumMonth + ' months');
+        meaningText = 'A ' + fmt(lumpSum) + ' lump sum payment ' + timingText + ' will save you ' + 
+          fmt(interestSaved) + ' in interest and pay off your mortgage ' + formatMonthsLong(monthsSaved) + 
+          ' early. Large one-time payments are especially powerful because they reduce your principal immediately.';
+      } else {
+        meaningText = 'Add extra payments above to see how much you could save on your mortgage. Even small amounts can add up to significant savings over time.';
+      }
+      document.getElementById('meaningText').textContent = meaningText;
+      
+      // Update decision card
+      document.getElementById('decisionSavings').textContent = fmt(interestSaved);
+      document.getElementById('decisionTime').textContent = formatMonthsLong(monthsSaved);
+      document.getElementById('decisionDate').textContent = addMonthsToDate(acceleratedResult.months);
+      
+      // Update timeline
+      var originalPayoffDate = addMonthsToDate(originalResult.months);
+      document.getElementById('originalPayoffLabel').textContent = originalPayoffDate;
+      document.getElementById('originalBarLabel').textContent = formatMonths(originalResult.months);
+      document.getElementById('acceleratedBarLabel').textContent = formatMonths(acceleratedResult.months);
+      document.getElementById('legendOriginalYears').textContent = formatMonths(originalResult.months);
+      document.getElementById('legendNewYears').textContent = formatMonths(acceleratedResult.months);
+      
+      var timelineRatio = originalResult.months > 0 ? (acceleratedResult.months / originalResult.months * 100) : 100;
+      document.getElementById('acceleratedBar').style.width = timelineRatio + '%';
+      
+      // Update interest comparison bars
+      document.getElementById('originalInterestVal').textContent = fmt(originalResult.totalInterest);
+      document.getElementById('newInterestVal').textContent = fmt(acceleratedResult.totalInterest);
+      var interestRatio = originalResult.totalInterest > 0 ? (acceleratedResult.totalInterest / originalResult.totalInterest * 100) : 100;
+      document.getElementById('newInterestBar').style.width = interestRatio + '%';
+      
+      // Build amortization impact preview
+      buildAmortImpact(balance, monthlyRate, basePayment, extra, lumpSum, lumpSumMonth, originalResult);
+    }
+
+    function calculateScenario(balance, monthlyRate, basePayment, maxMonths, extraMonthly, lumpSum, lumpSumMonth) {
+      var currentBalance = balance;
+      var totalInterest = 0;
+      var months = 0;
+      var lumpSumApplied = false;
+      
+      while (currentBalance > 0.01 && months < maxMonths * 2) {
+        months++;
+        
+        // Apply lump sum if timing matches
+        if (!lumpSumApplied && months > lumpSumMonth && lumpSum > 0) {
+          currentBalance -= lumpSum;
+          if (currentBalance < 0) currentBalance = 0;
+          lumpSumApplied = true;
+        }
+        
+        if (currentBalance <= 0) break;
+        
+        var interestPayment = currentBalance * monthlyRate;
+        var totalPayment = basePayment + extraMonthly;
+        var principalPayment = totalPayment - interestPayment;
+        
+        if (principalPayment > currentBalance) {
+          principalPayment = currentBalance;
+          totalPayment = principalPayment + interestPayment;
+        }
+        
+        totalInterest += interestPayment;
+        currentBalance -= principalPayment;
+        
+        if (currentBalance < 0.01) currentBalance = 0;
+      }
+      
+      return {
+        months: months,
+        totalInterest: totalInterest,
+        finalBalance: currentBalance
+      };
+    }
+
+    function buildAmortImpact(balance, monthlyRate, basePayment, extraMonthly, lumpSum, lumpSumMonth, originalResult) {
+      var container = document.getElementById('amortImpact');
+      var html = '';
+      
+      var currentBalance = balance;
+      var originalBalance = balance;
+      var lumpSumApplied = false;
+      var maxYears = 7; // Show first 7 years
+      var month = 0;
+      
+      for (var year = 1; year <= maxYears && currentBalance > 0.01; year++) {
+        var yearPrincipal = 0;
+        var yearInterest = 0;
+        var yearOriginalBalance = originalBalance;
+        
+        for (var m = 0; m < 12 && currentBalance > 0.01; m++) {
+          month++;
+          
+          // Apply lump sum
+          if (!lumpSumApplied && month > lumpSumMonth && lumpSum > 0) {
+            currentBalance -= lumpSum;
+            if (currentBalance < 0) currentBalance = 0;
+            lumpSumApplied = true;
+          }
+          
+          if (currentBalance <= 0.01) break;
+          
+          // Accelerated payment
+          var interest = currentBalance * monthlyRate;
+          var principal = (basePayment + extraMonthly) - interest;
+          if (principal > currentBalance) principal = currentBalance;
+          
+          yearPrincipal += principal;
+          yearInterest += interest;
+          currentBalance -= principal;
+          
+          // Original schedule (for comparison)
+          var origInterest = originalBalance * monthlyRate;
+          var origPrincipal = basePayment - origInterest;
+          if (origPrincipal > originalBalance) origPrincipal = originalBalance;
+          originalBalance -= origPrincipal;
+        }
+        
+        // Calculate percentages for bar
+        var total = yearPrincipal + yearInterest;
+        var pPct = total > 0 ? (yearPrincipal / total * 100) : 50;
+        var iPct = 100 - pPct;
+        
+        // Calculate savings vs original at this point
+        var savings = originalBalance - currentBalance;
+        var paidOffPct = balance > 0 ? ((balance - currentBalance) / balance * 100) : 0;
+        
+        html += '<div class="lw-amort-impact-row">';
+        html += '<span class="lw-amort-num">' + year + '</span>';
+        html += '<div class="lw-amort-bar"><div class="lw-amort-bar-inner"><div class="lw-amort-bar-p" style="width:' + pPct.toFixed(1) + '%"></div><div class="lw-amort-bar-i" style="width:' + iPct.toFixed(1) + '%"></div></div></div>';
+        html += '<span class="lw-amort-num">' + fmt(currentBalance) + '</span>';
+        html += '<span class="lw-amort-num" style="color:var(--lw-emerald)">' + paidOffPct.toFixed(1) + '%</span>';
+        html += '<span class="lw-amort-saved saved-col">+' + fmt(savings) + '</span>';
+        html += '</div>';
+      }
+      
+      container.innerHTML = html;
+    }
+
+    // Initial calculation
+    calculate();
+  })();
+  </script>
+
+  <!-- FAQ Schema JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How much can I save with extra mortgage payments?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The savings depend on your loan balance, interest rate, remaining term, and extra payment amount. On a $250,000 mortgage at 6.5%, adding just $200/month can save over $45,000 in interest and cut nearly 5 years off your loan."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is it better to pay extra monthly or make a lump sum payment?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Both strategies save money. Lump sum payments are more effective early in your mortgage when interest is highest. Monthly extra payments build consistent savings over time. The sooner you pay extra — in any form — the more you save."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I pay extra on my mortgage or invest the money?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It depends on your mortgage rate, investment options, and risk tolerance. If your mortgage rate is above 5-6% and you value guaranteed returns, extra payments make sense. If your rate is very low and you have tax-advantaged investment accounts available, investing may yield higher long-term returns."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do extra payments go toward principal or interest?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Extra payments should go entirely toward principal, not interest. Always specify 'apply to principal' when making extra payments. This directly reduces your balance, which reduces all future interest charges."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is there a penalty for paying off my mortgage early?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most conventional mortgages don't have prepayment penalties, but some do — especially certain FHA loans or mortgages from smaller lenders. Check your loan documents or contact your lender before making large extra payments."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When is the best time to make extra payments?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The earlier, the better. In the first years of a mortgage, most of your payment goes to interest. Extra principal payments early on have the biggest impact because they reduce the balance that interest is calculated on for all remaining years."
+        }
+      }
+    ]
+  }
+  </script>
+</body>
+</html>

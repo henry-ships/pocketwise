@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inflation-Adjusted Future Value Calculator | Real Return Calculator</title>
+  <meta name="description" content="Calculate your investment's real purchasing power after inflation. See the difference between nominal and inflation-adjusted returns with our free future value calculator.">
+  <meta name="keywords" content="inflation adjusted calculator, real return calculator, future value with inflation, purchasing power over time, inflation calculator, real vs nominal return">
+  <link rel="canonical" href="https://pocketwise.app/inflation-adjusted-calculator/">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Inflation-Adjusted Future Value Calculator">
+  <meta property="og:description" content="See how inflation erodes your investment's purchasing power. Calculate real vs nominal returns.">
+  <meta property="og:type" content="website">
+  
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the difference between nominal and real returns?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Nominal returns are the raw percentage gains on your investment before accounting for inflation. Real returns subtract the inflation rate from nominal returns, showing your actual increase in purchasing power. For example, if you earn 7% nominal return with 3% inflation, your real return is approximately 4%."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is inflation-adjusted return important?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Inflation-adjusted returns reveal the true growth of your wealth. A $100,000 investment that grows to $200,000 over 20 years sounds impressive, but if inflation averaged 3%, that $200,000 only has the purchasing power of about $110,000 in today's dollars. Understanding real returns helps you set realistic financial goals."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a good inflation assumption for long-term planning?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Federal Reserve targets 2% annual inflation, but historical US inflation has averaged about 3% over the past century. For conservative long-term planning, many financial advisors recommend using 3% as your inflation assumption. During high-inflation periods, you may want to use 4-5%."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I calculate real return from nominal return?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The precise formula is: Real Return = ((1 + Nominal Return) / (1 + Inflation Rate)) - 1. A simpler approximation is: Real Return ≈ Nominal Return - Inflation Rate. For example, with 8% nominal return and 3% inflation, the approximate real return is 5%, while the precise calculation gives 4.85%."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What nominal return do I need to achieve 5% real return?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "With 3% inflation, you'd need approximately 8.15% nominal return to achieve a 5% real return. The formula is: Required Nominal Return = (1 + Desired Real Return) × (1 + Inflation Rate) - 1. This calculator shows you exactly what nominal return you need for your target real return."
+        }
+      }
+    ]
+  }
+  </script>
+  
+  <style>
+    /* Chart Canvas */
+    .lw-chart-container {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      margin: 20px 0;
+    }
+    .lw-chart-canvas {
+      width: 100%;
+      height: 100%;
+    }
+    .lw-chart-legend {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 12px;
+    }
+    .lw-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--lw-text-secondary);
+    }
+    .lw-legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .lw-legend-dot.nominal { background: var(--lw-sky); }
+    .lw-legend-dot.real { background: var(--lw-emerald); }
+    .lw-legend-dot.inflation { background: var(--lw-rose); }
+    
+    /* Inflation Impact Callout */
+    .lw-callout {
+      background: linear-gradient(135deg, var(--lw-rose-50) 0%, #FFF5F6 100%);
+      border: 1px solid rgba(244, 63, 94, 0.2);
+      border-radius: var(--lw-radius-lg);
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .lw-callout-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .lw-callout-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--lw-rose);
+      border-radius: var(--lw-radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .lw-callout-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--lw-rose-dark);
+    }
+    .lw-callout-body {
+      font-size: 15px;
+      color: var(--lw-text-secondary);
+      line-height: 1.7;
+    }
+    .lw-callout-stat {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: var(--lw-rose-dark);
+    }
+    
+    /* Dual Result Hero */
+    .lw-dual-result {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .lw-result-box {
+      padding: 28px 24px;
+      border-radius: var(--lw-radius-lg);
+      text-align: center;
+    }
+    .lw-result-box.nominal {
+      background: linear-gradient(135deg, var(--lw-sky) 0%, var(--lw-sky-dark) 100%);
+    }
+    .lw-result-box.real {
+      background: linear-gradient(135deg, var(--lw-emerald) 0%, var(--lw-emerald-dark) 100%);
+    }
+    .lw-result-box .label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .lw-result-box .value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -1px;
+    }
+    .lw-result-box .subtext {
+      font-size: 13px;
+      color: rgba(255,255,255,0.75);
+      margin-top: 6px;
+    }
+    
+    /* Erosion Visualization */
+    .lw-erosion-visual {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 24px;
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius-lg);
+      margin: 20px 0;
+    }
+    .lw-erosion-bar-container {
+      flex: 1;
+    }
+    .lw-erosion-bar-wrap {
+      position: relative;
+      height: 40px;
+      background: var(--lw-slate-200);
+      border-radius: var(--lw-radius-full);
+      overflow: hidden;
+    }
+    .lw-erosion-bar-nominal {
+      position: absolute;
+      height: 100%;
+      background: linear-gradient(90deg, var(--lw-sky), var(--lw-sky-light));
+      border-radius: var(--lw-radius-full);
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 12px;
+    }
+    .lw-erosion-bar-real {
+      position: absolute;
+      height: 100%;
+      background: linear-gradient(90deg, var(--lw-emerald), var(--lw-emerald-light));
+      border-radius: var(--lw-radius-full);
+      display: flex;
+      align-items: center;
+      padding-left: 12px;
+      transition: width 0.6s ease;
+    }
+    .lw-erosion-bar-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+    }
+    .lw-erosion-text {
+      text-align: right;
+      min-width: 120px;
+    }
+    .lw-erosion-percent {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--lw-rose);
+    }
+    .lw-erosion-label {
+      font-size: 12px;
+      color: var(--lw-text-muted);
+      font-weight: 500;
+    }
+    
+    /* Required Return Box */
+    .lw-target-box {
+      background: linear-gradient(135deg, var(--lw-violet) 0%, #7C3AED 100%);
+      border-radius: var(--lw-radius-lg);
+      padding: 24px;
+      margin: 20px 0;
+      color: white;
+    }
+    .lw-target-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .lw-target-icon {
+      font-size: 24px;
+    }
+    .lw-target-title {
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.9;
+    }
+    .lw-target-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .lw-target-item {
+      text-align: center;
+    }
+    .lw-target-item-label {
+      font-size: 11px;
+      opacity: 0.8;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .lw-target-item-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    
+    /* Explanation Box */
+    .lw-explain {
+      background: var(--lw-sky-50);
+      border-radius: var(--lw-radius);
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 4px solid var(--lw-sky);
+    }
+    .lw-explain-title {
+      font-weight: 700;
+      color: var(--lw-navy);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .lw-explain-text {
+      font-size: 15px;
+      color: var(--lw-text-secondary);
+      line-height: 1.7;
+    }
+    
+    /* Decision Box */
+    .lw-decision {
+      background: linear-gradient(135deg, var(--lw-navy) 0%, var(--lw-slate-800) 100%);
+      border-radius: var(--lw-radius-lg);
+      padding: 28px;
+      text-align: center;
+      margin-top: 24px;
+    }
+    .lw-decision-label {
+      font-size: 12px;
+      color: var(--lw-slate-400);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .lw-decision-text {
+      font-size: 18px;
+      color: white;
+      line-height: 1.6;
+      font-weight: 500;
+    }
+    .lw-decision-text .highlight {
+      color: var(--lw-amber-light);
+      font-weight: 700;
+    }
+    
+    @media (max-width: 768px) {
+      .lw-dual-result {
+        grid-template-columns: 1fr;
+      }
+      .lw-result-box .value {
+        font-size: 28px;
+      }
+      .lw-erosion-visual {
+        flex-direction: column;
+        text-align: center;
+      }
+      .lw-erosion-text {
+        text-align: center;
+      }
+      .lw-target-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .lw-chart-container {
+        height: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <span class="lw-logo-icon">P</span>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/compound-interest-calculator/">Compound Interest</a></li>
+        <li><a href="/investment-return-calculator/">Investment Returns</a></li>
+        <li><a href="/retirement-savings-calculator/">Retirement</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
+    </div>
+  </nav>
+  <div class="lw-mobile-menu" id="mobileMenu">
+    <a href="/">Home</a>
+    <a href="/compound-interest-calculator/">Compound Interest</a>
+    <a href="/investment-return-calculator/">Investment Returns</a>
+    <a href="/retirement-savings-calculator/">Retirement</a>
+  </div>
+
+  <main class="lw-main">
+    <!-- Hero -->
+    <header class="lw-hero">
+      <span class="lw-badge rose">📉 Inflation Impact</span>
+      <h1>Inflation-Adjusted <span class="accent">Future Value</span> Calculator</h1>
+      <p class="subtitle">See what your investments will really be worth. Compare nominal growth vs. actual purchasing power after inflation.</p>
+    </header>
+
+    <!-- Calculator Card -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">📊</div>
+        <div>
+          <div class="lw-card-title">Investment Details</div>
+          <div class="lw-card-subtitle">Enter your investment scenario</div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Current Savings/Investment</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input" id="principal" value="50,000" inputmode="numeric">
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">Annual Contribution</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input" id="contribution" value="6,000" inputmode="numeric">
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label">Expected Nominal Return</label>
+            <span class="lw-range-value" id="returnDisplay">7%</span>
+          </div>
+          <input type="range" class="lw-range" id="nominalReturn" min="1" max="15" step="0.5" value="7">
+        </div>
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label">Expected Inflation Rate <span class="lw-label-hint">(~3% historical avg)</span></label>
+            <span class="lw-range-value" id="inflationDisplay">3%</span>
+          </div>
+          <input type="range" class="lw-range" id="inflation" min="1" max="10" step="0.5" value="3">
+        </div>
+      </div>
+
+      <div class="lw-range-group">
+        <div class="lw-range-header">
+          <label class="lw-label">Time Horizon</label>
+          <span class="lw-range-value" id="yearsDisplay">20 years</span>
+        </div>
+        <input type="range" class="lw-range" id="years" min="1" max="50" step="1" value="20">
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="results">
+      <!-- Dual Result Boxes -->
+      <div class="lw-dual-result">
+        <div class="lw-result-box nominal">
+          <div class="label">Nominal Future Value</div>
+          <div class="value" id="nominalValue">$0</div>
+          <div class="subtext">Before inflation adjustment</div>
+        </div>
+        <div class="lw-result-box real">
+          <div class="label">Real Future Value</div>
+          <div class="value" id="realValue">$0</div>
+          <div class="subtext">In today's dollars</div>
+        </div>
+      </div>
+
+      <!-- Purchasing Power Erosion Visual -->
+      <div class="lw-erosion-visual">
+        <div class="lw-erosion-bar-container">
+          <div class="lw-erosion-labels lw-flex lw-justify-between lw-mb-16">
+            <span style="font-size:13px; color:var(--lw-text-secondary); font-weight:500;">Your investment growth</span>
+          </div>
+          <div class="lw-erosion-bar-wrap">
+            <div class="lw-erosion-bar-nominal">
+              <span class="lw-erosion-bar-label" id="nominalBarLabel">$0</span>
+            </div>
+            <div class="lw-erosion-bar-real" id="realBar">
+              <span class="lw-erosion-bar-label" id="realBarLabel">$0</span>
+            </div>
+          </div>
+          <div class="lw-flex lw-justify-between lw-mt-16" style="font-size:12px;">
+            <span style="color:var(--lw-emerald); font-weight:600;">● Real value (purchasing power)</span>
+            <span style="color:var(--lw-sky); font-weight:600;">● Nominal value</span>
+          </div>
+        </div>
+        <div class="lw-erosion-text">
+          <div class="lw-erosion-percent" id="erosionPercent">0%</div>
+          <div class="lw-erosion-label">Lost to Inflation</div>
+        </div>
+      </div>
+
+      <!-- Inflation Impact Callout -->
+      <div class="lw-callout">
+        <div class="lw-callout-header">
+          <div class="lw-callout-icon">🔥</div>
+          <div class="lw-callout-title">The Hidden Cost of Inflation</div>
+        </div>
+        <div class="lw-callout-body">
+          <p id="calloutText">Loading...</p>
+        </div>
+      </div>
+
+      <!-- Result Grid -->
+      <div class="lw-result-grid">
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Total Contributions</div>
+          <div class="lw-result-item-value sky" id="totalContributions">$0</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Nominal Earnings</div>
+          <div class="lw-result-item-value green" id="nominalEarnings">$0</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Real Earnings</div>
+          <div class="lw-result-item-value" id="realEarnings">$0</div>
+        </div>
+      </div>
+
+      <!-- Required Nominal Return Box -->
+      <div class="lw-target-box">
+        <div class="lw-target-header">
+          <span class="lw-target-icon">🎯</span>
+          <span class="lw-target-title">Required Nominal Returns for Target Real Returns</span>
+        </div>
+        <div class="lw-target-grid">
+          <div class="lw-target-item">
+            <div class="lw-target-item-label">For 3% Real Return</div>
+            <div class="lw-target-item-value" id="target3">0%</div>
+          </div>
+          <div class="lw-target-item">
+            <div class="lw-target-item-label">For 5% Real Return</div>
+            <div class="lw-target-item-value" id="target5">0%</div>
+          </div>
+          <div class="lw-target-item">
+            <div class="lw-target-item-label">For 7% Real Return</div>
+            <div class="lw-target-item-value" id="target7">0%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon green">📈</div>
+          <div>
+            <div class="lw-card-title">Growth Comparison</div>
+            <div class="lw-card-subtitle">Nominal vs. real value over time</div>
+          </div>
+        </div>
+        <div class="lw-chart-container">
+          <canvas class="lw-chart-canvas" id="growthChart"></canvas>
+        </div>
+        <div class="lw-chart-legend">
+          <div class="lw-legend-item">
+            <span class="lw-legend-dot nominal"></span>
+            <span>Nominal Value</span>
+          </div>
+          <div class="lw-legend-item">
+            <span class="lw-legend-dot real"></span>
+            <span>Real Value (Today's $)</span>
+          </div>
+          <div class="lw-legend-item">
+            <span class="lw-legend-dot inflation"></span>
+            <span>Inflation Gap</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Year by Year Table -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon amber">📋</div>
+          <div>
+            <div class="lw-card-title">Year-by-Year Breakdown</div>
+            <div class="lw-card-subtitle">See both values grow over time</div>
+          </div>
+        </div>
+        <div class="lw-table-wrap">
+          <table class="lw-table">
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th>Nominal Value</th>
+                <th>Real Value</th>
+                <th>Inflation Loss</th>
+                <th>Purchasing Power</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- What This Means -->
+      <div class="lw-explain">
+        <div class="lw-explain-title">💡 What This Means</div>
+        <p class="lw-explain-text" id="explainText">Loading explanation...</p>
+      </div>
+
+      <!-- Decision Guidance -->
+      <div class="lw-decision">
+        <div class="lw-decision-label">📌 The Bottom Line</div>
+        <p class="lw-decision-text" id="decisionText">Loading...</p>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <section class="lw-content">
+      <h2>Understanding Inflation-Adjusted Returns</h2>
+      <p>When planning for the future, it's crucial to understand the difference between <strong>nominal returns</strong> (what you see on paper) and <strong>real returns</strong> (what you can actually buy). This inflation-adjusted future value calculator helps you see both perspectives, revealing the true growth of your wealth.</p>
+
+      <h3>Why Nominal Returns Can Be Misleading</h3>
+      <p>If your investment grows from $100,000 to $200,000 over 20 years, that looks like a great 100% return. But if inflation averaged 3% during that time, prices roughly doubled too. Your $200,000 only buys what $110,000 bought when you started. Understanding this reality helps you set achievable financial goals.</p>
+
+      <h3>The Real Return Formula</h3>
+      <p>The precise formula for calculating real return is:</p>
+      <p><strong>Real Return = ((1 + Nominal Return) ÷ (1 + Inflation Rate)) - 1</strong></p>
+      <p>A common approximation is simply: <strong>Real Return ≈ Nominal Return - Inflation Rate</strong>. With a 7% nominal return and 3% inflation, your approximate real return is 4%, while the precise calculation gives you about 3.88%.</p>
+
+      <h3>Historical Inflation Context</h3>
+      <p>The U.S. Federal Reserve targets 2% annual inflation, but historical averages tell a different story:</p>
+      <ul>
+        <li><strong>100-year average:</strong> ~3% annual inflation</li>
+        <li><strong>1970s-1980s:</strong> Some years exceeded 10%</li>
+        <li><strong>2020s:</strong> Inflation spiked to 8-9% before moderating</li>
+        <li><strong>Long-term planning:</strong> 3% is a reasonable conservative assumption</li>
+      </ul>
+
+      <h2>How to Use This Calculator</h2>
+      <p>Enter your current investment amount, annual contributions, expected nominal return (before inflation), expected inflation rate, and time horizon. The calculator instantly shows you:</p>
+      <ul>
+        <li><strong>Nominal future value:</strong> What your account will show</li>
+        <li><strong>Real future value:</strong> What it will buy in today's dollars</li>
+        <li><strong>Purchasing power lost:</strong> The gap inflation creates</li>
+        <li><strong>Required nominal returns:</strong> What you need to achieve target real returns</li>
+      </ul>
+
+      <h2>Strategies to Beat Inflation</h2>
+      <h3>1. Invest in Growth Assets</h3>
+      <p>Historically, stocks have returned 7-10% annually, outpacing inflation. While more volatile than bonds or savings accounts, equities provide the best long-term inflation protection.</p>
+
+      <h3>2. Consider Inflation-Protected Securities</h3>
+      <p>Treasury Inflation-Protected Securities (TIPS) and I Bonds adjust their principal based on inflation, guaranteeing a real return above inflation.</p>
+
+      <h3>3. Diversify Globally</h3>
+      <p>International investments can provide protection when U.S. inflation is particularly high, as different economies experience different inflation rates.</p>
+
+      <h3>4. Increase Savings Rate</h3>
+      <p>If achieving high real returns is difficult, compensate by saving more. An extra $100/month over 30 years can add over $100,000 to your real wealth.</p>
+
+      <!-- FAQ Section -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">What is the difference between nominal and real returns?</button>
+          <div class="lw-faq-a">
+            <p>Nominal returns are the raw percentage gains on your investment before accounting for inflation. Real returns subtract the inflation rate from nominal returns, showing your actual increase in purchasing power. For example, if you earn 7% nominal return with 3% inflation, your real return is approximately 4%.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">Why is inflation-adjusted return important?</button>
+          <div class="lw-faq-a">
+            <p>Inflation-adjusted returns reveal the true growth of your wealth. A $100,000 investment that grows to $200,000 over 20 years sounds impressive, but if inflation averaged 3%, that $200,000 only has the purchasing power of about $110,000 in today's dollars. Understanding real returns helps you set realistic financial goals.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">What is a good inflation assumption for long-term planning?</button>
+          <div class="lw-faq-a">
+            <p>The Federal Reserve targets 2% annual inflation, but historical US inflation has averaged about 3% over the past century. For conservative long-term planning, many financial advisors recommend using 3% as your inflation assumption. During high-inflation periods, you may want to use 4-5%.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">How do I calculate real return from nominal return?</button>
+          <div class="lw-faq-a">
+            <p>The precise formula is: Real Return = ((1 + Nominal Return) / (1 + Inflation Rate)) - 1. A simpler approximation is: Real Return ≈ Nominal Return - Inflation Rate. For example, with 8% nominal return and 3% inflation, the approximate real return is 5%, while the precise calculation gives 4.85%.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">What nominal return do I need to achieve 5% real return?</button>
+          <div class="lw-faq-a">
+            <p>With 3% inflation, you'd need approximately 8.15% nominal return to achieve a 5% real return. The formula is: Required Nominal Return = (1 + Desired Real Return) × (1 + Inflation Rate) - 1. This calculator shows you exactly what nominal return you need for your target real return.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Calculators -->
+    <section class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/compound-interest-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Compound Interest Calculator
+        </a>
+        <a href="/investment-return-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Investment Return Calculator
+        </a>
+        <a href="/retirement-savings-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Retirement Calculator
+        </a>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <div class="lw-disclaimer">
+      <p>This calculator provides estimates for educational purposes only. Actual returns and inflation rates will vary. Consult a qualified financial advisor for personalized advice.</p>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="lw-footer">
+    <p>© 2025 PocketWise. Free financial calculators for smarter money decisions.</p>
+  </footer>
+
+  <script>
+    // Utility functions
+    function parseNumber(str) {
+      return parseFloat(str.replace(/[,$]/g, '')) || 0;
+    }
+
+    function formatCurrency(num) {
+      return '$' + num.toLocaleString('en-US', { maximumFractionDigits: 0 });
+    }
+
+    function formatCurrencyShort(num) {
+      if (num >= 1000000) {
+        return '$' + (num / 1000000).toFixed(2) + 'M';
+      } else if (num >= 1000) {
+        return '$' + (num / 1000).toFixed(1) + 'K';
+      }
+      return formatCurrency(num);
+    }
+
+    // Calculate real return from nominal return
+    function calculateRealReturn(nominal, inflation) {
+      return ((1 + nominal) / (1 + inflation)) - 1;
+    }
+
+    // Calculate required nominal return for target real return
+    function calculateRequiredNominal(targetReal, inflation) {
+      return ((1 + targetReal) * (1 + inflation)) - 1;
+    }
+
+    // Main calculation function
+    function calculate() {
+      const principal = parseNumber(document.getElementById('principal').value);
+      const contribution = parseNumber(document.getElementById('contribution').value);
+      const nominalRate = parseFloat(document.getElementById('nominalReturn').value) / 100;
+      const inflationRate = parseFloat(document.getElementById('inflation').value) / 100;
+      const years = parseInt(document.getElementById('years').value);
+
+      // Update displays
+      document.getElementById('returnDisplay').textContent = (nominalRate * 100).toFixed(1) + '%';
+      document.getElementById('inflationDisplay').textContent = (inflationRate * 100).toFixed(1) + '%';
+      document.getElementById('yearsDisplay').textContent = years + ' years';
+
+      // Calculate real rate
+      const realRate = calculateRealReturn(nominalRate, inflationRate);
+
+      // Calculate future values year by year
+      const yearlyData = [];
+      let nominalValue = principal;
+      let realValue = principal;
+
+      for (let year = 1; year <= years; year++) {
+        // Add contribution at start of year, then compound
+        nominalValue = (nominalValue + contribution) * (1 + nominalRate);
+        realValue = (realValue + contribution) * (1 + realRate);
+        
+        const inflationLoss = nominalValue - realValue;
+        const purchasingPower = (realValue / nominalValue) * 100;
+
+        yearlyData.push({
+          year,
+          nominal: nominalValue,
+          real: realValue,
+          inflationLoss,
+          purchasingPower
+        });
+      }
+
+      const finalNominal = yearlyData[years - 1].nominal;
+      const finalReal = yearlyData[years - 1].real;
+      const totalContributions = principal + (contribution * years);
+      const nominalEarnings = finalNominal - totalContributions;
+      const realEarnings = finalReal - totalContributions;
+      const erosionPercent = ((finalNominal - finalReal) / finalNominal) * 100;
+      const purchasingPowerLost = finalNominal - finalReal;
+
+      // Update main results
+      document.getElementById('nominalValue').textContent = formatCurrency(finalNominal);
+      document.getElementById('realValue').textContent = formatCurrency(finalReal);
+      document.getElementById('totalContributions').textContent = formatCurrency(totalContributions);
+      document.getElementById('nominalEarnings').textContent = formatCurrency(nominalEarnings);
+      document.getElementById('realEarnings').textContent = formatCurrency(realEarnings);
+
+      // Update erosion visual
+      const realPercent = (finalReal / finalNominal) * 100;
+      document.getElementById('realBar').style.width = realPercent + '%';
+      document.getElementById('nominalBarLabel').textContent = formatCurrencyShort(finalNominal);
+      document.getElementById('realBarLabel').textContent = formatCurrencyShort(finalReal);
+      document.getElementById('erosionPercent').textContent = erosionPercent.toFixed(1) + '%';
+
+      // Update callout
+      document.getElementById('calloutText').innerHTML = 
+        `Over <span class="lw-callout-stat">${years} years</span>, inflation at <span class="lw-callout-stat">${(inflationRate * 100).toFixed(1)}%</span> will erode <span class="lw-callout-stat">${formatCurrency(purchasingPowerLost)}</span> of your investment's purchasing power. While your account will show <span class="lw-callout-stat">${formatCurrency(finalNominal)}</span>, it will only buy what <span class="lw-callout-stat">${formatCurrency(finalReal)}</span> buys today.`;
+
+      // Update required nominal returns
+      const target3 = calculateRequiredNominal(0.03, inflationRate) * 100;
+      const target5 = calculateRequiredNominal(0.05, inflationRate) * 100;
+      const target7 = calculateRequiredNominal(0.07, inflationRate) * 100;
+      document.getElementById('target3').textContent = target3.toFixed(2) + '%';
+      document.getElementById('target5').textContent = target5.toFixed(2) + '%';
+      document.getElementById('target7').textContent = target7.toFixed(2) + '%';
+
+      // Update explanation
+      const realReturnPercent = (realRate * 100).toFixed(2);
+      document.getElementById('explainText').innerHTML = 
+        `With a <strong>${(nominalRate * 100).toFixed(1)}% nominal return</strong> and <strong>${(inflationRate * 100).toFixed(1)}% inflation</strong>, your <strong>real return is ${realReturnPercent}%</strong>. ` +
+        `Your initial ${formatCurrency(principal)} plus ${formatCurrency(contribution)}/year contributions will grow to ${formatCurrency(finalNominal)} on paper. ` +
+        `But in today's purchasing power, that's equivalent to only ${formatCurrency(finalReal)} — meaning inflation claims ${erosionPercent.toFixed(1)}% of your apparent gains.`;
+
+      // Update decision
+      document.getElementById('decisionText').innerHTML = 
+        `Inflation reduces your purchasing power by <span class="highlight">${erosionPercent.toFixed(1)}%</span> — your <span class="highlight">${formatCurrency(finalNominal)}</span> will feel like <span class="highlight">${formatCurrency(finalReal)}</span> in today's dollars.`;
+
+      // Update table
+      updateTable(yearlyData);
+
+      // Update chart
+      drawChart(yearlyData);
+    }
+
+    function updateTable(data) {
+      const tbody = document.getElementById('tableBody');
+      // Show every year if 10 or fewer, otherwise show key years
+      let rowsToShow;
+      if (data.length <= 10) {
+        rowsToShow = data;
+      } else {
+        const years = data.length;
+        rowsToShow = [
+          data[0],
+          data[4] || data[Math.floor(years * 0.1)],
+          data[9] || data[Math.floor(years * 0.25)],
+          data[Math.floor(years * 0.5) - 1],
+          data[Math.floor(years * 0.75) - 1],
+          data[years - 1]
+        ].filter((v, i, a) => v && a.findIndex(x => x && x.year === v.year) === i);
+      }
+
+      tbody.innerHTML = rowsToShow.map(row => `
+        <tr>
+          <td class="num">${row.year}</td>
+          <td class="num">${formatCurrency(row.nominal)}</td>
+          <td class="num" style="color:var(--lw-emerald)">${formatCurrency(row.real)}</td>
+          <td class="num" style="color:var(--lw-rose)">${formatCurrency(row.inflationLoss)}</td>
+          <td class="num">${row.purchasingPower.toFixed(1)}%</td>
+        </tr>
+      `).join('');
+    }
+
+    function drawChart(data) {
+      const canvas = document.getElementById('growthChart');
+      const ctx = canvas.getContext('2d');
+      const dpr = window.devicePixelRatio || 1;
+      
+      // Set actual size in memory
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+      
+      const width = rect.width;
+      const height = rect.height;
+      const padding = { top: 20, right: 20, bottom: 40, left: 70 };
+      const chartWidth = width - padding.left - padding.right;
+      const chartHeight = height - padding.top - padding.bottom;
+
+      // Clear
+      ctx.clearRect(0, 0, width, height);
+
+      // Find max value
+      const maxValue = Math.max(...data.map(d => d.nominal));
+      const yScale = chartHeight / maxValue;
+      const xScale = chartWidth / (data.length - 1 || 1);
+
+      // Draw grid lines
+      ctx.strokeStyle = '#E2E8F0';
+      ctx.lineWidth = 1;
+      const gridLines = 5;
+      for (let i = 0; i <= gridLines; i++) {
+        const y = padding.top + (chartHeight / gridLines) * i;
+        ctx.beginPath();
+        ctx.moveTo(padding.left, y);
+        ctx.lineTo(width - padding.right, y);
+        ctx.stroke();
+
+        // Y-axis labels
+        const value = maxValue - (maxValue / gridLines) * i;
+        ctx.fillStyle = '#64748B';
+        ctx.font = '11px Inter, sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText(formatCurrencyShort(value), padding.left - 8, y + 4);
+      }
+
+      // Draw inflation gap (filled area between lines)
+      ctx.beginPath();
+      data.forEach((d, i) => {
+        const x = padding.left + i * xScale;
+        const y = padding.top + chartHeight - (d.nominal * yScale);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      for (let i = data.length - 1; i >= 0; i--) {
+        const x = padding.left + i * xScale;
+        const y = padding.top + chartHeight - (data[i].real * yScale);
+        ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(244, 63, 94, 0.15)';
+      ctx.fill();
+
+      // Draw nominal line
+      ctx.beginPath();
+      ctx.strokeStyle = '#0EA5E9';
+      ctx.lineWidth = 3;
+      data.forEach((d, i) => {
+        const x = padding.left + i * xScale;
+        const y = padding.top + chartHeight - (d.nominal * yScale);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      // Draw real line
+      ctx.beginPath();
+      ctx.strokeStyle = '#10B981';
+      ctx.lineWidth = 3;
+      data.forEach((d, i) => {
+        const x = padding.left + i * xScale;
+        const y = padding.top + chartHeight - (d.real * yScale);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      // X-axis labels
+      ctx.fillStyle = '#64748B';
+      ctx.font = '11px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      const labelCount = Math.min(6, data.length);
+      const labelStep = Math.max(1, Math.floor(data.length / labelCount));
+      for (let i = 0; i < data.length; i += labelStep) {
+        const x = padding.left + i * xScale;
+        ctx.fillText('Year ' + data[i].year, x, height - 10);
+      }
+      // Always show last year
+      if (data.length > 1) {
+        const lastX = padding.left + (data.length - 1) * xScale;
+        ctx.fillText('Year ' + data[data.length - 1].year, lastX, height - 10);
+      }
+
+      // Draw end points
+      const lastNominal = data[data.length - 1];
+      const lastReal = data[data.length - 1];
+      const lastX = padding.left + (data.length - 1) * xScale;
+      
+      // Nominal dot
+      ctx.beginPath();
+      ctx.arc(lastX, padding.top + chartHeight - (lastNominal.nominal * yScale), 6, 0, Math.PI * 2);
+      ctx.fillStyle = '#0EA5E9';
+      ctx.fill();
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Real dot
+      ctx.beginPath();
+      ctx.arc(lastX, padding.top + chartHeight - (lastReal.real * yScale), 6, 0, Math.PI * 2);
+      ctx.fillStyle = '#10B981';
+      ctx.fill();
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    // Format input as currency
+    function formatInput(input) {
+      let value = input.value.replace(/[^\d.]/g, '');
+      if (value) {
+        value = parseFloat(value);
+        if (!isNaN(value)) {
+          input.value = value.toLocaleString('en-US');
+        }
+      }
+    }
+
+    // Event listeners
+    document.getElementById('principal').addEventListener('input', function() {
+      formatInput(this);
+      calculate();
+    });
+    document.getElementById('contribution').addEventListener('input', function() {
+      formatInput(this);
+      calculate();
+    });
+    document.getElementById('nominalReturn').addEventListener('input', calculate);
+    document.getElementById('inflation').addEventListener('input', calculate);
+    document.getElementById('years').addEventListener('input', calculate);
+
+    // FAQ toggle
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      item.classList.toggle('open');
+    }
+
+    // Mobile menu
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    // Resize handler for chart
+    window.addEventListener('resize', function() {
+      calculate();
+    });
+
+    // Initial calculation
+    calculate();
+  </script>
+</body>
+</html>

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PocketWise — Free Financial Calculators & Loan Tools</title>
-  <meta name="description" content="15 free financial calculators: mortgage, auto loan, compound interest, debt payoff, credit card, home affordability, and more. No sign-ups. Instant results.">
+  <title>PocketWise — 45 Free Financial Calculators & Decision Tools</title>
+  <meta name="description" content="45 free financial calculators: mortgage, refinance, debt payoff, 401k, investing, and more. Every tool gives you a decision, not just a number. No sign-ups.">
   <link rel="canonical" href="https://pocketwise.io/">
   <link rel="stylesheet" href="/css/style.css">
   <style>
@@ -43,7 +43,7 @@
     .lw-home-hero .subtitle {
       font-size: 19px;
       color: #94A3B8;
-      max-width: 540px;
+      max-width: 600px;
       margin: 0 auto 32px;
       line-height: 1.7;
     }
@@ -87,11 +87,18 @@
     .lw-category-icon.rose { background: #FFF1F2; }
     .lw-category-icon.green { background: #ECFDF5; }
     .lw-category-icon.violet { background: #F3F0FF; }
+    .lw-category-icon.amber { background: #FEF3C7; }
+    .lw-category-icon.cyan { background: #CFFAFE; }
     .lw-category-title {
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 24px;
       font-weight: 700;
       color: #0F172A;
+    }
+    .lw-category-count {
+      font-size: 14px;
+      color: #64748B;
+      margin-left: auto;
     }
     .lw-tool-grid {
       display: grid;
@@ -101,7 +108,7 @@
     .lw-tool-card {
       background: white;
       border-radius: 14px;
-      padding: 28px;
+      padding: 24px;
       box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(0,0,0,0.03);
       border: 1px solid #F1F5F9;
       transition: all 0.3s ease;
@@ -119,10 +126,10 @@
     .lw-tool-card::after {
       content: '→';
       position: absolute;
-      top: 24px;
-      right: 24px;
+      top: 20px;
+      right: 20px;
       color: #CBD5E1;
-      font-size: 18px;
+      font-size: 16px;
       transition: all 0.3s ease;
     }
     .lw-tool-card:hover::after {
@@ -130,44 +137,35 @@
       transform: translateX(3px);
     }
     .lw-tool-emoji {
-      font-size: 28px;
-      margin-bottom: 14px;
+      font-size: 24px;
+      margin-bottom: 12px;
     }
     .lw-tool-card h3 {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 17px;
+      font-size: 15px;
       font-weight: 700;
       color: #0F172A;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       line-height: 1.3;
     }
     .lw-tool-card p {
-      font-size: 14px;
+      font-size: 13px;
       color: #64748B;
-      line-height: 1.6;
+      line-height: 1.5;
       flex: 1;
     }
     .lw-tool-tag {
       display: inline-block;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
-      padding: 3px 10px;
+      padding: 2px 8px;
       border-radius: 50px;
-      margin-top: 14px;
+      margin-top: 10px;
       align-self: flex-start;
     }
-    .lw-tool-tag.popular {
-      background: #FEF3C7;
-      color: #92400E;
-    }
-    .lw-tool-tag.new {
-      background: #E0F2FE;
-      color: #0369A1;
-    }
-    .lw-tool-tag.advanced {
-      background: #F3F0FF;
-      color: #6D28D9;
-    }
+    .lw-tool-tag.popular { background: #FEF3C7; color: #92400E; }
+    .lw-tool-tag.new { background: #DCFCE7; color: #166534; }
+    .lw-tool-tag.decision { background: #E0F2FE; color: #0369A1; }
 
     .lw-home-seo {
       max-width: 760px;
@@ -182,7 +180,6 @@
       color: #0F172A;
       margin-top: 40px;
       margin-bottom: 14px;
-      letter-spacing: -0.5px;
     }
     .lw-home-seo h2:first-child { margin-top: 0; }
     .lw-home-seo p {
@@ -191,26 +188,21 @@
       line-height: 1.75;
       margin-bottom: 16px;
     }
-    .lw-home-seo ul {
-      margin-bottom: 16px;
-      padding-left: 24px;
-    }
-    .lw-home-seo li {
-      color: #475569;
-      font-size: 16px;
-      line-height: 1.7;
-      margin-bottom: 8px;
-    }
+    .lw-home-seo ul { margin-bottom: 16px; padding-left: 24px; }
+    .lw-home-seo li { color: #475569; font-size: 16px; line-height: 1.7; margin-bottom: 8px; }
     .lw-home-seo strong { color: #0F172A; }
 
+    @media (max-width: 900px) {
+      .lw-tool-grid { grid-template-columns: repeat(2, 1fr); }
+    }
     @media (max-width: 768px) {
       .lw-home-hero { padding: 44px 20px 40px; }
       .lw-home-hero h1 { font-size: 34px; }
       .lw-home-hero .subtitle { font-size: 16px; }
       .lw-home-stats { gap: 28px; }
       .lw-home-stat-num { font-size: 28px; }
-      .lw-tool-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
-      .lw-tool-card { padding: 22px; }
+      .lw-tool-grid { gap: 14px; }
+      .lw-tool-card { padding: 20px; }
     }
     @media (max-width: 480px) {
       .lw-home-hero h1 { font-size: 28px; }
@@ -223,46 +215,27 @@
   <nav class="lw-nav">
     <div class="lw-nav-inner">
       <a href="/" class="lw-logo">
-        <div class="lw-logo-icon">L</div>
+        <div class="lw-logo-icon">P</div>
         PocketWise
       </a>
       <ul class="lw-nav-links">
-        <li><a href="/mortgage-calculator/">Mortgage</a></li>
-        <li><a href="/auto-loan-calculator/">Auto</a></li>
-        <li><a href="/compound-interest-calculator/">Investing</a></li>
-        <li><a href="/debt-payoff-calculator/">Debt</a></li>
-        <li><a href="/" class="active">All Tools</a></li>
+        <li><a href="#homeowner">Homeowner</a></li>
+        <li><a href="#debt">Debt</a></li>
+        <li><a href="#retirement">Retirement</a></li>
+        <li><a href="#investing">Investing</a></li>
       </ul>
       <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">☰</button>
-    </div>
-    <div class="lw-mobile-menu">
-      <a href="/">All Tools</a>
-      <a href="/mortgage-calculator/">Mortgage Calculator</a>
-      <a href="/auto-loan-calculator/">Auto Loan Calculator</a>
-      <a href="/personal-loan-calculator/">Personal Loan Calculator</a>
-      <a href="/compound-interest-calculator/">Compound Interest</a>
-      <a href="/debt-payoff-calculator/">Debt Payoff Calculator</a>
-      <a href="/credit-card-payoff-calculator/">Credit Card Payoff</a>
-      <a href="/home-affordability-calculator/">Home Affordability</a>
-      <a href="/refinance-calculator/">Refinance Calculator</a>
-      <a href="/loan-comparison-tool/">Loan Comparison</a>
-      <a href="/amortization-schedule/">Amortization Schedule</a>
-      <a href="/debt-to-income-calculator/">Debt-to-Income</a>
-      <a href="/apr-calculator/">APR Calculator</a>
-      <a href="/savings-goal-calculator/">Savings Goal</a>
-      <a href="/investment-return-calculator/">Investment Returns</a>
-      <a href="/emergency-fund-calculator/">Emergency Fund</a>
     </div>
   </nav>
 
   <main class="lw-main wide">
     <!-- HERO -->
     <div class="lw-home-hero">
-      <h1>Financial Calculators<br>That <span class="accent">Actually Help</span></h1>
-      <p class="subtitle">15 free tools to make smarter money decisions. No sign-ups, no ads, no BS — just accurate math and clean design.</p>
+      <h1>Financial <span class="accent">Decision Tools</span><br>Not Just Calculators</h1>
+      <p class="subtitle">45 free tools that tell you what to do, not just crunch numbers. Every tool gives you a clear decision with plain-English guidance.</p>
       <div class="lw-home-stats">
         <div style="text-align:center">
-          <div class="lw-home-stat-num">15</div>
+          <div class="lw-home-stat-num">45</div>
           <div class="lw-home-stat-label">Free Tools</div>
         </div>
         <div style="text-align:center">
@@ -276,122 +249,304 @@
       </div>
     </div>
 
-    <!-- HOME & MORTGAGE -->
-    <div class="lw-category">
+    <!-- HOMEOWNER & BORROWER -->
+    <div class="lw-category" id="homeowner">
       <div class="lw-category-header">
         <div class="lw-category-icon blue">🏠</div>
-        <h2 class="lw-category-title">Home & Mortgage</h2>
+        <h2 class="lw-category-title">Homeowner & Borrower</h2>
+        <span class="lw-category-count">16 tools</span>
       </div>
       <div class="lw-tool-grid">
         <a href="/mortgage-calculator/" class="lw-tool-card">
           <div class="lw-tool-emoji">🏦</div>
           <h3>Mortgage Calculator</h3>
-          <p>Calculate your monthly payment with taxes, insurance, and PMI. See full cost breakdown.</p>
-          <span class="lw-tool-tag popular">Most Popular</span>
+          <p>Monthly payment with taxes, insurance, and PMI breakdown.</p>
+          <span class="lw-tool-tag popular">Popular</span>
         </a>
         <a href="/home-affordability-calculator/" class="lw-tool-card">
           <div class="lw-tool-emoji">🏡</div>
           <h3>Home Affordability</h3>
-          <p>Find out how much house you can afford based on your income, debts, and down payment.</p>
+          <p>How much house can you afford based on income and debts?</p>
         </a>
         <a href="/refinance-calculator/" class="lw-tool-card">
           <div class="lw-tool-emoji">🔄</div>
           <h3>Refinance Calculator</h3>
-          <p>Should you refinance? See your monthly savings, break-even point, and total savings.</p>
+          <p>Monthly savings, break-even point, and total savings.</p>
+        </a>
+        <a href="/refinance-break-even/" class="lw-tool-card">
+          <div class="lw-tool-emoji">⏱️</div>
+          <h3>Refinance Break-Even</h3>
+          <p>"Refinancing makes sense if you stay longer than X months"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/refinance-rate-sensitivity/" class="lw-tool-card">
+          <div class="lw-tool-emoji">📉</div>
+          <h3>Should I Wait to Refinance?</h3>
+          <p>"Waiting only helps if rates fall by at least X%"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/extra-mortgage-payment/" class="lw-tool-card">
+          <div class="lw-tool-emoji">💸</div>
+          <h3>Extra Payment Planner</h3>
+          <p>"Extra payments save $X and shorten loan by Y years"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/mortgage-points-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🎯</div>
+          <h3>Are Points Worth It?</h3>
+          <p>"Points make sense if you keep the loan X years"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/rent-vs-buy/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🏘️</div>
+          <h3>Rent vs Buy</h3>
+          <p>"Buying becomes cheaper after X years"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/homeownership-tax-benefits/" class="lw-tool-card">
+          <div class="lw-tool-emoji">📋</div>
+          <h3>Tax Benefit Estimator</h3>
+          <p>Itemize vs standard deduction with SALT cap impact.</p>
+          <span class="lw-tool-tag new">New</span>
+        </a>
+        <a href="/recast-vs-refinance/" class="lw-tool-card">
+          <div class="lw-tool-emoji">⚖️</div>
+          <h3>Recast vs Refinance</h3>
+          <p>"Recast is cheaper if rates stay high"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/home-equity-projection/" class="lw-tool-card">
+          <div class="lw-tool-emoji">📈</div>
+          <h3>Home Equity Growth</h3>
+          <p>Equity projection from appreciation + payments.</p>
+          <span class="lw-tool-tag new">New</span>
+        </a>
+        <a href="/pmi-removal-planner/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🎉</div>
+          <h3>PMI Removal Planner</h3>
+          <p>"Extra payments remove PMI X months earlier"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/sell-vs-refinance-vs-stay/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🚪</div>
+          <h3>Sell vs Refinance vs Stay</h3>
+          <p>"Selling is best if moving within X years"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/property-tax-impact/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🏛️</div>
+          <h3>Property Tax Impact</h3>
+          <p>"Taxes increase your payment by X%"</p>
+          <span class="lw-tool-tag new">New</span>
+        </a>
+        <a href="/hoa-affordability-impact/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🏢</div>
+          <h3>HOA Fee Impact</h3>
+          <p>"HOA fees reduce buying power by $X"</p>
+          <span class="lw-tool-tag new">New</span>
         </a>
         <a href="/amortization-schedule/" class="lw-tool-card">
           <div class="lw-tool-emoji">📊</div>
           <h3>Amortization Schedule</h3>
-          <p>Generate a full payment schedule. See how extra payments save you years and thousands.</p>
+          <p>Full payment schedule with extra payment modeling.</p>
         </a>
       </div>
     </div>
 
-    <!-- LOANS -->
-    <div class="lw-category">
+    <!-- DEBT & BORROWING -->
+    <div class="lw-category" id="debt">
       <div class="lw-category-header">
-        <div class="lw-category-icon green">💰</div>
-        <h2 class="lw-category-title">Loans</h2>
+        <div class="lw-category-icon rose">💳</div>
+        <h2 class="lw-category-title">Debt & Borrowing</h2>
+        <span class="lw-category-count">14 tools</span>
       </div>
       <div class="lw-tool-grid">
-        <a href="/auto-loan-calculator/" class="lw-tool-card">
-          <div class="lw-tool-emoji">🚗</div>
-          <h3>Auto Loan Calculator</h3>
-          <p>Calculate car payments with trade-in, down payment, and sales tax factored in.</p>
-          <span class="lw-tool-tag popular">Most Popular</span>
+        <a href="/debt-payoff-optimizer/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🎯</div>
+          <h3>Debt Payoff Optimizer</h3>
+          <p>"Avalanche saves $X more, Snowball finishes Y months sooner"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
         </a>
-        <a href="/personal-loan-calculator/" class="lw-tool-card">
-          <div class="lw-tool-emoji">💵</div>
-          <h3>Personal Loan Calculator</h3>
-          <p>See your monthly payment, true APR with fees, and total cost of borrowing.</p>
-        </a>
-        <a href="/loan-comparison-tool/" class="lw-tool-card">
-          <div class="lw-tool-emoji">⚖️</div>
-          <h3>Loan Comparison Tool</h3>
-          <p>Compare two loan offers side by side. See which one actually costs less.</p>
-        </a>
-        <a href="/apr-calculator/" class="lw-tool-card">
-          <div class="lw-tool-emoji">📐</div>
-          <h3>APR Calculator</h3>
-          <p>Find the true annual percentage rate after fees. Know what you're really paying.</p>
-          <span class="lw-tool-tag advanced">Advanced</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- DEBT -->
-    <div class="lw-category">
-      <div class="lw-category-header">
-        <div class="lw-category-icon rose">🎯</div>
-        <h2 class="lw-category-title">Debt Freedom</h2>
-      </div>
-      <div class="lw-tool-grid">
         <a href="/debt-payoff-calculator/" class="lw-tool-card">
           <div class="lw-tool-emoji">❄️</div>
-          <h3>Debt Payoff Calculator</h3>
-          <p>Snowball vs. Avalanche — see which strategy gets you debt-free faster and cheaper.</p>
-          <span class="lw-tool-tag popular">Most Popular</span>
+          <h3>Snowball vs Avalanche</h3>
+          <p>Compare strategies to get debt-free faster.</p>
+          <span class="lw-tool-tag popular">Popular</span>
+        </a>
+        <a href="/balance-transfer-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🔄</div>
+          <h3>Balance Transfer Worth It?</h3>
+          <p>"Only worth it if paid off before promo ends"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/loan-consolidation-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🔗</div>
+          <h3>Loan Consolidation</h3>
+          <p>"Consolidation helps only if rate ≤ X%"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/refinance-vs-new-loan/" class="lw-tool-card">
+          <div class="lw-tool-emoji">⚖️</div>
+          <h3>Refinance vs New Loan</h3>
+          <p>"Refinance wins if fees < $X"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/debt-vs-cash-cushion/" class="lw-tool-card">
+          <div class="lw-tool-emoji">💰</div>
+          <h3>Debt vs Cash Cushion</h3>
+          <p>"Keep $X cash, apply rest to debt"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/credit-utilization-planner/" class="lw-tool-card">
+          <div class="lw-tool-emoji">📊</div>
+          <h3>Credit Utilization Planner</h3>
+          <p>"Pay Card A first for maximum utilization improvement"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/extra-payment-savings/" class="lw-tool-card">
+          <div class="lw-tool-emoji">📈</div>
+          <h3>Extra Payment Levels</h3>
+          <p>"Returns diminish beyond $X/month"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/emergency-fund-vs-debt/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🛡️</div>
+          <h3>Emergency Fund vs Debt</h3>
+          <p>"Build fund to X months, then attack debt"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
         </a>
         <a href="/credit-card-payoff-calculator/" class="lw-tool-card">
           <div class="lw-tool-emoji">💳</div>
           <h3>Credit Card Payoff</h3>
-          <p>See how long to pay off your balance — and the scary cost of minimum payments.</p>
+          <p>See the cost of minimum payments.</p>
         </a>
-        <a href="/debt-to-income-calculator/" class="lw-tool-card">
+        <a href="/auto-loan-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🚗</div>
+          <h3>Auto Loan Calculator</h3>
+          <p>Car payments with trade-in and taxes.</p>
+        </a>
+        <a href="/personal-loan-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">💵</div>
+          <h3>Personal Loan Calculator</h3>
+          <p>Monthly payment and true APR.</p>
+        </a>
+        <a href="/loan-comparison-tool/" class="lw-tool-card">
           <div class="lw-tool-emoji">📋</div>
-          <h3>Debt-to-Income Ratio</h3>
-          <p>Calculate your DTI and see how lenders view your financial health.</p>
+          <h3>Loan Comparison</h3>
+          <p>Compare offers side by side.</p>
+        </a>
+        <a href="/apr-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">📐</div>
+          <h3>APR Calculator</h3>
+          <p>True annual rate after fees.</p>
         </a>
       </div>
     </div>
 
-    <!-- WEALTH BUILDING -->
-    <div class="lw-category">
+    <!-- EVERYDAY WORKER WEALTH -->
+    <div class="lw-category" id="retirement">
+      <div class="lw-category-header">
+        <div class="lw-category-icon green">💼</div>
+        <h2 class="lw-category-title">Retirement & Paycheck</h2>
+        <span class="lw-category-count">8 tools</span>
+      </div>
+      <div class="lw-tool-grid">
+        <a href="/401k-match-optimizer/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🎁</div>
+          <h3>401(k) Match Optimizer</h3>
+          <p>"Contribute at least X% to avoid leaving $Y on table"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/pretax-vs-roth/" class="lw-tool-card">
+          <div class="lw-tool-emoji">⚖️</div>
+          <h3>Pre-Tax vs Roth</h3>
+          <p>"Roth wins if future tax ≥ X%"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/401k-paycheck-impact/" class="lw-tool-card">
+          <div class="lw-tool-emoji">💵</div>
+          <h3>401(k) Paycheck Impact</h3>
+          <p>"Each 1% contribution costs only $X per paycheck"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/budget-to-goal/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🎯</div>
+          <h3>Budget to Goal Planner</h3>
+          <p>"Cutting X category reaches goal fastest"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/raise-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">📈</div>
+          <h3>Raise Net-Pay Calculator</h3>
+          <p>"Your X% raise is really Y% after taxes"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/side-income-tax/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🧾</div>
+          <h3>Side Income Tax</h3>
+          <p>"Set aside X% for taxes (about $Y/month)"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/debt-to-income-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">📋</div>
+          <h3>Debt-to-Income Ratio</h3>
+          <p>Calculate your DTI for lenders.</p>
+        </a>
+        <a href="/emergency-fund-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🛡️</div>
+          <h3>Emergency Fund</h3>
+          <p>How much safety net do you need?</p>
+        </a>
+      </div>
+    </div>
+
+    <!-- INVESTING -->
+    <div class="lw-category" id="investing">
       <div class="lw-category-header">
         <div class="lw-category-icon violet">📈</div>
-        <h2 class="lw-category-title">Wealth Building</h2>
+        <h2 class="lw-category-title">Investing & Wealth</h2>
+        <span class="lw-category-count">7 tools</span>
       </div>
       <div class="lw-tool-grid">
         <a href="/compound-interest-calculator/" class="lw-tool-card">
           <div class="lw-tool-emoji">🧮</div>
           <h3>Compound Interest</h3>
-          <p>Watch your money grow over time. See contributions vs. earnings with visual charts.</p>
-          <span class="lw-tool-tag popular">Most Popular</span>
+          <p>Watch your money grow over time.</p>
+          <span class="lw-tool-tag popular">Popular</span>
+        </a>
+        <a href="/asset-location/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🗺️</div>
+          <h3>Asset Location Optimizer</h3>
+          <p>"Put this asset in tax-advantaged account because..."</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/fee-drag-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">💸</div>
+          <h3>Fee Drag Calculator</h3>
+          <p>"A 0.5% fee costs $X over Y years"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/lump-sum-vs-dca/" class="lw-tool-card">
+          <div class="lw-tool-emoji">📊</div>
+          <h3>Lump Sum vs DCA</h3>
+          <p>"Lump sum wins on average, DCA reduces regret risk"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
+        </a>
+        <a href="/inflation-adjusted-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">📉</div>
+          <h3>Inflation-Adjusted Value</h3>
+          <p>"Your $X will feel like $Y in today's dollars"</p>
+          <span class="lw-tool-tag decision">Decision Tool</span>
         </a>
         <a href="/investment-return-calculator/" class="lw-tool-card">
           <div class="lw-tool-emoji">💹</div>
           <h3>Investment Returns</h3>
-          <p>Project future investment value with inflation adjustment. See real vs. nominal returns.</p>
+          <p>Project future value with inflation adjustment.</p>
         </a>
         <a href="/savings-goal-calculator/" class="lw-tool-card">
           <div class="lw-tool-emoji">🎯</div>
           <h3>Savings Goal</h3>
-          <p>How long until you reach your goal? Track progress and see the power of consistent saving.</p>
-        </a>
-        <a href="/emergency-fund-calculator/" class="lw-tool-card">
-          <div class="lw-tool-emoji">🛡️</div>
-          <h3>Emergency Fund</h3>
-          <p>How much do you really need? Itemize expenses and build your safety net.</p>
+          <p>How long until you reach your goal?</p>
         </a>
       </div>
     </div>
@@ -399,40 +554,38 @@
     <!-- SEO CONTENT -->
     <div class="lw-home-seo">
       <h2>Why PocketWise?</h2>
-      <p>We built PocketWise because most financial calculator sites are stuck in 2005 — cluttered with ads, confusing to use, and impossible on mobile. We wanted something better: tools that are <strong>fast, beautiful, and actually useful</strong>.</p>
-      <p>Every calculator on this site runs entirely in your browser. No data is sent to any server. No account required. No email harvesting. Just honest math with a clean interface.</p>
+      <p>Most financial calculators give you a number. PocketWise gives you a <strong>decision</strong>. Every tool on this site tells you what to do, not just what the math says.</p>
+      <p>"Refinancing makes sense if you stay longer than 14 months." "Roth wins if your future tax rate is above 22%." "Pay Card A first for maximum utilization improvement." That's the difference.</p>
 
-      <h2>What You Can Do Here</h2>
-      <p>Whether you're buying your first home, paying off debt, or building wealth for the future, we have a tool for that:</p>
+      <h2>45 Tools, Zero Sign-ups</h2>
+      <p>Everything runs in your browser. No accounts, no data collection, no ads. Just honest math with a clean interface that works on your phone.</p>
       <ul>
-        <li><strong>Plan a home purchase</strong> — Calculate mortgage payments, check what you can afford, compare refinance options, and generate full amortization schedules</li>
-        <li><strong>Compare loan options</strong> — See the true cost of auto loans, personal loans, and credit cards. Understand APR vs. interest rate.</li>
-        <li><strong>Crush your debt</strong> — Compare snowball vs. avalanche strategies, see the real cost of minimum credit card payments, and track your debt-to-income ratio</li>
-        <li><strong>Grow your money</strong> — Project compound interest growth, model investment returns with inflation, set savings goals, and calculate your emergency fund target</li>
+        <li><strong>Homeowner Tools</strong> — Refinance decisions, rent vs buy, PMI removal, equity projections</li>
+        <li><strong>Debt Tools</strong> — Snowball vs avalanche, balance transfers, consolidation, utilization optimization</li>
+        <li><strong>Retirement Tools</strong> — 401(k) matching, Roth vs Traditional, paycheck impact, raise calculators</li>
+        <li><strong>Investing Tools</strong> — Asset location, fee drag, lump sum vs DCA, inflation adjustment</li>
       </ul>
 
       <h2>Built Different</h2>
-      <p>Every calculator uses <strong>real financial formulas</strong> — the same math your bank uses. Our mortgage calculator includes PITI and PMI. Our APR calculator uses Newton's method for true rate calculation. Our debt payoff tool simulates month-by-month payment schedules.</p>
-      <p>The design is intentional too. Numbers are formatted with JetBrains Mono for readability. Charts update in real-time as you move sliders. Results are color-coded so good news is green and warnings are amber. Everything works on your phone.</p>
-      <p>We're not financial advisors. These tools are for education and planning. For personalized advice, always consult a qualified financial professional.</p>
+      <p>Every calculator uses <strong>real financial formulas</strong> — the same math your bank uses. Results update in real-time as you adjust inputs. Decision guidance is personalized to your numbers, not generic advice.</p>
+      <p>We're not financial advisors. These tools are for education and planning. For personalized advice, consult a qualified financial professional.</p>
     </div>
 
     <p class="lw-disclaimer">
-      <em>PocketWise calculators are for educational purposes only. Results are estimates based on the information you provide and should not be considered financial advice. Consult a qualified financial advisor for personalized guidance.</em>
+      <em>PocketWise calculators are for educational purposes only. Results are estimates and should not be considered financial advice.</em>
     </p>
   </main>
 
   <footer class="lw-footer">
-    <p>© 2026 PocketWise. Free financial calculators for everyone.</p>
+    <p>© 2026 PocketWise. 45 free financial decision tools.</p>
   </footer>
 
-  <!-- Schema -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "PocketWise",
-    "description": "15 free financial calculators for mortgages, loans, debt payoff, compound interest, and more.",
+    "description": "45 free financial decision tools for mortgages, loans, debt payoff, retirement, and investing.",
     "url": "https://pocketwise.io/"
   }
   </script>

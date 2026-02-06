@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interest Savings by Extra Payment Levels | How Much Will I Save? | LendWise</title>
+  <meta name="description" content="See exactly how much interest you'll save with $50, $100, $200, $300, or $500 extra monthly payments. Find your sweet spot where returns diminish.">
+  <meta name="keywords" content="interest savings extra payment, loan extra payment calculator, how much interest will I save, extra payment savings, diminishing returns loan">
+  <link rel="canonical" href="https://lendwise.app/extra-payment-savings/">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How much interest will I save with an extra $100 payment per month?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The interest savings depend on your loan balance, interest rate, and remaining term. For example, on a $200,000 mortgage at 7% with 25 years remaining, paying an extra $100/month saves approximately $56,000 in interest and pays off the loan 5 years early."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the diminishing returns sweet spot for extra payments?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The sweet spot is where each additional dollar of extra payment generates the highest marginal interest savings. Typically, the first $100-200 extra provides the best ROI. Beyond $300-500 extra, the marginal benefit per dollar decreases significantly."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I make extra payments or invest the money instead?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If your loan interest rate is higher than expected investment returns (after taxes), extra payments win. For guaranteed returns, paying down debt at 7% is equivalent to a 7% risk-free investment—hard to beat in any market."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do extra payments reduce my loan term?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Extra payments go directly to principal, reducing the balance faster. This creates a compound effect—less principal means less interest accrues each month, accelerating payoff. Even small extra payments can shave years off your loan."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <span class="lw-logo-icon">L</span>
+        LendWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/extra-payment-savings/" class="active">Extra Payments</a></li>
+        <li><a href="/refinance-calculator/">Refinance</a></li>
+        <li><a href="/payoff-calculator/">Payoff</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="toggleMenu()" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu" id="mobileMenu">
+      <a href="/">Home</a>
+      <a href="/extra-payment-savings/">Extra Payments</a>
+      <a href="/refinance-calculator/">Refinance</a>
+      <a href="/payoff-calculator/">Payoff</a>
+    </div>
+  </nav>
+
+  <main class="lw-main wide">
+    <section class="lw-hero">
+      <span class="lw-badge green">Extra Payment Analysis</span>
+      <h1>How Much Interest <span class="accent">Will You Save?</span></h1>
+      <p class="subtitle">Compare $50 to $500 extra payments side by side. Find your sweet spot where diminishing returns begin.</p>
+    </section>
+
+    <!-- Calculator Input -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">📊</div>
+        <div>
+          <h2 class="lw-card-title">Your Loan Details</h2>
+          <p class="lw-card-subtitle">Enter your current loan information</p>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Current Loan Balance</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" id="balance" class="lw-input" value="250,000" placeholder="250,000" inputmode="numeric">
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">Interest Rate <span class="lw-label-hint">(APR)</span></label>
+          <div class="lw-input-suffix">
+            <input type="text" id="rate" class="lw-input" value="7.0" placeholder="7.0" inputmode="decimal">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">Remaining Term</label>
+          <div class="lw-input-suffix">
+            <input type="text" id="term" class="lw-input" value="25" placeholder="25" inputmode="numeric">
+            <span class="suffix">years</span>
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">Current Monthly Payment <span class="lw-label-hint">(optional)</span></label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" id="payment" class="lw-input" placeholder="Auto-calculated" inputmode="numeric">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Primary Result - Best Value -->
+    <div id="resultsSection" class="lw-hidden">
+      
+      <!-- Sweet Spot Hero -->
+      <div class="lw-result-hero">
+        <div class="lw-result-label">💡 Your Sweet Spot</div>
+        <div class="lw-result-number" id="sweetSpotAmount">$<span id="sweetSpotValue">200</span>/mo</div>
+        <p class="lw-result-sub" id="sweetSpotSummary">Saves $98,432 in interest • Pays off 8 years early</p>
+      </div>
+
+      <!-- What This Means -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon green">💬</div>
+          <div>
+            <h3 class="lw-card-title">What This Means</h3>
+          </div>
+        </div>
+        <p id="meaningText" style="color: var(--lw-text-secondary); font-size: 16px; line-height: 1.7;">
+          At <strong>$200 extra per month</strong>, you hit the efficiency sweet spot. Each dollar saves you <strong>$1.85 in interest</strong>. 
+          Beyond this point, you'll still save more total interest, but each additional dollar works less hard for you.
+        </p>
+      </div>
+
+      <!-- Comparison Chart -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon violet">📈</div>
+          <div>
+            <h3 class="lw-card-title">Interest Savings by Extra Payment Level</h3>
+            <p class="lw-card-subtitle">Compare total interest saved at each level</p>
+          </div>
+        </div>
+        
+        <div class="lw-bar-chart" id="savingsChart">
+          <!-- Bars populated by JS -->
+        </div>
+      </div>
+
+      <!-- Detailed Comparison Table -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon blue">📋</div>
+          <div>
+            <h3 class="lw-card-title">Detailed Comparison</h3>
+            <p class="lw-card-subtitle">Side-by-side analysis of each payment level</p>
+          </div>
+        </div>
+        
+        <div class="lw-table-wrap">
+          <table class="lw-table" id="comparisonTable">
+            <thead>
+              <tr>
+                <th>Extra Payment</th>
+                <th>Total Interest</th>
+                <th>Interest Saved</th>
+                <th>Time Saved</th>
+                <th>Payoff Date</th>
+                <th>$/$ Efficiency</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Diminishing Returns Curve -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon amber">📉</div>
+          <div>
+            <h3 class="lw-card-title">Diminishing Returns Analysis</h3>
+            <p class="lw-card-subtitle">Marginal interest saved per extra dollar</p>
+          </div>
+        </div>
+        
+        <div class="lw-bar-chart" id="efficiencyChart">
+          <!-- Efficiency bars populated by JS -->
+        </div>
+        
+        <div id="diminishingInsight" style="margin-top: 20px; padding: 16px; background: var(--lw-amber-50); border-radius: var(--lw-radius); border-left: 4px solid var(--lw-amber);">
+          <p style="color: var(--lw-slate-700); font-size: 14px; line-height: 1.6; margin: 0;">
+            <strong>Insight:</strong> <span id="insightText">Returns diminish significantly beyond $200/month. The sweet spot for your loan is $200 extra—best balance of savings vs. cash commitment.</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Decision Guidance -->
+      <div class="lw-card" style="background: linear-gradient(135deg, var(--lw-emerald-50) 0%, var(--lw-sky-50) 100%); border: 1px solid var(--lw-emerald);">
+        <div class="lw-card-header">
+          <div class="lw-card-icon green">🎯</div>
+          <div>
+            <h3 class="lw-card-title">Decision Guidance</h3>
+          </div>
+        </div>
+        
+        <div id="decisionGuidance">
+          <div style="display: grid; gap: 16px;">
+            <div style="display: flex; gap: 12px; align-items: flex-start;">
+              <span style="font-size: 20px;">✅</span>
+              <div>
+                <strong style="color: var(--lw-navy);">If you can afford $<span id="recAmount">200</span>/month extra:</strong>
+                <p style="color: var(--lw-text-secondary); margin: 4px 0 0; font-size: 14px;" id="recText1">This is your optimal choice. You'll save $98,432 and pay off 8 years early with the best efficiency.</p>
+              </div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: flex-start;">
+              <span style="font-size: 20px;">💰</span>
+              <div>
+                <strong style="color: var(--lw-navy);">If budget is tight:</strong>
+                <p style="color: var(--lw-text-secondary); margin: 4px 0 0; font-size: 14px;" id="recText2">Even $50/month saves $32,156 in interest. Start small—every dollar counts and the habit matters more than the amount.</p>
+              </div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: flex-start;">
+              <span style="font-size: 20px;">🚀</span>
+              <div>
+                <strong style="color: var(--lw-navy);">If you have extra cash:</strong>
+                <p style="color: var(--lw-text-secondary); margin: 4px 0 0; font-size: 14px;" id="recText3">Going beyond $300/month still saves more, but consider if investing the difference might earn more than your 7% loan rate.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <section class="lw-content">
+      <h2>How Extra Loan Payments Save You Interest</h2>
+      <p>Every extra dollar you pay on your loan goes directly toward principal—the amount you actually borrowed. This triggers a powerful compound effect: less principal means less interest accrues each month, which means more of your regular payment goes to principal, which reduces interest even further.</p>
+      
+      <p>The magic of extra payments lies in timing. A dollar paid early in your loan term can save you $2-3 in interest over the life of the loan. That's because you're eliminating interest that would have compounded for decades.</p>
+
+      <h3>Understanding Diminishing Returns</h3>
+      <p>While more extra payments always save more total interest, the <strong>marginal benefit per dollar decreases</strong> as you increase your extra payment. Here's why:</p>
+      <ul>
+        <li><strong>First $50-100 extra:</strong> Highest efficiency—these dollars eliminate the most expensive interest</li>
+        <li><strong>$100-200 extra:</strong> Still excellent returns, typically your "sweet spot"</li>
+        <li><strong>$200-300 extra:</strong> Good returns but efficiency starts declining</li>
+        <li><strong>$300+ extra:</strong> Diminishing returns kick in—consider other uses for this money</li>
+      </ul>
+
+      <h3>Finding Your Sweet Spot</h3>
+      <p>Your personal sweet spot depends on your specific loan details, but the principle is universal: there's a point where the efficiency of extra payments starts declining significantly. Our calculator identifies this point by analyzing the <strong>marginal interest saved per extra dollar</strong> at each payment level.</p>
+      
+      <p>Beyond the sweet spot, you're not wasting money—you're still saving interest. But you might get better returns investing the difference, especially if your loan rate is relatively low.</p>
+
+      <h2>Strategies for Making Extra Payments</h2>
+      <h3>The "Round Up" Method</h3>
+      <p>If your payment is $1,847, round up to $1,900 or $2,000. This painless $53-153 extra can shave years off your loan.</p>
+      
+      <h3>The "Paycheck Timing" Method</h3>
+      <p>If you're paid bi-weekly (26 paychecks/year), make half payments each paycheck. You'll make 13 full payments per year instead of 12—an extra payment annually without feeling it.</p>
+      
+      <h3>The "Windfall" Method</h3>
+      <p>Commit tax refunds, bonuses, or gift money to principal. One $3,000 lump sum can have the same impact as years of small extra payments.</p>
+
+      <!-- FAQ Section -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">How much interest will I save with an extra $100 payment per month?</button>
+          <div class="lw-faq-a">
+            <p>The interest savings depend on your loan balance, interest rate, and remaining term. For example, on a $200,000 mortgage at 7% with 25 years remaining, paying an extra $100/month saves approximately $56,000 in interest and pays off the loan 5 years early. Use our calculator above with your specific numbers for an accurate estimate.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">What is the diminishing returns sweet spot for extra payments?</button>
+          <div class="lw-faq-a">
+            <p>The sweet spot is where each additional dollar of extra payment generates the highest marginal interest savings. Typically, the first $100-200 extra provides the best ROI. Beyond $300-500 extra per month, the marginal benefit per dollar decreases significantly. Our calculator automatically identifies your personal sweet spot based on your loan details.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Should I make extra payments or invest the money instead?</button>
+          <div class="lw-faq-a">
+            <p>If your loan interest rate is higher than your expected investment returns (after taxes), extra payments win. For guaranteed returns, paying down debt at 7% is equivalent to a 7% risk-free investment—hard to beat in any market. However, if your loan rate is low (under 4-5%) and you have a long investment horizon, investing might make more sense mathematically.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">How do extra payments reduce my loan term?</button>
+          <div class="lw-faq-a">
+            <p>Extra payments go directly to principal, reducing your balance faster. This creates a compound effect—less principal means less interest accrues each month, so more of your regular payment goes to principal, accelerating payoff even further. Even small extra payments can shave years off your loan term.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/payoff-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Loan Payoff Calculator
+        </a>
+        <a href="/refinance-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Refinance Break-Even
+        </a>
+        <a href="/amortization-schedule/" class="lw-related-link">
+          <span class="dot"></span>
+          Amortization Schedule
+        </a>
+      </div>
+    </section>
+
+    <p class="lw-disclaimer">
+      This calculator provides estimates for educational purposes only. Actual savings may vary based on your lender's policies, payment timing, and other factors. Consult a financial advisor for personalized advice.
+    </p>
+  </main>
+
+  <footer class="lw-footer">
+    <p>© 2025 LendWise. All calculations are estimates. <a href="/">Return to Home</a></p>
+  </footer>
+
+  <script>
+    // ===== Mobile Menu =====
+    function toggleMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    // ===== FAQ Accordion =====
+    document.querySelectorAll('.lw-faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const wasOpen = item.classList.contains('open');
+        document.querySelectorAll('.lw-faq-item').forEach(i => i.classList.remove('open'));
+        if (!wasOpen) item.classList.add('open');
+      });
+    });
+
+    // ===== Format Helpers =====
+    function parseNumber(str) {
+      return parseFloat(String(str).replace(/[^0-9.-]/g, '')) || 0;
+    }
+
+    function formatCurrency(num) {
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(num);
+    }
+
+    function formatCurrencyFull(num) {
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num);
+    }
+
+    function formatNumber(num) {
+      return new Intl.NumberFormat('en-US').format(Math.round(num));
+    }
+
+    // ===== Input Formatting =====
+    ['balance', 'payment'].forEach(id => {
+      const el = document.getElementById(id);
+      el.addEventListener('blur', () => {
+        const val = parseNumber(el.value);
+        if (val > 0) el.value = formatNumber(val);
+      });
+    });
+
+    // ===== Loan Calculation Functions =====
+    function calculateMonthlyPayment(principal, annualRate, years) {
+      const monthlyRate = annualRate / 100 / 12;
+      const n = years * 12;
+      if (monthlyRate === 0) return principal / n;
+      return principal * (monthlyRate * Math.pow(1 + monthlyRate, n)) / (Math.pow(1 + monthlyRate, n) - 1);
+    }
+
+    function calculateLoanDetails(principal, annualRate, monthlyPayment, extraPayment = 0) {
+      const monthlyRate = annualRate / 100 / 12;
+      let balance = principal;
+      let totalInterest = 0;
+      let months = 0;
+      const maxMonths = 600; // 50 years max safety
+      const totalPayment = monthlyPayment + extraPayment;
+
+      while (balance > 0.01 && months < maxMonths) {
+        const interestPayment = balance * monthlyRate;
+        totalInterest += interestPayment;
+        
+        let principalPayment = totalPayment - interestPayment;
+        if (principalPayment > balance) principalPayment = balance;
+        
+        balance -= principalPayment;
+        months++;
+        
+        // Safety check - if payment doesn't cover interest
+        if (totalPayment <= interestPayment && months > 1) {
+          return { months: Infinity, totalInterest: Infinity };
+        }
+      }
+
+      return { months, totalInterest };
+    }
+
+    function monthsToYearsMonths(totalMonths) {
+      const years = Math.floor(totalMonths / 12);
+      const months = totalMonths % 12;
+      if (years === 0) return `${months} months`;
+      if (months === 0) return `${years} years`;
+      return `${years}y ${months}m`;
+    }
+
+    function getPayoffDate(months) {
+      const date = new Date();
+      date.setMonth(date.getMonth() + months);
+      return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    }
+
+    // ===== Main Calculation =====
+    const extraLevels = [0, 50, 100, 200, 300, 500];
+
+    function calculate() {
+      const balance = parseNumber(document.getElementById('balance').value);
+      const rate = parseNumber(document.getElementById('rate').value);
+      const term = parseNumber(document.getElementById('term').value);
+      let payment = parseNumber(document.getElementById('payment').value);
+
+      // Validate inputs
+      if (balance <= 0 || rate <= 0 || term <= 0) {
+        document.getElementById('resultsSection').classList.add('lw-hidden');
+        return;
+      }
+
+      // Calculate monthly payment if not provided
+      if (payment <= 0) {
+        payment = calculateMonthlyPayment(balance, rate, term);
+      }
+
+      // Calculate for each extra payment level
+      const results = extraLevels.map(extra => {
+        const details = calculateLoanDetails(balance, rate, payment, extra);
+        return {
+          extra,
+          months: details.months,
+          totalInterest: details.totalInterest
+        };
+      });
+
+      const baseResult = results[0];
+      
+      // Calculate savings and efficiency for each level
+      const analysis = results.map((r, i) => {
+        const interestSaved = baseResult.totalInterest - r.totalInterest;
+        const timeSaved = baseResult.months - r.months;
+        
+        // Marginal efficiency: interest saved per dollar of extra payment
+        let marginalEfficiency = 0;
+        if (i > 0) {
+          const prevResult = results[i - 1];
+          const marginalInterestSaved = prevResult.totalInterest - r.totalInterest;
+          const marginalExtraPayment = (r.extra - prevResult.extra) * r.months;
+          marginalEfficiency = marginalExtraPayment > 0 ? marginalInterestSaved / marginalExtraPayment : 0;
+        }
+
+        // Cumulative efficiency
+        const totalExtraPaid = r.extra * r.months;
+        const cumulativeEfficiency = totalExtraPaid > 0 ? interestSaved / totalExtraPaid : 0;
+
+        return {
+          ...r,
+          interestSaved,
+          timeSaved,
+          marginalEfficiency,
+          cumulativeEfficiency,
+          payoffDate: getPayoffDate(r.months)
+        };
+      });
+
+      // Find sweet spot (highest marginal efficiency that's not the first level)
+      let sweetSpotIndex = 1;
+      let maxEfficiency = 0;
+      for (let i = 1; i < analysis.length; i++) {
+        if (analysis[i].marginalEfficiency > maxEfficiency && analysis[i].months < Infinity) {
+          maxEfficiency = analysis[i].marginalEfficiency;
+          sweetSpotIndex = i;
+        }
+      }
+      
+      // If efficiencies are similar, prefer middle ground
+      if (analysis[2] && analysis[2].marginalEfficiency > maxEfficiency * 0.85) {
+        sweetSpotIndex = 2; // $100 is often a good sweet spot
+      }
+      if (analysis[3] && analysis[3].marginalEfficiency > maxEfficiency * 0.80) {
+        sweetSpotIndex = 3; // $200 might be better
+      }
+
+      const sweetSpot = analysis[sweetSpotIndex];
+
+      // Show results
+      document.getElementById('resultsSection').classList.remove('lw-hidden');
+
+      // Update sweet spot hero
+      document.getElementById('sweetSpotValue').textContent = sweetSpot.extra;
+      document.getElementById('sweetSpotSummary').textContent = 
+        `Saves ${formatCurrency(sweetSpot.interestSaved)} in interest • Pays off ${monthsToYearsMonths(sweetSpot.timeSaved)} early`;
+
+      // Update "What This Means"
+      document.getElementById('meaningText').innerHTML = 
+        `At <strong>${formatCurrency(sweetSpot.extra)} extra per month</strong>, you hit the efficiency sweet spot. Each dollar saves you <strong>${formatCurrencyFull(sweetSpot.cumulativeEfficiency)} in interest</strong>. Beyond this point, you'll still save more total interest, but each additional dollar works less hard for you.`;
+
+      // Render savings bar chart
+      const maxSavings = Math.max(...analysis.filter(a => a.interestSaved < Infinity).map(a => a.interestSaved));
+      const chartHtml = analysis.slice(1).map((a, i) => {
+        const width = maxSavings > 0 ? Math.max(5, (a.interestSaved / maxSavings) * 100) : 0;
+        const isSweet = a.extra === sweetSpot.extra;
+        const barClass = isSweet ? 'green' : 'blue';
+        return `
+          <div class="lw-bar-row">
+            <span class="lw-bar-label">${formatCurrency(a.extra)}/mo${isSweet ? ' ⭐' : ''}</span>
+            <div class="lw-bar-track">
+              <div class="lw-bar-fill ${barClass}" style="width: ${width}%">
+                <span class="lw-bar-amount">${formatCurrency(a.interestSaved)}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      document.getElementById('savingsChart').innerHTML = chartHtml;
+
+      // Render comparison table
+      const tableHtml = analysis.map((a, i) => {
+        const isBase = i === 0;
+        const isSweet = a.extra === sweetSpot.extra && !isBase;
+        const rowStyle = isSweet ? 'background: var(--lw-emerald-50);' : '';
+        return `
+          <tr style="${rowStyle}">
+            <td class="num">${isBase ? 'No extra' : formatCurrency(a.extra) + '/mo'}${isSweet ? ' ⭐' : ''}</td>
+            <td class="num">${formatCurrency(a.totalInterest)}</td>
+            <td class="num" style="color: ${a.interestSaved > 0 ? 'var(--lw-emerald)' : 'inherit'};">${isBase ? '—' : formatCurrency(a.interestSaved)}</td>
+            <td>${isBase ? '—' : monthsToYearsMonths(a.timeSaved)}</td>
+            <td>${a.payoffDate}</td>
+            <td class="num">${isBase ? '—' : formatCurrencyFull(a.cumulativeEfficiency)}</td>
+          </tr>
+        `;
+      }).join('');
+      document.getElementById('tableBody').innerHTML = tableHtml;
+
+      // Render efficiency chart (marginal efficiency)
+      const maxMarginal = Math.max(...analysis.slice(1).map(a => a.marginalEfficiency));
+      const efficiencyHtml = analysis.slice(1).map((a, i) => {
+        const width = maxMarginal > 0 ? Math.max(5, (a.marginalEfficiency / maxMarginal) * 100) : 0;
+        const isSweet = a.extra === sweetSpot.extra;
+        const barClass = width > 70 ? 'green' : width > 40 ? 'amber' : 'rose';
+        return `
+          <div class="lw-bar-row">
+            <span class="lw-bar-label">${formatCurrency(a.extra)}/mo</span>
+            <div class="lw-bar-track">
+              <div class="lw-bar-fill ${barClass}" style="width: ${width}%">
+                <span class="lw-bar-amount">${formatCurrencyFull(a.marginalEfficiency)}/$ saved</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      document.getElementById('efficiencyChart').innerHTML = efficiencyHtml;
+
+      // Update insight text
+      const highestExtra = analysis[analysis.length - 1];
+      const diminishPoint = analysis.find((a, i) => i > 0 && a.marginalEfficiency < maxEfficiency * 0.7);
+      const diminishAmount = diminishPoint ? formatCurrency(diminishPoint.extra) : formatCurrency(300);
+      
+      document.getElementById('insightText').textContent = 
+        `Returns diminish significantly beyond ${diminishAmount}/month. The sweet spot for your loan is ${formatCurrency(sweetSpot.extra)} extra—best balance of savings vs. cash commitment.`;
+
+      // Update decision guidance
+      document.getElementById('recAmount').textContent = sweetSpot.extra;
+      document.getElementById('recText1').textContent = 
+        `This is your optimal choice. You'll save ${formatCurrency(sweetSpot.interestSaved)} and pay off ${monthsToYearsMonths(sweetSpot.timeSaved)} early with the best efficiency.`;
+      
+      const smallExtra = analysis[1];
+      document.getElementById('recText2').textContent = 
+        `Even ${formatCurrency(smallExtra.extra)}/month saves ${formatCurrency(smallExtra.interestSaved)} in interest. Start small—every dollar counts and the habit matters more than the amount.`;
+      
+      document.getElementById('recText3').textContent = 
+        `Going beyond ${formatCurrency(sweetSpot.extra)}/month still saves more, but consider if investing the difference might earn more than your ${rate}% loan rate.`;
+
+      // Animate results
+      document.getElementById('resultsSection').classList.add('lw-animate-in');
+    }
+
+    // ===== Event Listeners =====
+    document.querySelectorAll('#balance, #rate, #term, #payment').forEach(input => {
+      input.addEventListener('input', calculate);
+      input.addEventListener('change', calculate);
+    });
+
+    // Initial calculation
+    calculate();
+  </script>
+</body>
+</html>

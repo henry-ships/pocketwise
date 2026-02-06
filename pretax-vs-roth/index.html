@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Tax vs Roth Breakeven Calculator | Which Retirement Account is Better?</title>
+  <meta name="description" content="Free Roth vs traditional calculator. Find your breakeven tax rate to determine if Roth or pre-tax 401k contributions are better for your retirement.">
+  <meta name="keywords" content="Roth vs traditional calculator, pre tax vs Roth 401k, Roth vs traditional breakeven, which retirement account is better, roth ira calculator, traditional vs roth comparison">
+  <link rel="canonical" href="https://pocketwise.app/pretax-vs-roth/">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Pre-Tax vs Roth Breakeven Calculator">
+  <meta property="og:description" content="Find out if Roth or Traditional contributions are better for your retirement based on your tax situation.">
+  <meta property="og:type" content="website">
+  
+  <style>
+    /* Calculator-specific styles */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin: 24px 0;
+    }
+    .comparison-card {
+      background: var(--lw-card);
+      border-radius: var(--lw-radius-lg);
+      padding: 24px;
+      border: 2px solid var(--lw-border-light);
+      text-align: center;
+      transition: all var(--lw-transition);
+    }
+    .comparison-card.traditional {
+      border-color: var(--lw-sky-100);
+    }
+    .comparison-card.roth {
+      border-color: var(--lw-emerald-50);
+    }
+    .comparison-card.winner {
+      border-color: var(--lw-emerald);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+    }
+    .comparison-card.winner.traditional {
+      border-color: var(--lw-sky);
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+    }
+    .comparison-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .comparison-card-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .traditional .comparison-card-icon {
+      background: var(--lw-sky-100);
+    }
+    .roth .comparison-card-icon {
+      background: var(--lw-emerald-50);
+    }
+    .comparison-card-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--lw-navy);
+    }
+    .comparison-value-label {
+      font-size: 12px;
+      color: var(--lw-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      margin-top: 16px;
+      margin-bottom: 4px;
+    }
+    .comparison-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--lw-navy);
+    }
+    .comparison-value.small {
+      font-size: 20px;
+    }
+    .comparison-value.green { color: var(--lw-emerald); }
+    .comparison-value.sky { color: var(--lw-sky); }
+    .winner-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--lw-emerald);
+      color: white;
+      padding: 4px 10px;
+      border-radius: var(--lw-radius-full);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 8px;
+    }
+    .winner.traditional .winner-badge {
+      background: var(--lw-sky);
+    }
+    
+    /* Breakeven visualization */
+    .breakeven-visual {
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .breakeven-bar {
+      position: relative;
+      height: 40px;
+      background: linear-gradient(90deg, var(--lw-sky) 0%, var(--lw-emerald) 100%);
+      border-radius: var(--lw-radius-full);
+      margin: 32px 0 24px;
+    }
+    .breakeven-marker {
+      position: absolute;
+      top: -20px;
+      transform: translateX(-50%);
+      text-align: center;
+      transition: left 0.5s ease;
+    }
+    .breakeven-marker::after {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 3px;
+      height: 60px;
+      background: var(--lw-navy);
+      border-radius: 2px;
+    }
+    .breakeven-marker-label {
+      font-size: 11px;
+      color: var(--lw-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+    .breakeven-marker-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--lw-navy);
+      background: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      box-shadow: var(--lw-shadow-sm);
+    }
+    .current-marker {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 16px;
+      height: 16px;
+      background: white;
+      border: 3px solid var(--lw-navy);
+      border-radius: 50%;
+      box-shadow: var(--lw-shadow);
+      transition: left 0.5s ease;
+    }
+    .breakeven-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--lw-text-muted);
+    }
+    .breakeven-labels span:first-child { color: var(--lw-sky-dark); }
+    .breakeven-labels span:last-child { color: var(--lw-emerald-dark); }
+    
+    /* Decision box */
+    .decision-box {
+      background: linear-gradient(135deg, var(--lw-navy) 0%, var(--lw-slate-800) 100%);
+      border-radius: var(--lw-radius-lg);
+      padding: 28px;
+      text-align: center;
+      color: white;
+      margin: 24px 0;
+    }
+    .decision-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+    .decision-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .decision-subtitle {
+      color: var(--lw-slate-400);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .decision-subtitle strong {
+      color: white;
+    }
+    
+    /* Meaning box */
+    .meaning-box {
+      background: var(--lw-sky-50);
+      border-left: 4px solid var(--lw-sky);
+      border-radius: 0 var(--lw-radius) var(--lw-radius) 0;
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+    .meaning-box.green {
+      background: var(--lw-emerald-50);
+      border-left-color: var(--lw-emerald);
+    }
+    .meaning-title {
+      font-weight: 600;
+      color: var(--lw-navy);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .meaning-text {
+      color: var(--lw-text-secondary);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    
+    /* Sensitivity table */
+    .sensitivity-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .sensitivity-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--lw-navy);
+    }
+    .lw-table .winner-row {
+      background: var(--lw-emerald-50);
+    }
+    .lw-table .winner-row td {
+      color: var(--lw-emerald-dark);
+      font-weight: 600;
+    }
+    .lw-table .current-row {
+      background: var(--lw-sky-50);
+    }
+    .lw-table .current-row td:first-child::after {
+      content: ' ← Your Rate';
+      font-size: 10px;
+      color: var(--lw-sky-dark);
+      font-weight: 600;
+    }
+    
+    /* Input grid */
+    .input-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .comparison-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .comparison-value {
+        font-size: 24px;
+      }
+      .input-row {
+        grid-template-columns: 1fr;
+      }
+      .decision-title {
+        font-size: 20px;
+      }
+    }
+  </style>
+  
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the difference between pre-tax and Roth contributions?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Pre-tax (Traditional) contributions reduce your taxable income now, and you pay taxes when you withdraw in retirement. Roth contributions are made with after-tax dollars, but withdrawals in retirement are completely tax-free."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I calculate the breakeven tax rate for Roth vs Traditional?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The breakeven tax rate is the future tax rate at which both options provide the same after-tax retirement value. If you expect your retirement tax rate to be higher than the breakeven rate, Roth wins. If lower, Traditional wins."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I choose Roth or Traditional 401k?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Choose Roth if you expect your tax rate to be higher in retirement than it is now. Choose Traditional if you expect your tax rate to be lower in retirement. Early-career workers often benefit from Roth, while peak earners often benefit from Traditional."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does the investment return affect the Roth vs Traditional decision?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No, investment returns do not affect the breakeven analysis. Both accounts grow tax-free, so the only factor that matters is your current tax rate compared to your expected retirement tax rate."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I contribute to both Roth and Traditional accounts?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, you can split your contributions between Roth and Traditional 401k up to the annual limit. This tax diversification strategy can hedge against uncertainty about future tax rates."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">P</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/pretax-vs-roth/" class="active">Pre-Tax vs Roth</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu" id="mobileMenu">
+      <a href="/">Home</a>
+      <a href="/pretax-vs-roth/">Pre-Tax vs Roth Calculator</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- Hero -->
+    <section class="lw-hero">
+      <span class="lw-badge">RETIREMENT PLANNING</span>
+      <h1>Pre-Tax vs Roth <span class="accent">Breakeven Calculator</span></h1>
+      <p class="subtitle">Should you pay taxes now or later? Find your breakeven tax rate and make the optimal retirement account decision.</p>
+    </section>
+
+    <!-- Calculator Inputs -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">📊</div>
+        <div>
+          <div class="lw-card-title">Your Information</div>
+          <div class="lw-card-subtitle">Enter your contribution and tax details</div>
+        </div>
+      </div>
+
+      <div class="lw-form-group">
+        <label class="lw-label">Annual Contribution Amount</label>
+        <div class="lw-input-prefix">
+          <span class="prefix">$</span>
+          <input type="number" class="lw-input" id="contribution" value="20000" min="0" max="100000" step="500">
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label">Current Marginal Tax Rate</label>
+            <span class="lw-range-value" id="currentTaxValue">24%</span>
+          </div>
+          <input type="range" class="lw-range" id="currentTax" min="10" max="50" value="24" step="1">
+        </div>
+
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label">Expected Retirement Tax Rate</label>
+            <span class="lw-range-value" id="retirementTaxValue">22%</span>
+          </div>
+          <input type="range" class="lw-range" id="retirementTax" min="0" max="50" value="22" step="1">
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label">Years Until Retirement</label>
+            <span class="lw-range-value" id="yearsValue">25 years</span>
+          </div>
+          <input type="range" class="lw-range" id="years" min="1" max="45" value="25" step="1">
+        </div>
+
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label">Expected Annual Return</label>
+            <span class="lw-range-value" id="returnValue">7%</span>
+          </div>
+          <input type="range" class="lw-range" id="annualReturn" min="3" max="12" value="7" step="0.5">
+        </div>
+      </div>
+    </div>
+
+    <!-- Decision Box -->
+    <div class="decision-box" id="decisionBox">
+      <div class="decision-icon" id="decisionIcon">🏆</div>
+      <div class="decision-title" id="decisionTitle">Traditional (Pre-Tax) Wins</div>
+      <div class="decision-subtitle" id="decisionSubtitle">
+        At your expected retirement tax rate of <strong>22%</strong>, Traditional contributions save you <strong>$45,231</strong> more than Roth.
+      </div>
+    </div>
+
+    <!-- Side-by-Side Comparison -->
+    <div class="comparison-grid">
+      <div class="comparison-card traditional" id="traditionalCard">
+        <div class="comparison-card-header">
+          <div class="comparison-card-icon">🏛️</div>
+          <div class="comparison-card-title">Traditional (Pre-Tax)</div>
+        </div>
+        <div class="comparison-value-label">Future Value</div>
+        <div class="comparison-value sky" id="traditionalFV">$1,216,766</div>
+        <div class="comparison-value-label">After-Tax at Retirement</div>
+        <div class="comparison-value small" id="traditionalAfterTax">$949,078</div>
+        <div class="comparison-value-label">Tax Savings Today</div>
+        <div class="comparison-value small green" id="taxSavingsToday">$4,800/yr</div>
+        <div class="winner-badge" id="traditionalWinner" style="display: none;">✓ Winner</div>
+      </div>
+
+      <div class="comparison-card roth" id="rothCard">
+        <div class="comparison-card-header">
+          <div class="comparison-card-icon">🌟</div>
+          <div class="comparison-card-title">Roth (After-Tax)</div>
+        </div>
+        <div class="comparison-value-label">Future Value</div>
+        <div class="comparison-value green" id="rothFV">$925,543</div>
+        <div class="comparison-value-label">After-Tax at Retirement</div>
+        <div class="comparison-value small" id="rothAfterTax">$925,543</div>
+        <div class="comparison-value-label">Effective Contribution</div>
+        <div class="comparison-value small" id="effectiveContrib">$15,200/yr</div>
+        <div class="winner-badge" id="rothWinner" style="display: none;">✓ Winner</div>
+      </div>
+    </div>
+
+    <!-- What This Means -->
+    <div class="meaning-box" id="meaningBox">
+      <div class="meaning-title">💡 What This Means</div>
+      <div class="meaning-text" id="meaningText">
+        With a current tax rate of 24% and expected retirement rate of 22%, you save more by deferring taxes. The tax savings you get today can be invested and will compound over time, resulting in a larger after-tax nest egg.
+      </div>
+    </div>
+
+    <!-- Breakeven Visualization -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">⚖️</div>
+        <div>
+          <div class="lw-card-title">Breakeven Tax Rate</div>
+          <div class="lw-card-subtitle">Where Traditional and Roth produce equal after-tax results</div>
+        </div>
+      </div>
+
+      <div class="breakeven-visual">
+        <div style="text-align: center; margin-bottom: 8px;">
+          <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 32px; font-weight: 800; color: var(--lw-navy);" id="breakevenRate">24%</span>
+          <div style="font-size: 14px; color: var(--lw-text-secondary);">Breakeven Tax Rate</div>
+        </div>
+        
+        <div class="breakeven-bar">
+          <div class="breakeven-marker" id="breakevenMarker" style="left: 48%;">
+            <div class="breakeven-marker-label">Breakeven</div>
+            <div class="breakeven-marker-value" id="breakevenMarkerValue">24%</div>
+          </div>
+          <div class="current-marker" id="currentMarker" style="left: 44%;"></div>
+        </div>
+        
+        <div class="breakeven-labels">
+          <span>← Traditional Wins</span>
+          <span>Roth Wins →</span>
+        </div>
+      </div>
+
+      <div class="meaning-box green" id="breakevenMeaning">
+        <div class="meaning-title">📈 Decision Rule</div>
+        <div class="meaning-text" id="breakevenText">
+          <strong>Roth wins if your future tax rate is ≥ 24%.</strong> Your expected retirement rate is 22%, which is below the breakeven—so Traditional is better at your expected rates.
+        </div>
+      </div>
+    </div>
+
+    <!-- Sensitivity Table -->
+    <div class="lw-card">
+      <div class="sensitivity-header">
+        <div>
+          <div class="lw-card-title">Sensitivity Analysis</div>
+          <div class="lw-card-subtitle" style="color: var(--lw-text-muted); font-size: 13px; margin-top: 4px;">See how different retirement tax rates affect your outcome</div>
+        </div>
+      </div>
+
+      <div class="lw-table-wrap">
+        <table class="lw-table">
+          <thead>
+            <tr>
+              <th>Retirement Tax Rate</th>
+              <th>Traditional After-Tax</th>
+              <th>Roth After-Tax</th>
+              <th>Difference</th>
+              <th>Winner</th>
+            </tr>
+          </thead>
+          <tbody id="sensitivityBody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <section class="lw-content">
+      <h2>Roth vs Traditional: How to Choose the Best Retirement Account</h2>
+      <p>The decision between pre-tax (Traditional) and Roth retirement contributions is one of the most impactful choices you'll make for your financial future. Both options offer tax advantages—but at different times. Understanding when each option wins can save you tens of thousands of dollars over your lifetime.</p>
+
+      <h3>How Pre-Tax (Traditional) Contributions Work</h3>
+      <p>When you make pre-tax contributions to a 401(k) or Traditional IRA, you reduce your taxable income today. Your money grows tax-deferred, and you pay ordinary income tax when you withdraw in retirement. This is advantageous when:</p>
+      <ul>
+        <li>You're in a high tax bracket now and expect to be in a lower bracket in retirement</li>
+        <li>You want to maximize your current take-home pay</li>
+        <li>You're near retirement and won't have decades of compounding ahead</li>
+      </ul>
+
+      <h3>How Roth Contributions Work</h3>
+      <p>Roth contributions are made with after-tax dollars—you don't get a tax break today. However, your money grows completely tax-free, and qualified withdrawals in retirement are 100% tax-free. Roth is typically better when:</p>
+      <ul>
+        <li>You expect your tax rate to be higher in retirement than now</li>
+        <li>You're early in your career with room for significant income growth</li>
+        <li>You want tax-free income in retirement for flexibility</li>
+        <li>You want to avoid Required Minimum Distributions (Roth IRAs only)</li>
+      </ul>
+
+      <h3>Understanding the Breakeven Tax Rate</h3>
+      <p>The breakeven tax rate is the key to this decision. It's the future tax rate at which both Traditional and Roth produce exactly the same after-tax retirement wealth. Here's the insight: <strong>the breakeven rate equals your current marginal tax rate.</strong></p>
+      <p>If your future tax rate will be higher than your current rate, Roth wins. If it will be lower, Traditional wins. If they're the same, you're indifferent (though Roth has other benefits like no RMDs).</p>
+
+      <h3>Factors That Affect Your Future Tax Rate</h3>
+      <p>Predicting your retirement tax rate involves considering:</p>
+      <ul>
+        <li><strong>Retirement income sources:</strong> Social Security, pensions, withdrawals from accounts</li>
+        <li><strong>Filing status:</strong> Single vs. married, which affects brackets</li>
+        <li><strong>Tax law changes:</strong> Future Congress may raise or lower rates</li>
+        <li><strong>State taxes:</strong> You might retire in a different state</li>
+        <li><strong>Deductions:</strong> You may have fewer deductions (no mortgage, no kids)</li>
+      </ul>
+
+      <h2>Frequently Asked Questions</h2>
+      <div class="lw-faq">
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">What is the difference between pre-tax and Roth contributions?</button>
+          <div class="lw-faq-a">
+            <p>Pre-tax (Traditional) contributions reduce your taxable income now, and you pay taxes when you withdraw in retirement. Roth contributions are made with after-tax dollars, but withdrawals in retirement are completely tax-free.</p>
+          </div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">How do I calculate the breakeven tax rate?</button>
+          <div class="lw-faq-a">
+            <p>The breakeven tax rate equals your current marginal tax rate. If you expect your retirement tax rate to be higher than your current rate, Roth wins. If lower, Traditional wins. This calculator shows you the exact numbers.</p>
+          </div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">Does investment return affect the Roth vs Traditional decision?</button>
+          <div class="lw-faq-a">
+            <p>No! This is a common misconception. Both accounts grow tax-free inside, so the investment return is the same. The only factor that matters is comparing your current tax rate to your expected retirement tax rate.</p>
+          </div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">Should I split contributions between Roth and Traditional?</button>
+          <div class="lw-faq-a">
+            <p>Tax diversification can be a smart strategy, especially if you're uncertain about future tax rates. Having both Roth and Traditional balances gives you flexibility in retirement to manage your tax bracket each year.</p>
+          </div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">What about state income taxes?</button>
+          <div class="lw-faq-a">
+            <p>State taxes matter too! If you live in a high-tax state now but plan to retire in a no-income-tax state (like Florida or Texas), Traditional becomes more attractive. Factor in your combined federal + state rate.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <div class="lw-disclaimer">
+      This calculator provides estimates for educational purposes only. Tax situations vary—consult a qualified tax professional or financial advisor for personalized advice.
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="lw-footer">
+    <a href="/">PocketWise</a> · Free Financial Calculators
+  </footer>
+
+  <script>
+    // Format currency
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    // Calculate future value
+    function futureValue(pmt, rate, years) {
+      if (rate === 0) return pmt * years;
+      return pmt * ((Math.pow(1 + rate, years) - 1) / rate);
+    }
+
+    // Main calculation
+    function calculate() {
+      const contribution = parseFloat(document.getElementById('contribution').value) || 0;
+      const currentTax = parseFloat(document.getElementById('currentTax').value) / 100;
+      const retirementTax = parseFloat(document.getElementById('retirementTax').value) / 100;
+      const years = parseInt(document.getElementById('years').value) || 1;
+      const annualReturn = parseFloat(document.getElementById('annualReturn').value) / 100;
+
+      // Update display values
+      document.getElementById('currentTaxValue').textContent = Math.round(currentTax * 100) + '%';
+      document.getElementById('retirementTaxValue').textContent = Math.round(retirementTax * 100) + '%';
+      document.getElementById('yearsValue').textContent = years + ' years';
+      document.getElementById('returnValue').textContent = (annualReturn * 100).toFixed(1) + '%';
+
+      // Traditional (Pre-Tax) calculations
+      const traditionalContrib = contribution; // Full amount goes in pre-tax
+      const traditionalFV = futureValue(traditionalContrib, annualReturn, years);
+      const traditionalAfterTax = traditionalFV * (1 - retirementTax);
+
+      // Roth (After-Tax) calculations
+      const rothContrib = contribution * (1 - currentTax); // You can only contribute what's left after tax
+      const rothFV = futureValue(rothContrib, annualReturn, years);
+      const rothAfterTax = rothFV; // No tax on withdrawal
+
+      // Breakeven rate (equals current tax rate for same contribution amount analysis)
+      const breakevenRate = currentTax;
+
+      // Difference
+      const difference = traditionalAfterTax - rothAfterTax;
+      const winner = difference > 0 ? 'traditional' : (difference < 0 ? 'roth' : 'tie');
+
+      // Update comparison cards
+      document.getElementById('traditionalFV').textContent = formatCurrency(traditionalFV);
+      document.getElementById('traditionalAfterTax').textContent = formatCurrency(traditionalAfterTax);
+      document.getElementById('taxSavingsToday').textContent = formatCurrency(contribution * currentTax) + '/yr';
+
+      document.getElementById('rothFV').textContent = formatCurrency(rothFV);
+      document.getElementById('rothAfterTax').textContent = formatCurrency(rothAfterTax);
+      document.getElementById('effectiveContrib').textContent = formatCurrency(rothContrib) + '/yr';
+
+      // Update winner badges
+      const traditionalCard = document.getElementById('traditionalCard');
+      const rothCard = document.getElementById('rothCard');
+      const traditionalWinner = document.getElementById('traditionalWinner');
+      const rothWinner = document.getElementById('rothWinner');
+
+      traditionalCard.classList.remove('winner');
+      rothCard.classList.remove('winner');
+      traditionalWinner.style.display = 'none';
+      rothWinner.style.display = 'none';
+
+      if (winner === 'traditional') {
+        traditionalCard.classList.add('winner');
+        traditionalWinner.style.display = 'inline-flex';
+      } else if (winner === 'roth') {
+        rothCard.classList.add('winner');
+        rothWinner.style.display = 'inline-flex';
+      }
+
+      // Update decision box
+      const decisionIcon = document.getElementById('decisionIcon');
+      const decisionTitle = document.getElementById('decisionTitle');
+      const decisionSubtitle = document.getElementById('decisionSubtitle');
+
+      if (winner === 'traditional') {
+        decisionIcon.textContent = '🏛️';
+        decisionTitle.textContent = 'Traditional (Pre-Tax) Wins';
+        decisionSubtitle.innerHTML = `At your expected retirement tax rate of <strong>${Math.round(retirementTax * 100)}%</strong>, Traditional contributions give you <strong>${formatCurrency(Math.abs(difference))}</strong> more than Roth.`;
+      } else if (winner === 'roth') {
+        decisionIcon.textContent = '🌟';
+        decisionTitle.textContent = 'Roth (After-Tax) Wins';
+        decisionSubtitle.innerHTML = `At your expected retirement tax rate of <strong>${Math.round(retirementTax * 100)}%</strong>, Roth contributions give you <strong>${formatCurrency(Math.abs(difference))}</strong> more than Traditional.`;
+      } else {
+        decisionIcon.textContent = '⚖️';
+        decisionTitle.textContent = "It's a Tie!";
+        decisionSubtitle.innerHTML = `At your expected retirement tax rate of <strong>${Math.round(retirementTax * 100)}%</strong>, both options produce the same after-tax result. Consider Roth for flexibility.`;
+      }
+
+      // Update meaning box
+      const meaningBox = document.getElementById('meaningBox');
+      const meaningText = document.getElementById('meaningText');
+
+      if (winner === 'traditional') {
+        meaningBox.classList.remove('green');
+        meaningText.innerHTML = `With a current tax rate of <strong>${Math.round(currentTax * 100)}%</strong> and expected retirement rate of <strong>${Math.round(retirementTax * 100)}%</strong>, you benefit from deferring taxes. The tax savings you get today (${formatCurrency(contribution * currentTax)}/year) can compound over ${years} years, building a larger retirement nest egg.`;
+      } else if (winner === 'roth') {
+        meaningBox.classList.add('green');
+        meaningText.innerHTML = `With a current tax rate of <strong>${Math.round(currentTax * 100)}%</strong> and expected retirement rate of <strong>${Math.round(retirementTax * 100)}%</strong>, paying taxes now at the lower rate saves you money. Your Roth contributions grow completely tax-free and you'll withdraw ${formatCurrency(rothAfterTax)} without owing a penny.`;
+      } else {
+        meaningBox.classList.remove('green');
+        meaningText.innerHTML = `Your current and expected retirement tax rates are equal at <strong>${Math.round(currentTax * 100)}%</strong>. Both options yield the same result, so consider Roth for its additional benefits: no Required Minimum Distributions and tax-free growth forever.`;
+      }
+
+      // Update breakeven visualization
+      document.getElementById('breakevenRate').textContent = Math.round(breakevenRate * 100) + '%';
+      document.getElementById('breakevenMarkerValue').textContent = Math.round(breakevenRate * 100) + '%';
+      
+      // Position markers (0-50% range mapped to 0-100% position)
+      const breakevenPos = Math.min(Math.max((breakevenRate * 100) / 50 * 100, 5), 95);
+      const currentPos = Math.min(Math.max((retirementTax * 100) / 50 * 100, 5), 95);
+      
+      document.getElementById('breakevenMarker').style.left = breakevenPos + '%';
+      document.getElementById('currentMarker').style.left = currentPos + '%';
+
+      // Update breakeven text
+      const breakevenText = document.getElementById('breakevenText');
+      if (winner === 'roth') {
+        breakevenText.innerHTML = `<strong>Roth wins if your future tax rate is ≥ ${Math.round(breakevenRate * 100)}%.</strong> Your expected retirement rate is ${Math.round(retirementTax * 100)}%, which is at or above the breakeven—so Roth is the better choice.`;
+      } else if (winner === 'traditional') {
+        breakevenText.innerHTML = `<strong>Roth wins if your future tax rate is ≥ ${Math.round(breakevenRate * 100)}%.</strong> Your expected retirement rate is ${Math.round(retirementTax * 100)}%, which is below the breakeven—so Traditional is better at your expected rates.`;
+      } else {
+        breakevenText.innerHTML = `<strong>You're right at the breakeven point!</strong> Both Traditional and Roth produce the same result. Roth offers flexibility benefits like no RMDs—consider it if you're on the fence.`;
+      }
+
+      // Generate sensitivity table
+      generateSensitivityTable(contribution, currentTax, retirementTax, years, annualReturn);
+    }
+
+    function generateSensitivityTable(contribution, currentTax, retirementTax, years, annualReturn) {
+      const tbody = document.getElementById('sensitivityBody');
+      tbody.innerHTML = '';
+
+      // Rate points to show
+      const rates = [10, 15, 20, 22, 24, 28, 32, 35, 37];
+      const currentTaxPct = Math.round(currentTax * 100);
+      const retirementTaxPct = Math.round(retirementTax * 100);
+
+      // Make sure we include the user's current and retirement rates
+      if (!rates.includes(currentTaxPct)) {
+        rates.push(currentTaxPct);
+      }
+      if (!rates.includes(retirementTaxPct)) {
+        rates.push(retirementTaxPct);
+      }
+      rates.sort((a, b) => a - b);
+
+      const traditionalFV = futureValue(contribution, annualReturn, years);
+      const rothContrib = contribution * (1 - currentTax);
+      const rothFV = futureValue(rothContrib, annualReturn, years);
+
+      rates.forEach(rate => {
+        const rateDec = rate / 100;
+        const tradAfterTax = traditionalFV * (1 - rateDec);
+        const rothAfterTax = rothFV;
+        const diff = tradAfterTax - rothAfterTax;
+        const winner = diff > 0 ? 'Traditional' : (diff < 0 ? 'Roth' : 'Tie');
+
+        const row = document.createElement('tr');
+        
+        // Highlight rows
+        if (rate === retirementTaxPct) {
+          row.classList.add('current-row');
+        }
+        
+        row.innerHTML = `
+          <td class="num">${rate}%</td>
+          <td class="num">${formatCurrency(tradAfterTax)}</td>
+          <td class="num">${formatCurrency(rothAfterTax)}</td>
+          <td class="num" style="color: ${diff >= 0 ? 'var(--lw-sky-dark)' : 'var(--lw-emerald-dark)'}">
+            ${diff >= 0 ? '+' : ''}${formatCurrency(diff)}
+          </td>
+          <td style="font-weight: 600; color: ${winner === 'Traditional' ? 'var(--lw-sky-dark)' : 'var(--lw-emerald-dark)'}">${winner}</td>
+        `;
+        
+        tbody.appendChild(row);
+      });
+    }
+
+    // FAQ toggle
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      item.classList.toggle('open');
+    }
+
+    // Mobile menu toggle
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    // Event listeners
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('input', calculate);
+    });
+
+    // Initial calculation
+    calculate();
+  </script>
+</body>
+</html>

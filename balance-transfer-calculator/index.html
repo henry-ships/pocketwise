@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Balance Transfer Break-Even Calculator — Is a Balance Transfer Worth It? | PocketWise</title>
+  <meta name="description" content="Calculate if a balance transfer is worth it. See the break-even point, interest savings, and whether you'll pay off your balance before the 0% APR promo ends.">
+  <meta name="keywords" content="balance transfer worth it, balance transfer break even calculator, credit card balance transfer fee, 0% APR balance transfer math">
+  <link rel="canonical" href="https://pocketwise.io/balance-transfer-calculator/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* Timeline visualization */
+    .timeline-container {
+      background: var(--lw-card);
+      border-radius: var(--lw-radius-lg);
+      padding: 28px;
+      margin-bottom: 24px;
+      border: 1px solid var(--lw-border-light);
+    }
+    .timeline-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .timeline-header-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--lw-radius);
+      background: var(--lw-sky-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .timeline-header-text h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--lw-navy);
+      margin-bottom: 2px;
+    }
+    .timeline-header-text p {
+      font-size: 13px;
+      color: var(--lw-text-muted);
+    }
+
+    .timeline-track {
+      position: relative;
+      height: 56px;
+      background: var(--lw-slate-100);
+      border-radius: var(--lw-radius);
+      margin: 20px 0 16px;
+      overflow: hidden;
+    }
+    .timeline-promo {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, var(--lw-emerald-50) 0%, rgba(16, 185, 129, 0.1) 100%);
+      border-right: 3px dashed var(--lw-emerald);
+      display: flex;
+      align-items: center;
+      padding-left: 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--lw-emerald-dark);
+    }
+    .timeline-post-promo {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, rgba(244, 63, 94, 0.05) 0%, rgba(244, 63, 94, 0.1) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--lw-rose);
+    }
+    .timeline-payoff-marker {
+      position: absolute;
+      top: -6px;
+      bottom: -6px;
+      width: 4px;
+      background: var(--lw-sky);
+      border-radius: 2px;
+      z-index: 2;
+    }
+    .timeline-payoff-marker::before {
+      content: attr(data-label);
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--lw-sky-dark);
+      background: var(--lw-sky-50);
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(14, 165, 233, 0.2);
+    }
+    .timeline-breakeven-marker {
+      position: absolute;
+      top: -6px;
+      bottom: -6px;
+      width: 3px;
+      background: var(--lw-amber);
+      border-radius: 2px;
+      z-index: 1;
+    }
+    .timeline-breakeven-marker::before {
+      content: attr(data-label);
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: 10px;
+      font-weight: 600;
+      color: #B45309;
+      background: var(--lw-amber-50);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .timeline-balance-bar {
+      position: absolute;
+      left: 0;
+      top: 16px;
+      height: 24px;
+      background: linear-gradient(90deg, var(--lw-sky) 0%, var(--lw-sky-light) 100%);
+      border-radius: 6px;
+      transition: width 0.6s ease;
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+    }
+    .timeline-balance-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: white;
+      white-space: nowrap;
+    }
+
+    .timeline-legend {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: var(--lw-text-secondary);
+    }
+    .timeline-legend span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-marker {
+      width: 12px;
+      height: 4px;
+      border-radius: 2px;
+    }
+    .legend-marker.promo { background: var(--lw-emerald); }
+    .legend-marker.payoff { background: var(--lw-sky); width: 4px; height: 12px; }
+    .legend-marker.breakeven { background: var(--lw-amber); width: 4px; height: 12px; }
+
+    /* Decision cards */
+    .decision-card {
+      border-radius: var(--lw-radius-lg);
+      padding: 28px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .decision-card::before {
+      content: '';
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      opacity: 0.1;
+    }
+    .decision-card.success {
+      background: linear-gradient(135deg, var(--lw-emerald-50) 0%, #D1FAE5 100%);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    .decision-card.success::before { background: var(--lw-emerald); }
+    .decision-card.warning {
+      background: linear-gradient(135deg, var(--lw-amber-50) 0%, #FEF3C7 100%);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+    .decision-card.warning::before { background: var(--lw-amber); }
+    .decision-card.danger {
+      background: linear-gradient(135deg, var(--lw-rose-50) 0%, #FFE4E6 100%);
+      border: 1px solid rgba(244, 63, 94, 0.2);
+    }
+    .decision-card.danger::before { background: var(--lw-rose); }
+
+    .decision-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--lw-radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 14px;
+    }
+    .decision-card.success .decision-icon { background: rgba(16, 185, 129, 0.15); }
+    .decision-card.warning .decision-icon { background: rgba(245, 158, 11, 0.15); }
+    .decision-card.danger .decision-icon { background: rgba(244, 63, 94, 0.15); }
+
+    .decision-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .decision-card.success .decision-title { color: var(--lw-emerald-dark); }
+    .decision-card.warning .decision-title { color: #B45309; }
+    .decision-card.danger .decision-title { color: var(--lw-rose-dark); }
+
+    .decision-text {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--lw-text-secondary);
+    }
+    .decision-text strong {
+      color: var(--lw-navy);
+    }
+
+    /* Comparison grid */
+    .compare-scenarios {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .scenario-box {
+      background: var(--lw-card);
+      border-radius: var(--lw-radius);
+      padding: 20px;
+      border: 1px solid var(--lw-border-light);
+    }
+    .scenario-box.highlight {
+      border-color: var(--lw-sky);
+      background: var(--lw-sky-50);
+    }
+    .scenario-box-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--lw-slate-600);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .scenario-box-header .icon {
+      font-size: 16px;
+    }
+    .scenario-stat {
+      margin-bottom: 12px;
+    }
+    .scenario-stat:last-child { margin-bottom: 0; }
+    .scenario-stat-label {
+      font-size: 12px;
+      color: var(--lw-text-muted);
+      margin-bottom: 2px;
+    }
+    .scenario-stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--lw-navy);
+    }
+    .scenario-stat-value.rose { color: var(--lw-rose-dark); }
+    .scenario-stat-value.green { color: var(--lw-emerald-dark); }
+
+    /* Savings banner */
+    .savings-banner {
+      background: linear-gradient(135deg, var(--lw-navy) 0%, var(--lw-slate-800) 100%);
+      border-radius: var(--lw-radius-lg);
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .savings-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(ellipse at 30% 0%, rgba(16, 185, 129, 0.2) 0%, transparent 50%);
+    }
+    .savings-banner * { position: relative; }
+    .savings-label {
+      font-size: 14px;
+      color: var(--lw-slate-400);
+      margin-bottom: 4px;
+    }
+    .savings-amount {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--lw-emerald-light);
+    }
+    .savings-badge {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--lw-emerald-light);
+      padding: 8px 16px;
+      border-radius: var(--lw-radius-full);
+      font-size: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* Warning callout */
+    .warning-callout {
+      background: var(--lw-rose-50);
+      border: 1px solid rgba(244, 63, 94, 0.2);
+      border-radius: var(--lw-radius);
+      padding: 16px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .warning-callout-icon {
+      font-size: 20px;
+      line-height: 1;
+    }
+    .warning-callout-text {
+      font-size: 14px;
+      color: var(--lw-rose-dark);
+      line-height: 1.5;
+    }
+    .warning-callout-text strong {
+      font-weight: 600;
+    }
+
+    /* Month breakdown */
+    .month-breakdown {
+      background: var(--lw-card);
+      border: 1px solid var(--lw-border-light);
+      border-radius: var(--lw-radius);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .month-breakdown-header {
+      padding: 16px 20px;
+      background: var(--lw-slate-50);
+      border-bottom: 1px solid var(--lw-border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .month-breakdown-header h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--lw-navy);
+    }
+    .month-breakdown-body {
+      padding: 16px 20px;
+    }
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--lw-border-light);
+    }
+    .breakdown-row:last-child { border-bottom: none; }
+    .breakdown-label {
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+    }
+    .breakdown-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--lw-navy);
+    }
+    .breakdown-value.green { color: var(--lw-emerald-dark); }
+    .breakdown-value.rose { color: var(--lw-rose-dark); }
+
+    @media (max-width: 768px) {
+      .compare-scenarios { grid-template-columns: 1fr; }
+      .savings-banner {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+      }
+      .savings-amount { font-size: 28px; }
+      .timeline-legend { gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">L</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/mortgage-calculator/">Mortgage</a></li>
+        <li><a href="/auto-loan-calculator/">Auto</a></li>
+        <li><a href="/compound-interest-calculator/">Investing</a></li>
+        <li><a href="/debt-payoff-calculator/">Debt</a></li>
+        <li><a href="/">All Tools</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu">
+      <a href="/">All Tools</a>
+      <a href="/mortgage-calculator/">Mortgage Calculator</a>
+      <a href="/auto-loan-calculator/">Auto Loan Calculator</a>
+      <a href="/personal-loan-calculator/">Personal Loan Calculator</a>
+      <a href="/credit-card-payoff-calculator/">Credit Card Payoff</a>
+      <a href="/debt-payoff-calculator/">Debt Payoff Calculator</a>
+      <a href="/refinance-calculator/">Refinance Calculator</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- HERO -->
+    <div class="lw-hero">
+      <span class="lw-badge green">Balance Transfer</span>
+      <h1>Balance Transfer <span class="accent">Break-Even</span> Calculator</h1>
+      <p class="subtitle">Should you transfer your credit card balance? Find out if a 0% APR offer will actually save you money — and whether you can pay it off before the promo ends.</p>
+    </div>
+
+    <!-- INPUTS -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon rose">💳</div>
+        <div>
+          <div class="lw-card-title">Your Current Card</div>
+          <div class="lw-card-subtitle">The card you're considering transferring from</div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Current Balance</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="balance" class="lw-input" value="5000" min="100" max="100000" step="100">
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">Current APR</label>
+          <div class="lw-input-suffix">
+            <input type="number" id="currentApr" class="lw-input" value="22.99" min="5" max="35" step="0.01">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">🎯</div>
+        <div>
+          <div class="lw-card-title">Balance Transfer Offer</div>
+          <div class="lw-card-subtitle">Details of the new card's promotional offer</div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Transfer Fee <span class="lw-label-hint">(typically 3-5%)</span></label>
+          <div class="lw-input-suffix">
+            <input type="number" id="transferFee" class="lw-input" value="3" min="0" max="10" step="0.5">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">Promo APR <span class="lw-label-hint">(often 0%)</span></label>
+          <div class="lw-input-suffix">
+            <input type="number" id="promoApr" class="lw-input" value="0" min="0" max="15" step="0.1">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Promo Period</label>
+          <div class="lw-input-suffix">
+            <input type="number" id="promoPeriod" class="lw-input" value="18" min="6" max="24" step="1">
+            <span class="suffix">months</span>
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">Post-Promo APR <span class="lw-label-hint">(after promo ends)</span></label>
+          <div class="lw-input-suffix">
+            <input type="number" id="postPromoApr" class="lw-input" value="24.99" min="10" max="35" step="0.01">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">💵</div>
+        <div>
+          <div class="lw-card-title">Your Payment Plan</div>
+          <div class="lw-card-subtitle">How much can you pay each month?</div>
+        </div>
+      </div>
+
+      <div class="lw-range-group">
+        <div class="lw-range-header">
+          <label class="lw-label" style="margin-bottom:0">Monthly Payment</label>
+          <span class="lw-range-value" id="paymentDisplay">$300</span>
+        </div>
+        <input type="range" id="monthlyPayment" class="lw-range" min="50" max="2000" value="300" step="10">
+        <div class="lw-flex lw-justify-between" style="font-size:12px;color:var(--lw-text-muted);margin-top:4px">
+          <span>$50</span>
+          <span>$2,000</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DECISION CARD -->
+    <div id="decisionCard" class="decision-card success">
+      <div class="decision-icon">✅</div>
+      <div class="decision-title" id="decisionTitle">Worth It — You'll Pay Off Before Promo Ends!</div>
+      <p class="decision-text" id="decisionText">Loading...</p>
+    </div>
+
+    <!-- WARNING CALLOUT (shown when balance remains after promo) -->
+    <div id="warningCallout" class="warning-callout" style="display:none">
+      <div class="warning-callout-icon">⚠️</div>
+      <div class="warning-callout-text" id="warningText">
+        <strong>Heads up:</strong> You won't pay off the balance during the promo period.
+      </div>
+    </div>
+
+    <!-- SAVINGS BANNER -->
+    <div class="savings-banner" id="savingsBanner">
+      <div>
+        <div class="savings-label">Net Interest Savings</div>
+        <div class="savings-amount" id="netSavings">$847</div>
+      </div>
+      <div class="savings-badge" id="savingsBadge">Transfer saves money!</div>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="timeline-container">
+      <div class="timeline-header">
+        <div class="timeline-header-icon">📅</div>
+        <div class="timeline-header-text">
+          <h3>Payoff Timeline</h3>
+          <p id="timelineSubtitle">See when you'll pay off vs. when the promo ends</p>
+        </div>
+      </div>
+      <div class="timeline-track" id="timelineTrack">
+        <div class="timeline-promo" id="timelinePromo" style="width:60%">0% APR</div>
+        <div class="timeline-post-promo" id="timelinePostPromo" style="left:60%">Regular APR</div>
+        <div class="timeline-balance-bar" id="timelineBalanceBar" style="width:45%">
+          <span class="timeline-balance-text">Balance Payoff</span>
+        </div>
+        <div class="timeline-payoff-marker" id="timelinePayoff" style="left:45%" data-label="Paid Off: Month 15"></div>
+        <div class="timeline-breakeven-marker" id="timelineBreakeven" style="left:10%" data-label="Break-even"></div>
+      </div>
+      <div class="timeline-legend">
+        <span><span class="legend-marker promo"></span> 0% APR Period</span>
+        <span><span class="legend-marker payoff"></span> Payoff Point</span>
+        <span><span class="legend-marker breakeven"></span> Break-even</span>
+      </div>
+    </div>
+
+    <!-- SCENARIO COMPARISON -->
+    <div class="compare-scenarios">
+      <div class="scenario-box" id="keepCardBox">
+        <div class="scenario-box-header">
+          <span class="icon">💳</span> Keep Current Card
+        </div>
+        <div class="scenario-stat">
+          <div class="scenario-stat-label">Time to Pay Off</div>
+          <div class="scenario-stat-value" id="keepMonths">19 months</div>
+        </div>
+        <div class="scenario-stat">
+          <div class="scenario-stat-label">Total Interest Paid</div>
+          <div class="scenario-stat-value rose" id="keepInterest">$1,156</div>
+        </div>
+        <div class="scenario-stat">
+          <div class="scenario-stat-label">Total Cost</div>
+          <div class="scenario-stat-value" id="keepTotal">$6,156</div>
+        </div>
+      </div>
+
+      <div class="scenario-box highlight" id="transferBox">
+        <div class="scenario-box-header">
+          <span class="icon">🎯</span> Balance Transfer
+        </div>
+        <div class="scenario-stat">
+          <div class="scenario-stat-label">Time to Pay Off</div>
+          <div class="scenario-stat-value" id="transferMonths">18 months</div>
+        </div>
+        <div class="scenario-stat">
+          <div class="scenario-stat-label">Total Interest + Fee</div>
+          <div class="scenario-stat-value green" id="transferCost">$150</div>
+        </div>
+        <div class="scenario-stat">
+          <div class="scenario-stat-label">Total Cost</div>
+          <div class="scenario-stat-value" id="transferTotal">$5,150</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BREAKDOWN -->
+    <div class="month-breakdown">
+      <div class="month-breakdown-header">
+        <span>📊</span>
+        <h4>Balance Transfer Cost Breakdown</h4>
+      </div>
+      <div class="month-breakdown-body">
+        <div class="breakdown-row">
+          <span class="breakdown-label">Transfer Fee (<span id="feePercent">3%</span> of balance)</span>
+          <span class="breakdown-value" id="feeAmount">$150</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-label">Interest During Promo Period</span>
+          <span class="breakdown-value green" id="promoInterest">$0</span>
+        </div>
+        <div class="breakdown-row" id="postPromoRow" style="display:none">
+          <span class="breakdown-label">Interest After Promo (if applicable)</span>
+          <span class="breakdown-value rose" id="postPromoInterest">$0</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-label">Break-Even Point</span>
+          <span class="breakdown-value" id="breakEvenMonth">Month 2</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-label">Interest Saved During Promo</span>
+          <span class="breakdown-value green" id="interestSaved">$997</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <div class="lw-content">
+      <h2>Is a Balance Transfer Worth It?</h2>
+      <p>A balance transfer can be a powerful tool for paying off credit card debt faster — but only if you understand the math. The key question isn't just "Will I save money?" but "Will I pay off the balance before the promotional period ends?" If the answer is no, a balance transfer could actually cost you more than staying with your current card.</p>
+
+      <p>Our balance transfer break-even calculator helps you answer this crucial question by analyzing your specific situation. Enter your current balance, the promotional offer details, and what you can afford to pay monthly to see exactly when you'll break even on the transfer fee and whether the transfer makes financial sense.</p>
+
+      <h3>How Balance Transfer Break-Even Works</h3>
+      <p>When you transfer a balance, you typically pay a fee of 3-5% of the transferred amount upfront. This fee adds to your total balance. However, during the promotional period (often 12-21 months at 0% APR), you pay no interest — meaning every dollar of your payment goes toward reducing principal.</p>
+
+      <p>The "break-even point" is when your interest savings from the promotional rate exceed the transfer fee you paid. After this point, you're genuinely saving money. For example, if you transfer $5,000 with a 3% fee ($150) and your current card charges 22.99% APR, you'd normally pay about $96/month in interest. You break even after roughly 2 months of 0% APR.</p>
+
+      <h3>The Critical Question: Will You Pay It Off in Time?</h3>
+      <p>A 0% APR balance transfer is only beneficial if you can realistically pay off the entire balance before the promotional period ends. If you can't, here's what happens:</p>
+      <ul>
+        <li>The remaining balance starts accruing interest at the post-promo APR (often 20-29%)</li>
+        <li>Some cards apply deferred interest — charging you for the entire promo period retroactively</li>
+        <li>You may end up paying more than if you'd kept your original card</li>
+      </ul>
+      <p>This is why our calculator shows you not just the savings, but whether you'll actually pay off the balance in time based on your monthly payment amount.</p>
+
+      <h3>When a Balance Transfer Makes Sense</h3>
+      <p>Balance transfers work best when:</p>
+      <ul>
+        <li><strong>You can pay off the full balance during the promo period.</strong> This is the most important factor.</li>
+        <li><strong>Your current APR is significantly higher than the transfer fee equivalent.</strong> A 3% fee on 18 months equals about 2% annualized — much better than 20%+ APR.</li>
+        <li><strong>You won't add new charges.</strong> Most balance transfer cards charge regular APR on new purchases.</li>
+        <li><strong>You have the discipline to make consistent payments.</strong> Missing payments can void your promotional rate.</li>
+      </ul>
+
+      <h3>When to Skip the Balance Transfer</h3>
+      <p>A balance transfer might not make sense if:</p>
+      <ul>
+        <li>Your balance is too high to pay off within the promo period</li>
+        <li>The transfer fee wipes out most of your interest savings</li>
+        <li>You're likely to accumulate new debt on either card</li>
+        <li>Your credit score won't qualify you for a good promotional offer</li>
+      </ul>
+
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">What is a balance transfer fee?</button>
+          <div class="lw-faq-a">
+            <p>A balance transfer fee is a one-time charge when you move debt from one credit card to another. It's typically 3-5% of the transferred amount. For a $5,000 balance, a 3% fee would be $150. This fee is added to your new card's balance. Some cards offer no-fee transfers, but these usually have shorter promotional periods.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">How do I calculate if a balance transfer is worth it?</button>
+          <div class="lw-faq-a">
+            <p>Compare total costs: (1) Calculate what you'd pay staying with your current card — total payments until debt-free. (2) Calculate balance transfer costs — transfer fee plus any interest if you don't pay off during the promo period. (3) If the transfer cost is lower and you can realistically make the payments, it's worth it. Our calculator does this math automatically.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">What happens if I don't pay off the balance before the promo ends?</button>
+          <div class="lw-faq-a">
+            <p>When the promotional period ends, the remaining balance starts accruing interest at the card's regular APR (often 20-29%). Some cards have "deferred interest" — if you don't pay in full, they charge retroactive interest on the original balance for the entire promo period. Always read the terms carefully and aim to pay off completely before the promo ends.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Does a balance transfer hurt my credit score?</button>
+          <div class="lw-faq-a">
+            <p>Initially, there may be a small dip: applying for a new card creates a hard inquiry, and opening new credit temporarily lowers your average account age. However, if the transfer helps you pay off debt faster and reduces your credit utilization ratio, your score typically improves over time. Don't close your old card — the available credit helps your utilization ratio.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Can I do multiple balance transfers?</button>
+          <div class="lw-faq-a">
+            <p>Yes, but be strategic. Each new card means a hard inquiry on your credit, and repeatedly opening cards for balance transfers (called "surfing") can signal risk to lenders. It's better to choose a card with a long enough promo period to pay off your debt completely. If you must transfer again, wait until you've made significant progress on the current balance.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED TOOLS -->
+    <div class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/credit-card-payoff-calculator/" class="lw-related-link"><span class="dot"></span> Credit Card Payoff Calculator</a>
+        <a href="/debt-payoff-calculator/" class="lw-related-link"><span class="dot"></span> Debt Payoff Calculator</a>
+        <a href="/apr-calculator/" class="lw-related-link"><span class="dot"></span> APR Calculator</a>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <p class="lw-disclaimer">
+      <em>This calculator is for educational purposes only. Results are estimates based on the inputs provided. Actual results may vary based on specific card terms, fees, and payment timing. Always read the full terms of any balance transfer offer before applying. Consult a qualified financial advisor for personalized guidance.</em>
+    </p>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="lw-footer">
+    <p>© 2026 PocketWise. Free financial calculators for everyone.</p>
+  </footer>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // Utilities
+    function fmt(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:0, maximumFractionDigits:0}).format(n); }
+    function fmtCents(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:2, maximumFractionDigits:2}).format(n); }
+
+    // DOM refs
+    var balanceEl = document.getElementById('balance');
+    var currentAprEl = document.getElementById('currentApr');
+    var transferFeeEl = document.getElementById('transferFee');
+    var promoAprEl = document.getElementById('promoApr');
+    var promoPeriodEl = document.getElementById('promoPeriod');
+    var postPromoAprEl = document.getElementById('postPromoApr');
+    var monthlyPaymentEl = document.getElementById('monthlyPayment');
+    var paymentDisplay = document.getElementById('paymentDisplay');
+
+    // Event listeners
+    var inputs = [balanceEl, currentAprEl, transferFeeEl, promoAprEl, promoPeriodEl, postPromoAprEl, monthlyPaymentEl];
+    inputs.forEach(function(el) {
+      el.addEventListener('input', calculate);
+    });
+
+    monthlyPaymentEl.addEventListener('input', function() {
+      paymentDisplay.textContent = fmt(+this.value);
+    });
+
+    // Calculate payoff scenario
+    function calcPayoff(balance, aprPct, monthlyPayment, maxMonths) {
+      maxMonths = maxMonths || 600;
+      var rate = aprPct / 100 / 12;
+      if (monthlyPayment <= balance * rate && rate > 0) {
+        return { months: Infinity, totalInterest: Infinity, totalPaid: Infinity };
+      }
+      var remaining = balance;
+      var totalInterest = 0;
+      var months = 0;
+
+      while (remaining > 0.01 && months < maxMonths) {
+        var interest = remaining * rate;
+        var principal = Math.min(monthlyPayment - interest, remaining);
+        remaining -= principal;
+        totalInterest += interest;
+        months++;
+      }
+
+      return {
+        months: months,
+        totalInterest: totalInterest,
+        totalPaid: balance + totalInterest,
+        remainingBalance: Math.max(0, remaining)
+      };
+    }
+
+    // Calculate balance transfer scenario
+    function calcBalanceTransfer(balance, transferFeePct, promoAprPct, promoPeriodMonths, postPromoAprPct, monthlyPayment) {
+      var transferFee = balance * (transferFeePct / 100);
+      var newBalance = balance + transferFee;
+      var promoRate = promoAprPct / 100 / 12;
+      var postRate = postPromoAprPct / 100 / 12;
+
+      var remaining = newBalance;
+      var promoInterest = 0;
+      var postPromoInterest = 0;
+      var months = 0;
+      var paidOffDuringPromo = false;
+      var payoffMonth = 0;
+
+      // During promo period
+      while (remaining > 0.01 && months < promoPeriodMonths) {
+        var interest = remaining * promoRate;
+        var principal = Math.min(monthlyPayment - interest, remaining);
+        if (principal <= 0 && promoRate > 0) break;
+        remaining -= principal;
+        promoInterest += interest;
+        months++;
+      }
+
+      if (remaining <= 0.01) {
+        paidOffDuringPromo = true;
+        payoffMonth = months;
+      }
+
+      // After promo period (if balance remains)
+      var postPromoMonths = 0;
+      while (remaining > 0.01 && postPromoMonths < 600) {
+        var interest = remaining * postRate;
+        var principal = monthlyPayment - interest;
+        if (principal <= 0) {
+          postPromoMonths = Infinity;
+          postPromoInterest = Infinity;
+          break;
+        }
+        remaining -= principal;
+        postPromoInterest += interest;
+        postPromoMonths++;
+        months++;
+      }
+
+      if (!paidOffDuringPromo && remaining <= 0.01) {
+        payoffMonth = months;
+      }
+
+      return {
+        transferFee: transferFee,
+        promoInterest: promoInterest,
+        postPromoInterest: postPromoInterest,
+        totalInterest: promoInterest + postPromoInterest,
+        totalCost: transferFee + promoInterest + postPromoInterest,
+        totalPaid: newBalance + promoInterest + postPromoInterest,
+        payoffMonths: payoffMonth,
+        paidOffDuringPromo: paidOffDuringPromo,
+        balanceAtPromoEnd: paidOffDuringPromo ? 0 : (months === promoPeriodMonths ? remaining : 0),
+        remainingBalance: remaining
+      };
+    }
+
+    // Calculate break-even month
+    function calcBreakEvenMonth(balance, currentAprPct, transferFeePct, promoAprPct, monthlyPayment) {
+      var transferFee = balance * (transferFeePct / 100);
+      var currentRate = currentAprPct / 100 / 12;
+      var promoRate = promoAprPct / 100 / 12;
+
+      // Calculate cumulative interest saved each month
+      var currentBalance = balance;
+      var transferBalance = balance + transferFee;
+      var cumulativeSavings = -transferFee; // Start negative (fee cost)
+      var month = 0;
+
+      while (cumulativeSavings < 0 && month < 100) {
+        var currentInterest = currentBalance * currentRate;
+        var promoInterest = transferBalance * promoRate;
+        var monthSavings = currentInterest - promoInterest;
+        cumulativeSavings += monthSavings;
+
+        // Update balances
+        currentBalance = Math.max(0, currentBalance - (monthlyPayment - currentInterest));
+        transferBalance = Math.max(0, transferBalance - (monthlyPayment - promoInterest));
+        month++;
+
+        if (currentBalance <= 0.01 && transferBalance <= 0.01) break;
+      }
+
+      return cumulativeSavings >= 0 ? month : null;
+    }
+
+    function formatDuration(months) {
+      if (months === Infinity || months === null) return 'Never';
+      if (months === 1) return '1 month';
+      if (months < 12) return months + ' months';
+      var y = Math.floor(months / 12);
+      var m = months % 12;
+      if (m === 0) return y + (y === 1 ? ' year' : ' years');
+      return y + (y === 1 ? ' yr' : ' yrs') + ', ' + m + ' mo';
+    }
+
+    function calculate() {
+      var balance = parseFloat(balanceEl.value) || 0;
+      var currentApr = parseFloat(currentAprEl.value) || 0;
+      var transferFee = parseFloat(transferFeeEl.value) || 0;
+      var promoApr = parseFloat(promoAprEl.value) || 0;
+      var promoPeriod = parseInt(promoPeriodEl.value) || 18;
+      var postPromoApr = parseFloat(postPromoAprEl.value) || 0;
+      var monthlyPayment = parseFloat(monthlyPaymentEl.value) || 0;
+
+      if (balance <= 0 || monthlyPayment <= 0) return;
+
+      // Calculate both scenarios
+      var keepCard = calcPayoff(balance, currentApr, monthlyPayment);
+      var transfer = calcBalanceTransfer(balance, transferFee, promoApr, promoPeriod, postPromoApr, monthlyPayment);
+      var breakEvenMonth = calcBreakEvenMonth(balance, currentApr, transferFee, promoApr, monthlyPayment);
+
+      // Net savings
+      var netSavings = keepCard.totalInterest - transfer.totalCost;
+      var transferWorthIt = netSavings > 0 && transfer.paidOffDuringPromo;
+
+      // Update decision card
+      var decisionCard = document.getElementById('decisionCard');
+      var decisionTitle = document.getElementById('decisionTitle');
+      var decisionText = document.getElementById('decisionText');
+
+      if (transfer.paidOffDuringPromo && netSavings > 0) {
+        decisionCard.className = 'decision-card success';
+        decisionCard.querySelector('.decision-icon').textContent = '✅';
+        decisionTitle.textContent = 'Worth It — You\'ll Pay Off Before Promo Ends!';
+        decisionText.innerHTML = 'At <strong>' + fmt(monthlyPayment) + '/month</strong>, you\'ll pay off your balance in <strong>' + transfer.payoffMonths + ' months</strong> — well within the ' + promoPeriod + '-month promo period. You\'ll save <strong>' + fmt(netSavings) + '</strong> compared to keeping your current card.';
+      } else if (netSavings > 0 && !transfer.paidOffDuringPromo) {
+        decisionCard.className = 'decision-card warning';
+        decisionCard.querySelector('.decision-icon').textContent = '⚠️';
+        decisionTitle.textContent = 'Proceed With Caution';
+        decisionText.innerHTML = 'The transfer saves you <strong>' + fmt(netSavings) + '</strong> overall, BUT you won\'t pay off before the promo ends. You\'ll have <strong>' + fmt(transfer.balanceAtPromoEnd) + '</strong> remaining at ' + postPromoApr + '% APR. Consider paying <strong>' + fmt(Math.ceil((balance * (1 + transferFee/100)) / promoPeriod / 10) * 10) + '+/month</strong> to pay off during promo.';
+      } else {
+        decisionCard.className = 'decision-card danger';
+        decisionCard.querySelector('.decision-icon').textContent = '❌';
+        decisionTitle.textContent = 'Not Worth It — Keep Your Current Card';
+        decisionText.innerHTML = 'Based on your numbers, the balance transfer would actually cost you <strong>' + fmt(Math.abs(netSavings)) + ' more</strong> than staying with your current card. The transfer fee and/or post-promo interest outweigh the savings.';
+      }
+
+      // Update warning callout
+      var warningCallout = document.getElementById('warningCallout');
+      var warningText = document.getElementById('warningText');
+      if (!transfer.paidOffDuringPromo && transfer.remainingBalance > 0.01) {
+        warningCallout.style.display = 'flex';
+        warningText.innerHTML = '<strong>Heads up:</strong> With ' + fmt(monthlyPayment) + '/month, you\'ll have <strong>' + fmt(transfer.balanceAtPromoEnd) + '</strong> remaining when the promo ends. This balance will accrue interest at ' + postPromoApr + '% APR. To avoid this, pay at least <strong>' + fmt(Math.ceil((balance * (1 + transferFee/100)) / promoPeriod)) + '/month</strong>.';
+      } else {
+        warningCallout.style.display = 'none';
+      }
+
+      // Update savings banner
+      var savingsBanner = document.getElementById('savingsBanner');
+      var savingsBadge = document.getElementById('savingsBadge');
+      document.getElementById('netSavings').textContent = fmt(Math.abs(netSavings));
+      if (netSavings > 0) {
+        document.querySelector('.savings-label').textContent = 'Net Interest Savings';
+        document.getElementById('netSavings').style.color = 'var(--lw-emerald-light)';
+        savingsBadge.textContent = '💰 Transfer saves money!';
+        savingsBadge.style.background = 'rgba(16, 185, 129, 0.2)';
+        savingsBadge.style.color = 'var(--lw-emerald-light)';
+      } else {
+        document.querySelector('.savings-label').textContent = 'Additional Cost';
+        document.getElementById('netSavings').style.color = 'var(--lw-rose-light)';
+        savingsBadge.textContent = '📉 Stay with current card';
+        savingsBadge.style.background = 'rgba(244, 63, 94, 0.2)';
+        savingsBadge.style.color = 'var(--lw-rose-light)';
+      }
+
+      // Update timeline
+      var maxTimelineMonths = Math.max(promoPeriod, transfer.payoffMonths, keepCard.months, 36);
+      maxTimelineMonths = Math.min(maxTimelineMonths, 60); // Cap at 60 months for display
+
+      var promoWidthPct = (promoPeriod / maxTimelineMonths) * 100;
+      var payoffPct = Math.min((transfer.payoffMonths / maxTimelineMonths) * 100, 100);
+      var breakEvenPct = breakEvenMonth ? Math.min((breakEvenMonth / maxTimelineMonths) * 100, 100) : 0;
+
+      document.getElementById('timelinePromo').style.width = promoWidthPct + '%';
+      document.getElementById('timelinePostPromo').style.left = promoWidthPct + '%';
+
+      var balanceBar = document.getElementById('timelineBalanceBar');
+      balanceBar.style.width = payoffPct + '%';
+
+      var payoffMarker = document.getElementById('timelinePayoff');
+      payoffMarker.style.left = payoffPct + '%';
+      payoffMarker.setAttribute('data-label', 'Paid Off: Month ' + transfer.payoffMonths);
+
+      var breakEvenMarker = document.getElementById('timelineBreakeven');
+      if (breakEvenMonth && breakEvenMonth <= maxTimelineMonths) {
+        breakEvenMarker.style.display = 'block';
+        breakEvenMarker.style.left = breakEvenPct + '%';
+        breakEvenMarker.setAttribute('data-label', 'Break-even: Mo ' + breakEvenMonth);
+      } else {
+        breakEvenMarker.style.display = 'none';
+      }
+
+      document.getElementById('timelineSubtitle').textContent = 
+        transfer.paidOffDuringPromo 
+          ? 'Great! You\'ll pay off ' + (promoPeriod - transfer.payoffMonths) + ' months before the promo ends'
+          : 'Warning: Balance extends ' + (transfer.payoffMonths - promoPeriod) + ' months past promo period';
+
+      // Update scenario comparison
+      document.getElementById('keepMonths').textContent = formatDuration(keepCard.months);
+      document.getElementById('keepInterest').textContent = keepCard.totalInterest === Infinity ? '∞' : fmt(keepCard.totalInterest);
+      document.getElementById('keepTotal').textContent = keepCard.totalPaid === Infinity ? '∞' : fmt(keepCard.totalPaid);
+
+      document.getElementById('transferMonths').textContent = formatDuration(transfer.payoffMonths);
+      document.getElementById('transferCost').textContent = fmt(transfer.totalCost);
+      document.getElementById('transferTotal').textContent = fmt(transfer.totalPaid);
+
+      // Highlight winner
+      var keepBox = document.getElementById('keepCardBox');
+      var transferBox = document.getElementById('transferBox');
+      if (netSavings > 0) {
+        keepBox.classList.remove('highlight');
+        transferBox.classList.add('highlight');
+      } else {
+        keepBox.classList.add('highlight');
+        transferBox.classList.remove('highlight');
+      }
+
+      // Update breakdown
+      document.getElementById('feePercent').textContent = transferFee + '%';
+      document.getElementById('feeAmount').textContent = fmt(transfer.transferFee);
+      document.getElementById('promoInterest').textContent = fmt(transfer.promoInterest);
+
+      var postPromoRow = document.getElementById('postPromoRow');
+      if (transfer.postPromoInterest > 0.01) {
+        postPromoRow.style.display = 'flex';
+        document.getElementById('postPromoInterest').textContent = fmt(transfer.postPromoInterest);
+      } else {
+        postPromoRow.style.display = 'none';
+      }
+
+      document.getElementById('breakEvenMonth').textContent = breakEvenMonth ? 'Month ' + breakEvenMonth : 'N/A';
+
+      // Interest saved during promo = what you would have paid on current card during that time
+      var wouldHavePaid = 0;
+      var tempBalance = balance;
+      var currentRate = currentApr / 100 / 12;
+      for (var i = 0; i < Math.min(promoPeriod, transfer.payoffMonths); i++) {
+        var interest = tempBalance * currentRate;
+        wouldHavePaid += interest;
+        tempBalance = Math.max(0, tempBalance - (monthlyPayment - interest));
+        if (tempBalance <= 0.01) break;
+      }
+      document.getElementById('interestSaved').textContent = fmt(wouldHavePaid);
+    }
+
+    // Initial calculation
+    calculate();
+  })();
+  </script>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a balance transfer fee?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A balance transfer fee is a one-time charge when you move debt from one credit card to another. It's typically 3-5% of the transferred amount. For a $5,000 balance, a 3% fee would be $150. This fee is added to your new card's balance. Some cards offer no-fee transfers, but these usually have shorter promotional periods."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I calculate if a balance transfer is worth it?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Compare total costs: (1) Calculate what you'd pay staying with your current card — total payments until debt-free. (2) Calculate balance transfer costs — transfer fee plus any interest if you don't pay off during the promo period. (3) If the transfer cost is lower and you can realistically make the payments, it's worth it."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What happens if I don't pay off the balance before the promo ends?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "When the promotional period ends, the remaining balance starts accruing interest at the card's regular APR (often 20-29%). Some cards have deferred interest — if you don't pay in full, they charge retroactive interest on the original balance for the entire promo period. Always read the terms carefully and aim to pay off completely before the promo ends."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does a balance transfer hurt my credit score?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Initially, there may be a small dip: applying for a new card creates a hard inquiry, and opening new credit temporarily lowers your average account age. However, if the transfer helps you pay off debt faster and reduces your credit utilization ratio, your score typically improves over time. Don't close your old card — the available credit helps your utilization ratio."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I do multiple balance transfers?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, but be strategic. Each new card means a hard inquiry on your credit, and repeatedly opening cards for balance transfers (called 'surfing') can signal risk to lenders. It's better to choose a card with a long enough promo period to pay off your debt completely. If you must transfer again, wait until you've made significant progress on the current balance."
+        }
+      }
+    ]
+  }
+  </script>
+</body>
+</html>

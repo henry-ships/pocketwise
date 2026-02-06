@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asset Location Optimizer | Taxable vs Tax-Advantaged Investing | PocketWise</title>
+  <meta name="description" content="Optimize where to hold your investments across taxable brokerage, Traditional IRA/401k, and Roth accounts. Free asset location strategy calculator with tax efficiency recommendations.">
+  <meta name="keywords" content="asset location strategy, taxable vs tax advantaged investing, where to hold investments, asset placement calculator, tax efficient investing, asset location optimizer">
+  <link rel="canonical" href="https://pocketwise.app/asset-location/">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Asset Location Optimizer | Tax-Efficient Investment Placement">
+  <meta property="og:description" content="Maximize after-tax returns by placing investments in the right accounts. Free asset location calculator.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pocketwise.app/asset-location/">
+  
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is asset location?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Asset location is the strategy of placing different investments in the most tax-efficient account types. Unlike asset allocation (which determines what to invest in), asset location determines where to hold those investments to minimize taxes and maximize after-tax returns."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I hold bonds in taxable or tax-advantaged accounts?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Bonds that pay taxable interest (like corporate bonds, government bonds, and bond funds) are generally best held in tax-advantaged accounts like Traditional IRAs or 401(k)s. This shields the interest income from annual taxation. Municipal bonds are the exception—they're tax-exempt and belong in taxable accounts."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why should stocks go in taxable accounts?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "US stocks and index funds are relatively tax-efficient because qualified dividends and long-term capital gains receive preferential tax rates (0-20%). Additionally, holding stocks in taxable accounts allows you to harvest tax losses, receive a step-up in basis at death, and avoid converting favorable capital gains rates into ordinary income upon withdrawal from traditional accounts."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What assets are best for Roth accounts?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Roth accounts (Roth IRA, Roth 401k) are ideal for assets expected to have the highest growth, since all growth is tax-free. This includes high-growth stocks, small-cap stocks, emerging markets, and REITs. The key principle: put your highest expected return assets in Roth where the growth will never be taxed."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where should I hold international stocks?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "International stocks are often best in taxable accounts because you can claim the Foreign Tax Credit for taxes withheld by foreign governments. This credit is lost when international stocks are held in tax-advantaged accounts. However, if you don't have enough taxable space, prioritize overall tax efficiency."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    /* Asset Location Specific Styles */
+    .asset-checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 480px) {
+      .asset-checkbox-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .asset-checkbox-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all var(--lw-transition);
+    }
+    .asset-checkbox-item:hover {
+      background: var(--lw-sky-50);
+      border-color: var(--lw-sky-100);
+    }
+    .asset-checkbox-item.selected {
+      background: var(--lw-sky-50);
+      border-color: var(--lw-sky);
+    }
+    .asset-checkbox-item input {
+      margin-top: 2px;
+      width: 18px;
+      height: 18px;
+      accent-color: var(--lw-sky);
+      cursor: pointer;
+    }
+    .asset-checkbox-content {
+      flex: 1;
+    }
+    .asset-checkbox-name {
+      font-weight: 600;
+      color: var(--lw-navy);
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    .asset-checkbox-desc {
+      font-size: 12px;
+      color: var(--lw-text-muted);
+    }
+    
+    /* Tax Efficiency Rating Badge */
+    .tax-rating {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: var(--lw-radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .tax-rating.high {
+      background: var(--lw-emerald-50);
+      color: var(--lw-emerald-dark);
+    }
+    .tax-rating.medium {
+      background: var(--lw-amber-50);
+      color: #B45309;
+    }
+    .tax-rating.low {
+      background: var(--lw-rose-50);
+      color: var(--lw-rose-dark);
+    }
+    
+    /* Account Input Cards */
+    .account-input-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      margin-bottom: 12px;
+      border: 2px solid transparent;
+      transition: all var(--lw-transition);
+    }
+    .account-input-card.active {
+      background: white;
+      border-color: var(--lw-sky);
+      box-shadow: var(--lw-shadow);
+    }
+    .account-input-card.disabled {
+      opacity: 0.5;
+    }
+    .account-toggle {
+      width: 48px;
+      height: 28px;
+      background: var(--lw-slate-300);
+      border-radius: var(--lw-radius-full);
+      position: relative;
+      cursor: pointer;
+      transition: background var(--lw-transition);
+      flex-shrink: 0;
+    }
+    .account-toggle.active {
+      background: var(--lw-sky);
+    }
+    .account-toggle::after {
+      content: '';
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      background: white;
+      border-radius: 50%;
+      top: 3px;
+      left: 3px;
+      transition: transform var(--lw-transition);
+      box-shadow: var(--lw-shadow-sm);
+    }
+    .account-toggle.active::after {
+      transform: translateX(20px);
+    }
+    .account-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .account-name {
+      font-weight: 600;
+      color: var(--lw-navy);
+      font-size: 15px;
+    }
+    .account-type {
+      font-size: 12px;
+      color: var(--lw-text-muted);
+      margin-top: 2px;
+    }
+    .account-amount-input {
+      width: 140px;
+    }
+    @media (max-width: 600px) {
+      .account-input-card {
+        flex-wrap: wrap;
+      }
+      .account-amount-input {
+        width: 100%;
+        margin-top: 8px;
+      }
+    }
+    
+    /* Asset Placement Map */
+    .placement-map {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .placement-account {
+      background: white;
+      border-radius: var(--lw-radius-lg);
+      border: 1px solid var(--lw-border);
+      overflow: hidden;
+    }
+    .placement-account-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: var(--lw-slate-50);
+      border-bottom: 1px solid var(--lw-border);
+    }
+    .placement-account-name {
+      font-weight: 700;
+      color: var(--lw-navy);
+      font-size: 16px;
+    }
+    .placement-account-amount {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: var(--lw-sky-dark);
+      font-size: 15px;
+    }
+    .placement-account-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--lw-radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-right: 12px;
+    }
+    .placement-account-icon.taxable { background: var(--lw-amber-50); }
+    .placement-account-icon.traditional { background: var(--lw-sky-100); }
+    .placement-account-icon.roth { background: var(--lw-emerald-50); }
+    
+    .placement-assets {
+      padding: 16px 20px;
+    }
+    .placement-asset-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      margin-bottom: 10px;
+      transition: all var(--lw-transition);
+    }
+    .placement-asset-item:last-child {
+      margin-bottom: 0;
+    }
+    .placement-asset-item:hover {
+      background: var(--lw-slate-100);
+    }
+    .placement-asset-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .placement-asset-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--lw-radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .placement-asset-icon.stocks { background: var(--lw-sky-100); }
+    .placement-asset-icon.intl { background: #FEF3C7; }
+    .placement-asset-icon.bonds { background: var(--lw-slate-200); }
+    .placement-asset-icon.reits { background: #FCE7F3; }
+    .placement-asset-icon.tips { background: #DBEAFE; }
+    .placement-asset-icon.munis { background: var(--lw-emerald-50); }
+    
+    .placement-asset-name {
+      font-weight: 600;
+      color: var(--lw-navy);
+      font-size: 14px;
+    }
+    .placement-asset-amount {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: var(--lw-text-secondary);
+      font-size: 14px;
+    }
+    
+    .placement-empty {
+      color: var(--lw-text-muted);
+      font-size: 14px;
+      font-style: italic;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    /* Priority Order Visualization */
+    .priority-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .priority-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: white;
+      border-radius: var(--lw-radius);
+      border: 1px solid var(--lw-border);
+    }
+    .priority-number {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--lw-sky), var(--lw-teal));
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .priority-content {
+      flex: 1;
+    }
+    .priority-action {
+      font-weight: 600;
+      color: var(--lw-navy);
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+    .priority-reason {
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+    }
+    
+    /* Decision Cards */
+    .decision-grid {
+      display: grid;
+      gap: 16px;
+    }
+    .decision-card {
+      background: white;
+      border-radius: var(--lw-radius);
+      padding: 20px;
+      border-left: 4px solid var(--lw-sky);
+      box-shadow: var(--lw-shadow-sm);
+    }
+    .decision-card.traditional {
+      border-left-color: var(--lw-sky);
+    }
+    .decision-card.roth {
+      border-left-color: var(--lw-emerald);
+    }
+    .decision-card.taxable {
+      border-left-color: var(--lw-amber);
+    }
+    .decision-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .decision-asset {
+      font-weight: 700;
+      color: var(--lw-navy);
+      font-size: 16px;
+    }
+    .decision-arrow {
+      color: var(--lw-text-muted);
+    }
+    .decision-account {
+      font-weight: 600;
+      color: var(--lw-sky-dark);
+    }
+    .decision-account.roth { color: var(--lw-emerald); }
+    .decision-account.taxable { color: #B45309; }
+    .decision-reason {
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+      line-height: 1.6;
+    }
+    
+    /* Educational Tooltips */
+    .info-tooltip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      background: var(--lw-slate-200);
+      color: var(--lw-slate-600);
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: help;
+      margin-left: 6px;
+    }
+    .info-tooltip:hover .tooltip-content {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .tooltip-content {
+      position: absolute;
+      bottom: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%) translateY(5px);
+      width: 280px;
+      background: var(--lw-navy);
+      color: white;
+      font-size: 13px;
+      font-weight: 400;
+      padding: 12px 16px;
+      border-radius: var(--lw-radius);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s ease;
+      z-index: 100;
+      line-height: 1.5;
+      box-shadow: var(--lw-shadow-xl);
+    }
+    .tooltip-content::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 8px solid transparent;
+      border-top-color: var(--lw-navy);
+    }
+    
+    /* Tax Treatment Legend */
+    .tax-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+      padding: 16px;
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+    }
+    .tax-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+    }
+    .tax-legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .tax-legend-dot.high { background: var(--lw-emerald); }
+    .tax-legend-dot.medium { background: var(--lw-amber); }
+    .tax-legend-dot.low { background: var(--lw-rose); }
+    
+    /* Summary Stats */
+    .summary-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 600px) {
+      .summary-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+    .summary-stat {
+      background: white;
+      border-radius: var(--lw-radius);
+      padding: 20px;
+      text-align: center;
+      border: 1px solid var(--lw-border);
+    }
+    .summary-stat-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--lw-navy);
+    }
+    .summary-stat-value.sky { color: var(--lw-sky); }
+    .summary-stat-value.green { color: var(--lw-emerald); }
+    .summary-stat-value.amber { color: #B45309; }
+    .summary-stat-label {
+      font-size: 13px;
+      color: var(--lw-text-muted);
+      margin-top: 4px;
+    }
+    
+    /* No results state */
+    .no-results {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--lw-text-muted);
+    }
+    .no-results-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+    .no-results-text {
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <span class="lw-logo-icon">P</span>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/compound-interest-calculator/">Compound Interest</a></li>
+        <li><a href="/investment-return-calculator/">Investment Returns</a></li>
+        <li><a href="/pretax-vs-roth/">Pre-Tax vs Roth</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu" id="mobileMenu">
+      <a href="/">Home</a>
+      <a href="/compound-interest-calculator/">Compound Interest</a>
+      <a href="/investment-return-calculator/">Investment Returns</a>
+      <a href="/pretax-vs-roth/">Pre-Tax vs Roth</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="lw-hero">
+    <span class="lw-badge green">Tax Optimization</span>
+    <h1>Asset Location <span class="accent">Optimizer</span></h1>
+    <p class="subtitle">Maximize after-tax returns by placing investments in the most tax-efficient accounts. Get personalized recommendations based on your portfolio.</p>
+  </header>
+
+  <main class="lw-main wide">
+    <!-- Step 1: Select Assets -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">📊</div>
+        <div>
+          <div class="lw-card-title">Select Your Asset Types</div>
+          <div class="lw-card-subtitle">Choose the investments you want to allocate</div>
+        </div>
+      </div>
+      
+      <div class="asset-checkbox-grid" id="assetGrid">
+        <label class="asset-checkbox-item selected">
+          <input type="checkbox" name="asset" value="us_stocks" checked>
+          <div class="asset-checkbox-content">
+            <div class="asset-checkbox-name">US Stocks / Total Market 📈</div>
+            <div class="asset-checkbox-desc">VTI, VTSAX, S&P 500 funds</div>
+            <span class="tax-rating high">Tax Efficient</span>
+          </div>
+        </label>
+        
+        <label class="asset-checkbox-item">
+          <input type="checkbox" name="asset" value="intl_stocks">
+          <div class="asset-checkbox-content">
+            <div class="asset-checkbox-name">International Stocks 🌍</div>
+            <div class="asset-checkbox-desc">VXUS, VTIAX, developed & emerging</div>
+            <span class="tax-rating medium">Moderate</span>
+          </div>
+        </label>
+        
+        <label class="asset-checkbox-item">
+          <input type="checkbox" name="asset" value="bonds">
+          <div class="asset-checkbox-content">
+            <div class="asset-checkbox-name">Bonds / Bond Funds 📃</div>
+            <div class="asset-checkbox-desc">BND, VBTLX, corporate, treasury</div>
+            <span class="tax-rating low">Tax Inefficient</span>
+          </div>
+        </label>
+        
+        <label class="asset-checkbox-item">
+          <input type="checkbox" name="asset" value="reits">
+          <div class="asset-checkbox-content">
+            <div class="asset-checkbox-name">REITs 🏢</div>
+            <div class="asset-checkbox-desc">VNQ, real estate investment trusts</div>
+            <span class="tax-rating low">Tax Inefficient</span>
+          </div>
+        </label>
+        
+        <label class="asset-checkbox-item">
+          <input type="checkbox" name="asset" value="tips">
+          <div class="asset-checkbox-content">
+            <div class="asset-checkbox-name">TIPS / I-Bonds 🛡️</div>
+            <div class="asset-checkbox-desc">Treasury inflation-protected securities</div>
+            <span class="tax-rating low">Tax Inefficient</span>
+          </div>
+        </label>
+        
+        <label class="asset-checkbox-item">
+          <input type="checkbox" name="asset" value="munis">
+          <div class="asset-checkbox-content">
+            <div class="asset-checkbox-name">Municipal Bonds 🏛️</div>
+            <div class="asset-checkbox-desc">Tax-exempt state/local bonds</div>
+            <span class="tax-rating high">Tax Exempt</span>
+          </div>
+        </label>
+        
+        <label class="asset-checkbox-item">
+          <input type="checkbox" name="asset" value="small_cap">
+          <div class="asset-checkbox-content">
+            <div class="asset-checkbox-name">Small Cap / Value 🚀</div>
+            <div class="asset-checkbox-desc">VBR, small cap value, factor tilts</div>
+            <span class="tax-rating high">Tax Efficient</span>
+          </div>
+        </label>
+        
+        <label class="asset-checkbox-item">
+          <input type="checkbox" name="asset" value="high_yield">
+          <div class="asset-checkbox-content">
+            <div class="asset-checkbox-name">High-Yield Bonds 💰</div>
+            <div class="asset-checkbox-desc">Junk bonds, high income funds</div>
+            <span class="tax-rating low">Tax Inefficient</span>
+          </div>
+        </label>
+      </div>
+      
+      <div class="tax-legend">
+        <div class="tax-legend-item">
+          <div class="tax-legend-dot high"></div>
+          <span>Tax Efficient — OK in taxable</span>
+        </div>
+        <div class="tax-legend-item">
+          <div class="tax-legend-dot medium"></div>
+          <span>Moderate — Consider tax-advantaged</span>
+        </div>
+        <div class="tax-legend-item">
+          <div class="tax-legend-dot low"></div>
+          <span>Tax Inefficient — Prioritize tax-advantaged</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Account Types & Amounts -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">🏦</div>
+        <div>
+          <div class="lw-card-title">Your Account Types</div>
+          <div class="lw-card-subtitle">Toggle accounts you have and enter approximate balances</div>
+        </div>
+      </div>
+      
+      <div id="accountInputs">
+        <div class="account-input-card active" data-account="taxable">
+          <div class="account-toggle active" onclick="toggleAccount('taxable')"></div>
+          <div class="account-info">
+            <div class="account-name">Taxable Brokerage</div>
+            <div class="account-type">Pay taxes annually on dividends & capital gains</div>
+          </div>
+          <div class="lw-input-prefix account-amount-input">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input" id="taxableAmount" value="50,000" oninput="formatAndCalculate(this)">
+          </div>
+        </div>
+        
+        <div class="account-input-card active" data-account="traditional">
+          <div class="account-toggle active" onclick="toggleAccount('traditional')"></div>
+          <div class="account-info">
+            <div class="account-name">Traditional IRA / 401(k)</div>
+            <div class="account-type">Tax-deferred — pay taxes on withdrawal</div>
+          </div>
+          <div class="lw-input-prefix account-amount-input">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input" id="traditionalAmount" value="100,000" oninput="formatAndCalculate(this)">
+          </div>
+        </div>
+        
+        <div class="account-input-card active" data-account="roth">
+          <div class="account-toggle active" onclick="toggleAccount('roth')"></div>
+          <div class="account-info">
+            <div class="account-name">Roth IRA / Roth 401(k)</div>
+            <div class="account-type">Tax-free growth & withdrawals</div>
+          </div>
+          <div class="lw-input-prefix account-amount-input">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input" id="rothAmount" value="50,000" oninput="formatAndCalculate(this)">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsSection">
+      <!-- Summary Stats -->
+      <div class="summary-stats lw-animate-in" id="summaryStats">
+        <div class="summary-stat">
+          <div class="summary-stat-value" id="totalPortfolio">$200,000</div>
+          <div class="summary-stat-label">Total Portfolio</div>
+        </div>
+        <div class="summary-stat">
+          <div class="summary-stat-value sky" id="assetsSelected">1</div>
+          <div class="summary-stat-label">Assets to Allocate</div>
+        </div>
+        <div class="summary-stat">
+          <div class="summary-stat-value green" id="accountsActive">3</div>
+          <div class="summary-stat-label">Active Accounts</div>
+        </div>
+      </div>
+
+      <!-- Optimal Placement Recommendations -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon violet">✨</div>
+          <div>
+            <div class="lw-card-title">Optimal Placement Recommendations</div>
+            <div class="lw-card-subtitle">Where to hold each asset for maximum tax efficiency</div>
+          </div>
+        </div>
+        
+        <div class="decision-grid" id="decisionGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Visual Asset Map -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon blue">🗺️</div>
+          <div>
+            <div class="lw-card-title">Asset Location Map</div>
+            <div class="lw-card-subtitle">Visual breakdown of assets by account type</div>
+          </div>
+        </div>
+        
+        <div class="placement-map" id="placementMap">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Account Filling Priority -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon amber">📋</div>
+          <div>
+            <div class="lw-card-title">Account Filling Priority</div>
+            <div class="lw-card-subtitle">Step-by-step order for placing your investments</div>
+          </div>
+        </div>
+        
+        <div class="priority-list" id="priorityList">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- What This Means -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon green">💡</div>
+          <div>
+            <div class="lw-card-title">What This Means</div>
+            <div class="lw-card-subtitle">Understanding your personalized recommendations</div>
+          </div>
+        </div>
+        
+        <div id="explanationContent">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Educational Content -->
+    <section class="lw-content">
+      <h2>What Is Asset Location?</h2>
+      <p><strong>Asset location</strong> is the strategy of placing different investments in the most tax-efficient account types. While <em>asset allocation</em> determines what you invest in (stocks, bonds, etc.), asset location determines <em>where</em> you hold those investments.</p>
+      <p>Done correctly, asset location can add 0.25% to 0.75% per year to your after-tax returns—that's tens of thousands of dollars over a lifetime of investing.</p>
+
+      <h2>The Three Account Types</h2>
+      <h3>1. Taxable Brokerage Accounts</h3>
+      <p>In taxable accounts, you pay taxes annually on dividends and capital gains. However, you get preferential rates on qualified dividends (0-20%) and long-term capital gains. You can also harvest tax losses and receive a step-up in cost basis at death.</p>
+      
+      <h3>2. Traditional IRA / 401(k)</h3>
+      <p>Tax-deferred accounts let your money grow without annual taxes, but you pay ordinary income tax on withdrawals. Best for assets that generate lots of taxable income (bonds, REITs) since that income would be taxed at high rates anyway.</p>
+      
+      <h3>3. Roth IRA / Roth 401(k)</h3>
+      <p>Roth accounts offer tax-free growth and tax-free withdrawals. Since all growth escapes taxation forever, prioritize your highest expected return assets here—stocks with high growth potential.</p>
+
+      <h2>Tax Efficiency by Asset Type</h2>
+      <h3>Tax-Efficient Assets (OK in Taxable)</h3>
+      <ul>
+        <li><strong>US Total Market / S&P 500 Index Funds:</strong> Low turnover, qualified dividends taxed at preferential rates</li>
+        <li><strong>Municipal Bonds:</strong> Interest is federally tax-exempt (and often state-exempt)</li>
+        <li><strong>Tax-Managed Funds:</strong> Specifically designed to minimize taxable distributions</li>
+      </ul>
+      
+      <h3>Tax-Inefficient Assets (Better in Tax-Advantaged)</h3>
+      <ul>
+        <li><strong>Bonds:</strong> Interest taxed as ordinary income (up to 37%)</li>
+        <li><strong>REITs:</strong> Most dividends are non-qualified, taxed as ordinary income</li>
+        <li><strong>TIPS:</strong> Phantom income from inflation adjustments is taxable annually</li>
+        <li><strong>High-Yield Bonds:</strong> High interest payments taxed at ordinary rates</li>
+        <li><strong>Actively Managed Funds:</strong> Higher turnover creates more taxable events</li>
+      </ul>
+
+      <h2>Special Considerations</h2>
+      <h3>International Stocks & the Foreign Tax Credit</h3>
+      <p>International stocks held in taxable accounts let you claim the Foreign Tax Credit for taxes withheld by foreign governments. This credit is lost in tax-advantaged accounts, making taxable accounts often the better home for international equity funds.</p>
+      
+      <h3>Asset Allocation Comes First</h3>
+      <p>Never let asset location override your target asset allocation. If you need 60% stocks and 40% bonds, maintain that ratio regardless of which accounts hold which assets. Asset location is an optimization layer, not a replacement for proper allocation.</p>
+
+      <!-- FAQ Section -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">What is asset location?</button>
+          <div class="lw-faq-a">
+            <p>Asset location is the strategy of placing different investments in the most tax-efficient account types. Unlike asset allocation (which determines what to invest in), asset location determines where to hold those investments to minimize taxes and maximize after-tax returns.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">Should I hold bonds in taxable or tax-advantaged accounts?</button>
+          <div class="lw-faq-a">
+            <p>Bonds that pay taxable interest (like corporate bonds, government bonds, and bond funds) are generally best held in tax-advantaged accounts like Traditional IRAs or 401(k)s. This shields the interest income from annual taxation. Municipal bonds are the exception—they're tax-exempt and belong in taxable accounts.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">Why should stocks go in taxable accounts?</button>
+          <div class="lw-faq-a">
+            <p>US stocks and index funds are relatively tax-efficient because qualified dividends and long-term capital gains receive preferential tax rates (0-20%). Additionally, holding stocks in taxable accounts allows you to harvest tax losses, receive a step-up in basis at death, and avoid converting favorable capital gains rates into ordinary income upon withdrawal from traditional accounts.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">What assets are best for Roth accounts?</button>
+          <div class="lw-faq-a">
+            <p>Roth accounts (Roth IRA, Roth 401k) are ideal for assets expected to have the highest growth, since all growth is tax-free. This includes high-growth stocks, small-cap stocks, emerging markets, and REITs. The key principle: put your highest expected return assets in Roth where the growth will never be taxed.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">Where should I hold international stocks?</button>
+          <div class="lw-faq-a">
+            <p>International stocks are often best in taxable accounts because you can claim the Foreign Tax Credit for taxes withheld by foreign governments. This credit is lost when international stocks are held in tax-advantaged accounts. However, if you don't have enough taxable space, prioritize overall tax efficiency.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/pretax-vs-roth/" class="lw-related-link">
+          <span class="dot"></span>
+          Pre-Tax vs Roth Calculator
+        </a>
+        <a href="/401k-match-optimizer/" class="lw-related-link">
+          <span class="dot"></span>
+          401(k) Match Optimizer
+        </a>
+        <a href="/investment-return-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Investment Return Calculator
+        </a>
+        <a href="/compound-interest-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Compound Interest Calculator
+        </a>
+        <a href="/emergency-fund-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Emergency Fund Calculator
+        </a>
+        <a href="/savings-goal-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Savings Goal Calculator
+        </a>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <p class="lw-disclaimer">
+      This calculator provides general educational guidance only and does not constitute financial, tax, or investment advice. 
+      Individual circumstances vary—consult a qualified financial advisor or tax professional for personalized recommendations.
+    </p>
+  </main>
+
+  <!-- Footer -->
+  <footer class="lw-footer">
+    <p>© 2025 PocketWise. Free financial calculators for smart money decisions.</p>
+    <p><a href="/">Home</a> · <a href="/about/">About</a></p>
+  </footer>
+
+  <script>
+    // Asset data with tax characteristics
+    const assetData = {
+      us_stocks: {
+        name: 'US Stocks / Total Market',
+        icon: '📈',
+        iconClass: 'stocks',
+        taxEfficiency: 'high',
+        preferredAccounts: ['taxable', 'roth'],
+        reason: 'Qualified dividends taxed at preferential rates (0-20%). Tax-loss harvesting possible. Step-up in basis at death.',
+        shortReason: 'Tax-efficient qualified dividends & capital gains'
+      },
+      intl_stocks: {
+        name: 'International Stocks',
+        icon: '🌍',
+        iconClass: 'intl',
+        taxEfficiency: 'medium',
+        preferredAccounts: ['taxable', 'roth'],
+        reason: 'Foreign Tax Credit available in taxable accounts offsets foreign withholding. Lost in tax-advantaged accounts.',
+        shortReason: 'Foreign Tax Credit available in taxable'
+      },
+      bonds: {
+        name: 'Bonds / Bond Funds',
+        icon: '📃',
+        iconClass: 'bonds',
+        taxEfficiency: 'low',
+        preferredAccounts: ['traditional', 'roth'],
+        reason: 'Interest taxed as ordinary income (up to 37%). Shelter in tax-advantaged accounts to defer or avoid taxes.',
+        shortReason: 'Interest taxed as ordinary income—shelter it'
+      },
+      reits: {
+        name: 'REITs',
+        icon: '🏢',
+        iconClass: 'reits',
+        taxEfficiency: 'low',
+        preferredAccounts: ['roth', 'traditional'],
+        reason: 'Most REIT dividends are non-qualified, taxed as ordinary income. High expected returns make Roth ideal.',
+        shortReason: 'Non-qualified dividends taxed as ordinary income'
+      },
+      tips: {
+        name: 'TIPS / I-Bonds',
+        icon: '🛡️',
+        iconClass: 'tips',
+        taxEfficiency: 'low',
+        preferredAccounts: ['traditional', 'roth'],
+        reason: 'Phantom income from inflation adjustments taxed annually even without cash distribution. Shelter in tax-advantaged.',
+        shortReason: 'Phantom inflation income taxed annually'
+      },
+      munis: {
+        name: 'Municipal Bonds',
+        icon: '🏛️',
+        iconClass: 'munis',
+        taxEfficiency: 'high',
+        preferredAccounts: ['taxable'],
+        reason: 'Interest is federally tax-exempt (often state-exempt too). Placing in tax-advantaged wastes the tax benefit.',
+        shortReason: 'Already tax-exempt—keep in taxable'
+      },
+      small_cap: {
+        name: 'Small Cap / Value',
+        icon: '🚀',
+        iconClass: 'stocks',
+        taxEfficiency: 'high',
+        preferredAccounts: ['roth', 'taxable'],
+        reason: 'Higher expected returns than total market. Roth maximizes tax-free growth on highest return assets.',
+        shortReason: 'High growth potential—ideal for Roth'
+      },
+      high_yield: {
+        name: 'High-Yield Bonds',
+        icon: '💰',
+        iconClass: 'bonds',
+        taxEfficiency: 'low',
+        preferredAccounts: ['traditional', 'roth'],
+        reason: 'High interest payments taxed as ordinary income. Must shelter in tax-advantaged accounts.',
+        shortReason: 'High taxable interest—must shelter'
+      }
+    };
+
+    // Account order priority (which to fill first for tax-inefficient assets)
+    const accountPriority = {
+      taxInefficient: ['traditional', 'roth', 'taxable'],
+      taxEfficient: ['taxable', 'roth', 'traditional'],
+      rothPreferred: ['roth', 'traditional', 'taxable'],
+      taxableOnly: ['taxable']
+    };
+
+    // Account display data
+    const accountInfo = {
+      taxable: { name: 'Taxable Brokerage', icon: '💵', iconClass: 'taxable' },
+      traditional: { name: 'Traditional IRA/401(k)', icon: '🏛️', iconClass: 'traditional' },
+      roth: { name: 'Roth IRA/401(k)', icon: '🌟', iconClass: 'roth' }
+    };
+
+    // State
+    let activeAccounts = { taxable: true, traditional: true, roth: true };
+    let selectedAssets = ['us_stocks'];
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      setupCheckboxListeners();
+      calculate();
+    });
+
+    function setupCheckboxListeners() {
+      document.querySelectorAll('#assetGrid input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', function() {
+          const item = this.closest('.asset-checkbox-item');
+          if (this.checked) {
+            item.classList.add('selected');
+            if (!selectedAssets.includes(this.value)) {
+              selectedAssets.push(this.value);
+            }
+          } else {
+            item.classList.remove('selected');
+            selectedAssets = selectedAssets.filter(a => a !== this.value);
+          }
+          calculate();
+        });
+      });
+    }
+
+    function toggleAccount(accountType) {
+      activeAccounts[accountType] = !activeAccounts[accountType];
+      const card = document.querySelector(`[data-account="${accountType}"]`);
+      const toggle = card.querySelector('.account-toggle');
+      const input = card.querySelector('input');
+      
+      if (activeAccounts[accountType]) {
+        card.classList.add('active');
+        card.classList.remove('disabled');
+        toggle.classList.add('active');
+        input.disabled = false;
+      } else {
+        card.classList.remove('active');
+        card.classList.add('disabled');
+        toggle.classList.remove('active');
+        input.disabled = true;
+      }
+      calculate();
+    }
+
+    function formatAndCalculate(input) {
+      let value = input.value.replace(/[^\d]/g, '');
+      if (value) {
+        input.value = parseInt(value).toLocaleString();
+      }
+      calculate();
+    }
+
+    function parseAmount(id) {
+      const val = document.getElementById(id).value.replace(/[^\d]/g, '');
+      return parseInt(val) || 0;
+    }
+
+    function formatCurrency(amount) {
+      return '$' + amount.toLocaleString();
+    }
+
+    function calculate() {
+      // Get amounts
+      const amounts = {
+        taxable: activeAccounts.taxable ? parseAmount('taxableAmount') : 0,
+        traditional: activeAccounts.traditional ? parseAmount('traditionalAmount') : 0,
+        roth: activeAccounts.roth ? parseAmount('rothAmount') : 0
+      };
+      
+      const totalPortfolio = amounts.taxable + amounts.traditional + amounts.roth;
+      const activeAccountCount = Object.values(activeAccounts).filter(v => v).length;
+      
+      // Update summary stats
+      document.getElementById('totalPortfolio').textContent = formatCurrency(totalPortfolio);
+      document.getElementById('assetsSelected').textContent = selectedAssets.length;
+      document.getElementById('accountsActive').textContent = activeAccountCount;
+      
+      if (selectedAssets.length === 0 || activeAccountCount === 0 || totalPortfolio === 0) {
+        showNoResults();
+        return;
+      }
+      
+      // Generate recommendations
+      generateDecisions();
+      generatePlacementMap(amounts);
+      generatePriorityList();
+      generateExplanation(amounts);
+    }
+
+    function showNoResults() {
+      document.getElementById('decisionGrid').innerHTML = `
+        <div class="no-results">
+          <div class="no-results-icon">📊</div>
+          <div class="no-results-text">Select at least one asset type and enable an account with a balance to see recommendations.</div>
+        </div>
+      `;
+      document.getElementById('placementMap').innerHTML = '';
+      document.getElementById('priorityList').innerHTML = '';
+      document.getElementById('explanationContent').innerHTML = '';
+    }
+
+    function generateDecisions() {
+      const grid = document.getElementById('decisionGrid');
+      const activeAccountTypes = Object.entries(activeAccounts).filter(([k, v]) => v).map(([k]) => k);
+      
+      let html = '';
+      selectedAssets.forEach(assetKey => {
+        const asset = assetData[assetKey];
+        // Find best available account
+        const bestAccount = asset.preferredAccounts.find(acc => activeAccountTypes.includes(acc)) || activeAccountTypes[0];
+        const accountClass = bestAccount === 'roth' ? 'roth' : (bestAccount === 'taxable' ? 'taxable' : 'traditional');
+        
+        html += `
+          <div class="decision-card ${accountClass}">
+            <div class="decision-header">
+              <span class="decision-asset">${asset.icon} ${asset.name}</span>
+              <span class="decision-arrow">→</span>
+              <span class="decision-account ${accountClass}">${accountInfo[bestAccount].name}</span>
+            </div>
+            <div class="decision-reason">${asset.reason}</div>
+          </div>
+        `;
+      });
+      
+      grid.innerHTML = html;
+    }
+
+    function generatePlacementMap(amounts) {
+      const map = document.getElementById('placementMap');
+      const activeAccountTypes = Object.entries(activeAccounts).filter(([k, v]) => v).map(([k]) => k);
+      
+      // Group assets by their best account
+      const placements = { taxable: [], traditional: [], roth: [] };
+      
+      selectedAssets.forEach(assetKey => {
+        const asset = assetData[assetKey];
+        const bestAccount = asset.preferredAccounts.find(acc => activeAccountTypes.includes(acc)) || activeAccountTypes[0];
+        if (bestAccount) {
+          placements[bestAccount].push(assetKey);
+        }
+      });
+      
+      let html = '';
+      activeAccountTypes.forEach(accType => {
+        const info = accountInfo[accType];
+        const assets = placements[accType];
+        
+        html += `
+          <div class="placement-account">
+            <div class="placement-account-header">
+              <div style="display: flex; align-items: center;">
+                <div class="placement-account-icon ${info.iconClass}">${info.icon}</div>
+                <div>
+                  <div class="placement-account-name">${info.name}</div>
+                </div>
+              </div>
+              <div class="placement-account-amount">${formatCurrency(amounts[accType])}</div>
+            </div>
+            <div class="placement-assets">
+        `;
+        
+        if (assets.length > 0) {
+          assets.forEach(assetKey => {
+            const asset = assetData[assetKey];
+            html += `
+              <div class="placement-asset-item">
+                <div class="placement-asset-info">
+                  <div class="placement-asset-icon ${asset.iconClass}">${asset.icon}</div>
+                  <div class="placement-asset-name">${asset.name}</div>
+                </div>
+                <span class="tax-rating ${asset.taxEfficiency}">${asset.taxEfficiency === 'high' ? 'Tax Efficient' : (asset.taxEfficiency === 'medium' ? 'Moderate' : 'Tax Inefficient')}</span>
+              </div>
+            `;
+          });
+        } else {
+          html += `<div class="placement-empty">No assets assigned to this account</div>`;
+        }
+        
+        html += `</div></div>`;
+      });
+      
+      map.innerHTML = html;
+    }
+
+    function generatePriorityList() {
+      const list = document.getElementById('priorityList');
+      const activeAccountTypes = Object.entries(activeAccounts).filter(([k, v]) => v).map(([k]) => k);
+      
+      // Sort selected assets by tax efficiency (inefficient first)
+      const sortedAssets = [...selectedAssets].sort((a, b) => {
+        const order = { low: 0, medium: 1, high: 2 };
+        return order[assetData[a].taxEfficiency] - order[assetData[b].taxEfficiency];
+      });
+      
+      let html = '';
+      let step = 1;
+      
+      // Group by priority category
+      const taxInefficient = sortedAssets.filter(a => assetData[a].taxEfficiency === 'low');
+      const taxModerate = sortedAssets.filter(a => assetData[a].taxEfficiency === 'medium');
+      const taxEfficient = sortedAssets.filter(a => assetData[a].taxEfficiency === 'high');
+      
+      if (taxInefficient.length > 0) {
+        const assetNames = taxInefficient.map(a => assetData[a].name).join(', ');
+        const targetAccounts = activeAccountTypes.includes('traditional') ? 'Traditional IRA/401(k)' : 
+                              (activeAccountTypes.includes('roth') ? 'Roth' : 'your available accounts');
+        html += `
+          <div class="priority-item">
+            <div class="priority-number">${step++}</div>
+            <div class="priority-content">
+              <div class="priority-action">Fill ${targetAccounts} with tax-inefficient assets first</div>
+              <div class="priority-reason"><strong>${assetNames}</strong> — These generate income taxed at ordinary rates. Shelter them in tax-advantaged accounts to defer or eliminate taxes.</div>
+            </div>
+          </div>
+        `;
+      }
+      
+      if (taxModerate.length > 0 && activeAccountTypes.includes('taxable')) {
+        const assetNames = taxModerate.map(a => assetData[a].name).join(', ');
+        html += `
+          <div class="priority-item">
+            <div class="priority-number">${step++}</div>
+            <div class="priority-content">
+              <div class="priority-action">Place international stocks in taxable (if space allows)</div>
+              <div class="priority-reason"><strong>${assetNames}</strong> — The Foreign Tax Credit offsets foreign withholding taxes but is only available in taxable accounts.</div>
+            </div>
+          </div>
+        `;
+      }
+      
+      if (taxEfficient.length > 0) {
+        const assetNames = taxEfficient.map(a => assetData[a].name).join(', ');
+        const hasMunis = taxEfficient.includes('munis');
+        const hasGrowth = taxEfficient.includes('small_cap');
+        
+        if (hasMunis && activeAccountTypes.includes('taxable')) {
+          html += `
+            <div class="priority-item">
+              <div class="priority-number">${step++}</div>
+              <div class="priority-content">
+                <div class="priority-action">Keep municipal bonds in taxable accounts only</div>
+                <div class="priority-reason"><strong>Municipal Bonds</strong> — Already tax-exempt. Placing in tax-advantaged accounts wastes the benefit and converts tax-free income to taxable income upon withdrawal.</div>
+              </div>
+            </div>
+          `;
+        }
+        
+        if (hasGrowth && activeAccountTypes.includes('roth')) {
+          html += `
+            <div class="priority-item">
+              <div class="priority-number">${step++}</div>
+              <div class="priority-content">
+                <div class="priority-action">Prioritize high-growth assets in Roth</div>
+                <div class="priority-reason"><strong>Small Cap / Value</strong> — Higher expected returns benefit most from tax-free Roth growth. All gains escape taxation forever.</div>
+              </div>
+            </div>
+          `;
+        }
+        
+        const regularStocks = taxEfficient.filter(a => !['munis', 'small_cap'].includes(a));
+        if (regularStocks.length > 0) {
+          const stockNames = regularStocks.map(a => assetData[a].name).join(', ');
+          html += `
+            <div class="priority-item">
+              <div class="priority-number">${step++}</div>
+              <div class="priority-content">
+                <div class="priority-action">Fill remaining space with tax-efficient equities</div>
+                <div class="priority-reason"><strong>${stockNames}</strong> — These work well in any account due to qualified dividend treatment and capital gains tax rates.</div>
+              </div>
+            </div>
+          `;
+        }
+      }
+      
+      list.innerHTML = html || '<div class="placement-empty">Select assets to see filling priority</div>';
+    }
+
+    function generateExplanation(amounts) {
+      const content = document.getElementById('explanationContent');
+      const activeAccountTypes = Object.entries(activeAccounts).filter(([k, v]) => v).map(([k]) => k);
+      
+      // Calculate tax-advantaged ratio
+      const taxAdvantaged = amounts.traditional + amounts.roth;
+      const total = amounts.taxable + taxAdvantaged;
+      const taxAdvRatio = total > 0 ? ((taxAdvantaged / total) * 100).toFixed(0) : 0;
+      
+      // Analyze portfolio
+      const hasTaxInefficient = selectedAssets.some(a => assetData[a].taxEfficiency === 'low');
+      const taxInefficientCount = selectedAssets.filter(a => assetData[a].taxEfficiency === 'low').length;
+      const hasSufficientShelter = taxAdvantaged > amounts.taxable;
+      
+      let html = `
+        <p style="margin-bottom: 16px; color: var(--lw-text-secondary); line-height: 1.7;">
+          <strong>Your portfolio breakdown:</strong> ${taxAdvRatio}% tax-advantaged (${formatCurrency(taxAdvantaged)}) and ${100 - taxAdvRatio}% taxable (${formatCurrency(amounts.taxable)}).
+        </p>
+      `;
+      
+      if (hasTaxInefficient) {
+        if (hasSufficientShelter) {
+          html += `
+            <p style="margin-bottom: 16px; color: var(--lw-text-secondary); line-height: 1.7;">
+              ✅ <strong>Good news:</strong> You have sufficient tax-advantaged space to shelter your ${taxInefficientCount} tax-inefficient asset${taxInefficientCount > 1 ? 's' : ''}. 
+              Prioritize placing bonds, REITs, and TIPS in your Traditional IRA/401(k) to shield that income from annual taxation.
+            </p>
+          `;
+        } else {
+          html += `
+            <p style="margin-bottom: 16px; color: var(--lw-text-secondary); line-height: 1.7;">
+              ⚠️ <strong>Consider:</strong> Your tax-advantaged space is limited relative to your taxable account. 
+              You may not be able to fully shelter all tax-inefficient assets. Prioritize placing the highest-yield bonds and REITs in tax-advantaged accounts first.
+            </p>
+          `;
+        }
+      }
+      
+      if (amounts.roth > 0) {
+        html += `
+          <p style="margin-bottom: 16px; color: var(--lw-text-secondary); line-height: 1.7;">
+            💎 <strong>Roth advantage:</strong> Your ${formatCurrency(amounts.roth)} in Roth accounts will grow completely tax-free. 
+            Put your highest expected return assets here—the more they grow, the more you save in taxes forever.
+          </p>
+        `;
+      }
+      
+      if (selectedAssets.includes('intl_stocks') && activeAccountTypes.includes('taxable')) {
+        html += `
+          <p style="margin-bottom: 16px; color: var(--lw-text-secondary); line-height: 1.7;">
+            🌍 <strong>International stocks:</strong> Holding these in taxable lets you claim the Foreign Tax Credit (typically 5-15% of dividends). 
+            This credit is completely lost in IRAs and 401(k)s.
+          </p>
+        `;
+      }
+      
+      if (selectedAssets.includes('munis') && activeAccountTypes.includes('taxable')) {
+        html += `
+          <p style="margin-bottom: 16px; color: var(--lw-text-secondary); line-height: 1.7;">
+            🏛️ <strong>Municipal bonds:</strong> Always keep these in taxable accounts. Their tax-exempt interest becomes taxable when withdrawn from Traditional accounts—defeating the purpose entirely.
+          </p>
+        `;
+      }
+      
+      html += `
+        <p style="margin-bottom: 0; color: var(--lw-text-muted); font-size: 14px; line-height: 1.7;">
+          <em>Remember: Maintain your target asset allocation across all accounts. Asset location optimizes where you hold assets, not what or how much you hold.</em>
+        </p>
+      `;
+      
+      content.innerHTML = html;
+    }
+
+    // Mobile menu toggle
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    // FAQ accordion
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.lw-faq-item').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    }
+  </script>
+</body>
+</html>

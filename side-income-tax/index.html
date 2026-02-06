@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Side Income Tax Calculator — Freelance & Self-Employment Tax Estimator | PocketWise</title>
+  <meta name="description" content="Free side hustle tax calculator. Estimate self-employment tax (15.3%), federal & state taxes on freelance income. See how much to set aside for quarterly taxes.">
+  <meta name="keywords" content="side hustle tax calculator, self employment tax estimator, side income after tax, freelance tax calculator, 1099 tax calculator, gig economy taxes">
+  <link rel="canonical" href="https://pocketwise.io/side-income-tax/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .lw-set-aside-hero {
+      background: linear-gradient(135deg, #059669 0%, #10B981 100%);
+      border-radius: var(--lw-radius-lg);
+      padding: 32px;
+      text-align: center;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .lw-set-aside-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.15) 0%, transparent 50%);
+    }
+    .lw-set-aside-hero * { position: relative; }
+    .lw-set-aside-label {
+      font-size: 14px;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .lw-set-aside-pct {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 64px;
+      font-weight: 800;
+      color: white;
+      line-height: 1;
+      letter-spacing: -2px;
+    }
+    .lw-set-aside-amt {
+      font-size: 20px;
+      color: rgba(255,255,255,0.9);
+      margin-top: 8px;
+      font-weight: 500;
+    }
+    .lw-set-aside-sub {
+      font-size: 14px;
+      color: rgba(255,255,255,0.7);
+      margin-top: 4px;
+    }
+    .lw-tax-breakdown-visual {
+      display: flex;
+      height: 32px;
+      border-radius: var(--lw-radius-full);
+      overflow: hidden;
+      margin: 24px 0 16px;
+    }
+    .lw-tax-seg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: width 0.6s ease;
+      min-width: 0;
+    }
+    .lw-tax-seg.se { background: #F43F5E; }
+    .lw-tax-seg.federal { background: #F59E0B; }
+    .lw-tax-seg.state { background: #8B5CF6; }
+    .lw-tax-seg.net { background: #10B981; }
+    .lw-tax-seg span {
+      font-size: 11px;
+      font-weight: 600;
+      color: white;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .lw-tax-seg:hover span,
+    .lw-tax-seg[style*="width: 1"] span,
+    .lw-tax-seg[style*="width: 2"] span,
+    .lw-tax-seg[style*="width: 3"] span,
+    .lw-tax-seg[style*="width: 4"] span,
+    .lw-tax-seg[style*="width: 5"] span { opacity: 1; }
+    .lw-breakdown-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .lw-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+    }
+    .lw-legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .lw-legend-dot.se { background: #F43F5E; }
+    .lw-legend-dot.federal { background: #F59E0B; }
+    .lw-legend-dot.state { background: #8B5CF6; }
+    .lw-legend-dot.net { background: #10B981; }
+    .lw-quarterly-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .lw-quarterly-item {
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      padding: 16px;
+      text-align: center;
+      border: 1px solid var(--lw-border-light);
+    }
+    .lw-quarterly-label {
+      font-size: 11px;
+      color: var(--lw-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .lw-quarterly-due {
+      font-size: 12px;
+      color: var(--lw-slate-500);
+      margin-bottom: 8px;
+    }
+    .lw-quarterly-amt {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--lw-navy);
+    }
+    .lw-insight-box {
+      background: var(--lw-sky-50);
+      border: 1px solid rgba(14, 165, 233, 0.2);
+      border-radius: var(--lw-radius);
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .lw-insight-title {
+      font-weight: 600;
+      color: var(--lw-sky-dark);
+      font-size: 14px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .lw-insight-text {
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+      line-height: 1.6;
+    }
+    .lw-decision-box {
+      background: var(--lw-emerald-50);
+      border: 2px solid var(--lw-emerald);
+      border-radius: var(--lw-radius);
+      padding: 24px;
+      margin-top: 24px;
+      text-align: center;
+    }
+    .lw-decision-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      color: var(--lw-emerald-dark);
+      font-size: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .lw-decision-text {
+      font-size: 18px;
+      color: var(--lw-navy);
+      font-weight: 600;
+      line-height: 1.5;
+    }
+    @media (max-width: 768px) {
+      .lw-quarterly-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .lw-set-aside-pct {
+        font-size: 48px;
+      }
+    }
+    @media (max-width: 480px) {
+      .lw-breakdown-legend {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+    }
+  </style>
+  
+  <!-- FAQ Schema JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How much tax do I pay on side income?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Side income is subject to self-employment tax (15.3% on 92.35% of net earnings), plus federal income tax at your marginal bracket, plus any applicable state income tax. Most people need to set aside 25-35% of their side income for taxes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is self-employment tax?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Self-employment tax is 15.3% (12.4% Social Security + 2.9% Medicare) on net self-employment earnings up to $168,600 (2024). This covers both the employee and employer portions of FICA taxes that W-2 employees split with their employer."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I have to pay quarterly estimated taxes?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If you expect to owe $1,000 or more in taxes, you should make quarterly estimated tax payments to avoid underpayment penalties. Payments are due April 15, June 15, September 15, and January 15 of the following year."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I deduct business expenses from my side income?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes! You can deduct ordinary and necessary business expenses like supplies, equipment, software, home office costs, mileage, and professional services. These deductions reduce your taxable income and lower both self-employment and income taxes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the self-employment tax deduction?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can deduct half of your self-employment tax (the employer-equivalent portion) when calculating your federal income tax. This deduction reduces your adjusted gross income (AGI) and lowers your overall tax liability."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">P</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">All Tools</a></li>
+        <li><a href="/compound-interest/">Compound Interest</a></li>
+        <li><a href="/debt-payoff/">Debt Payoff</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')">☰</button>
+    </div>
+    <div class="lw-mobile-menu">
+      <a href="/">All Tools</a>
+      <a href="/compound-interest/">Compound Interest</a>
+      <a href="/debt-payoff/">Debt Payoff</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- Hero -->
+    <header class="lw-hero">
+      <span class="lw-badge">FREELANCE TAX TOOL</span>
+      <h1>Side Income <span class="accent">Tax Estimator</span></h1>
+      <p class="subtitle">Calculate self-employment tax, federal & state taxes on your side hustle income. Know exactly how much to set aside.</p>
+    </header>
+
+    <!-- Calculator Card -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">💼</div>
+        <div>
+          <div class="lw-card-title">Your Side Income Details</div>
+          <div class="lw-card-subtitle">Enter your freelance, gig, or 1099 income</div>
+        </div>
+      </div>
+
+      <!-- Income Amount Toggle -->
+      <div class="lw-form-group">
+        <label class="lw-label">Income Period</label>
+        <div class="lw-toggle-group">
+          <button type="button" class="lw-toggle-btn active" data-period="annual" onclick="setPeriod('annual')">Annual</button>
+          <button type="button" class="lw-toggle-btn" data-period="monthly" onclick="setPeriod('monthly')">Monthly</button>
+        </div>
+      </div>
+
+      <!-- Side Income -->
+      <div class="lw-form-group">
+        <label class="lw-label" for="sideIncome">Side Income Amount <span class="lw-label-hint" id="periodHint">(per year)</span></label>
+        <div class="lw-input-prefix">
+          <span class="prefix">$</span>
+          <input type="text" id="sideIncome" class="lw-input" placeholder="20,000" inputmode="numeric">
+        </div>
+      </div>
+
+      <!-- Business Expenses -->
+      <div class="lw-form-group">
+        <label class="lw-label" for="expenses">Business Expenses <span class="lw-label-hint">(deductible, annual)</span></label>
+        <div class="lw-input-prefix">
+          <span class="prefix">$</span>
+          <input type="text" id="expenses" class="lw-input" placeholder="2,000" inputmode="numeric">
+        </div>
+      </div>
+
+      <!-- Filing Status -->
+      <div class="lw-form-group">
+        <label class="lw-label" for="filingStatus">Filing Status</label>
+        <select id="filingStatus" class="lw-select">
+          <option value="single">Single</option>
+          <option value="married">Married Filing Jointly</option>
+          <option value="married_separate">Married Filing Separately</option>
+          <option value="head">Head of Household</option>
+        </select>
+      </div>
+
+      <!-- W-2 Income -->
+      <div class="lw-form-group">
+        <label class="lw-label" for="w2Income">W-2 Income <span class="lw-label-hint">(your day job, annual)</span></label>
+        <div class="lw-input-prefix">
+          <span class="prefix">$</span>
+          <input type="text" id="w2Income" class="lw-input" placeholder="60,000" inputmode="numeric">
+        </div>
+      </div>
+
+      <!-- State Tax Rate -->
+      <div class="lw-form-group">
+        <label class="lw-label" for="stateRate">State Tax Rate</label>
+        <div class="lw-input-suffix">
+          <input type="text" id="stateRate" class="lw-input" placeholder="5.0" inputmode="decimal">
+          <span class="suffix">%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SET ASIDE HERO - Primary Result -->
+    <div class="lw-set-aside-hero" id="setAsideHero">
+      <div class="lw-set-aside-label">💰 Set Aside for Taxes</div>
+      <div class="lw-set-aside-pct" id="setAsidePct">30%</div>
+      <div class="lw-set-aside-amt" id="setAsideAmt">About $500 per month</div>
+      <div class="lw-set-aside-sub">of your side income</div>
+    </div>
+
+    <!-- Results Card -->
+    <div class="lw-card" id="resultsCard">
+      <div class="lw-card-header">
+        <div class="lw-card-icon rose">📊</div>
+        <div>
+          <div class="lw-card-title">Tax Breakdown</div>
+          <div class="lw-card-subtitle">How your side income is taxed</div>
+        </div>
+      </div>
+
+      <!-- Visual Breakdown Bar -->
+      <div class="lw-tax-breakdown-visual" id="taxBreakdownBar">
+        <div class="lw-tax-seg se" style="width: 15%;"><span>SE Tax</span></div>
+        <div class="lw-tax-seg federal" style="width: 12%;"><span>Federal</span></div>
+        <div class="lw-tax-seg state" style="width: 5%;"><span>State</span></div>
+        <div class="lw-tax-seg net" style="width: 68%;"><span>Keep</span></div>
+      </div>
+
+      <!-- Legend -->
+      <div class="lw-breakdown-legend">
+        <div class="lw-legend-item"><div class="lw-legend-dot se"></div><span>Self-Employment Tax</span></div>
+        <div class="lw-legend-item"><div class="lw-legend-dot federal"></div><span>Federal Income Tax</span></div>
+        <div class="lw-legend-item"><div class="lw-legend-dot state"></div><span>State Tax</span></div>
+        <div class="lw-legend-item"><div class="lw-legend-dot net"></div><span>After-Tax Income</span></div>
+      </div>
+
+      <!-- Result Grid -->
+      <div class="lw-result-grid">
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Self-Employment Tax</div>
+          <div class="lw-result-item-value rose" id="seTax">$2,826</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Federal Tax</div>
+          <div class="lw-result-item-value" id="federalTax">$2,160</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">State Tax</div>
+          <div class="lw-result-item-value" id="stateTax">$900</div>
+        </div>
+      </div>
+
+      <div class="lw-result-grid lw-mt-16">
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Total Tax</div>
+          <div class="lw-result-item-value rose" id="totalTax">$5,886</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">After-Tax Income</div>
+          <div class="lw-result-item-value green" id="afterTax">$12,114</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Effective Rate</div>
+          <div class="lw-result-item-value sky" id="effectiveRate">32.7%</div>
+        </div>
+      </div>
+
+      <!-- What This Means -->
+      <div class="lw-insight-box">
+        <div class="lw-insight-title">💡 What This Means</div>
+        <div class="lw-insight-text" id="insightText">
+          On $18,000 of net side income, you'll pay about $5,886 in combined taxes. Your effective tax rate on this income is 32.7% — higher than your W-2 job because of the 15.3% self-employment tax.
+        </div>
+      </div>
+
+      <!-- Decision Guidance -->
+      <div class="lw-decision-box">
+        <div class="lw-decision-title">✅ Your Action Plan</div>
+        <div class="lw-decision-text" id="decisionText">
+          Set aside <strong>33%</strong> of every side income payment. Open a separate savings account and transfer <strong>$490/month</strong> automatically.
+        </div>
+      </div>
+    </div>
+
+    <!-- Quarterly Payments Card -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon amber">📅</div>
+        <div>
+          <div class="lw-card-title">Quarterly Estimated Payments</div>
+          <div class="lw-card-subtitle">Avoid underpayment penalties by paying on time</div>
+        </div>
+      </div>
+
+      <div class="lw-quarterly-grid" id="quarterlyGrid">
+        <div class="lw-quarterly-item">
+          <div class="lw-quarterly-label">Q1</div>
+          <div class="lw-quarterly-due">Due Apr 15</div>
+          <div class="lw-quarterly-amt" id="q1Amt">$1,472</div>
+        </div>
+        <div class="lw-quarterly-item">
+          <div class="lw-quarterly-label">Q2</div>
+          <div class="lw-quarterly-due">Due Jun 15</div>
+          <div class="lw-quarterly-amt" id="q2Amt">$1,472</div>
+        </div>
+        <div class="lw-quarterly-item">
+          <div class="lw-quarterly-label">Q3</div>
+          <div class="lw-quarterly-due">Due Sep 15</div>
+          <div class="lw-quarterly-amt" id="q3Amt">$1,472</div>
+        </div>
+        <div class="lw-quarterly-item">
+          <div class="lw-quarterly-label">Q4</div>
+          <div class="lw-quarterly-due">Due Jan 15</div>
+          <div class="lw-quarterly-amt" id="q4Amt">$1,470</div>
+        </div>
+      </div>
+
+      <div class="lw-insight-box" style="background: var(--lw-amber-50); border-color: rgba(245, 158, 11, 0.2);">
+        <div class="lw-insight-title" style="color: #B45309;">⚠️ Important</div>
+        <div class="lw-insight-text">
+          If you expect to owe more than $1,000, you should make quarterly estimated payments to avoid IRS penalties. Use <strong>Form 1040-ES</strong> or pay online at <a href="https://www.irs.gov/payments" target="_blank" rel="noopener">IRS.gov/payments</a>.
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <section class="lw-content">
+      <h2>How Side Income Taxes Work</h2>
+      <p>When you earn money from freelancing, gig work, or any self-employment activity, you're responsible for paying taxes that would normally be split with an employer. This includes <strong>self-employment tax</strong> (Social Security and Medicare) plus regular income taxes.</p>
+
+      <h3>Self-Employment Tax (15.3%)</h3>
+      <p>The biggest surprise for new freelancers is the self-employment tax. Unlike W-2 employees who split FICA taxes 50/50 with their employer, you pay the full 15.3%:</p>
+      <ul>
+        <li><strong>Social Security:</strong> 12.4% on the first $168,600 (2024)</li>
+        <li><strong>Medicare:</strong> 2.9% on all earnings (plus 0.9% on income over $200,000)</li>
+      </ul>
+      <p>Good news: You can deduct half of your SE tax when calculating income tax, slightly reducing your overall burden.</p>
+
+      <h3>Federal Income Tax</h3>
+      <p>Your side income is added to your W-2 income to determine your total taxable income. This means your side hustle is often taxed at your <strong>marginal rate</strong> — the highest bracket you reach. If your day job puts you in the 22% bracket, your side income is taxed at 22% (or higher if it pushes you into the next bracket).</p>
+
+      <h3>State Income Tax</h3>
+      <p>Most states tax self-employment income at your normal state income tax rate. Nine states have no income tax: Alaska, Florida, Nevada, New Hampshire, South Dakota, Tennessee, Texas, Washington, and Wyoming.</p>
+
+      <h2>How to Reduce Your Side Income Taxes</h2>
+      
+      <h3>Deduct Business Expenses</h3>
+      <p>Track and deduct all ordinary and necessary business expenses:</p>
+      <ul>
+        <li>Equipment, software, and supplies</li>
+        <li>Home office (simplified: $5/sq ft, up to 300 sq ft)</li>
+        <li>Business mileage (67¢/mile for 2024)</li>
+        <li>Professional services, subscriptions, training</li>
+        <li>Health insurance premiums (if self-employed)</li>
+      </ul>
+
+      <h3>Contribute to Retirement</h3>
+      <p>Self-employed retirement accounts let you defer taxes while saving:</p>
+      <ul>
+        <li><strong>SEP-IRA:</strong> Contribute up to 25% of net self-employment income</li>
+        <li><strong>Solo 401(k):</strong> Up to $69,000 in 2024 (with employer + employee contributions)</li>
+        <li><strong>Traditional IRA:</strong> $7,000 limit ($8,000 if 50+)</li>
+      </ul>
+
+      <h3>The QBI Deduction</h3>
+      <p>The Qualified Business Income (QBI) deduction lets you deduct up to 20% of qualified business income from your taxable income. This applies to most self-employed income below certain thresholds.</p>
+
+      <!-- FAQ Section -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            How much tax do I pay on side income?
+          </button>
+          <div class="lw-faq-a">
+            <p>Side income is subject to self-employment tax (15.3% on 92.35% of net earnings), plus federal income tax at your marginal bracket, plus any applicable state income tax. Most people need to set aside 25-35% of their side income for taxes.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            What is self-employment tax?
+          </button>
+          <div class="lw-faq-a">
+            <p>Self-employment tax is 15.3% (12.4% Social Security + 2.9% Medicare) on net self-employment earnings up to $168,600 (2024). This covers both the employee and employer portions of FICA taxes that W-2 employees split with their employer.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            Do I have to pay quarterly estimated taxes?
+          </button>
+          <div class="lw-faq-a">
+            <p>If you expect to owe $1,000 or more in taxes, you should make quarterly estimated tax payments to avoid underpayment penalties. Payments are due April 15, June 15, September 15, and January 15 of the following year.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            Can I deduct business expenses from my side income?
+          </button>
+          <div class="lw-faq-a">
+            <p>Yes! You can deduct ordinary and necessary business expenses like supplies, equipment, software, home office costs, mileage, and professional services. These deductions reduce your taxable income and lower both self-employment and income taxes.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            What is the self-employment tax deduction?
+          </button>
+          <div class="lw-faq-a">
+            <p>You can deduct half of your self-employment tax (the employer-equivalent portion) when calculating your federal income tax. This deduction reduces your adjusted gross income (AGI) and lowers your overall tax liability.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/emergency-fund/" class="lw-related-link">
+          <span class="dot"></span>Emergency Fund Calculator
+        </a>
+        <a href="/debt-payoff/" class="lw-related-link">
+          <span class="dot"></span>Debt Payoff Planner
+        </a>
+        <a href="/compound-interest/" class="lw-related-link">
+          <span class="dot"></span>Compound Interest Calculator
+        </a>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <div class="lw-disclaimer">
+      This calculator provides estimates for educational purposes only. Tax laws are complex and change frequently. Consult a qualified tax professional for personalized advice.
+    </div>
+  </main>
+
+  <footer class="lw-footer">
+    <a href="/">PocketWise</a> — Free financial calculators
+  </footer>
+
+  <script>
+    // 2024 Tax Brackets
+    const TAX_BRACKETS = {
+      single: [
+        { min: 0, max: 11600, rate: 0.10 },
+        { min: 11600, max: 47150, rate: 0.12 },
+        { min: 47150, max: 100525, rate: 0.22 },
+        { min: 100525, max: 191950, rate: 0.24 },
+        { min: 191950, max: 243725, rate: 0.32 },
+        { min: 243725, max: 609350, rate: 0.35 },
+        { min: 609350, max: Infinity, rate: 0.37 }
+      ],
+      married: [
+        { min: 0, max: 23200, rate: 0.10 },
+        { min: 23200, max: 94300, rate: 0.12 },
+        { min: 94300, max: 201050, rate: 0.22 },
+        { min: 201050, max: 383900, rate: 0.24 },
+        { min: 383900, max: 487450, rate: 0.32 },
+        { min: 487450, max: 731200, rate: 0.35 },
+        { min: 731200, max: Infinity, rate: 0.37 }
+      ],
+      married_separate: [
+        { min: 0, max: 11600, rate: 0.10 },
+        { min: 11600, max: 47150, rate: 0.12 },
+        { min: 47150, max: 100525, rate: 0.22 },
+        { min: 100525, max: 191950, rate: 0.24 },
+        { min: 191950, max: 243725, rate: 0.32 },
+        { min: 243725, max: 365600, rate: 0.35 },
+        { min: 365600, max: Infinity, rate: 0.37 }
+      ],
+      head: [
+        { min: 0, max: 16550, rate: 0.10 },
+        { min: 16550, max: 63100, rate: 0.12 },
+        { min: 63100, max: 100500, rate: 0.22 },
+        { min: 100500, max: 191950, rate: 0.24 },
+        { min: 191950, max: 243700, rate: 0.32 },
+        { min: 243700, max: 609350, rate: 0.35 },
+        { min: 609350, max: Infinity, rate: 0.37 }
+      ]
+    };
+
+    const STANDARD_DEDUCTION = {
+      single: 14600,
+      married: 29200,
+      married_separate: 14600,
+      head: 21900
+    };
+
+    const SS_WAGE_BASE = 168600;
+    const SE_TAX_RATE = 0.153;
+    const SS_RATE = 0.124;
+    const MEDICARE_RATE = 0.029;
+
+    let currentPeriod = 'annual';
+
+    // Format currency
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(amount);
+    }
+
+    // Parse input value
+    function parseValue(id) {
+      const el = document.getElementById(id);
+      return parseFloat(el.value.replace(/[^0-9.-]/g, '')) || 0;
+    }
+
+    // Format input on blur
+    function formatInput(input) {
+      const value = parseFloat(input.value.replace(/[^0-9.-]/g, ''));
+      if (!isNaN(value) && value > 0) {
+        input.value = new Intl.NumberFormat('en-US').format(value);
+      }
+    }
+
+    // Set period (annual/monthly)
+    function setPeriod(period) {
+      currentPeriod = period;
+      document.querySelectorAll('.lw-toggle-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.period === period);
+      });
+      document.getElementById('periodHint').textContent = period === 'annual' ? '(per year)' : '(per month)';
+      calculate();
+    }
+
+    // Calculate federal income tax
+    function calculateFederalTax(taxableIncome, filingStatus) {
+      const brackets = TAX_BRACKETS[filingStatus];
+      let tax = 0;
+      let remaining = taxableIncome;
+
+      for (const bracket of brackets) {
+        if (remaining <= 0) break;
+        const taxableInBracket = Math.min(remaining, bracket.max - bracket.min);
+        tax += taxableInBracket * bracket.rate;
+        remaining -= taxableInBracket;
+      }
+
+      return tax;
+    }
+
+    // Get marginal rate
+    function getMarginalRate(taxableIncome, filingStatus) {
+      const brackets = TAX_BRACKETS[filingStatus];
+      for (const bracket of brackets) {
+        if (taxableIncome <= bracket.max) {
+          return bracket.rate;
+        }
+      }
+      return 0.37;
+    }
+
+    // Main calculation
+    function calculate() {
+      let sideIncome = parseValue('sideIncome');
+      const expenses = parseValue('expenses');
+      const filingStatus = document.getElementById('filingStatus').value;
+      const w2Income = parseValue('w2Income');
+      const stateRate = parseValue('stateRate') / 100;
+
+      // Convert monthly to annual if needed
+      if (currentPeriod === 'monthly') {
+        sideIncome = sideIncome * 12;
+      }
+
+      // Net self-employment income
+      const netSEIncome = Math.max(0, sideIncome - expenses);
+
+      // Self-employment tax (on 92.35% of net earnings)
+      const seTaxableIncome = netSEIncome * 0.9235;
+      
+      // Social Security portion (capped)
+      const w2SocialSecurity = Math.min(w2Income, SS_WAGE_BASE);
+      const remainingSScap = Math.max(0, SS_WAGE_BASE - w2SocialSecurity);
+      const ssTaxableForSE = Math.min(seTaxableIncome, remainingSScap);
+      
+      const ssTax = ssTaxableForSE * SS_RATE;
+      const medicareTax = seTaxableIncome * MEDICARE_RATE;
+      const selfEmploymentTax = ssTax + medicareTax;
+
+      // Deductible portion of SE tax (half)
+      const seDeduction = selfEmploymentTax / 2;
+
+      // Calculate federal tax on side income (marginal approach)
+      const standardDeduction = STANDARD_DEDUCTION[filingStatus];
+      
+      // Taxable income with just W-2
+      const taxableW2 = Math.max(0, w2Income - standardDeduction);
+      
+      // Taxable income with W-2 + side income (minus SE deduction)
+      const totalIncome = w2Income + netSEIncome - seDeduction;
+      const taxableTotal = Math.max(0, totalIncome - standardDeduction);
+      
+      // Federal tax is the difference
+      const federalTaxW2Only = calculateFederalTax(taxableW2, filingStatus);
+      const federalTaxTotal = calculateFederalTax(taxableTotal, filingStatus);
+      const federalTaxOnSide = federalTaxTotal - federalTaxW2Only;
+
+      // State tax on net SE income
+      const stateTax = netSEIncome * stateRate;
+
+      // Totals
+      const totalTax = selfEmploymentTax + federalTaxOnSide + stateTax;
+      const afterTax = netSEIncome - totalTax;
+      const effectiveRate = netSEIncome > 0 ? (totalTax / netSEIncome) * 100 : 0;
+
+      // Set aside percentage (round up to nearest 5%)
+      const setAsidePct = Math.ceil(effectiveRate / 5) * 5;
+      const setAsideMonthly = (sideIncome * (setAsidePct / 100)) / 12;
+
+      // Quarterly payments
+      const quarterlyAmt = Math.ceil(totalTax / 4);
+
+      // Update UI
+      document.getElementById('setAsidePct').textContent = setAsidePct + '%';
+      document.getElementById('setAsideAmt').textContent = `About ${formatCurrency(setAsideMonthly)} per month`;
+
+      document.getElementById('seTax').textContent = formatCurrency(selfEmploymentTax);
+      document.getElementById('federalTax').textContent = formatCurrency(federalTaxOnSide);
+      document.getElementById('stateTax').textContent = formatCurrency(stateTax);
+      document.getElementById('totalTax').textContent = formatCurrency(totalTax);
+      document.getElementById('afterTax').textContent = formatCurrency(afterTax);
+      document.getElementById('effectiveRate').textContent = effectiveRate.toFixed(1) + '%';
+
+      // Update breakdown bar
+      const seWidth = netSEIncome > 0 ? (selfEmploymentTax / netSEIncome) * 100 : 0;
+      const fedWidth = netSEIncome > 0 ? (federalTaxOnSide / netSEIncome) * 100 : 0;
+      const stateWidth = netSEIncome > 0 ? (stateTax / netSEIncome) * 100 : 0;
+      const netWidth = netSEIncome > 0 ? (afterTax / netSEIncome) * 100 : 100;
+
+      const bar = document.getElementById('taxBreakdownBar');
+      bar.innerHTML = `
+        <div class="lw-tax-seg se" style="width: ${seWidth}%"><span>${seWidth > 8 ? 'SE Tax' : ''}</span></div>
+        <div class="lw-tax-seg federal" style="width: ${fedWidth}%"><span>${fedWidth > 8 ? 'Federal' : ''}</span></div>
+        <div class="lw-tax-seg state" style="width: ${stateWidth}%"><span>${stateWidth > 8 ? 'State' : ''}</span></div>
+        <div class="lw-tax-seg net" style="width: ${netWidth}%"><span>${netWidth > 8 ? 'Keep' : ''}</span></div>
+      `;
+
+      // Quarterly payments
+      const q1 = quarterlyAmt;
+      const q2 = quarterlyAmt;
+      const q3 = quarterlyAmt;
+      const q4 = Math.max(0, Math.round(totalTax) - (q1 + q2 + q3));
+      
+      document.getElementById('q1Amt').textContent = formatCurrency(q1);
+      document.getElementById('q2Amt').textContent = formatCurrency(q2);
+      document.getElementById('q3Amt').textContent = formatCurrency(q3);
+      document.getElementById('q4Amt').textContent = formatCurrency(q4);
+
+      // Insight text
+      const marginalRate = getMarginalRate(taxableTotal, filingStatus);
+      document.getElementById('insightText').innerHTML = netSEIncome > 0 
+        ? `On <strong>${formatCurrency(netSEIncome)}</strong> of net side income, you'll pay about <strong>${formatCurrency(totalTax)}</strong> in combined taxes. Your effective tax rate on this income is <strong>${effectiveRate.toFixed(1)}%</strong> — higher than your W-2 job because of the 15.3% self-employment tax. Your marginal federal rate is ${(marginalRate * 100).toFixed(0)}%.`
+        : 'Enter your side income above to see your tax breakdown.';
+
+      // Decision text
+      document.getElementById('decisionText').innerHTML = netSEIncome > 0
+        ? `Set aside <strong>${setAsidePct}%</strong> of every side income payment. Open a separate savings account and transfer <strong>${formatCurrency(setAsideMonthly)}/month</strong> automatically.`
+        : 'Enter your side income to get personalized tax guidance.';
+    }
+
+    // Event listeners
+    document.querySelectorAll('input, select').forEach(el => {
+      el.addEventListener('input', calculate);
+      if (el.tagName === 'INPUT') {
+        el.addEventListener('blur', function() { formatInput(this); });
+      }
+    });
+
+    // Initial calculation with default values
+    document.getElementById('sideIncome').value = '20,000';
+    document.getElementById('expenses').value = '2,000';
+    document.getElementById('w2Income').value = '60,000';
+    document.getElementById('stateRate').value = '5';
+    calculate();
+  </script>
+</body>
+</html>

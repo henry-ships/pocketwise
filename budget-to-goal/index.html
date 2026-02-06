@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Budget to Goal Planner — Goal-Based Budget Calculator | PocketWise</title>
+  <meta name="description" content="Plan your budget around your savings goal. Calculate how much to save monthly, get category-by-category cut suggestions, and compare timelines to reach your goal faster.">
+  <meta name="keywords" content="savings goal calculator, budget to savings goal, how much to save per month, goal based budget planner, budget optimizer, savings planner">
+  <link rel="canonical" href="https://pocketwise.io/budget-to-goal/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .btg-budget-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .btg-budget-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px;
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      border: 1px solid var(--lw-border-light);
+    }
+    .btg-budget-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--lw-radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .btg-budget-icon.housing { background: #DBEAFE; }
+    .btg-budget-icon.food { background: #FEF3C7; }
+    .btg-budget-icon.transport { background: #D1FAE5; }
+    .btg-budget-icon.entertainment { background: #FCE7F3; }
+    .btg-budget-icon.subscriptions { background: #E0E7FF; }
+    .btg-budget-icon.other { background: #F1F5F9; }
+    .btg-budget-details { flex: 1; min-width: 0; }
+    .btg-budget-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--lw-slate-600);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .btg-budget-input {
+      width: 100%;
+      padding: 6px 0 6px 18px;
+      border: none;
+      background: transparent;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--lw-navy);
+      outline: none;
+    }
+    .btg-budget-input::placeholder { color: var(--lw-slate-400); }
+    .btg-prefix {
+      position: relative;
+    }
+    .btg-prefix::before {
+      content: '$';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--lw-slate-400);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .btg-chart-container {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+    .btg-pie-wrap {
+      position: relative;
+      width: 200px;
+      height: 200px;
+    }
+    .btg-pie {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      transform: rotate(-90deg);
+    }
+    .btg-pie-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100px;
+      height: 100px;
+      background: var(--lw-card);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .btg-pie-center-label {
+      font-size: 10px;
+      color: var(--lw-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .btg-pie-center-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--lw-navy);
+    }
+    .btg-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .btg-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+    }
+    .btg-legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .btg-legend-value {
+      margin-left: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      color: var(--lw-navy);
+    }
+    .btg-cuts-list {
+      margin: 20px 0;
+    }
+    .btg-cut-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      margin-bottom: 10px;
+      border-left: 4px solid var(--lw-sky);
+      transition: all var(--lw-transition);
+    }
+    .btg-cut-item:hover {
+      background: var(--lw-sky-50);
+      border-left-color: var(--lw-sky-dark);
+    }
+    .btg-cut-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--lw-radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .btg-cut-details { flex: 1; }
+    .btg-cut-category {
+      font-weight: 600;
+      color: var(--lw-navy);
+      font-size: 14px;
+    }
+    .btg-cut-desc {
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+      margin-top: 2px;
+    }
+    .btg-cut-amount {
+      text-align: right;
+    }
+    .btg-cut-save {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--lw-emerald);
+    }
+    .btg-cut-impact {
+      font-size: 11px;
+      color: var(--lw-text-muted);
+    }
+    .btg-timeline-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .btg-timeline-card {
+      padding: 24px;
+      border-radius: var(--lw-radius);
+      text-align: center;
+      border: 2px solid var(--lw-border-light);
+      background: var(--lw-card);
+    }
+    .btg-timeline-card.optimized {
+      border-color: var(--lw-emerald);
+      background: var(--lw-emerald-50);
+    }
+    .btg-timeline-label {
+      font-size: 12px;
+      color: var(--lw-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .btg-timeline-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--lw-navy);
+    }
+    .btg-timeline-date {
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+      margin-top: 4px;
+    }
+    .btg-timeline-card.optimized .btg-timeline-value { color: var(--lw-emerald-dark); }
+    .btg-savings-badge {
+      display: inline-block;
+      background: var(--lw-emerald);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--lw-radius-full);
+      margin-top: 10px;
+    }
+    .btg-progress-section {
+      margin: 24px 0;
+    }
+    .btg-progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+    .btg-progress-track {
+      width: 100%;
+      height: 32px;
+      background: var(--lw-slate-100);
+      border-radius: var(--lw-radius-full);
+      position: relative;
+      overflow: hidden;
+    }
+    .btg-progress-fill {
+      height: 100%;
+      border-radius: var(--lw-radius-full);
+      background: linear-gradient(90deg, var(--lw-sky) 0%, var(--lw-teal) 100%);
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 12px;
+      min-width: 0;
+    }
+    .btg-progress-pct {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+    }
+    .btg-progress-markers {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--lw-text-muted);
+    }
+    .btg-decision {
+      background: linear-gradient(135deg, var(--lw-navy) 0%, var(--lw-slate-800) 100%);
+      border-radius: var(--lw-radius-lg);
+      padding: 28px;
+      text-align: center;
+      margin: 24px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .btg-decision::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(16, 185, 129, 0.15) 0%, transparent 60%);
+    }
+    .btg-decision * { position: relative; }
+    .btg-decision-icon {
+      font-size: 36px;
+      margin-bottom: 12px;
+    }
+    .btg-decision-title {
+      font-size: 14px;
+      color: var(--lw-slate-400);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .btg-decision-text {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+      line-height: 1.4;
+    }
+    .btg-decision-text .highlight {
+      color: var(--lw-emerald-light);
+    }
+    .btg-status-good {
+      background: var(--lw-emerald-50);
+      color: var(--lw-emerald-dark);
+      padding: 16px 20px;
+      border-radius: var(--lw-radius);
+      text-align: center;
+      font-weight: 600;
+      margin: 16px 0;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    .btg-status-warning {
+      background: var(--lw-amber-50);
+      color: #B45309;
+      padding: 16px 20px;
+      border-radius: var(--lw-radius);
+      text-align: center;
+      font-weight: 600;
+      margin: 16px 0;
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+    .btg-status-alert {
+      background: var(--lw-rose-50);
+      color: var(--lw-rose-dark);
+      padding: 16px 20px;
+      border-radius: var(--lw-radius);
+      text-align: center;
+      font-weight: 600;
+      margin: 16px 0;
+      border: 1px solid rgba(244, 63, 94, 0.2);
+    }
+    .btg-bar-compare {
+      margin: 20px 0;
+    }
+    .btg-bar-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 12px;
+    }
+    .btg-bar-label {
+      width: 90px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--lw-slate-600);
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .btg-bar-track {
+      flex: 1;
+      height: 24px;
+      background: var(--lw-slate-100);
+      border-radius: var(--lw-radius-full);
+      overflow: hidden;
+      position: relative;
+    }
+    .btg-bar-fill {
+      height: 100%;
+      border-radius: var(--lw-radius-full);
+      transition: width 0.6s ease;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+    }
+    .btg-bar-fill.current { background: var(--lw-slate-400); }
+    .btg-bar-fill.optimized { background: linear-gradient(90deg, var(--lw-emerald), var(--lw-teal)); }
+    .btg-bar-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: white;
+      white-space: nowrap;
+    }
+    @media (max-width: 768px) {
+      .btg-budget-grid { grid-template-columns: 1fr; }
+      .btg-chart-container { flex-direction: column; }
+      .btg-timeline-compare { grid-template-columns: 1fr; }
+      .btg-legend { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+    }
+    @media (max-width: 480px) {
+      .btg-pie-wrap { width: 160px; height: 160px; }
+      .btg-pie-center { width: 80px; height: 80px; }
+      .btg-pie-center-value { font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">P</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/mortgage-calculator/">Mortgage</a></li>
+        <li><a href="/auto-loan-calculator/">Auto</a></li>
+        <li><a href="/compound-interest-calculator/">Investing</a></li>
+        <li><a href="/debt-payoff-calculator/">Debt</a></li>
+        <li><a href="/">All Tools</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu">
+      <a href="/">All Tools</a>
+      <a href="/mortgage-calculator/">Mortgage Calculator</a>
+      <a href="/auto-loan-calculator/">Auto Loan Calculator</a>
+      <a href="/savings-goal-calculator/">Savings Goal Calculator</a>
+      <a href="/emergency-fund-calculator/">Emergency Fund Calculator</a>
+      <a href="/debt-payoff-calculator/">Debt Payoff Calculator</a>
+      <a href="/credit-card-payoff-calculator/">Credit Card Payoff</a>
+      <a href="/compound-interest-calculator/">Compound Interest</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- HERO -->
+    <div class="lw-hero">
+      <span class="lw-badge green">Goal Planner</span>
+      <h1>Budget to <span class="accent">Goal</span> Planner</h1>
+      <p class="subtitle">Align your budget with your savings goal. See exactly where to cut, how much to save monthly, and how fast you can reach your target.</p>
+    </div>
+
+    <!-- GOAL & INCOME -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">🎯</div>
+        <div>
+          <div class="lw-card-title">Your Savings Goal</div>
+          <div class="lw-card-subtitle">What are you saving for and when?</div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Goal Amount</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" id="goalAmount" class="lw-input" value="10,000" inputmode="numeric">
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">Target Timeline</label>
+          <select id="targetMonths" class="lw-select">
+            <option value="3">3 months</option>
+            <option value="6">6 months</option>
+            <option value="12" selected>12 months (1 year)</option>
+            <option value="18">18 months</option>
+            <option value="24">24 months (2 years)</option>
+            <option value="36">36 months (3 years)</option>
+            <option value="48">48 months (4 years)</option>
+            <option value="60">60 months (5 years)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="lw-form-group">
+        <label class="lw-label">Monthly Take-Home Income <span class="lw-label-hint">(after taxes)</span></label>
+        <div class="lw-input-prefix">
+          <span class="prefix">$</span>
+          <input type="text" id="monthlyIncome" class="lw-input" value="5,000" inputmode="numeric">
+        </div>
+      </div>
+    </div>
+
+    <!-- BUDGET CATEGORIES -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">📊</div>
+        <div>
+          <div class="lw-card-title">Your Monthly Budget</div>
+          <div class="lw-card-subtitle">Enter your current spending by category</div>
+        </div>
+      </div>
+
+      <div class="btg-budget-grid">
+        <div class="btg-budget-item">
+          <div class="btg-budget-icon housing">🏠</div>
+          <div class="btg-budget-details">
+            <div class="btg-budget-label">Housing</div>
+            <div class="btg-prefix">
+              <input type="text" id="catHousing" class="btg-budget-input" value="1,500" inputmode="numeric" data-category="housing">
+            </div>
+          </div>
+        </div>
+        <div class="btg-budget-item">
+          <div class="btg-budget-icon food">🍽️</div>
+          <div class="btg-budget-details">
+            <div class="btg-budget-label">Food & Groceries</div>
+            <div class="btg-prefix">
+              <input type="text" id="catFood" class="btg-budget-input" value="600" inputmode="numeric" data-category="food">
+            </div>
+          </div>
+        </div>
+        <div class="btg-budget-item">
+          <div class="btg-budget-icon transport">🚗</div>
+          <div class="btg-budget-details">
+            <div class="btg-budget-label">Transportation</div>
+            <div class="btg-prefix">
+              <input type="text" id="catTransport" class="btg-budget-input" value="450" inputmode="numeric" data-category="transport">
+            </div>
+          </div>
+        </div>
+        <div class="btg-budget-item">
+          <div class="btg-budget-icon entertainment">🎬</div>
+          <div class="btg-budget-details">
+            <div class="btg-budget-label">Entertainment</div>
+            <div class="btg-prefix">
+              <input type="text" id="catEntertainment" class="btg-budget-input" value="200" inputmode="numeric" data-category="entertainment">
+            </div>
+          </div>
+        </div>
+        <div class="btg-budget-item">
+          <div class="btg-budget-icon subscriptions">📱</div>
+          <div class="btg-budget-details">
+            <div class="btg-budget-label">Subscriptions</div>
+            <div class="btg-prefix">
+              <input type="text" id="catSubscriptions" class="btg-budget-input" value="120" inputmode="numeric" data-category="subscriptions">
+            </div>
+          </div>
+        </div>
+        <div class="btg-budget-item">
+          <div class="btg-budget-icon other">💳</div>
+          <div class="btg-budget-details">
+            <div class="btg-budget-label">Other Expenses</div>
+            <div class="btg-prefix">
+              <input type="text" id="catOther" class="btg-budget-input" value="350" inputmode="numeric" data-category="other">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRIMARY RESULT -->
+    <div class="lw-result-hero" id="resultHero">
+      <div class="lw-result-label">Required Monthly Savings</div>
+      <div class="lw-result-number"><span class="currency">$</span><span id="requiredSavings">834</span><span class="period">/mo</span></div>
+      <div class="lw-result-sub" id="resultSubtext">to reach $10,000 in 12 months</div>
+    </div>
+
+    <!-- STATUS MESSAGE -->
+    <div id="statusMessage" class="btg-status-good">
+      ✅ You have enough surplus to reach your goal on time!
+    </div>
+
+    <!-- RESULT GRID -->
+    <div class="lw-result-grid">
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Current Surplus</div>
+        <div class="lw-result-item-value green" id="currentSurplus">$1,780</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Gap to Close</div>
+        <div class="lw-result-item-value rose" id="gapToClose">$0</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Total Spending</div>
+        <div class="lw-result-item-value" id="totalSpending">$3,220</div>
+      </div>
+    </div>
+
+    <!-- BUDGET BREAKDOWN PIE -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon amber">🥧</div>
+        <div>
+          <div class="lw-card-title">Budget Breakdown</div>
+          <div class="lw-card-subtitle">Where your money goes each month</div>
+        </div>
+      </div>
+      
+      <div class="btg-chart-container">
+        <div class="btg-pie-wrap">
+          <svg class="btg-pie" id="pieChart" viewBox="0 0 100 100"></svg>
+          <div class="btg-pie-center">
+            <div class="btg-pie-center-label">Surplus</div>
+            <div class="btg-pie-center-value" id="pieCenterValue">$1,780</div>
+          </div>
+        </div>
+        <div class="btg-legend" id="pieLegend"></div>
+      </div>
+    </div>
+
+    <!-- DECISION GUIDANCE -->
+    <div class="btg-decision" id="decisionBox">
+      <div class="btg-decision-icon">💡</div>
+      <div class="btg-decision-title">Best Path to Your Goal</div>
+      <div class="btg-decision-text" id="decisionText">
+        You're already on track! Current surplus of <span class="highlight">$1,780/mo</span> exceeds your required savings.
+      </div>
+    </div>
+
+    <!-- TIMELINE COMPARISON -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon violet">⏱️</div>
+        <div>
+          <div class="lw-card-title">Timeline Comparison</div>
+          <div class="lw-card-subtitle">Current path vs. optimized budget</div>
+        </div>
+      </div>
+      
+      <div class="btg-timeline-compare">
+        <div class="btg-timeline-card">
+          <div class="btg-timeline-label">Current Path</div>
+          <div class="btg-timeline-value" id="currentPathTime">6 months</div>
+          <div class="btg-timeline-date" id="currentPathDate">August 2026</div>
+        </div>
+        <div class="btg-timeline-card optimized">
+          <div class="btg-timeline-label">With Cuts Applied</div>
+          <div class="btg-timeline-value" id="optimizedPathTime">4 months</div>
+          <div class="btg-timeline-date" id="optimizedPathDate">June 2026</div>
+          <div class="btg-savings-badge" id="timeSavedBadge">2 months faster!</div>
+        </div>
+      </div>
+
+      <div class="btg-bar-compare">
+        <div class="btg-bar-row">
+          <div class="btg-bar-label">Current</div>
+          <div class="btg-bar-track">
+            <div class="btg-bar-fill current" id="currentBarFill" style="width: 60%">
+              <span class="btg-bar-val" id="currentBarVal">$1,780/mo</span>
+            </div>
+          </div>
+        </div>
+        <div class="btg-bar-row">
+          <div class="btg-bar-label">Optimized</div>
+          <div class="btg-bar-track">
+            <div class="btg-bar-fill optimized" id="optimizedBarFill" style="width: 85%">
+              <span class="btg-bar-val" id="optimizedBarVal">$2,450/mo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUGGESTED CUTS -->
+    <div class="lw-card" id="cutsCard">
+      <div class="lw-card-header">
+        <div class="lw-card-icon rose">✂️</div>
+        <div>
+          <div class="lw-card-title">Suggested Category Cuts</div>
+          <div class="lw-card-subtitle">Potential savings by reducing flexible spending</div>
+        </div>
+      </div>
+
+      <div class="btg-cuts-list" id="cutsList">
+        <!-- Dynamically populated -->
+      </div>
+    </div>
+
+    <!-- PROGRESS TRACKER -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">📈</div>
+        <div>
+          <div class="lw-card-title">Monthly Savings Capacity</div>
+          <div class="lw-card-subtitle">How your surplus compares to your required savings</div>
+        </div>
+      </div>
+
+      <div class="btg-progress-section">
+        <div class="btg-progress-header">
+          <span class="lw-label">Required: <span id="progressRequired" class="lw-mono">$834</span></span>
+          <span class="lw-label">Available: <span id="progressAvailable" class="lw-mono">$1,780</span></span>
+        </div>
+        <div class="btg-progress-track">
+          <div class="btg-progress-fill" id="progressFill" style="width: 100%">
+            <span class="btg-progress-pct" id="progressPct">213%</span>
+          </div>
+        </div>
+        <div class="btg-progress-markers">
+          <span>$0</span>
+          <span id="progressGoalMarker">Goal: $834/mo</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHAT THIS MEANS -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">📖</div>
+        <div>
+          <div class="lw-card-title">What This Means</div>
+          <div class="lw-card-subtitle">Understanding your budget-to-goal analysis</div>
+        </div>
+      </div>
+
+      <div id="meaningSection">
+        <p style="color: var(--lw-text-secondary); line-height: 1.7; font-size: 15px;">
+          Based on your inputs, we've calculated exactly how much you need to save each month to reach your goal. The analysis shows your current financial position and provides actionable suggestions to help you get there faster.
+        </p>
+        <ul style="color: var(--lw-text-secondary); line-height: 1.8; margin-top: 16px; padding-left: 20px;">
+          <li id="meaningItem1"><strong style="color: var(--lw-navy);">Your required monthly savings</strong> is based on your goal divided by your timeline.</li>
+          <li id="meaningItem2"><strong style="color: var(--lw-navy);">Current surplus</strong> shows what's left after all expenses — this is your savings capacity.</li>
+          <li id="meaningItem3"><strong style="color: var(--lw-navy);">Gap to close</strong> indicates how much more you need to save monthly to stay on track.</li>
+          <li id="meaningItem4"><strong style="color: var(--lw-navy);">Suggested cuts</strong> prioritize flexible categories where small changes have the biggest impact.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <div class="lw-content">
+      <h2>How to Use the Budget to Goal Planner</h2>
+      <p>The Budget to Goal Planner helps you reverse-engineer your budget around a specific savings target. Instead of wondering if you can afford to save, this tool shows you exactly what adjustments are needed to reach any financial goal — whether it's an emergency fund, vacation, down payment, or major purchase.</p>
+      <p>Start by entering your savings goal amount and desired timeline. Then input your monthly take-home income and break down your current spending across six categories: housing, food, transportation, entertainment, subscriptions, and other expenses. The calculator instantly shows if your current budget supports your goal or where cuts are needed.</p>
+
+      <h2>Understanding Your Results</h2>
+      <p>The planner provides a comprehensive view of your path to success:</p>
+      <ul>
+        <li><strong>Required monthly savings:</strong> The exact amount you need to set aside each month to hit your target by your deadline.</li>
+        <li><strong>Current surplus/deficit:</strong> The difference between your income and total expenses — your available savings capacity.</li>
+        <li><strong>Gap to close:</strong> If your surplus falls short of required savings, this shows how much more you need to find in your budget.</li>
+        <li><strong>Suggested cuts:</strong> Category-by-category recommendations for where to reduce spending, prioritized by flexibility and impact.</li>
+        <li><strong>Timeline comparison:</strong> See how much faster you can reach your goal by implementing the suggested changes.</li>
+      </ul>
+
+      <h3>The 50/30/20 Budgeting Perspective</h3>
+      <p>Many financial experts recommend the 50/30/20 rule: 50% of income for needs (housing, food, transportation), 30% for wants (entertainment, subscriptions), and 20% for savings and debt repayment. This planner helps you see where your current allocation falls and how to adjust toward your goal.</p>
+      <p>If your savings goal requires more than 20% of income, you may need to temporarily reduce "wants" categories or extend your timeline. The suggested cuts feature automatically identifies the most impactful areas to adjust.</p>
+
+      <h3>Making Cuts That Stick</h3>
+      <p>The most successful budget cuts are those you can sustain. Consider these strategies:</p>
+      <ul>
+        <li><strong>Subscriptions:</strong> Audit every recurring charge. Cancel unused services and consider annual plans for ones you keep.</li>
+        <li><strong>Entertainment:</strong> Look for free alternatives. Library cards, outdoor activities, and home-cooked dinner parties cost less than restaurants and events.</li>
+        <li><strong>Food:</strong> Meal planning reduces waste and impulse purchases. Batch cooking saves both time and money.</li>
+        <li><strong>Transportation:</strong> If possible, combine trips, carpool, or explore public transit options for regular commutes.</li>
+      </ul>
+
+      <h2>Frequently Asked Questions</h2>
+      <div class="lw-faq">
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">What if my expenses exceed my income?</button>
+          <div class="lw-faq-a"><p>If you're spending more than you earn, the calculator will show a negative surplus (deficit). This is a critical situation that requires immediate attention. Focus first on eliminating the deficit before adding savings goals — the suggested cuts feature will help identify where to reduce spending.</p></div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">How aggressive should my budget cuts be?</button>
+          <div class="lw-faq-a"><p>Aim for cuts you can realistically maintain. Cutting 50% from entertainment might work for a month but leads to burnout. Start with 15-20% reductions in flexible categories and adjust based on your experience. Sustainability beats intensity for long-term success.</p></div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Should I include debt payments in my budget?</button>
+          <div class="lw-faq-a"><p>Minimum debt payments should be included in your expense categories (typically "Other" or a specific category). However, extra debt payments compete with savings goals. Consider using our <a href="/debt-payoff-calculator/">Debt Payoff Calculator</a> to optimize your debt strategy alongside this goal planner.</p></div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Can I have multiple savings goals at once?</button>
+          <div class="lw-faq-a"><p>Yes! Simply divide your available surplus among your goals. For example, if you have $1,000/month in surplus, you might allocate $500 to an emergency fund, $300 to a vacation, and $200 to a down payment. Run each goal through the planner separately to see individual timelines.</p></div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">What's the best category to cut first?</button>
+          <div class="lw-faq-a"><p>Start with subscriptions — they're often forgotten and provide immediate recurring savings. Next, look at entertainment and dining out. Housing and transportation are typically harder to reduce quickly but offer the biggest potential savings if you can make changes (downsizing, refinancing, changing commute patterns).</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED TOOLS -->
+    <div class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/savings-goal-calculator/" class="lw-related-link"><span class="dot"></span> Savings Goal Calculator</a>
+        <a href="/emergency-fund-calculator/" class="lw-related-link"><span class="dot"></span> Emergency Fund Calculator</a>
+        <a href="/debt-payoff-calculator/" class="lw-related-link"><span class="dot"></span> Debt Payoff Calculator</a>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <p class="lw-disclaimer">
+      <em>This calculator is for educational purposes only. Results are estimates based on your inputs and should not be considered financial advice. Consult a qualified financial advisor for personalized guidance.</em>
+    </p>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="lw-footer">
+    <p>&copy; 2026 PocketWise. Free financial calculators for everyone.</p>
+    <p style="margin-top: 8px;"><a href="/">← Back to All Tools</a></p>
+  </footer>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // Utilities
+    function fmt(n) {
+      return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:0, maximumFractionDigits:0}).format(n);
+    }
+    function fmtNum(n) {
+      return new Intl.NumberFormat('en-US').format(Math.round(n));
+    }
+    function parseNum(str) {
+      return parseFloat(String(str).replace(/[^0-9.\-]/g, '')) || 0;
+    }
+    function formatInput(el) {
+      var raw = parseNum(el.value);
+      if (!isNaN(raw) && raw >= 0) {
+        el.value = fmtNum(raw);
+      }
+    }
+
+    // Category config
+    var categories = [
+      { id: 'catHousing', name: 'Housing', icon: '🏠', color: '#3B82F6', cutPct: 0 },
+      { id: 'catFood', name: 'Food', icon: '🍽️', color: '#F59E0B', cutPct: 0.15 },
+      { id: 'catTransport', name: 'Transport', icon: '🚗', color: '#10B981', cutPct: 0.10 },
+      { id: 'catEntertainment', name: 'Entertainment', icon: '🎬', color: '#EC4899', cutPct: 0.40 },
+      { id: 'catSubscriptions', name: 'Subscriptions', icon: '📱', color: '#6366F1', cutPct: 0.50 },
+      { id: 'catOther', name: 'Other', icon: '💳', color: '#64748B', cutPct: 0.15 }
+    ];
+
+    // DOM
+    var goalInput = document.getElementById('goalAmount');
+    var targetSelect = document.getElementById('targetMonths');
+    var incomeInput = document.getElementById('monthlyIncome');
+    var catInputs = categories.map(function(c) { return document.getElementById(c.id); });
+
+    // Format inputs on blur
+    [goalInput, incomeInput].concat(catInputs).forEach(function(el) {
+      if (el) {
+        el.addEventListener('blur', function() { formatInput(this); });
+        el.addEventListener('input', calculate);
+      }
+    });
+    targetSelect.addEventListener('change', calculate);
+
+    function getDateFromNow(months) {
+      var d = new Date();
+      d.setMonth(d.getMonth() + months);
+      return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    }
+
+    function getShortDate(months) {
+      var d = new Date();
+      d.setMonth(d.getMonth() + months);
+      return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    }
+
+    function formatMonths(m) {
+      if (m === Infinity || m > 600) return 'Never';
+      if (m < 1) return '< 1 month';
+      var years = Math.floor(m / 12);
+      var months = Math.round(m % 12);
+      if (years === 0) return months + ' month' + (months !== 1 ? 's' : '');
+      if (months === 0) return years + ' year' + (years !== 1 ? 's' : '');
+      return years + 'y ' + months + 'mo';
+    }
+
+    function drawPieChart(catValues, totalSpending, surplus) {
+      var svg = document.getElementById('pieChart');
+      var total = totalSpending + Math.max(surplus, 0);
+      if (total <= 0) {
+        svg.innerHTML = '<circle cx="50" cy="50" r="45" fill="#E2E8F0"/>';
+        return;
+      }
+
+      var html = '';
+      var cumulative = 0;
+      var r = 45, cx = 50, cy = 50;
+
+      // Draw category segments
+      categories.forEach(function(cat, i) {
+        var val = catValues[i] || 0;
+        if (val <= 0) return;
+        var pct = val / total;
+        var startAngle = cumulative * 360;
+        var endAngle = (cumulative + pct) * 360;
+        cumulative += pct;
+
+        var x1 = cx + r * Math.cos((startAngle - 90) * Math.PI / 180);
+        var y1 = cy + r * Math.sin((startAngle - 90) * Math.PI / 180);
+        var x2 = cx + r * Math.cos((endAngle - 90) * Math.PI / 180);
+        var y2 = cy + r * Math.sin((endAngle - 90) * Math.PI / 180);
+        var largeArc = pct > 0.5 ? 1 : 0;
+
+        html += '<path d="M' + cx + ',' + cy + ' L' + x1.toFixed(2) + ',' + y1.toFixed(2) + 
+                ' A' + r + ',' + r + ' 0 ' + largeArc + ',1 ' + x2.toFixed(2) + ',' + y2.toFixed(2) + 
+                ' Z" fill="' + cat.color + '"/>';
+      });
+
+      // Surplus segment (if positive)
+      if (surplus > 0) {
+        var pct = surplus / total;
+        var startAngle = cumulative * 360;
+        var endAngle = 360;
+        var x1 = cx + r * Math.cos((startAngle - 90) * Math.PI / 180);
+        var y1 = cy + r * Math.sin((startAngle - 90) * Math.PI / 180);
+        var x2 = cx + r * Math.cos((endAngle - 90) * Math.PI / 180);
+        var y2 = cy + r * Math.sin((endAngle - 90) * Math.PI / 180);
+        var largeArc = pct > 0.5 ? 1 : 0;
+
+        html += '<path d="M' + cx + ',' + cy + ' L' + x1.toFixed(2) + ',' + y1.toFixed(2) + 
+                ' A' + r + ',' + r + ' 0 ' + largeArc + ',1 ' + x2.toFixed(2) + ',' + y2.toFixed(2) + 
+                ' Z" fill="#14B8A6"/>';
+      }
+
+      svg.innerHTML = html;
+
+      // Update legend
+      var legendHtml = '';
+      categories.forEach(function(cat, i) {
+        var val = catValues[i] || 0;
+        if (val > 0) {
+          legendHtml += '<div class="btg-legend-item"><div class="btg-legend-swatch" style="background:' + cat.color + '"></div>' + cat.name + '<span class="btg-legend-value">' + fmt(val) + '</span></div>';
+        }
+      });
+      if (surplus > 0) {
+        legendHtml += '<div class="btg-legend-item"><div class="btg-legend-swatch" style="background:#14B8A6"></div>Surplus<span class="btg-legend-value">' + fmt(surplus) + '</span></div>';
+      }
+      document.getElementById('pieLegend').innerHTML = legendHtml;
+    }
+
+    function calculate() {
+      var goal = parseNum(goalInput.value);
+      var months = parseInt(targetSelect.value) || 12;
+      var income = parseNum(incomeInput.value);
+
+      var catValues = catInputs.map(function(el) { return parseNum(el.value); });
+      var totalSpending = catValues.reduce(function(a, b) { return a + b; }, 0);
+      var surplus = income - totalSpending;
+      var requiredSavings = goal / months;
+      var gap = Math.max(requiredSavings - surplus, 0);
+
+      // Update primary result
+      document.getElementById('requiredSavings').textContent = fmtNum(Math.ceil(requiredSavings));
+      document.getElementById('resultSubtext').textContent = 'to reach ' + fmt(goal) + ' in ' + months + ' month' + (months !== 1 ? 's' : '');
+
+      // Update result grid
+      document.getElementById('currentSurplus').textContent = fmt(surplus);
+      document.getElementById('currentSurplus').className = 'lw-result-item-value ' + (surplus >= 0 ? 'green' : 'rose');
+      document.getElementById('gapToClose').textContent = fmt(gap);
+      document.getElementById('gapToClose').className = 'lw-result-item-value ' + (gap > 0 ? 'rose' : 'green');
+      document.getElementById('totalSpending').textContent = fmt(totalSpending);
+
+      // Status message
+      var statusEl = document.getElementById('statusMessage');
+      if (surplus < 0) {
+        statusEl.className = 'btg-status-alert';
+        statusEl.innerHTML = '⚠️ You\'re spending more than you earn! Reduce expenses by ' + fmt(Math.abs(surplus)) + '/mo first.';
+      } else if (gap > 0) {
+        statusEl.className = 'btg-status-warning';
+        statusEl.innerHTML = '⚡ You need to find ' + fmt(gap) + '/mo more to reach your goal on time.';
+      } else {
+        statusEl.className = 'btg-status-good';
+        statusEl.innerHTML = '✅ You have enough surplus to reach your goal on time!';
+      }
+
+      // Pie chart
+      drawPieChart(catValues, totalSpending, Math.max(surplus, 0));
+      document.getElementById('pieCenterValue').textContent = fmt(Math.max(surplus, 0));
+
+      // Calculate potential cuts
+      var potentialCuts = [];
+      var totalPotentialSavings = 0;
+      categories.forEach(function(cat, i) {
+        var val = catValues[i] || 0;
+        if (cat.cutPct > 0 && val > 0) {
+          var cutAmount = Math.round(val * cat.cutPct);
+          potentialCuts.push({
+            name: cat.name,
+            icon: cat.icon,
+            current: val,
+            cut: cutAmount,
+            cutPct: cat.cutPct,
+            impact: cutAmount / requiredSavings * 100
+          });
+          totalPotentialSavings += cutAmount;
+        }
+      });
+
+      // Sort by cut amount descending
+      potentialCuts.sort(function(a, b) { return b.cut - a.cut; });
+
+      // Render cuts list
+      var cutsHtml = '';
+      potentialCuts.forEach(function(cut) {
+        var desc = 'Cut ' + Math.round(cut.cutPct * 100) + '% → ' + fmt(cut.current - cut.cut) + '/mo';
+        cutsHtml += '<div class="btg-cut-item">' +
+          '<div class="btg-cut-icon">' + cut.icon + '</div>' +
+          '<div class="btg-cut-details">' +
+            '<div class="btg-cut-category">' + cut.name + '</div>' +
+            '<div class="btg-cut-desc">' + desc + '</div>' +
+          '</div>' +
+          '<div class="btg-cut-amount">' +
+            '<div class="btg-cut-save">+' + fmt(cut.cut) + '</div>' +
+            '<div class="btg-cut-impact">' + (cut.cut / months >= 1 ? fmt(cut.cut * months) + ' toward goal' : '') + '</div>' +
+          '</div>' +
+        '</div>';
+      });
+      document.getElementById('cutsList').innerHTML = cutsHtml || '<p style="color: var(--lw-text-muted); text-align: center; padding: 20px;">No flexible spending to cut.</p>';
+
+      // Timeline calculations
+      var currentMonthsToGoal = surplus > 0 ? Math.ceil(goal / surplus) : Infinity;
+      var optimizedSurplus = surplus + totalPotentialSavings;
+      var optimizedMonthsToGoal = optimizedSurplus > 0 ? Math.ceil(goal / optimizedSurplus) : Infinity;
+      var monthsSaved = currentMonthsToGoal - optimizedMonthsToGoal;
+
+      document.getElementById('currentPathTime').textContent = formatMonths(currentMonthsToGoal);
+      document.getElementById('currentPathDate').textContent = currentMonthsToGoal < 600 ? getShortDate(currentMonthsToGoal) : '—';
+      document.getElementById('optimizedPathTime').textContent = formatMonths(optimizedMonthsToGoal);
+      document.getElementById('optimizedPathDate').textContent = optimizedMonthsToGoal < 600 ? getShortDate(optimizedMonthsToGoal) : '—';
+
+      var timeSavedBadge = document.getElementById('timeSavedBadge');
+      if (monthsSaved > 0 && monthsSaved < 600) {
+        timeSavedBadge.textContent = monthsSaved + ' month' + (monthsSaved !== 1 ? 's' : '') + ' faster!';
+        timeSavedBadge.style.display = 'inline-block';
+      } else {
+        timeSavedBadge.style.display = 'none';
+      }
+
+      // Bar comparison
+      var maxSurplus = Math.max(surplus, optimizedSurplus, requiredSavings, 1);
+      document.getElementById('currentBarFill').style.width = Math.max((surplus / maxSurplus) * 100, 5) + '%';
+      document.getElementById('currentBarVal').textContent = fmt(surplus) + '/mo';
+      document.getElementById('optimizedBarFill').style.width = Math.max((optimizedSurplus / maxSurplus) * 100, 5) + '%';
+      document.getElementById('optimizedBarVal').textContent = fmt(optimizedSurplus) + '/mo';
+
+      // Decision guidance
+      var decisionText = '';
+      if (surplus < 0) {
+        decisionText = 'First priority: <span class="highlight">eliminate your ' + fmt(Math.abs(surplus)) + '/mo deficit</span>. Focus on essential expense cuts before setting savings goals.';
+      } else if (surplus >= requiredSavings) {
+        decisionText = 'You\'re already on track! Current surplus of <span class="highlight">' + fmt(surplus) + '/mo</span> exceeds your required savings.';
+      } else if (potentialCuts.length > 0 && totalPotentialSavings >= gap) {
+        var topCut = potentialCuts[0];
+        decisionText = 'Cutting <span class="highlight">' + topCut.name + '</span> by <span class="highlight">' + fmt(topCut.cut) + '/mo</span> reaches your goal fastest.';
+      } else if (potentialCuts.length > 0) {
+        decisionText = 'Apply all suggested cuts to save <span class="highlight">' + fmt(totalPotentialSavings) + '/mo</span> more — but you may need to extend your timeline.';
+      } else {
+        decisionText = 'Consider extending your timeline or increasing income to reach <span class="highlight">' + fmt(goal) + '</span>.';
+      }
+      document.getElementById('decisionText').innerHTML = decisionText;
+
+      // Progress tracker
+      var progressPct = surplus > 0 ? (surplus / requiredSavings) * 100 : 0;
+      document.getElementById('progressRequired').textContent = fmt(requiredSavings);
+      document.getElementById('progressAvailable').textContent = fmt(Math.max(surplus, 0));
+      document.getElementById('progressFill').style.width = Math.min(progressPct, 200) + '%';
+      document.getElementById('progressPct').textContent = Math.round(progressPct) + '%';
+      document.getElementById('progressGoalMarker').textContent = 'Goal: ' + fmt(requiredSavings) + '/mo';
+    }
+
+    // Initialize
+    calculate();
+  })();
+  </script>
+
+  <!-- FAQ Schema JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How much should I save per month to reach my savings goal?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Divide your total savings goal by the number of months in your timeline. For example, to save $10,000 in 12 months, you need to save approximately $834 per month. The Budget to Goal Planner calculates this automatically and shows if your current budget supports this savings rate."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What if my expenses exceed my income?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If you're spending more than you earn, the calculator will show a negative surplus (deficit). This is a critical situation requiring immediate attention. Focus first on eliminating the deficit before adding savings goals — the suggested cuts feature will help identify where to reduce spending."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How aggressive should my budget cuts be?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Aim for cuts you can realistically maintain. Start with 15-20% reductions in flexible categories like entertainment and subscriptions. Cutting too aggressively leads to burnout. Sustainability beats intensity for long-term financial success."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What's the best budget category to cut first?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Start with subscriptions — they're often forgotten and provide immediate recurring savings. Next, look at entertainment and dining out. Housing and transportation are typically harder to reduce quickly but offer the biggest potential savings if you can make changes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I have multiple savings goals at once?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes! Divide your available surplus among your goals. For example, if you have $1,000/month in surplus, allocate portions to different goals like emergency fund, vacation, and down payment. Run each goal through the planner separately to see individual timelines."
+        }
+      }
+    ]
+  }
+  </script>
+</body>
+</html>

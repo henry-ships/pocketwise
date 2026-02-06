@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Refinance Break-Even Calculator | How Long to Break Even on Refinance</title>
+  <meta name="description" content="Free refinance break even calculator. Find out how many months until your refinancing costs pay off. Calculate monthly savings and make smarter mortgage refinance decisions.">
+  <meta name="keywords" content="refinance break even calculator, mortgage refinance break even, how long to break even on refinance, refinance calculator, mortgage refinance savings">
+  <link rel="canonical" href="https://lendwise.tools/refinance-break-even/">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Refinance Break-Even Calculator | LendWise">
+  <meta property="og:description" content="Calculate how long it takes to break even on your mortgage refinance. Find your monthly savings and make informed decisions.">
+  <meta property="og:type" content="website">
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a refinance break-even point?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The refinance break-even point is the number of months it takes for your monthly savings from a lower interest rate to equal the total closing costs you paid to refinance. After this point, you start actually saving money from the refinance."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do you calculate the break-even point on a refinance?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Break-even months = Total Closing Costs ÷ Monthly Savings. For example, if your closing costs are $4,000 and you save $200/month, your break-even point is 20 months. After 20 months, every dollar saved is money in your pocket."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How long should I plan to stay in my home to make refinancing worth it?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You should plan to stay in your home longer than your break-even period. If your break-even is 18 months, staying at least 2-3 years (24-36 months) ensures you realize significant savings. The longer you stay past break-even, the more you benefit from refinancing."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What closing costs are included in a refinance?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Typical refinance closing costs include: loan origination fees (0.5-1% of loan), appraisal fees ($300-600), title insurance and search ($500-1,500), credit report fees, recording fees, and prepaid items like property taxes and insurance. Total costs typically range from 2-5% of the loan amount."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is it worth refinancing for a 0.5% lower rate?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Whether a 0.5% rate reduction is worth it depends on your loan balance and how long you'll stay. On a $300,000 loan, a 0.5% reduction saves roughly $90/month. If closing costs are $4,000, your break-even is about 44 months. Use this calculator to determine if it makes sense for your specific situation."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <span class="lw-logo-icon">P</span>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">All Tools</a></li>
+        <li><a href="/refinance-break-even/" class="active">Refinance Break-Even</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu" id="mobileMenu">
+      <a href="/">All Tools</a>
+      <a href="/refinance-break-even/">Refinance Break-Even</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- Hero -->
+    <section class="lw-hero">
+      <span class="lw-badge">MORTGAGE TOOL</span>
+      <h1>Refinance <span class="accent">Break-Even</span> Calculator</h1>
+      <p class="subtitle">Calculate how many months until your refinance pays for itself. Know when it makes sense to refinance your mortgage.</p>
+    </section>
+
+    <!-- Calculator Card -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">🏠</div>
+        <div>
+          <div class="lw-card-title">Your Current Mortgage</div>
+          <div class="lw-card-subtitle">Enter your existing loan details</div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Current Loan Balance</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input" id="currentBalance" placeholder="250,000" inputmode="numeric">
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">Current Interest Rate</label>
+          <div class="lw-input-suffix">
+            <input type="text" class="lw-input" id="currentRate" placeholder="6.5" inputmode="decimal">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-form-group">
+        <label class="lw-label">Term Remaining <span class="lw-label-hint">(months left on current mortgage)</span></label>
+        <div class="lw-input-suffix">
+          <input type="text" class="lw-input" id="termRemaining" placeholder="300" inputmode="numeric">
+          <span class="suffix">months</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">✨</div>
+        <div>
+          <div class="lw-card-title">New Refinance Terms</div>
+          <div class="lw-card-subtitle">Enter the new loan offer</div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">New Interest Rate</label>
+          <div class="lw-input-suffix">
+            <input type="text" class="lw-input" id="newRate" placeholder="5.5" inputmode="decimal">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">Total Closing Costs</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input" id="closingCosts" placeholder="5,000" inputmode="numeric">
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-form-group">
+        <label class="lw-label">New Loan Term <span class="lw-label-hint">(optional, defaults to remaining term)</span></label>
+        <div class="lw-input-suffix">
+          <input type="text" class="lw-input" id="newTerm" placeholder="Same as remaining" inputmode="numeric">
+          <span class="suffix">months</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsSection" class="lw-hidden">
+      <!-- Primary Result -->
+      <div class="lw-result-hero" id="resultHero">
+        <div class="lw-result-label">BREAK-EVEN POINT</div>
+        <div class="lw-result-number"><span id="breakEvenMonths">--</span> <span class="period">months</span></div>
+        <div class="lw-result-sub" id="breakEvenYears"></div>
+      </div>
+
+      <!-- Verdict Box -->
+      <div class="lw-card" id="verdictCard">
+        <div class="lw-card-header">
+          <div class="lw-card-icon" id="verdictIcon">📊</div>
+          <div>
+            <div class="lw-card-title" id="verdictTitle">Analyzing...</div>
+            <div class="lw-card-subtitle">Decision guidance</div>
+          </div>
+        </div>
+        <p id="verdictText" style="color: var(--lw-text-secondary); line-height: 1.7; margin: 0;"></p>
+      </div>
+
+      <!-- Result Grid -->
+      <div class="lw-result-grid">
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Monthly Savings</div>
+          <div class="lw-result-item-value green" id="monthlySavings">$0</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Current Payment</div>
+          <div class="lw-result-item-value" id="currentPayment">$0</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">New Payment</div>
+          <div class="lw-result-item-value sky" id="newPayment">$0</div>
+        </div>
+      </div>
+
+      <!-- Break-Even Timeline -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon violet">📈</div>
+          <div>
+            <div class="lw-card-title">Break-Even Timeline</div>
+            <div class="lw-card-subtitle">Visual path to recouping your costs</div>
+          </div>
+        </div>
+        
+        <div class="lw-timeline-visual" id="timelineVisual">
+          <!-- Timeline will be rendered here -->
+        </div>
+
+        <div class="lw-bar-chart lw-mt-24">
+          <div class="lw-bar-row">
+            <div class="lw-bar-label">Closing Costs</div>
+            <div class="lw-bar-track">
+              <div class="lw-bar-fill rose" id="closingCostsBar" style="width: 0%">
+                <span class="lw-bar-amount" id="closingCostsAmount">$0</span>
+              </div>
+            </div>
+          </div>
+          <div class="lw-bar-row">
+            <div class="lw-bar-label">1-Year Savings</div>
+            <div class="lw-bar-track">
+              <div class="lw-bar-fill green" id="yearSavingsBar" style="width: 0%">
+                <span class="lw-bar-amount" id="yearSavingsAmount">$0</span>
+              </div>
+            </div>
+          </div>
+          <div class="lw-bar-row">
+            <div class="lw-bar-label">5-Year Savings</div>
+            <div class="lw-bar-track">
+              <div class="lw-bar-fill blue" id="fiveYearSavingsBar" style="width: 0%">
+                <span class="lw-bar-amount" id="fiveYearSavingsAmount">$0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- What This Means -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon amber">💡</div>
+          <div>
+            <div class="lw-card-title">What This Means</div>
+            <div class="lw-card-subtitle">Plain English breakdown</div>
+          </div>
+        </div>
+        <div id="explanationText" style="color: var(--lw-text-secondary); line-height: 1.8;">
+          <!-- Explanation will be rendered here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <section class="lw-content">
+      <h2>How to Use the Refinance Break-Even Calculator</h2>
+      <p>This calculator helps you determine whether refinancing your mortgage makes financial sense based on your specific situation. By comparing your current mortgage terms with a potential new loan, you'll see exactly how long it takes to recoup your closing costs and start actually saving money.</p>
+
+      <h3>What You'll Need</h3>
+      <ul>
+        <li><strong>Current loan balance</strong> — The remaining principal on your existing mortgage</li>
+        <li><strong>Current interest rate</strong> — Your existing mortgage's annual percentage rate</li>
+        <li><strong>Months remaining</strong> — How many months are left on your current loan</li>
+        <li><strong>New interest rate</strong> — The rate offered on the refinanced loan</li>
+        <li><strong>Closing costs</strong> — Total fees for the new loan (typically 2-5% of loan amount)</li>
+      </ul>
+
+      <h2>Understanding Your Break-Even Point</h2>
+      <p>The <strong>break-even point</strong> is the moment when your cumulative monthly savings equal the closing costs you paid to refinance. Before this point, you're still "paying back" the refinance costs. After this point, every dollar saved goes straight to your pocket.</p>
+      
+      <p>The formula is straightforward:</p>
+      <p style="background: var(--lw-slate-50); padding: 16px 20px; border-radius: var(--lw-radius); font-family: 'JetBrains Mono', monospace; color: var(--lw-navy); font-weight: 500;">Break-Even Months = Closing Costs ÷ Monthly Savings</p>
+
+      <h2>When Does Refinancing Make Sense?</h2>
+      <p>Refinancing typically makes sense when:</p>
+      <ul>
+        <li><strong>You'll stay past break-even</strong> — Plan to stay at least 1-2 years beyond your break-even point</li>
+        <li><strong>Rate drop of 0.5-1%+</strong> — Smaller drops can still work with low closing costs</li>
+        <li><strong>You have a large balance</strong> — Bigger loans mean more savings per rate point</li>
+        <li><strong>Your credit has improved</strong> — Better scores unlock better rates</li>
+        <li><strong>You want to change terms</strong> — Switch from 30-year to 15-year, or vice versa</li>
+      </ul>
+
+      <h2>Refinance Closing Costs Explained</h2>
+      <p>Understanding what goes into closing costs helps you negotiate and budget:</p>
+      <ul>
+        <li><strong>Origination fee:</strong> 0.5-1% of loan amount</li>
+        <li><strong>Appraisal:</strong> $300-600</li>
+        <li><strong>Title insurance & search:</strong> $500-1,500</li>
+        <li><strong>Credit report:</strong> $25-50</li>
+        <li><strong>Recording fees:</strong> $50-250</li>
+        <li><strong>Prepaid items:</strong> Property taxes, insurance escrow</li>
+      </ul>
+
+      <!-- FAQ Section -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">What is a refinance break-even point?</button>
+          <div class="lw-faq-a">
+            <p>The refinance break-even point is the number of months it takes for your monthly savings from a lower interest rate to equal the total closing costs you paid to refinance. After this point, you start actually saving money from the refinance.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">How do you calculate the break-even point on a refinance?</button>
+          <div class="lw-faq-a">
+            <p>Break-even months = Total Closing Costs ÷ Monthly Savings. For example, if your closing costs are $4,000 and you save $200/month, your break-even point is 20 months. After 20 months, every dollar saved is money in your pocket.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">How long should I stay to make refinancing worth it?</button>
+          <div class="lw-faq-a">
+            <p>You should plan to stay in your home longer than your break-even period. If your break-even is 18 months, staying at least 2-3 years (24-36 months) ensures you realize significant savings. The longer you stay past break-even, the more you benefit.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">What closing costs are included in a refinance?</button>
+          <div class="lw-faq-a">
+            <p>Typical refinance closing costs include: loan origination fees (0.5-1% of loan), appraisal fees ($300-600), title insurance and search ($500-1,500), credit report fees, recording fees, and prepaid items like property taxes and insurance. Total costs typically range from 2-5% of the loan amount.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Is it worth refinancing for a 0.5% lower rate?</button>
+          <div class="lw-faq-a">
+            <p>Whether a 0.5% rate reduction is worth it depends on your loan balance and how long you'll stay. On a $300,000 loan, a 0.5% reduction saves roughly $90/month. If closing costs are $4,000, your break-even is about 44 months. Use this calculator to determine if it makes sense for your specific situation.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <div class="lw-disclaimer">
+      This calculator provides estimates for educational purposes only. Actual payments and savings may vary based on your lender's terms, tax implications, and other factors. Consult a mortgage professional before making refinancing decisions.
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="lw-footer">
+    <p>© 2025 PocketWise Financial Tools. <a href="/">Explore All Calculators</a></p>
+  </footer>
+
+  <style>
+    /* Timeline Visual Styles */
+    .lw-timeline-visual {
+      position: relative;
+      padding: 24px 0;
+      margin-bottom: 16px;
+    }
+    .lw-timeline-track {
+      position: relative;
+      height: 12px;
+      background: var(--lw-slate-100);
+      border-radius: var(--lw-radius-full);
+      overflow: visible;
+    }
+    .lw-timeline-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      border-radius: var(--lw-radius-full);
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .lw-timeline-fill.loss {
+      background: linear-gradient(90deg, var(--lw-rose), var(--lw-rose-light));
+    }
+    .lw-timeline-fill.gain {
+      background: linear-gradient(90deg, var(--lw-emerald), var(--lw-emerald-light));
+    }
+    .lw-timeline-marker {
+      position: absolute;
+      top: -8px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--lw-card);
+      border: 3px solid var(--lw-sky);
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      box-shadow: var(--lw-shadow);
+      z-index: 2;
+    }
+    .lw-timeline-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 16px;
+      font-size: 12px;
+      color: var(--lw-text-muted);
+    }
+    .lw-timeline-label {
+      text-align: center;
+    }
+    .lw-timeline-label strong {
+      display: block;
+      color: var(--lw-navy);
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .lw-timeline-breakeven {
+      position: absolute;
+      top: 28px;
+      transform: translateX(-50%);
+      background: var(--lw-sky-50);
+      color: var(--lw-sky-dark);
+      padding: 4px 10px;
+      border-radius: var(--lw-radius-sm);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+      border: 1px solid rgba(14, 165, 233, 0.2);
+    }
+
+    /* Verdict Card States */
+    .verdict-positive .lw-card-icon { background: var(--lw-emerald-50); }
+    .verdict-negative .lw-card-icon { background: var(--lw-rose-50); }
+    .verdict-neutral .lw-card-icon { background: var(--lw-amber-50); }
+  </style>
+
+  <script>
+    // Utility functions
+    function parseNumber(str) {
+      if (!str) return 0;
+      return parseFloat(str.replace(/[^0-9.-]/g, '')) || 0;
+    }
+
+    function formatCurrency(num) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(num);
+    }
+
+    function formatCurrencyPrecise(num) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(num);
+    }
+
+    function formatInput(input, prefix = '') {
+      const value = parseNumber(input.value);
+      if (value > 0) {
+        input.value = value.toLocaleString('en-US');
+      }
+    }
+
+    // Calculate monthly payment
+    function calculateMonthlyPayment(principal, annualRate, months) {
+      if (annualRate === 0) return principal / months;
+      const monthlyRate = annualRate / 100 / 12;
+      return principal * (monthlyRate * Math.pow(1 + monthlyRate, months)) / 
+             (Math.pow(1 + monthlyRate, months) - 1);
+    }
+
+    // Main calculation
+    function calculate() {
+      const balance = parseNumber(document.getElementById('currentBalance').value);
+      const currentRate = parseNumber(document.getElementById('currentRate').value);
+      const termRemaining = parseNumber(document.getElementById('termRemaining').value);
+      const newRate = parseNumber(document.getElementById('newRate').value);
+      const closingCosts = parseNumber(document.getElementById('closingCosts').value);
+      const newTermInput = parseNumber(document.getElementById('newTerm').value);
+      
+      // Use remaining term if no new term specified
+      const newTerm = newTermInput > 0 ? newTermInput : termRemaining;
+
+      // Validate inputs
+      if (balance <= 0 || currentRate <= 0 || termRemaining <= 0 || newRate <= 0 || closingCosts <= 0) {
+        document.getElementById('resultsSection').classList.add('lw-hidden');
+        return;
+      }
+
+      // Show results
+      document.getElementById('resultsSection').classList.remove('lw-hidden');
+
+      // Calculate payments
+      const currentPayment = calculateMonthlyPayment(balance, currentRate, termRemaining);
+      const newPayment = calculateMonthlyPayment(balance, newRate, newTerm);
+      const monthlySavings = currentPayment - newPayment;
+
+      // Calculate break-even
+      let breakEvenMonths = 0;
+      let isNeverBreakEven = false;
+      let isImmediateBreakEven = false;
+
+      if (monthlySavings <= 0) {
+        isNeverBreakEven = true;
+      } else {
+        breakEvenMonths = Math.ceil(closingCosts / monthlySavings);
+        if (breakEvenMonths <= 0) {
+          isImmediateBreakEven = true;
+        }
+      }
+
+      // Update primary result
+      if (isNeverBreakEven) {
+        document.getElementById('breakEvenMonths').textContent = 'Never';
+        document.getElementById('breakEvenYears').textContent = 'New payment would be higher';
+      } else if (isImmediateBreakEven) {
+        document.getElementById('breakEvenMonths').textContent = '0';
+        document.getElementById('breakEvenYears').textContent = 'Immediate savings!';
+      } else {
+        document.getElementById('breakEvenMonths').textContent = breakEvenMonths;
+        const years = Math.floor(breakEvenMonths / 12);
+        const months = breakEvenMonths % 12;
+        let yearText = '';
+        if (years > 0) yearText += `${years} year${years > 1 ? 's' : ''}`;
+        if (years > 0 && months > 0) yearText += ', ';
+        if (months > 0) yearText += `${months} month${months > 1 ? 's' : ''}`;
+        document.getElementById('breakEvenYears').textContent = yearText || 'Less than a month';
+      }
+
+      // Update result grid
+      document.getElementById('monthlySavings').textContent = monthlySavings > 0 ? formatCurrencyPrecise(monthlySavings) : formatCurrencyPrecise(0);
+      document.getElementById('monthlySavings').className = 'lw-result-item-value ' + (monthlySavings > 0 ? 'green' : 'rose');
+      document.getElementById('currentPayment').textContent = formatCurrencyPrecise(currentPayment);
+      document.getElementById('newPayment').textContent = formatCurrencyPrecise(newPayment);
+
+      // Update verdict
+      updateVerdict(breakEvenMonths, monthlySavings, termRemaining, closingCosts, isNeverBreakEven);
+
+      // Update timeline
+      updateTimeline(breakEvenMonths, termRemaining, closingCosts, monthlySavings, isNeverBreakEven);
+
+      // Update bar chart
+      updateBarChart(closingCosts, monthlySavings);
+
+      // Update explanation
+      updateExplanation(breakEvenMonths, monthlySavings, closingCosts, currentPayment, newPayment, termRemaining, isNeverBreakEven);
+    }
+
+    function updateVerdict(breakEvenMonths, monthlySavings, termRemaining, closingCosts, isNeverBreakEven) {
+      const card = document.getElementById('verdictCard');
+      const icon = document.getElementById('verdictIcon');
+      const title = document.getElementById('verdictTitle');
+      const text = document.getElementById('verdictText');
+
+      card.classList.remove('verdict-positive', 'verdict-negative', 'verdict-neutral');
+
+      if (isNeverBreakEven || monthlySavings <= 0) {
+        card.classList.add('verdict-negative');
+        icon.textContent = '⛔';
+        title.textContent = 'Refinancing Not Recommended';
+        text.textContent = `The new rate doesn't lower your payment enough to justify the closing costs. Your new payment would actually be ${monthlySavings < 0 ? 'higher' : 'the same'}. Consider waiting for better rates or negotiating lower closing costs.`;
+      } else if (breakEvenMonths > termRemaining) {
+        card.classList.add('verdict-negative');
+        icon.textContent = '⚠️';
+        title.textContent = 'Break-Even Exceeds Loan Term';
+        text.textContent = `Your break-even point of ${breakEvenMonths} months exceeds your remaining loan term of ${termRemaining} months. You'd never fully recoup the closing costs before paying off the loan. This refinance doesn't make financial sense.`;
+      } else if (breakEvenMonths <= 12) {
+        card.classList.add('verdict-positive');
+        icon.textContent = '✅';
+        title.textContent = 'Excellent Refinancing Opportunity';
+        text.textContent = `With a break-even of just ${breakEvenMonths} months, this is a strong refinancing opportunity. If you plan to stay in your home for at least ${Math.max(breakEvenMonths + 12, 24)} months, you'll save ${formatCurrency(monthlySavings * (termRemaining - breakEvenMonths))} over the remaining loan term.`;
+      } else if (breakEvenMonths <= 36) {
+        card.classList.add('verdict-positive');
+        icon.textContent = '👍';
+        title.textContent = 'Refinancing Makes Sense';
+        text.textContent = `Refinancing makes sense if you plan to stay longer than ${breakEvenMonths} months (${(breakEvenMonths / 12).toFixed(1)} years). After break-even, you'll save ${formatCurrency(monthlySavings)} every month. Over 5 years beyond break-even, that's ${formatCurrency(monthlySavings * 60)} in your pocket.`;
+      } else if (breakEvenMonths <= 60) {
+        card.classList.add('verdict-neutral');
+        icon.textContent = '🤔';
+        title.textContent = 'Consider Your Timeline Carefully';
+        text.textContent = `With a ${breakEvenMonths}-month break-even (${(breakEvenMonths / 12).toFixed(1)} years), this only makes sense for long-term homeowners. If you're confident you'll stay at least ${Math.ceil(breakEvenMonths / 12) + 2} years, the refinance pays off. Otherwise, you might lose money.`;
+      } else {
+        card.classList.add('verdict-negative');
+        icon.textContent = '⚠️';
+        title.textContent = 'Long Break-Even Period';
+        text.textContent = `A ${breakEvenMonths}-month break-even (${(breakEvenMonths / 12).toFixed(1)} years) is quite long. Many homeowners move or refinance again within this timeframe. Unless you're certain you'll stay ${Math.ceil(breakEvenMonths / 12) + 2}+ years, consider negotiating lower closing costs or waiting for better rates.`;
+      }
+    }
+
+    function updateTimeline(breakEvenMonths, termRemaining, closingCosts, monthlySavings, isNeverBreakEven) {
+      const container = document.getElementById('timelineVisual');
+      
+      if (isNeverBreakEven || monthlySavings <= 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 24px; background: var(--lw-rose-50); border-radius: var(--lw-radius); color: var(--lw-rose-dark);">
+            <span style="font-size: 32px; display: block; margin-bottom: 8px;">📉</span>
+            <strong>No Break-Even Point</strong><br>
+            <span style="font-size: 14px; color: var(--lw-text-secondary);">New payment doesn't create monthly savings</span>
+          </div>
+        `;
+        return;
+      }
+
+      const maxMonths = Math.min(Math.max(breakEvenMonths * 1.5, 60), termRemaining);
+      const breakEvenPercent = Math.min((breakEvenMonths / maxMonths) * 100, 100);
+      
+      container.innerHTML = `
+        <div class="lw-timeline-track">
+          <div class="lw-timeline-fill loss" style="width: ${breakEvenPercent}%"></div>
+          <div class="lw-timeline-fill gain" style="width: ${100 - breakEvenPercent}%; left: ${breakEvenPercent}%"></div>
+          <div class="lw-timeline-marker" style="left: ${breakEvenPercent}%">💰</div>
+          <div class="lw-timeline-breakeven" style="left: ${breakEvenPercent}%">Break-even: ${breakEvenMonths} mo</div>
+        </div>
+        <div class="lw-timeline-labels">
+          <div class="lw-timeline-label">
+            <strong>Today</strong>
+            <span>Start refinance</span>
+          </div>
+          <div class="lw-timeline-label" style="color: var(--lw-rose);">
+            <strong>Paying Back</strong>
+            <span>Costs > Savings</span>
+          </div>
+          <div class="lw-timeline-label" style="color: var(--lw-emerald);">
+            <strong>Profiting</strong>
+            <span>Pure savings</span>
+          </div>
+        </div>
+      `;
+
+      // Animate after a brief delay
+      setTimeout(() => {
+        const fills = container.querySelectorAll('.lw-timeline-fill');
+        fills.forEach(fill => {
+          fill.style.transition = 'width 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+        });
+      }, 100);
+    }
+
+    function updateBarChart(closingCosts, monthlySavings) {
+      const yearSavings = Math.max(monthlySavings * 12, 0);
+      const fiveYearSavings = Math.max(monthlySavings * 60, 0);
+      const maxValue = Math.max(closingCosts, yearSavings, fiveYearSavings, 1);
+
+      document.getElementById('closingCostsAmount').textContent = formatCurrency(closingCosts);
+      document.getElementById('yearSavingsAmount').textContent = formatCurrency(yearSavings);
+      document.getElementById('fiveYearSavingsAmount').textContent = formatCurrency(fiveYearSavings);
+
+      setTimeout(() => {
+        document.getElementById('closingCostsBar').style.width = `${(closingCosts / maxValue) * 100}%`;
+        document.getElementById('yearSavingsBar').style.width = `${(yearSavings / maxValue) * 100}%`;
+        document.getElementById('fiveYearSavingsBar').style.width = `${(fiveYearSavings / maxValue) * 100}%`;
+      }, 100);
+    }
+
+    function updateExplanation(breakEvenMonths, monthlySavings, closingCosts, currentPayment, newPayment, termRemaining, isNeverBreakEven) {
+      const container = document.getElementById('explanationText');
+      
+      if (isNeverBreakEven || monthlySavings <= 0) {
+        container.innerHTML = `
+          <p><strong>Your new rate doesn't lower your payment.</strong> This happens when the new rate isn't low enough, or when you're extending to a new longer term that offsets rate savings.</p>
+          <p>For refinancing to make sense, your new monthly payment must be <em>lower</em> than your current payment. Try:</p>
+          <ul style="margin-left: 20px; margin-top: 8px;">
+            <li>Finding a lower interest rate</li>
+            <li>Keeping the same term length (or shorter)</li>
+            <li>Negotiating lower closing costs</li>
+          </ul>
+        `;
+        return;
+      }
+
+      const totalSavingsAtTerm = monthlySavings * (termRemaining - breakEvenMonths);
+      const netSavings5Year = (monthlySavings * 60) - closingCosts;
+
+      container.innerHTML = `
+        <p><strong>Here's the bottom line:</strong> By refinancing, you'll drop your monthly payment from ${formatCurrencyPrecise(currentPayment)} to ${formatCurrencyPrecise(newPayment)}, saving ${formatCurrencyPrecise(monthlySavings)} every month.</p>
+        <p>The catch? You're paying ${formatCurrency(closingCosts)} upfront in closing costs. It takes <strong>${breakEvenMonths} months</strong> of savings to recover that cost.</p>
+        <p><strong>After break-even:</strong> Every month you stay, you pocket ${formatCurrencyPrecise(monthlySavings)}. If you stay for the remaining ${termRemaining} months of your original term, you'll net ${formatCurrency(Math.max(totalSavingsAtTerm, 0))} in total savings (after subtracting closing costs).</p>
+        ${termRemaining >= 60 ? `<p><strong>5-year outlook:</strong> After 5 years, you'll have saved ${formatCurrency(monthlySavings * 60)} total, netting ${formatCurrency(netSavings5Year)} after closing costs.</p>` : ''}
+      `;
+    }
+
+    // Input formatting and events
+    const inputs = ['currentBalance', 'currentRate', 'termRemaining', 'newRate', 'closingCosts', 'newTerm'];
+    
+    inputs.forEach(id => {
+      const input = document.getElementById(id);
+      
+      input.addEventListener('input', () => {
+        calculate();
+      });
+
+      input.addEventListener('blur', () => {
+        if (id === 'currentBalance' || id === 'closingCosts') {
+          formatInput(input);
+        }
+      });
+    });
+
+    // FAQ accordion
+    document.querySelectorAll('.lw-faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const wasOpen = item.classList.contains('open');
+        
+        // Close all
+        document.querySelectorAll('.lw-faq-item').forEach(i => i.classList.remove('open'));
+        
+        // Toggle current
+        if (!wasOpen) item.classList.add('open');
+      });
+    });
+
+    // Mobile menu
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', calculate);
+  </script>
+</body>
+</html>

@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lump Sum vs DCA Calculator — Should You Invest All at Once or Spread It Out?</title>
+  <meta name="description" content="Free lump sum vs dollar cost averaging calculator. Compare expected returns, risk exposure, and regret potential. Find out if you should invest all at once or spread it out.">
+  <meta name="keywords" content="lump sum vs DCA, dollar cost averaging vs lump sum, invest lump sum or monthly, DCA vs lump sum calculator, lump sum investing calculator">
+  <link rel="canonical" href="https://pocketwise.io/lump-sum-vs-dca/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .lw-comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .lw-strategy-card {
+      background: var(--lw-card);
+      border-radius: var(--lw-radius-lg);
+      padding: 24px;
+      border: 2px solid var(--lw-border-light);
+      transition: all var(--lw-transition);
+      position: relative;
+    }
+    .lw-strategy-card.winner {
+      border-color: var(--lw-emerald);
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+    }
+    .lw-strategy-card.winner::after {
+      content: '✓ Recommended';
+      position: absolute;
+      top: -12px;
+      right: 16px;
+      background: var(--lw-emerald);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .lw-strategy-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .lw-strategy-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    .lw-strategy-icon.lump { background: var(--lw-sky-100); }
+    .lw-strategy-icon.dca { background: var(--lw-violet-light); background: #F3F0FF; }
+    .lw-strategy-name {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--lw-navy);
+    }
+    .lw-strategy-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--lw-navy);
+      margin-bottom: 8px;
+    }
+    .lw-strategy-value .currency {
+      font-size: 22px;
+      opacity: 0.6;
+    }
+    .lw-strategy-return {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .lw-strategy-return.positive { color: var(--lw-emerald); }
+    .lw-strategy-return.negative { color: var(--lw-rose); }
+    .lw-strategy-stats {
+      border-top: 1px solid var(--lw-border-light);
+      padding-top: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .lw-stat-mini {
+      text-align: center;
+    }
+    .lw-stat-mini-label {
+      font-size: 11px;
+      color: var(--lw-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .lw-stat-mini-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--lw-slate-700);
+    }
+    .lw-probability-bar {
+      background: var(--lw-slate-100);
+      border-radius: var(--lw-radius-full);
+      height: 48px;
+      position: relative;
+      overflow: hidden;
+      margin: 20px 0;
+      display: flex;
+    }
+    .lw-prob-lump {
+      background: linear-gradient(90deg, var(--lw-sky), var(--lw-sky-light));
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: width 0.6s ease;
+    }
+    .lw-prob-dca {
+      background: linear-gradient(90deg, var(--lw-violet), var(--lw-violet-light));
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+    }
+    .lw-prob-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: white;
+      white-space: nowrap;
+      padding: 0 12px;
+    }
+    .lw-scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .lw-scenario-card {
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      padding: 16px;
+      text-align: center;
+      border: 1px solid var(--lw-border-light);
+    }
+    .lw-scenario-card.bull { border-left: 3px solid var(--lw-emerald); }
+    .lw-scenario-card.bear { border-left: 3px solid var(--lw-rose); }
+    .lw-scenario-card.sideways { border-left: 3px solid var(--lw-amber); }
+    .lw-scenario-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--lw-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .lw-scenario-winner {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--lw-navy);
+      margin-bottom: 4px;
+    }
+    .lw-scenario-diff {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+    }
+    .lw-regret-meter {
+      margin: 24px 0;
+    }
+    .lw-regret-track {
+      height: 12px;
+      background: linear-gradient(90deg, var(--lw-emerald-50) 0%, var(--lw-amber-50) 50%, var(--lw-rose-50) 100%);
+      border-radius: var(--lw-radius-full);
+      position: relative;
+      border: 1px solid var(--lw-border);
+    }
+    .lw-regret-marker {
+      width: 24px;
+      height: 24px;
+      background: var(--lw-navy);
+      border: 3px solid white;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      transition: left 0.5s ease;
+    }
+    .lw-regret-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--lw-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .lw-decision-box {
+      background: linear-gradient(135deg, var(--lw-navy) 0%, var(--lw-slate-800) 100%);
+      border-radius: var(--lw-radius-lg);
+      padding: 28px;
+      color: white;
+      margin-top: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .lw-decision-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 70% 20%, rgba(14, 165, 233, 0.15) 0%, transparent 50%);
+    }
+    .lw-decision-box * { position: relative; }
+    .lw-decision-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+    .lw-decision-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .lw-decision-text {
+      font-size: 15px;
+      color: var(--lw-slate-300);
+      line-height: 1.7;
+    }
+    .lw-decision-text strong {
+      color: white;
+    }
+    .lw-risk-slider-wrap {
+      padding: 8px 0;
+    }
+    .lw-risk-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--lw-text-muted);
+      margin-top: 8px;
+    }
+    .lw-insight-box {
+      background: var(--lw-sky-50);
+      border: 1px solid rgba(14, 165, 233, 0.2);
+      border-radius: var(--lw-radius);
+      padding: 16px 20px;
+      margin-top: 16px;
+    }
+    .lw-insight-box.amber {
+      background: var(--lw-amber-50);
+      border-color: rgba(245, 158, 11, 0.2);
+    }
+    .lw-insight-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--lw-sky-dark);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .lw-insight-box.amber .lw-insight-title { color: #B45309; }
+    .lw-insight-text {
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+      line-height: 1.6;
+    }
+    @media (max-width: 768px) {
+      .lw-comparison-grid { grid-template-columns: 1fr; }
+      .lw-scenario-grid { grid-template-columns: 1fr; }
+      .lw-strategy-value { font-size: 28px; }
+      .lw-prob-label { font-size: 11px; padding: 0 8px; }
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the difference between lump sum investing and dollar cost averaging?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Lump sum investing means investing all your money at once, while dollar cost averaging (DCA) spreads your investment over time with regular purchases. Lump sum typically performs better about 67% of the time because markets tend to rise over time, but DCA reduces the risk of investing everything right before a market downturn."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does lump sum investing beat DCA?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Historically, lump sum investing outperforms DCA about two-thirds of the time. This is because markets generally trend upward, so having your money invested sooner captures more growth. However, DCA wins during bear markets and provides psychological comfort by reducing the chance of investing everything at a market peak."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When should I use dollar cost averaging instead of lump sum?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Consider DCA if: (1) you have low risk tolerance and would panic-sell after a market drop, (2) you're investing a life-changing sum and the psychological impact of a loss matters, (3) market valuations are historically high and you're worried about timing, or (4) you simply can't stomach the idea of investing everything before a potential crash."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is regret risk in investing?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Regret risk measures the potential emotional and financial pain of a suboptimal decision. For lump sum investing, the regret risk is investing right before a major crash. For DCA, it's watching the market soar while your money sits uninvested. Understanding your personal regret tolerance helps choose the right strategy."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How long should I spread out dollar cost averaging?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most research suggests DCA periods of 6-12 months are optimal. Shorter periods (3-6 months) capture most of the psychological benefit while minimizing opportunity cost. Periods longer than 12 months significantly increase the chance of underperformance compared to lump sum investing."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">P</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">All Calculators</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')">☰</button>
+    </div>
+    <div class="lw-mobile-menu">
+      <a href="/">← All Calculators</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- Hero -->
+    <section class="lw-hero">
+      <span class="lw-badge">Investment Strategy</span>
+      <h1>Lump Sum vs <span class="accent">DCA</span> Calculator</h1>
+      <p class="subtitle">Should you invest all at once or spread it out? Compare expected returns, risk exposure, and find your optimal strategy.</p>
+    </section>
+
+    <!-- Calculator Card -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">📊</div>
+        <div>
+          <div class="lw-card-title">Investment Parameters</div>
+          <div class="lw-card-subtitle">Enter your details to compare strategies</div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Total Amount to Invest</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" id="amount" class="lw-input" value="50,000" inputmode="numeric">
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">DCA Period <span class="lw-label-hint">(months)</span></label>
+          <select id="dcaPeriod" class="lw-select">
+            <option value="3">3 months</option>
+            <option value="6" selected>6 months</option>
+            <option value="9">9 months</option>
+            <option value="12">12 months</option>
+            <option value="18">18 months</option>
+            <option value="24">24 months</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label">Expected Annual Return</label>
+            <span class="lw-range-value" id="returnDisplay">8%</span>
+          </div>
+          <input type="range" id="annualReturn" class="lw-range" min="2" max="15" step="0.5" value="8">
+        </div>
+
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label">Expected Volatility</label>
+            <span class="lw-range-value" id="volatilityDisplay">15%</span>
+          </div>
+          <input type="range" id="volatility" class="lw-range" min="5" max="35" step="1" value="15">
+        </div>
+      </div>
+
+      <div class="lw-range-group">
+        <div class="lw-range-header">
+          <label class="lw-label">Your Risk Tolerance</label>
+          <span class="lw-range-value" id="riskDisplay">3 — Moderate</span>
+        </div>
+        <div class="lw-risk-slider-wrap">
+          <input type="range" id="riskTolerance" class="lw-range" min="1" max="5" step="1" value="3">
+          <div class="lw-risk-labels">
+            <span>Conservative</span>
+            <span>Aggressive</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="results">
+      <!-- Strategy Comparison Cards -->
+      <div class="lw-comparison-grid">
+        <div class="lw-strategy-card" id="lumpCard">
+          <div class="lw-strategy-header">
+            <div class="lw-strategy-icon lump">💰</div>
+            <div class="lw-strategy-name">Lump Sum</div>
+          </div>
+          <div class="lw-strategy-value">
+            <span class="currency">$</span><span id="lumpEndValue">54,000</span>
+          </div>
+          <div class="lw-strategy-return positive" id="lumpReturn">+$4,000 (8.0%)</div>
+          <div class="lw-strategy-stats">
+            <div class="lw-stat-mini">
+              <div class="lw-stat-mini-label">Max Drawdown</div>
+              <div class="lw-stat-mini-value" id="lumpDrawdown">-$7,500</div>
+            </div>
+            <div class="lw-stat-mini">
+              <div class="lw-stat-mini-label">Time in Market</div>
+              <div class="lw-stat-mini-value" id="lumpTime">12 mo</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lw-strategy-card" id="dcaCard">
+          <div class="lw-strategy-header">
+            <div class="lw-strategy-icon dca">📅</div>
+            <div class="lw-strategy-name">Dollar Cost Averaging</div>
+          </div>
+          <div class="lw-strategy-value">
+            <span class="currency">$</span><span id="dcaEndValue">52,800</span>
+          </div>
+          <div class="lw-strategy-return positive" id="dcaReturn">+$2,800 (5.6%)</div>
+          <div class="lw-strategy-stats">
+            <div class="lw-stat-mini">
+              <div class="lw-stat-mini-label">Max Drawdown</div>
+              <div class="lw-stat-mini-value" id="dcaDrawdown">-$3,750</div>
+            </div>
+            <div class="lw-stat-mini">
+              <div class="lw-stat-mini-label">Avg Time in Market</div>
+              <div class="lw-stat-mini-value" id="dcaTime">6 mo</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Historical Win Rate -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon green">📈</div>
+          <div>
+            <div class="lw-card-title">Historical Win Rate</div>
+            <div class="lw-card-subtitle">Based on historical market data</div>
+          </div>
+        </div>
+        
+        <div class="lw-probability-bar">
+          <div class="lw-prob-lump" id="probLumpBar" style="width: 67%;">
+            <span class="lw-prob-label">Lump Sum Wins <span id="probLumpPct">67%</span></span>
+          </div>
+          <div class="lw-prob-dca">
+            <span class="lw-prob-label">DCA Wins <span id="probDcaPct">33%</span></span>
+          </div>
+        </div>
+
+        <div class="lw-insight-box">
+          <div class="lw-insight-title">💡 What this means</div>
+          <div class="lw-insight-text" id="probabilityInsight">
+            Historically, investing a lump sum immediately outperforms DCA about two-thirds of the time. This is because markets tend to rise over time, so having money invested sooner captures more growth on average.
+          </div>
+        </div>
+      </div>
+
+      <!-- Scenario Analysis -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon amber">🎯</div>
+          <div>
+            <div class="lw-card-title">Scenario Analysis</div>
+            <div class="lw-card-subtitle">How each strategy performs in different markets</div>
+          </div>
+        </div>
+
+        <div class="lw-scenario-grid">
+          <div class="lw-scenario-card bull">
+            <div class="lw-scenario-name">🐂 Bull Market</div>
+            <div class="lw-scenario-winner" id="bullWinner">Lump Sum Wins</div>
+            <div class="lw-scenario-diff" id="bullDiff" style="color: var(--lw-emerald);">+$2,400 advantage</div>
+          </div>
+          <div class="lw-scenario-card bear">
+            <div class="lw-scenario-name">🐻 Bear Market</div>
+            <div class="lw-scenario-winner" id="bearWinner">DCA Wins</div>
+            <div class="lw-scenario-diff" id="bearDiff" style="color: var(--lw-emerald);">+$3,200 advantage</div>
+          </div>
+          <div class="lw-scenario-card sideways">
+            <div class="lw-scenario-name">↔️ Sideways</div>
+            <div class="lw-scenario-winner" id="sidewaysWinner">Nearly Equal</div>
+            <div class="lw-scenario-diff" id="sidewaysDiff" style="color: var(--lw-slate-500);">$200 difference</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Regret Risk Analysis -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon rose">😰</div>
+          <div>
+            <div class="lw-card-title">Regret Risk Analysis</div>
+            <div class="lw-card-subtitle">Maximum potential regret for each strategy</div>
+          </div>
+        </div>
+
+        <div class="lw-bar-chart">
+          <div class="lw-bar-row">
+            <div class="lw-bar-label">Lump Sum Regret</div>
+            <div class="lw-bar-track">
+              <div class="lw-bar-fill rose" id="lumpRegretBar" style="width: 75%;">
+                <span class="lw-bar-amount" id="lumpRegretAmt">$7,500</span>
+              </div>
+            </div>
+          </div>
+          <div class="lw-bar-row">
+            <div class="lw-bar-label">DCA Regret</div>
+            <div class="lw-bar-track">
+              <div class="lw-bar-fill amber" id="dcaRegretBar" style="width: 40%;">
+                <span class="lw-bar-amount" id="dcaRegretAmt">$4,000</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lw-regret-meter">
+          <div style="font-size: 13px; font-weight: 600; color: var(--lw-slate-700); margin-bottom: 8px;">Your Regret Tolerance Position</div>
+          <div class="lw-regret-track">
+            <div class="lw-regret-marker" id="regretMarker" style="left: 50%;"></div>
+          </div>
+          <div class="lw-regret-labels">
+            <span>Low (DCA Preferred)</span>
+            <span>High (Lump Sum OK)</span>
+          </div>
+        </div>
+
+        <div class="lw-insight-box amber">
+          <div class="lw-insight-title">⚠️ What is regret risk?</div>
+          <div class="lw-insight-text">
+            <strong>Lump sum regret:</strong> Investing everything right before a market crash.<br>
+            <strong>DCA regret:</strong> Watching markets soar while your money sits uninvested.<br><br>
+            <span id="regretInsight">Based on your risk tolerance, you can handle moderate regret. Lump sum is mathematically optimal, but DCA might help you sleep better.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Decision Box -->
+      <div class="lw-decision-box" id="decisionBox">
+        <div class="lw-decision-icon" id="decisionIcon">💰</div>
+        <div class="lw-decision-title" id="decisionTitle">Lump Sum Wins on Average, But...</div>
+        <div class="lw-decision-text" id="decisionText">
+          Lump sum investing is expected to produce <strong>$1,200 more</strong> than DCA over this period. However, DCA reduces your maximum potential regret by <strong>$3,500</strong>. Given your moderate risk tolerance, consider lump sum if you can handle short-term volatility, or split the difference with a 3-month DCA.
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <section class="lw-content">
+      <h2>Lump Sum vs Dollar Cost Averaging: Which Strategy Is Right for You?</h2>
+      
+      <p>If you've received a windfall—an inheritance, bonus, or proceeds from selling a home—you face a crucial decision: <strong>should you invest it all at once (lump sum) or spread it out over time (dollar cost averaging)?</strong></p>
+
+      <p>This calculator helps you understand the mathematical reality and emotional trade-offs of each approach, so you can make a decision that's both financially sound and personally sustainable.</p>
+
+      <h3>The Mathematical Reality</h3>
+      
+      <p>Historical data from Vanguard's research shows that <strong>lump sum investing outperforms DCA about 67% of the time</strong> across global markets. The reason is simple: markets tend to rise over time. By investing immediately, your money has more time to compound.</p>
+
+      <p>However, that 67% figure means DCA wins roughly one-third of the time—typically during market downturns when spreading out your investment means buying at lower average prices.</p>
+
+      <h3>Understanding Maximum Drawdown</h3>
+      
+      <p><strong>Maximum drawdown</strong> measures the largest peak-to-trough decline during a specific period. With lump sum investing, your entire investment is exposed to this risk from day one. With DCA, only the invested portion faces this exposure, reducing your worst-case scenario.</p>
+
+      <p>For example, if you invest $50,000 lump sum and the market drops 15%, you're down $7,500. With DCA over 6 months, only half your money (on average) is exposed, limiting your potential loss to roughly $3,750.</p>
+
+      <h3>The Psychology of Regret</h3>
+      
+      <p>Beyond the numbers, consider the emotional impact:</p>
+      
+      <ul>
+        <li><strong>Lump sum regret:</strong> "I invested everything right before the crash"</li>
+        <li><strong>DCA regret:</strong> "I missed the rally while waiting to invest"</li>
+      </ul>
+
+      <p>Research in behavioral finance suggests that <strong>losses feel roughly twice as painful as equivalent gains feel good</strong>. This "loss aversion" means the regret of a lump sum loss often outweighs the joy of a lump sum gain—even if they're the same dollar amount.</p>
+
+      <h3>When to Choose Lump Sum</h3>
+      
+      <ul>
+        <li>You have a high risk tolerance and long time horizon</li>
+        <li>You won't panic-sell during market drops</li>
+        <li>You understand and accept short-term volatility</li>
+        <li>Mathematically optimal returns are your priority</li>
+        <li>The amount, while significant, isn't life-changing</li>
+      </ul>
+
+      <h3>When to Choose DCA</h3>
+      
+      <ul>
+        <li>You're investing a life-changing sum (inheritance, home sale proceeds)</li>
+        <li>Market valuations seem historically elevated</li>
+        <li>You'd lose sleep over a major immediate loss</li>
+        <li>You have lower risk tolerance</li>
+        <li>Peace of mind matters more than optimal returns</li>
+      </ul>
+
+      <h3>The Hybrid Approach</h3>
+      
+      <p>Can't decide? Consider a middle ground: invest 50% immediately to capture most of the lump sum benefit, then DCA the remaining 50% over 3-6 months. This approach captures roughly 75% of the expected lump sum advantage while significantly reducing regret risk.</p>
+
+      <h2>Frequently Asked Questions</h2>
+
+      <div class="lw-faq">
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">What is the difference between lump sum investing and dollar cost averaging?</button>
+          <div class="lw-faq-a">
+            <p>Lump sum investing means putting all your available money into the market at once. Dollar cost averaging (DCA) spreads your investment over regular intervals—weekly, monthly, or quarterly—to reduce the impact of market timing. While lump sum typically performs better mathematically, DCA provides psychological comfort and reduces worst-case scenarios.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Does lump sum investing beat DCA?</button>
+          <div class="lw-faq-a">
+            <p>Historically, yes—about two-thirds of the time. Vanguard's research across U.S., U.K., and Australian markets from 1926-2011 found lump sum investing outperformed DCA in roughly 67% of rolling 12-month periods. However, DCA wins during market downturns, which is precisely when the psychological pain of losses is highest.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">How long should I spread out dollar cost averaging?</button>
+          <div class="lw-faq-a">
+            <p>Research suggests 6-12 months is optimal. Shorter periods (3-6 months) capture most of the psychological benefit while minimizing opportunity cost. Periods longer than 12 months significantly increase the probability of underperforming lump sum investing—you're essentially betting against the historical tendency of markets to rise.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">What if the market is at an all-time high?</button>
+          <div class="lw-faq-a">
+            <p>Markets hit all-time highs frequently—that's the natural result of long-term growth. Research shows that investing at all-time highs has historically produced similar long-term returns to investing at any other time. However, if you're uncomfortable, DCA can provide peace of mind while still getting your money working.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Is DCA the same as automatic monthly investing from my paycheck?</button>
+          <div class="lw-faq-a">
+            <p>No, they're different situations. Automatic paycheck investing is your only option—you invest as money becomes available. True DCA is when you have a lump sum available but choose to invest it gradually. The lump sum vs. DCA debate only applies when you already have the full amount to invest.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/compound-interest/" class="lw-related-link">
+          <span class="dot"></span>
+          Compound Interest Calculator
+        </a>
+        <a href="/investment-growth/" class="lw-related-link">
+          <span class="dot"></span>
+          Investment Growth Calculator
+        </a>
+        <a href="/retirement/" class="lw-related-link">
+          <span class="dot"></span>
+          Retirement Calculator
+        </a>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <div class="lw-disclaimer">
+      This calculator provides estimates for educational purposes only. Past performance doesn't guarantee future results. Consult a qualified financial advisor for personalized investment advice.
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="lw-footer">
+    <p>© 2025 PocketWise. Free financial calculators for everyone.</p>
+    <p style="margin-top: 8px;"><a href="/">View All Calculators</a></p>
+  </footer>
+
+  <script>
+    // ===== DOM Elements =====
+    const amountInput = document.getElementById('amount');
+    const dcaPeriodSelect = document.getElementById('dcaPeriod');
+    const annualReturnSlider = document.getElementById('annualReturn');
+    const volatilitySlider = document.getElementById('volatility');
+    const riskToleranceSlider = document.getElementById('riskTolerance');
+    
+    const returnDisplay = document.getElementById('returnDisplay');
+    const volatilityDisplay = document.getElementById('volatilityDisplay');
+    const riskDisplay = document.getElementById('riskDisplay');
+
+    // Risk tolerance labels
+    const riskLabels = ['1 — Very Conservative', '2 — Conservative', '3 — Moderate', '4 — Aggressive', '5 — Very Aggressive'];
+
+    // ===== Formatting Utilities =====
+    function formatCurrency(num) {
+      return Math.round(num).toLocaleString('en-US');
+    }
+
+    function parseCurrency(str) {
+      return parseFloat(str.replace(/[^0-9.-]/g, '')) || 0;
+    }
+
+    function formatPercent(num, decimals = 1) {
+      return num.toFixed(decimals) + '%';
+    }
+
+    // ===== Input Formatting =====
+    amountInput.addEventListener('input', function() {
+      let val = this.value.replace(/[^0-9]/g, '');
+      if (val) {
+        this.value = parseInt(val).toLocaleString('en-US');
+      }
+      calculate();
+    });
+
+    annualReturnSlider.addEventListener('input', function() {
+      returnDisplay.textContent = this.value + '%';
+      calculate();
+    });
+
+    volatilitySlider.addEventListener('input', function() {
+      volatilityDisplay.textContent = this.value + '%';
+      calculate();
+    });
+
+    riskToleranceSlider.addEventListener('input', function() {
+      riskDisplay.textContent = riskLabels[parseInt(this.value) - 1];
+      calculate();
+    });
+
+    dcaPeriodSelect.addEventListener('change', calculate);
+
+    // ===== Main Calculation =====
+    function calculate() {
+      const amount = parseCurrency(amountInput.value);
+      const dcaMonths = parseInt(dcaPeriodSelect.value);
+      const annualReturn = parseFloat(annualReturnSlider.value) / 100;
+      const volatility = parseFloat(volatilitySlider.value) / 100;
+      const riskTolerance = parseInt(riskToleranceSlider.value);
+
+      // Use 12 months as analysis period (1 year after DCA completes)
+      const analysisPeriod = 12;
+      const monthlyReturn = annualReturn / 12;
+      const monthlyVol = volatility / Math.sqrt(12);
+
+      // ===== Lump Sum Calculations =====
+      // Expected value after analysis period
+      const lumpEndValue = amount * Math.pow(1 + monthlyReturn, analysisPeriod);
+      const lumpGain = lumpEndValue - amount;
+      const lumpReturnPct = (lumpGain / amount) * 100;
+
+      // Maximum drawdown exposure (simplified: volatility * sqrt(time) * amount)
+      // Using approximate max drawdown as 1.5x annual volatility
+      const lumpMaxDrawdown = amount * volatility * 1.5;
+
+      // ===== DCA Calculations =====
+      // DCA invests equal amounts each month over dcaMonths
+      const monthlyInvestment = amount / dcaMonths;
+      let dcaEndValue = 0;
+
+      // Calculate future value of each DCA contribution
+      for (let i = 0; i < dcaMonths; i++) {
+        const monthsInvested = analysisPeriod - i;
+        dcaEndValue += monthlyInvestment * Math.pow(1 + monthlyReturn, monthsInvested);
+      }
+
+      const dcaGain = dcaEndValue - amount;
+      const dcaReturnPct = (dcaGain / amount) * 100;
+
+      // DCA average time in market is half the DCA period + remaining analysis time
+      const avgTimeInMarket = (dcaMonths / 2) + (analysisPeriod - dcaMonths);
+      
+      // DCA max drawdown is lower because average exposure is lower
+      const avgExposure = amount * ((dcaMonths + 1) / (2 * dcaMonths)); // During DCA period
+      const dcaMaxDrawdown = avgExposure * volatility * 1.5 * (dcaMonths / analysisPeriod) + 
+                            amount * volatility * 1.5 * ((analysisPeriod - dcaMonths) / analysisPeriod);
+
+      // ===== Probability Analysis =====
+      // Base probability: 67% lump sum wins historically
+      // Adjust based on volatility (higher vol = more DCA wins)
+      // and DCA period (longer period = less advantage for DCA)
+      let probLumpWins = 67;
+      
+      // Volatility adjustment: higher volatility slightly favors DCA
+      if (volatility > 0.20) {
+        probLumpWins -= (volatility - 0.20) * 20; // -4% for each 1% vol above 20%
+      } else if (volatility < 0.12) {
+        probLumpWins += (0.12 - volatility) * 30; // +3% for each 1% below 12%
+      }
+
+      // DCA period adjustment: longer periods reduce DCA effectiveness
+      if (dcaMonths > 12) {
+        probLumpWins += (dcaMonths - 12) * 2;
+      } else if (dcaMonths < 6) {
+        probLumpWins -= (6 - dcaMonths) * 1.5;
+      }
+
+      probLumpWins = Math.max(55, Math.min(80, probLumpWins));
+      const probDcaWins = 100 - probLumpWins;
+
+      // ===== Scenario Analysis =====
+      // Bull market: +20% year
+      const bullReturn = 0.20;
+      const bullMonthly = bullReturn / 12;
+      const bullLump = amount * Math.pow(1 + bullMonthly, analysisPeriod);
+      let bullDca = 0;
+      for (let i = 0; i < dcaMonths; i++) {
+        bullDca += monthlyInvestment * Math.pow(1 + bullMonthly, analysisPeriod - i);
+      }
+      const bullDiff = Math.abs(bullLump - bullDca);
+
+      // Bear market: -20% year
+      const bearReturn = -0.20;
+      const bearMonthly = bearReturn / 12;
+      const bearLump = amount * Math.pow(1 + bearMonthly, analysisPeriod);
+      let bearDca = 0;
+      for (let i = 0; i < dcaMonths; i++) {
+        bearDca += monthlyInvestment * Math.pow(1 + bearMonthly, analysisPeriod - i);
+      }
+      const bearDiff = Math.abs(bearDca - bearLump);
+
+      // Sideways market: 2% year
+      const sideReturn = 0.02;
+      const sideMonthly = sideReturn / 12;
+      const sideLump = amount * Math.pow(1 + sideMonthly, analysisPeriod);
+      let sideDca = 0;
+      for (let i = 0; i < dcaMonths; i++) {
+        sideDca += monthlyInvestment * Math.pow(1 + sideMonthly, analysisPeriod - i);
+      }
+      const sideDiff = Math.abs(sideLump - sideDca);
+
+      // ===== Regret Risk Analysis =====
+      // Lump sum regret: what if market crashes right after investing?
+      const lumpRegret = lumpMaxDrawdown;
+      
+      // DCA regret: what if market soars and you missed out?
+      // Calculate opportunity cost if market goes up 15% during DCA period
+      const missedGainPct = 0.15 * (dcaMonths / 12);
+      const dcaRegret = amount * missedGainPct * 0.5; // Average half the money missed the rally
+
+      const maxRegret = Math.max(lumpRegret, dcaRegret);
+      const regretReduction = lumpRegret - dcaRegret;
+
+      // ===== Update UI =====
+      
+      // Strategy Cards
+      document.getElementById('lumpEndValue').textContent = formatCurrency(lumpEndValue);
+      document.getElementById('lumpReturn').textContent = `+$${formatCurrency(lumpGain)} (${formatPercent(lumpReturnPct)})`;
+      document.getElementById('lumpReturn').className = 'lw-strategy-return ' + (lumpGain >= 0 ? 'positive' : 'negative');
+      document.getElementById('lumpDrawdown').textContent = `-$${formatCurrency(lumpMaxDrawdown)}`;
+      document.getElementById('lumpTime').textContent = analysisPeriod + ' mo';
+
+      document.getElementById('dcaEndValue').textContent = formatCurrency(dcaEndValue);
+      document.getElementById('dcaReturn').textContent = `+$${formatCurrency(dcaGain)} (${formatPercent(dcaReturnPct)})`;
+      document.getElementById('dcaReturn').className = 'lw-strategy-return ' + (dcaGain >= 0 ? 'positive' : 'negative');
+      document.getElementById('dcaDrawdown').textContent = `-$${formatCurrency(dcaMaxDrawdown * 0.5)}`;
+      document.getElementById('dcaTime').textContent = Math.round(avgTimeInMarket) + ' mo';
+
+      // Winner badge
+      const lumpCard = document.getElementById('lumpCard');
+      const dcaCard = document.getElementById('dcaCard');
+      const expectedDiff = lumpEndValue - dcaEndValue;
+      
+      // Determine winner based on risk tolerance and expected values
+      let recommendLump = expectedDiff > 0;
+      if (riskTolerance <= 2 && regretReduction > expectedDiff * 0.5) {
+        recommendLump = false; // For conservative investors, peace of mind matters more
+      }
+
+      lumpCard.classList.toggle('winner', recommendLump);
+      dcaCard.classList.toggle('winner', !recommendLump);
+
+      // Probability bar
+      document.getElementById('probLumpBar').style.width = probLumpWins + '%';
+      document.getElementById('probLumpPct').textContent = Math.round(probLumpWins) + '%';
+      document.getElementById('probDcaPct').textContent = Math.round(probDcaWins) + '%';
+
+      document.getElementById('probabilityInsight').innerHTML = `
+        Based on historical data and a ${formatPercent(volatility * 100, 0)} volatility assumption, lump sum investing 
+        would outperform DCA approximately <strong>${Math.round(probLumpWins)}%</strong> of the time. 
+        ${probLumpWins > 65 ? 
+          "The odds favor investing all at once." : 
+          "Higher market volatility makes DCA relatively more attractive."}
+      `;
+
+      // Scenario Analysis
+      document.getElementById('bullWinner').textContent = 'Lump Sum Wins';
+      document.getElementById('bullDiff').textContent = `+$${formatCurrency(bullDiff)} advantage`;
+      document.getElementById('bullDiff').style.color = 'var(--lw-emerald)';
+
+      document.getElementById('bearWinner').textContent = 'DCA Wins';
+      document.getElementById('bearDiff').textContent = `+$${formatCurrency(bearDiff)} advantage`;
+      document.getElementById('bearDiff').style.color = 'var(--lw-emerald)';
+
+      document.getElementById('sidewaysWinner').textContent = sideLump > sideDca ? 'Lump Sum Wins' : 'Nearly Equal';
+      document.getElementById('sidewaysDiff').textContent = `$${formatCurrency(sideDiff)} difference`;
+      document.getElementById('sidewaysDiff').style.color = 'var(--lw-slate-500)';
+
+      // Regret Risk Bars
+      const regretBarMax = Math.max(lumpRegret, dcaRegret) * 1.2;
+      document.getElementById('lumpRegretBar').style.width = Math.min(100, (lumpRegret / regretBarMax * 100)) + '%';
+      document.getElementById('lumpRegretAmt').textContent = `$${formatCurrency(lumpRegret)}`;
+      document.getElementById('dcaRegretBar').style.width = Math.min(100, (dcaRegret / regretBarMax * 100)) + '%';
+      document.getElementById('dcaRegretAmt').textContent = `$${formatCurrency(dcaRegret)}`;
+
+      // Regret marker position based on risk tolerance
+      const regretPosition = ((riskTolerance - 1) / 4) * 100;
+      document.getElementById('regretMarker').style.left = regretPosition + '%';
+
+      // Regret insight
+      const regretInsights = [
+        `With very conservative risk tolerance, the peace of mind from DCA is worth more than the expected ${formatCurrency(expectedDiff)} advantage of lump sum. Consider DCA over ${dcaMonths} months.`,
+        `As a conservative investor, DCA's lower regret potential (saving $${formatCurrency(regretReduction)} in worst-case exposure) likely outweighs the expected $${formatCurrency(expectedDiff)} lump sum advantage.`,
+        `With moderate risk tolerance, both strategies are viable. Lump sum offers $${formatCurrency(expectedDiff)} more expected value, but DCA reduces your worst-case regret by $${formatCurrency(regretReduction)}.`,
+        `Your higher risk tolerance suggests you can handle volatility. Lump sum's expected $${formatCurrency(expectedDiff)} advantage is worth capturing, though a short DCA (3 months) is also reasonable.`,
+        `With aggressive risk tolerance, lump sum is clearly preferred. You're comfortable with volatility and want to maximize expected returns (+$${formatCurrency(expectedDiff)}).`
+      ];
+      document.getElementById('regretInsight').textContent = regretInsights[riskTolerance - 1];
+
+      // Decision Box
+      const decisionIcon = document.getElementById('decisionIcon');
+      const decisionTitle = document.getElementById('decisionTitle');
+      const decisionText = document.getElementById('decisionText');
+
+      if (recommendLump) {
+        decisionIcon.textContent = '💰';
+        decisionTitle.textContent = 'Recommendation: Lump Sum';
+        
+        if (riskTolerance >= 4) {
+          decisionText.innerHTML = `
+            <strong>Go all in.</strong> Based on your risk tolerance and the numbers, lump sum investing 
+            is expected to produce <strong>$${formatCurrency(expectedDiff)} more</strong> than DCA. 
+            You understand markets fluctuate and won't panic during downturns. 
+            Invest the full <strong>$${formatCurrency(amount)}</strong> now and let compounding work its magic.
+          `;
+        } else {
+          decisionText.innerHTML = `
+            <strong>Lump sum wins on average, but DCA is a valid choice.</strong> 
+            Mathematically, investing all <strong>$${formatCurrency(amount)}</strong> now should yield 
+            <strong>$${formatCurrency(expectedDiff)} more</strong> than DCA. However, DCA reduces your 
+            maximum regret exposure by <strong>$${formatCurrency(regretReduction)}</strong>. 
+            If you'd lose sleep over a short-term crash, consider a ${Math.min(dcaMonths, 6)}-month DCA instead.
+          `;
+        }
+      } else {
+        decisionIcon.textContent = '📅';
+        decisionTitle.textContent = 'Recommendation: Dollar Cost Averaging';
+        decisionText.innerHTML = `
+          <strong>Spread it out for peace of mind.</strong> While lump sum has a slight expected advantage 
+          of <strong>$${formatCurrency(Math.abs(expectedDiff))}</strong>, your conservative risk profile suggests 
+          the <strong>$${formatCurrency(regretReduction)} reduction in regret risk</strong> is more valuable to you. 
+          Invest <strong>$${formatCurrency(amount / dcaMonths)}/month</strong> over ${dcaMonths} months 
+          to sleep soundly regardless of short-term market moves.
+        `;
+      }
+    }
+
+    // ===== FAQ Accordion =====
+    document.querySelectorAll('.lw-faq-q').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const item = this.parentElement;
+        const wasOpen = item.classList.contains('open');
+        
+        // Close all
+        document.querySelectorAll('.lw-faq-item').forEach(i => i.classList.remove('open'));
+        
+        // Open clicked if it wasn't open
+        if (!wasOpen) {
+          item.classList.add('open');
+        }
+      });
+    });
+
+    // ===== Initial Calculation =====
+    calculate();
+  </script>
+</body>
+</html>

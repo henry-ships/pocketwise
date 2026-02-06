@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Raise Take Home Pay Calculator | Net Raise After Taxes | LendWise</title>
+  <meta name="description" content="Calculate your actual take-home pay increase from a salary raise. See how much of your raise goes to taxes vs. your pocket. Find your real net raise amount.">
+  <meta name="keywords" content="raise take home pay calculator, salary raise after tax, net raise calculator, raise impact calculator, pay raise after taxes">
+  <link rel="canonical" href="https://lendwise.app/raise-calculator/">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How much of my raise will I actually take home?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Typically, you'll take home 55-75% of your gross raise after federal taxes, state taxes, and FICA (Social Security and Medicare). For example, a $5,000 raise in the 22% federal bracket with 5% state tax results in about $3,235 net annually, or $125 more per bi-weekly paycheck."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is my raise taxed at a higher rate than my regular salary?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Your raise is taxed at your marginal tax rate—the rate applied to your last dollars of income. If your raise pushes you into a higher tax bracket, part of it may be taxed at the higher rate. However, only the portion above the bracket threshold is taxed higher, not your entire income."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I increase my 401k contribution when I get a raise?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Increasing your 401k contribution is a smart strategy. It reduces your taxable income, meaning you keep more of your raise (pre-tax), and it boosts retirement savings. Many experts recommend putting at least half of any raise toward retirement savings."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the effective raise percentage after taxes?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The effective raise percentage is your net raise divided by your previous net salary. If you were taking home $4,000/month and your raise adds $200 net, your effective raise is 5%—even if the gross raise was 8%. This shows the real impact on your lifestyle."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I calculate the tax on my raise?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Your raise is subject to: Federal income tax (at your marginal bracket, 10-37%), State income tax (0-13% depending on state), FICA taxes (7.65% for Social Security and Medicare). Add these together to find your total tax bite, typically 25-45% of the gross raise."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <span class="lw-logo-icon">L</span>
+        LendWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/raise-calculator/" class="active">Raise Calculator</a></li>
+        <li><a href="/debt-payoff-calculator/">Debt Payoff</a></li>
+        <li><a href="/savings-goal-calculator/">Savings</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="toggleMenu()" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu" id="mobileMenu">
+      <a href="/">Home</a>
+      <a href="/raise-calculator/">Raise Calculator</a>
+      <a href="/debt-payoff-calculator/">Debt Payoff</a>
+      <a href="/savings-goal-calculator/">Savings</a>
+    </div>
+  </nav>
+
+  <main class="lw-main wide">
+    <section class="lw-hero">
+      <span class="lw-badge green">Salary Analysis</span>
+      <h1>Raise Net-Pay <span class="accent">Calculator</span></h1>
+      <p class="subtitle">See exactly how much of your raise you'll actually take home. Spoiler: it's less than you think.</p>
+    </section>
+
+    <!-- Calculator Input -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">💰</div>
+        <div>
+          <h2 class="lw-card-title">Your Salary Details</h2>
+          <p class="lw-card-subtitle">Enter your current pay and raise information</p>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Current Annual Salary</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" id="currentSalary" class="lw-input" value="75,000" placeholder="75,000" inputmode="numeric">
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">Pay Frequency</label>
+          <select id="payFrequency" class="lw-select">
+            <option value="52">Weekly</option>
+            <option value="26" selected>Bi-weekly (every 2 weeks)</option>
+            <option value="24">Semi-monthly (twice a month)</option>
+            <option value="12">Monthly</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Raise Input Toggle -->
+      <div class="lw-form-group">
+        <label class="lw-label">Enter Your Raise As</label>
+        <div class="lw-toggle-group" id="raiseToggle">
+          <button type="button" class="lw-toggle-btn active" data-value="percent">Percentage</button>
+          <button type="button" class="lw-toggle-btn" data-value="salary">New Salary</button>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group" id="percentGroup">
+          <label class="lw-label">Raise Percentage</label>
+          <div class="lw-input-suffix">
+            <input type="text" id="raisePercent" class="lw-input" value="5" placeholder="5" inputmode="decimal">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+
+        <div class="lw-form-group lw-hidden" id="salaryGroup">
+          <label class="lw-label">New Annual Salary</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" id="newSalary" class="lw-input" placeholder="80,000" inputmode="numeric">
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">Federal Tax Bracket</label>
+          <select id="federalBracket" class="lw-select">
+            <option value="10">10% (Up to $11,600)</option>
+            <option value="12">12% ($11,600 - $47,150)</option>
+            <option value="22" selected>22% ($47,150 - $100,525)</option>
+            <option value="24">24% ($100,525 - $191,950)</option>
+            <option value="32">32% ($191,950 - $243,725)</option>
+            <option value="35">35% ($243,725 - $609,350)</option>
+            <option value="37">37% (Over $609,350)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">State Tax Rate <span class="lw-label-hint">(0% if no state tax)</span></label>
+          <div class="lw-input-suffix">
+            <input type="text" id="stateRate" class="lw-input" value="5" placeholder="5" inputmode="decimal">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">401(k) Contribution <span class="lw-label-hint">(pre-tax)</span></label>
+          <div class="lw-input-suffix">
+            <input type="text" id="contribution401k" class="lw-input" value="6" placeholder="6" inputmode="decimal">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-form-group">
+        <label class="lw-label">Other Pre-Tax Deductions <span class="lw-label-hint">(health insurance, HSA, FSA per paycheck)</span></label>
+        <div class="lw-input-prefix">
+          <span class="prefix">$</span>
+          <input type="text" id="otherDeductions" class="lw-input" value="150" placeholder="150" inputmode="numeric">
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsSection">
+      
+      <!-- Primary Result Hero -->
+      <div class="lw-result-hero">
+        <div class="lw-result-label">💵 Your Net Raise Per Paycheck</div>
+        <div class="lw-result-number"><span class="currency">$</span><span id="netPerPaycheck">144</span></div>
+        <p class="lw-result-sub" id="summaryText">$3,744 more per year after taxes</p>
+      </div>
+
+      <!-- Key Metrics Grid -->
+      <div class="lw-result-grid">
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Gross Raise (Annual)</div>
+          <div class="lw-result-item-value" id="grossRaise">$3,750</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Net Raise (Annual)</div>
+          <div class="lw-result-item-value green" id="netRaise">$2,648</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Effective Raise %</div>
+          <div class="lw-result-item-value sky" id="effectivePercent">3.5%</div>
+        </div>
+      </div>
+
+      <!-- Decision Statement -->
+      <div class="lw-card" style="background: linear-gradient(135deg, var(--lw-amber-50) 0%, var(--lw-rose-50) 100%); border: 1px solid var(--lw-amber);">
+        <div class="lw-card-header">
+          <div class="lw-card-icon amber">⚡</div>
+          <div>
+            <h3 class="lw-card-title">The Reality Check</h3>
+          </div>
+        </div>
+        <p id="decisionStatement" style="color: var(--lw-slate-700); font-size: 18px; line-height: 1.7; font-weight: 500;">
+          Your <strong>5% raise</strong> is really only <strong>3.5%</strong> after taxes — you'll see <strong>$144 more</strong> per paycheck.
+        </p>
+      </div>
+
+      <!-- Before/After Comparison -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon violet">📊</div>
+          <div>
+            <h3 class="lw-card-title">Before & After Paycheck Comparison</h3>
+            <p class="lw-card-subtitle">See the difference in your take-home pay</p>
+          </div>
+        </div>
+        
+        <div class="lw-grid-2" style="gap: 24px;">
+          <!-- Before -->
+          <div style="background: var(--lw-slate-50); border-radius: var(--lw-radius); padding: 20px;">
+            <div style="text-align: center; margin-bottom: 16px;">
+              <span style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--lw-text-muted); font-weight: 600;">Before Raise</span>
+              <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 32px; font-weight: 800; color: var(--lw-navy);" id="beforePaycheck">$2,048</div>
+              <span style="font-size: 13px; color: var(--lw-text-muted);">per paycheck</span>
+            </div>
+            <div style="border-top: 1px solid var(--lw-border); padding-top: 12px;">
+              <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+                <span style="color: var(--lw-text-muted);">Gross</span>
+                <span class="lw-mono" id="beforeGross">$2,885</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+                <span style="color: var(--lw-text-muted);">Federal Tax</span>
+                <span class="lw-mono" style="color: var(--lw-rose);" id="beforeFederal">-$433</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+                <span style="color: var(--lw-text-muted);">State Tax</span>
+                <span class="lw-mono" style="color: var(--lw-rose);" id="beforeState">-$98</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+                <span style="color: var(--lw-text-muted);">FICA</span>
+                <span class="lw-mono" style="color: var(--lw-rose);" id="beforeFICA">-$155</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+                <span style="color: var(--lw-text-muted);">401(k)</span>
+                <span class="lw-mono" style="color: var(--lw-sky);" id="before401k">-$173</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                <span style="color: var(--lw-text-muted);">Other Deductions</span>
+                <span class="lw-mono" id="beforeOther">-$150</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- After -->
+          <div style="background: var(--lw-emerald-50); border-radius: var(--lw-radius); padding: 20px; border: 2px solid var(--lw-emerald);">
+            <div style="text-align: center; margin-bottom: 16px;">
+              <span style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--lw-emerald-dark); font-weight: 600;">After Raise</span>
+              <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 32px; font-weight: 800; color: var(--lw-emerald-dark);" id="afterPaycheck">$2,192</div>
+              <span style="font-size: 13px; color: var(--lw-emerald-dark);">per paycheck <strong>(+$144)</strong></span>
+            </div>
+            <div style="border-top: 1px solid var(--lw-emerald); padding-top: 12px;">
+              <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+                <span style="color: var(--lw-slate-600);">Gross</span>
+                <span class="lw-mono" id="afterGross">$3,029</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+                <span style="color: var(--lw-slate-600);">Federal Tax</span>
+                <span class="lw-mono" style="color: var(--lw-rose);" id="afterFederal">-$459</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+                <span style="color: var(--lw-slate-600);">State Tax</span>
+                <span class="lw-mono" style="color: var(--lw-rose);" id="afterState">-$103</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+                <span style="color: var(--lw-slate-600);">FICA</span>
+                <span class="lw-mono" style="color: var(--lw-rose);" id="afterFICA">-$163</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+                <span style="color: var(--lw-slate-600);">401(k)</span>
+                <span class="lw-mono" style="color: var(--lw-sky);" id="after401k">-$182</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                <span style="color: var(--lw-slate-600);">Other Deductions</span>
+                <span class="lw-mono" id="afterOther">-$150</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tax Bite Waterfall -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon rose">🔻</div>
+          <div>
+            <h3 class="lw-card-title">Where Your Raise Goes</h3>
+            <p class="lw-card-subtitle">Watch your gross raise get sliced by taxes</p>
+          </div>
+        </div>
+        
+        <!-- Waterfall Chart -->
+        <div id="waterfallChart" style="margin: 24px 0;">
+          <!-- Populated by JS -->
+        </div>
+        
+        <!-- Tax Breakdown Bars -->
+        <div class="lw-bar-chart" id="taxBreakdownChart">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- What This Means -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon green">💬</div>
+          <div>
+            <h3 class="lw-card-title">What This Means</h3>
+          </div>
+        </div>
+        <p id="meaningText" style="color: var(--lw-text-secondary); font-size: 16px; line-height: 1.7;">
+          Out of every dollar of your raise, you keep about <strong>71 cents</strong>. The rest goes to Uncle Sam and your state. 
+          Your 401(k) contribution takes another slice, but that's money working for your future — not lost to taxes.
+        </p>
+      </div>
+
+      <!-- Decision Guidance -->
+      <div class="lw-card" style="background: linear-gradient(135deg, var(--lw-emerald-50) 0%, var(--lw-sky-50) 100%); border: 1px solid var(--lw-emerald);">
+        <div class="lw-card-header">
+          <div class="lw-card-icon green">🎯</div>
+          <div>
+            <h3 class="lw-card-title">Smart Moves With Your Raise</h3>
+          </div>
+        </div>
+        
+        <div id="decisionGuidance">
+          <div style="display: grid; gap: 16px;">
+            <div style="display: flex; gap: 12px; align-items: flex-start;">
+              <span style="font-size: 20px;">📈</span>
+              <div>
+                <strong style="color: var(--lw-navy);">Boost Your 401(k)</strong>
+                <p style="color: var(--lw-text-secondary); margin: 4px 0 0; font-size: 14px;" id="guidance401k">Increasing your 401(k) by 2% would reduce your taxes and add $1,575 more to retirement annually. Your net paycheck would only drop by ~$60.</p>
+              </div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: flex-start;">
+              <span style="font-size: 20px;">💳</span>
+              <div>
+                <strong style="color: var(--lw-navy);">Attack High-Interest Debt</strong>
+                <p style="color: var(--lw-text-secondary); margin: 4px 0 0; font-size: 14px;" id="guidanceDebt">Your extra $144/paycheck could pay off $3,744 of credit card debt per year, saving you ~$600 in interest at 18% APR.</p>
+              </div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: flex-start;">
+              <span style="font-size: 20px;">🏦</span>
+              <div>
+                <strong style="color: var(--lw-navy);">Build an Emergency Fund</strong>
+                <p style="color: var(--lw-text-secondary); margin: 4px 0 0; font-size: 14px;" id="guidanceEmergency">Saving your entire raise would build a $3,744 emergency cushion in one year — a great start toward 3-6 months of expenses.</p>
+              </div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: flex-start;">
+              <span style="font-size: 20px;">🎉</span>
+              <div>
+                <strong style="color: var(--lw-navy);">Lifestyle Creep Check</strong>
+                <p style="color: var(--lw-text-secondary); margin: 4px 0 0; font-size: 14px;" id="guidanceLifestyle">Before upgrading your lifestyle, remember: this raise adds ~$12/day to your life. Make sure new expenses are worth it!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <section class="lw-content">
+      <h2>Understanding Your Raise After Taxes</h2>
+      <p>Getting a raise is exciting — until you see your first paycheck and wonder where all that extra money went. The reality is that <strong>your marginal tax rate takes the first bite</strong>, followed by state taxes, Social Security, and Medicare. Understanding this "tax bite" helps you set realistic expectations and make smarter decisions with your raise.</p>
+      
+      <p>For most Americans, a raise translates to keeping <strong>55-75% of the gross increase</strong>. Someone in the 22% federal bracket with 5% state tax and FICA contributions will see about 65 cents of every raise dollar in their actual paycheck.</p>
+
+      <h3>Why Your Raise Gets Taxed at a Higher Rate</h3>
+      <p>Your raise is taxed at your <strong>marginal tax rate</strong> — the rate on your highest dollars of income. This is often higher than your overall effective tax rate. If your raise pushes you into the next tax bracket, only the portion above the threshold is taxed at the higher rate (that's how progressive taxation works).</p>
+      
+      <p>For example, if you're at $95,000 and get a $10,000 raise, the first $5,525 is taxed at 22%, while the remaining $4,475 (above $100,525) is taxed at 24%. You don't suddenly pay 24% on everything.</p>
+
+      <h3>The FICA Tax on Your Raise</h3>
+      <p>Beyond income tax, your raise is also subject to <strong>FICA taxes</strong>:</p>
+      <ul>
+        <li><strong>Social Security:</strong> 6.2% on wages up to $168,600 (2024 cap)</li>
+        <li><strong>Medicare:</strong> 1.45% on all wages, plus 0.9% additional on wages over $200,000</li>
+      </ul>
+      <p>Combined, FICA takes 7.65% off the top of most raises. Unlike income tax, there's no deduction or bracket strategy here — it's a flat percentage.</p>
+
+      <h2>Smart Strategies for Your Raise</h2>
+      
+      <h3>Increase Pre-Tax Contributions</h3>
+      <p>One of the smartest moves is to <strong>increase your 401(k) contribution</strong> when you get a raise. This reduces your taxable income, meaning you keep more money (albeit in retirement savings) and pay less in current taxes. If your employer matches, you're essentially getting free money on top of your raise.</p>
+      
+      <h3>The 50/50 Rule</h3>
+      <p>Financial advisors often recommend putting <strong>at least half of any raise toward savings or debt</strong>. This helps you avoid lifestyle creep while still enjoying some of the increase. If your raise adds $200/month to your paycheck, commit $100 to financial goals automatically.</p>
+
+      <h3>Avoid Lifestyle Inflation</h3>
+      <p>The biggest risk with a raise is upgrading your lifestyle to match. That slightly nicer apartment or new car payment can easily consume your entire raise — or more. Before making any new commitments, calculate how much your raise <em>actually</em> adds to your monthly budget after taxes.</p>
+
+      <h2>Calculate Your Effective Raise</h2>
+      <p>Your "effective raise" is the percentage increase in your <strong>take-home pay</strong>, not your gross salary. This is what actually impacts your day-to-day life. A 5% gross raise might only be a 3.5% effective raise after taxes — still meaningful, but important to understand.</p>
+      
+      <p>Use the calculator above to see your exact numbers and make informed decisions about negotiating, budgeting, and planning for your future.</p>
+
+      <!-- FAQ Section -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">How much of my raise will I actually take home?</button>
+          <div class="lw-faq-a">
+            <p>Typically, you'll take home 55-75% of your gross raise after federal taxes, state taxes, and FICA (Social Security and Medicare). For example, a $5,000 raise in the 22% federal bracket with 5% state tax results in about $3,235 net annually, or $125 more per bi-weekly paycheck. Use our calculator above for your exact numbers.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Why is my raise taxed at a higher rate than my regular salary?</button>
+          <div class="lw-faq-a">
+            <p>Your raise is taxed at your marginal tax rate—the rate applied to your last dollars of income. If your raise pushes you into a higher tax bracket, part of it may be taxed at the higher rate. However, only the portion above the bracket threshold is taxed higher, not your entire income. This is how progressive taxation works.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Should I increase my 401k contribution when I get a raise?</button>
+          <div class="lw-faq-a">
+            <p>Increasing your 401k contribution is a smart strategy. It reduces your taxable income, meaning you keep more of your raise (pre-tax), and it boosts retirement savings. Many experts recommend putting at least half of any raise toward retirement savings—especially if your employer offers matching contributions.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">What is the effective raise percentage after taxes?</button>
+          <div class="lw-faq-a">
+            <p>The effective raise percentage is your net raise divided by your previous net salary. If you were taking home $4,000/month and your raise adds $200 net, your effective raise is 5%—even if the gross raise was 8%. This shows the real impact on your lifestyle and is the number you should focus on when budgeting.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">How do I calculate the tax on my raise?</button>
+          <div class="lw-faq-a">
+            <p>Your raise is subject to: Federal income tax (at your marginal bracket, 10-37%), State income tax (0-13% depending on your state), and FICA taxes (7.65% for Social Security and Medicare). Add these percentages together to find your total tax bite, typically 25-45% of the gross raise amount.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/debt-payoff-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Debt Payoff Calculator
+        </a>
+        <a href="/savings-goal-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Savings Goal Calculator
+        </a>
+        <a href="/emergency-fund-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Emergency Fund Calculator
+        </a>
+      </div>
+    </section>
+
+    <p class="lw-disclaimer">
+      This calculator provides estimates for educational purposes only. Actual take-home pay may vary based on your specific tax situation, deductions, and employer policies. Consult a tax professional for personalized advice.
+    </p>
+  </main>
+
+  <footer class="lw-footer">
+    <p>© 2025 LendWise. All calculations are estimates. <a href="/">Return to Home</a></p>
+  </footer>
+
+  <script>
+    // ===== Mobile Menu =====
+    function toggleMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    // ===== FAQ Accordion =====
+    document.querySelectorAll('.lw-faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const wasOpen = item.classList.contains('open');
+        document.querySelectorAll('.lw-faq-item').forEach(i => i.classList.remove('open'));
+        if (!wasOpen) item.classList.add('open');
+      });
+    });
+
+    // ===== Toggle Group =====
+    document.querySelectorAll('#raiseToggle .lw-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#raiseToggle .lw-toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        const value = btn.dataset.value;
+        if (value === 'percent') {
+          document.getElementById('percentGroup').classList.remove('lw-hidden');
+          document.getElementById('salaryGroup').classList.add('lw-hidden');
+        } else {
+          document.getElementById('percentGroup').classList.add('lw-hidden');
+          document.getElementById('salaryGroup').classList.remove('lw-hidden');
+        }
+        calculate();
+      });
+    });
+
+    // ===== Format Helpers =====
+    function parseNumber(str) {
+      return parseFloat(String(str).replace(/[^0-9.-]/g, '')) || 0;
+    }
+
+    function formatCurrency(num) {
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(num);
+    }
+
+    function formatCurrencyFull(num) {
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num);
+    }
+
+    function formatNumber(num) {
+      return new Intl.NumberFormat('en-US').format(Math.round(num));
+    }
+
+    function formatPercent(num) {
+      return num.toFixed(1) + '%';
+    }
+
+    // ===== Input Formatting =====
+    ['currentSalary', 'newSalary', 'otherDeductions'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('blur', () => {
+          const val = parseNumber(el.value);
+          if (val > 0) el.value = formatNumber(val);
+        });
+      }
+    });
+
+    // ===== FICA Rate =====
+    const FICA_RATE = 0.0765; // 6.2% SS + 1.45% Medicare
+
+    // ===== Paycheck Calculation =====
+    function calculatePaycheck(annualSalary, federalRate, stateRate, contribution401k, otherDeductions, payPeriods) {
+      const grossPerPaycheck = annualSalary / payPeriods;
+      
+      // Pre-tax deductions (401k is calculated on gross)
+      const preTax401k = grossPerPaycheck * (contribution401k / 100);
+      const taxablePerPaycheck = grossPerPaycheck - preTax401k;
+      
+      // Taxes (calculated on taxable income after 401k)
+      const federalTax = taxablePerPaycheck * (federalRate / 100);
+      const stateTax = taxablePerPaycheck * (stateRate / 100);
+      const ficaTax = grossPerPaycheck * FICA_RATE; // FICA is on gross, not reduced by 401k
+      
+      // Net pay
+      const netPaycheck = grossPerPaycheck - federalTax - stateTax - ficaTax - preTax401k - otherDeductions;
+      
+      return {
+        gross: grossPerPaycheck,
+        federalTax,
+        stateTax,
+        ficaTax,
+        preTax401k,
+        otherDeductions,
+        net: netPaycheck,
+        taxable: taxablePerPaycheck
+      };
+    }
+
+    // ===== Main Calculation =====
+    function calculate() {
+      const currentSalary = parseNumber(document.getElementById('currentSalary').value);
+      const payPeriods = parseNumber(document.getElementById('payFrequency').value);
+      const federalRate = parseNumber(document.getElementById('federalBracket').value);
+      const stateRate = parseNumber(document.getElementById('stateRate').value);
+      const contribution401k = parseNumber(document.getElementById('contribution401k').value);
+      const otherDeductions = parseNumber(document.getElementById('otherDeductions').value);
+      
+      // Determine raise amount based on toggle
+      const isPercent = document.querySelector('#raiseToggle .lw-toggle-btn.active').dataset.value === 'percent';
+      let newSalary, raisePercent;
+      
+      if (isPercent) {
+        raisePercent = parseNumber(document.getElementById('raisePercent').value);
+        newSalary = currentSalary * (1 + raisePercent / 100);
+      } else {
+        newSalary = parseNumber(document.getElementById('newSalary').value);
+        raisePercent = currentSalary > 0 ? ((newSalary - currentSalary) / currentSalary) * 100 : 0;
+      }
+      
+      const grossRaise = newSalary - currentSalary;
+      
+      if (currentSalary <= 0 || newSalary <= currentSalary) {
+        return;
+      }
+      
+      // Calculate before and after paychecks
+      const before = calculatePaycheck(currentSalary, federalRate, stateRate, contribution401k, otherDeductions, payPeriods);
+      const after = calculatePaycheck(newSalary, federalRate, stateRate, contribution401k, otherDeductions, payPeriods);
+      
+      // Calculate net raise
+      const netRaisePerPaycheck = after.net - before.net;
+      const netRaiseAnnual = netRaisePerPaycheck * payPeriods;
+      
+      // Calculate effective raise percentage (net raise / before net annual)
+      const beforeNetAnnual = before.net * payPeriods;
+      const effectiveRaisePercent = beforeNetAnnual > 0 ? (netRaiseAnnual / beforeNetAnnual) * 100 : 0;
+      
+      // Calculate tax bite on the raise
+      const federalBite = (after.federalTax - before.federalTax) * payPeriods;
+      const stateBite = (after.stateTax - before.stateTax) * payPeriods;
+      const ficaBite = (after.ficaTax - before.ficaTax) * payPeriods;
+      const contribution401kBite = (after.preTax401k - before.preTax401k) * payPeriods;
+      const totalTaxBite = federalBite + stateBite + ficaBite;
+      
+      // Update primary result
+      document.getElementById('netPerPaycheck').textContent = formatNumber(netRaisePerPaycheck);
+      document.getElementById('summaryText').textContent = `${formatCurrency(netRaiseAnnual)} more per year after taxes`;
+      
+      // Update key metrics
+      document.getElementById('grossRaise').textContent = formatCurrency(grossRaise);
+      document.getElementById('netRaise').textContent = formatCurrency(netRaiseAnnual);
+      document.getElementById('effectivePercent').textContent = formatPercent(effectiveRaisePercent);
+      
+      // Update decision statement
+      document.getElementById('decisionStatement').innerHTML = 
+        `Your <strong>${formatPercent(raisePercent)} raise</strong> is really only <strong>${formatPercent(effectiveRaisePercent)}</strong> after taxes — you'll see <strong>${formatCurrency(netRaisePerPaycheck)} more</strong> per paycheck.`;
+      
+      // Update before paycheck
+      document.getElementById('beforePaycheck').textContent = formatCurrency(before.net);
+      document.getElementById('beforeGross').textContent = formatCurrency(before.gross);
+      document.getElementById('beforeFederal').textContent = '-' + formatCurrency(before.federalTax);
+      document.getElementById('beforeState').textContent = '-' + formatCurrency(before.stateTax);
+      document.getElementById('beforeFICA').textContent = '-' + formatCurrency(before.ficaTax);
+      document.getElementById('before401k').textContent = '-' + formatCurrency(before.preTax401k);
+      document.getElementById('beforeOther').textContent = '-' + formatCurrency(before.otherDeductions);
+      
+      // Update after paycheck
+      document.getElementById('afterPaycheck').textContent = formatCurrency(after.net);
+      document.querySelector('#afterPaycheck').parentElement.querySelector('span:last-child').innerHTML = 
+        `per paycheck <strong>(+${formatCurrency(netRaisePerPaycheck)})</strong>`;
+      document.getElementById('afterGross').textContent = formatCurrency(after.gross);
+      document.getElementById('afterFederal').textContent = '-' + formatCurrency(after.federalTax);
+      document.getElementById('afterState').textContent = '-' + formatCurrency(after.stateTax);
+      document.getElementById('afterFICA').textContent = '-' + formatCurrency(after.ficaTax);
+      document.getElementById('after401k').textContent = '-' + formatCurrency(after.preTax401k);
+      document.getElementById('afterOther').textContent = '-' + formatCurrency(after.otherDeductions);
+      
+      // Render waterfall chart
+      const waterfallData = [
+        { label: 'Gross Raise', value: grossRaise, type: 'start' },
+        { label: 'Federal Tax', value: -federalBite, type: 'subtract' },
+        { label: 'State Tax', value: -stateBite, type: 'subtract' },
+        { label: 'FICA', value: -ficaBite, type: 'subtract' },
+        { label: '401(k)', value: -contribution401kBite, type: 'savings' },
+        { label: 'Net Raise', value: netRaiseAnnual, type: 'end' }
+      ];
+      
+      let runningTotal = grossRaise;
+      const waterfallHtml = waterfallData.map((item, i) => {
+        let barWidth, leftOffset, color, displayValue;
+        
+        if (item.type === 'start') {
+          barWidth = 100;
+          leftOffset = 0;
+          color = 'var(--lw-sky)';
+          displayValue = item.value;
+        } else if (item.type === 'end') {
+          const endPercent = (item.value / grossRaise) * 100;
+          barWidth = endPercent;
+          leftOffset = 0;
+          color = 'var(--lw-emerald)';
+          displayValue = item.value;
+        } else {
+          const subtractPercent = (Math.abs(item.value) / grossRaise) * 100;
+          runningTotal += item.value;
+          const runningPercent = (runningTotal / grossRaise) * 100;
+          barWidth = subtractPercent;
+          leftOffset = runningPercent;
+          color = item.type === 'savings' ? 'var(--lw-sky)' : 'var(--lw-rose)';
+          displayValue = item.value;
+        }
+        
+        return `
+          <div style="display: flex; align-items: center; margin-bottom: 8px; gap: 12px;">
+            <span style="width: 100px; font-size: 13px; font-weight: 500; color: var(--lw-text-secondary); text-align: right;">${item.label}</span>
+            <div style="flex: 1; height: 32px; background: var(--lw-slate-100); border-radius: var(--lw-radius-full); position: relative; overflow: hidden;">
+              <div style="position: absolute; left: ${leftOffset}%; width: ${barWidth}%; height: 100%; background: ${color}; border-radius: var(--lw-radius-full); display: flex; align-items: center; ${item.type === 'subtract' || item.type === 'savings' ? 'justify-content: flex-end;' : ''} padding: 0 12px; transition: all 0.5s ease;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: white; white-space: nowrap;">
+                  ${displayValue >= 0 ? '+' : ''}${formatCurrency(displayValue)}
+                </span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      document.getElementById('waterfallChart').innerHTML = waterfallHtml;
+      
+      // Render tax breakdown bars
+      const taxItems = [
+        { label: 'Federal Tax', value: federalBite, color: 'rose' },
+        { label: 'State Tax', value: stateBite, color: 'rose' },
+        { label: 'FICA (SS + Medicare)', value: ficaBite, color: 'rose' },
+        { label: '401(k) Contribution', value: contribution401kBite, color: 'blue' },
+        { label: 'Your Net Raise', value: netRaiseAnnual, color: 'green' }
+      ];
+      
+      const maxTaxValue = Math.max(...taxItems.map(t => Math.abs(t.value)));
+      
+      const taxHtml = taxItems.map(item => {
+        const width = maxTaxValue > 0 ? Math.max(5, (Math.abs(item.value) / maxTaxValue) * 100) : 0;
+        return `
+          <div class="lw-bar-row">
+            <span class="lw-bar-label">${item.label}</span>
+            <div class="lw-bar-track">
+              <div class="lw-bar-fill ${item.color}" style="width: ${width}%">
+                <span class="lw-bar-amount">${formatCurrency(item.value)}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      document.getElementById('taxBreakdownChart').innerHTML = taxHtml;
+      
+      // Update meaning text
+      const keepPercent = grossRaise > 0 ? (netRaiseAnnual / grossRaise) * 100 : 0;
+      const centsKept = Math.round(keepPercent);
+      document.getElementById('meaningText').innerHTML = 
+        `Out of every dollar of your raise, you keep about <strong>${centsKept} cents</strong>. The rest goes to Uncle Sam (${formatPercent(federalRate)}) and your state (${formatPercent(stateRate)}). ` +
+        (contribution401k > 0 ? `Your 401(k) contribution takes another ${formatPercent(contribution401k)}, but that's money working for your future — not lost to taxes.` : `Consider adding some to a 401(k) to reduce taxes and build retirement savings.`);
+      
+      // Update guidance
+      const extra401kAmount = newSalary * 0.02;
+      const extra401kNet = extra401kAmount * (1 - federalRate/100 - stateRate/100) / payPeriods;
+      document.getElementById('guidance401k').textContent = 
+        `Increasing your 401(k) by 2% would add ${formatCurrency(extra401kAmount)} to retirement annually. Your net paycheck would only drop by ~${formatCurrency(extra401kNet)}.`;
+      
+      document.getElementById('guidanceDebt').textContent = 
+        `Your extra ${formatCurrency(netRaisePerPaycheck)}/paycheck could pay off ${formatCurrency(netRaiseAnnual)} of credit card debt per year, saving you ~${formatCurrency(netRaiseAnnual * 0.18)} in interest at 18% APR.`;
+      
+      document.getElementById('guidanceEmergency').textContent = 
+        `Saving your entire raise would build a ${formatCurrency(netRaiseAnnual)} emergency cushion in one year — a great start toward 3-6 months of expenses.`;
+      
+      const dailyIncrease = netRaiseAnnual / 365;
+      document.getElementById('guidanceLifestyle').textContent = 
+        `Before upgrading your lifestyle, remember: this raise adds ~${formatCurrency(dailyIncrease)}/day to your life. Make sure new expenses are worth it!`;
+      
+      // Animate results
+      document.getElementById('resultsSection').classList.add('lw-animate-in');
+    }
+
+    // ===== Event Listeners =====
+    const inputs = ['currentSalary', 'payFrequency', 'raisePercent', 'newSalary', 'federalBracket', 'stateRate', 'contribution401k', 'otherDeductions'];
+    inputs.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', calculate);
+        el.addEventListener('change', calculate);
+      }
+    });
+
+    // Initial calculation
+    calculate();
+  </script>
+</body>
+</html>

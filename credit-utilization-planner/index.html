@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credit Utilization Paydown Planner | Optimize Your Credit Score | PocketWise</title>
+  <meta name="description" content="Free credit utilization calculator. Find the optimal order to pay down credit cards for maximum utilization improvement. Lower your credit utilization and boost your score.">
+  <meta name="keywords" content="credit utilization calculator, best way to lower utilization, pay down credit cards order, utilization optimization, credit score improvement">
+  <link rel="canonical" href="https://pocketwise.app/credit-utilization-planner/">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Credit Utilization Paydown Planner | PocketWise">
+  <meta property="og:description" content="Optimize your credit card payments to maximize utilization improvement and boost your credit score.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pocketwise.app/credit-utilization-planner/">
+  
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is credit utilization and why does it matter?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Credit utilization is the percentage of your available credit that you're using. It's calculated by dividing your total credit card balances by your total credit limits. Utilization accounts for about 30% of your credit score—the second most important factor after payment history. Lower utilization (ideally under 30%) signals to lenders that you manage credit responsibly."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What's the best credit utilization percentage for a good score?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Experts recommend keeping utilization under 30% for a good score, and under 10% for the best scores. However, having 0% utilization isn't ideal either—using a small amount shows you're actively managing credit. The sweet spot is typically 1-10% utilization across all cards."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I pay down one card completely or spread payments across cards?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For maximum utilization improvement, prioritize paying down cards with the highest individual utilization first. High utilization on any single card can hurt your score even if overall utilization is low. Our calculator finds the optimal payment strategy to lower both individual and overall utilization most effectively."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How quickly does credit utilization affect my score?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Unlike other factors, credit utilization has no memory—it only reflects your current balances. When card issuers report lower balances (typically monthly), your score updates almost immediately. This makes utilization one of the fastest ways to improve your credit score."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does closing a credit card hurt utilization?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, closing a card reduces your total available credit, which increases your overall utilization percentage. For example, if you have $10,000 in limits with $3,000 balance (30% utilization), closing a $5,000 limit card would spike utilization to 60%. Consider keeping cards open even if unused."
+        }
+      }
+    ]
+  }
+  </script>
+  
+  <style>
+    /* Card Row Styles */
+    .card-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .card-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+      padding: 16px;
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      border: 1px solid var(--lw-border-light);
+      transition: all var(--lw-transition);
+    }
+    .card-row:hover {
+      border-color: var(--lw-slate-300);
+    }
+    .card-row .lw-form-group {
+      margin-bottom: 0;
+    }
+    .card-row .lw-label {
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+    .card-row .lw-input {
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+    .card-row .lw-input-prefix .lw-input {
+      padding-left: 26px;
+    }
+    .card-row .lw-input-prefix .prefix {
+      left: 12px;
+      font-size: 14px;
+    }
+    .remove-card-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: var(--lw-radius-sm);
+      background: var(--lw-rose-50);
+      color: var(--lw-rose);
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--lw-transition);
+      margin-bottom: 2px;
+    }
+    .remove-card-btn:hover {
+      background: var(--lw-rose);
+      color: white;
+    }
+    .remove-card-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    .add-card-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 12px;
+      border: 2px dashed var(--lw-slate-300);
+      border-radius: var(--lw-radius);
+      background: transparent;
+      color: var(--lw-slate-500);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--lw-transition);
+    }
+    .add-card-btn:hover {
+      border-color: var(--lw-sky);
+      color: var(--lw-sky);
+      background: var(--lw-sky-50);
+    }
+    
+    /* Utilization Gauge */
+    .utilization-gauge {
+      height: 10px;
+      background: var(--lw-slate-200);
+      border-radius: var(--lw-radius-full);
+      overflow: hidden;
+      position: relative;
+    }
+    .utilization-gauge-fill {
+      height: 100%;
+      border-radius: var(--lw-radius-full);
+      transition: width 0.5s ease, background 0.3s ease;
+    }
+    .utilization-gauge-fill.green {
+      background: linear-gradient(90deg, var(--lw-emerald), var(--lw-emerald-light));
+    }
+    .utilization-gauge-fill.yellow {
+      background: linear-gradient(90deg, var(--lw-amber), var(--lw-amber-light));
+    }
+    .utilization-gauge-fill.red {
+      background: linear-gradient(90deg, var(--lw-rose), var(--lw-rose-light));
+    }
+    
+    /* Overall Utilization Meter */
+    .overall-meter {
+      position: relative;
+      padding: 24px 0;
+    }
+    .meter-track {
+      height: 16px;
+      background: linear-gradient(90deg, 
+        var(--lw-emerald) 0%, 
+        var(--lw-emerald) 30%, 
+        var(--lw-amber) 30%, 
+        var(--lw-amber) 50%, 
+        var(--lw-rose) 50%, 
+        var(--lw-rose) 100%
+      );
+      border-radius: var(--lw-radius-full);
+      position: relative;
+    }
+    .meter-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--lw-text-muted);
+    }
+    .meter-pointer {
+      position: absolute;
+      top: -8px;
+      width: 4px;
+      height: 32px;
+      background: var(--lw-navy);
+      border-radius: 2px;
+      transform: translateX(-50%);
+      transition: left 0.5s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .meter-pointer::after {
+      content: '';
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 6px solid var(--lw-navy);
+    }
+    
+    /* Card Results */
+    .card-result-item {
+      display: grid;
+      grid-template-columns: 1fr 100px 120px;
+      gap: 16px;
+      align-items: center;
+      padding: 16px;
+      background: var(--lw-card);
+      border-radius: var(--lw-radius);
+      border: 1px solid var(--lw-border-light);
+      margin-bottom: 10px;
+    }
+    .card-result-name {
+      font-weight: 600;
+      color: var(--lw-navy);
+      font-size: 14px;
+    }
+    .card-result-balance {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+    }
+    .card-result-util {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .card-result-util-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 14px;
+      text-align: right;
+    }
+    .card-result-util-text.green { color: var(--lw-emerald); }
+    .card-result-util-text.yellow { color: var(--lw-amber); }
+    .card-result-util-text.red { color: var(--lw-rose); }
+    
+    /* Allocation Table */
+    .allocation-row {
+      display: grid;
+      grid-template-columns: 40px 1fr 100px 100px 100px;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      background: var(--lw-card);
+      border-radius: var(--lw-radius);
+      border: 1px solid var(--lw-border-light);
+      margin-bottom: 8px;
+    }
+    .allocation-row.header {
+      background: var(--lw-slate-50);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--lw-slate-600);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 10px 16px;
+    }
+    .allocation-priority {
+      width: 32px;
+      height: 32px;
+      background: var(--lw-sky);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .allocation-card-name {
+      font-weight: 600;
+      color: var(--lw-navy);
+      font-size: 14px;
+    }
+    .allocation-amount {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: var(--lw-emerald);
+      font-size: 14px;
+    }
+    .allocation-util-change {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .allocation-util-change .arrow {
+      color: var(--lw-emerald);
+    }
+    .allocation-new-util {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    
+    /* Comparison Box */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 60px 1fr;
+      gap: 16px;
+      align-items: center;
+      margin: 24px 0;
+    }
+    .comparison-box {
+      text-align: center;
+      padding: 20px;
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+    }
+    .comparison-box.after {
+      background: var(--lw-emerald-50);
+    }
+    .comparison-label {
+      font-size: 12px;
+      color: var(--lw-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .comparison-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+    }
+    .comparison-box.before .comparison-value {
+      color: var(--lw-slate-600);
+    }
+    .comparison-box.after .comparison-value {
+      color: var(--lw-emerald);
+    }
+    .comparison-arrow {
+      font-size: 24px;
+      color: var(--lw-slate-400);
+    }
+    
+    /* Decision Box */
+    .decision-box {
+      background: linear-gradient(135deg, var(--lw-emerald-50) 0%, #E0FFF5 100%);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: var(--lw-radius-lg);
+      padding: 24px;
+      text-align: center;
+      margin-top: 24px;
+    }
+    .decision-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--lw-emerald);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      font-size: 24px;
+    }
+    .decision-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--lw-navy);
+      margin-bottom: 8px;
+    }
+    .decision-text {
+      color: var(--lw-text-secondary);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .decision-highlight {
+      font-weight: 600;
+      color: var(--lw-emerald-dark);
+    }
+    
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--lw-text-muted);
+    }
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .card-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .card-row .remove-btn-wrap {
+        display: flex;
+        justify-content: flex-end;
+      }
+      .card-result-item {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .card-result-util {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .card-result-util-text {
+        text-align: left;
+      }
+      .allocation-row {
+        grid-template-columns: 32px 1fr;
+        gap: 8px;
+      }
+      .allocation-row.header {
+        display: none;
+      }
+      .allocation-row .allocation-details {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .comparison-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .comparison-arrow {
+        transform: rotate(90deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">P</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/credit-card-payoff-calculator/">Payoff Calculator</a></li>
+        <li><a href="/debt-payoff-calculator/">Debt Payoff</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
+    </div>
+  </nav>
+  <div class="lw-mobile-menu" id="mobileMenu">
+    <a href="/">Home</a>
+    <a href="/credit-card-payoff-calculator/">Payoff Calculator</a>
+    <a href="/debt-payoff-calculator/">Debt Payoff</a>
+  </div>
+
+  <main class="lw-main">
+    <!-- Hero -->
+    <section class="lw-hero">
+      <span class="lw-badge">Credit Score Optimizer</span>
+      <h1>Credit Utilization <span class="accent">Paydown Planner</span></h1>
+      <p class="subtitle">Find the optimal order to pay down your credit cards for maximum utilization improvement. Lower utilization = better credit score.</p>
+    </section>
+
+    <!-- Input Card -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">💳</div>
+        <div>
+          <div class="lw-card-title">Your Credit Cards</div>
+          <div class="lw-card-subtitle">Add all your cards to calculate optimal paydown</div>
+        </div>
+      </div>
+
+      <div class="card-rows" id="cardRows">
+        <!-- Card rows inserted dynamically -->
+      </div>
+      
+      <button class="add-card-btn" onclick="addCard()">
+        <span>+</span> Add Another Card
+      </button>
+      
+      <div class="lw-form-group lw-mt-24">
+        <label class="lw-label">
+          💵 Total Payment Available
+          <span class="lw-label-hint">How much can you pay this month?</span>
+        </label>
+        <div class="lw-input-prefix">
+          <span class="prefix">$</span>
+          <input type="text" class="lw-input" id="paymentAmount" inputmode="decimal" placeholder="500" oninput="formatCurrency(this); calculate()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsSection" class="lw-hidden">
+      <!-- Overall Utilization -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon violet">📊</div>
+          <div>
+            <div class="lw-card-title">Current Credit Utilization</div>
+            <div class="lw-card-subtitle">Your overall and per-card utilization</div>
+          </div>
+        </div>
+        
+        <div class="overall-meter">
+          <div class="meter-track">
+            <div class="meter-pointer" id="meterPointer" style="left: 0%"></div>
+          </div>
+          <div class="meter-labels">
+            <span>0%</span>
+            <span>30% (Good)</span>
+            <span>50%</span>
+            <span>100%+</span>
+          </div>
+        </div>
+        
+        <div class="lw-result-grid lw-mt-16" style="grid-template-columns: repeat(3, 1fr);">
+          <div class="lw-result-item">
+            <div class="lw-result-item-label">Total Balance</div>
+            <div class="lw-result-item-value" id="totalBalance">$0</div>
+          </div>
+          <div class="lw-result-item">
+            <div class="lw-result-item-label">Total Credit</div>
+            <div class="lw-result-item-value" id="totalCredit">$0</div>
+          </div>
+          <div class="lw-result-item">
+            <div class="lw-result-item-label">Overall Utilization</div>
+            <div class="lw-result-item-value" id="overallUtil">0%</div>
+          </div>
+        </div>
+        
+        <div class="lw-mt-24">
+          <div class="lw-label">Per-Card Utilization</div>
+          <div id="cardUtilResults"></div>
+        </div>
+      </div>
+
+      <!-- Optimal Paydown Strategy -->
+      <div class="lw-card" id="paydownCard">
+        <div class="lw-card-header">
+          <div class="lw-card-icon green">🎯</div>
+          <div>
+            <div class="lw-card-title">Optimal Paydown Strategy</div>
+            <div class="lw-card-subtitle">Pay in this order for maximum utilization reduction</div>
+          </div>
+        </div>
+        
+        <!-- Before/After Comparison -->
+        <div class="comparison-grid">
+          <div class="comparison-box before">
+            <div class="comparison-label">Current Utilization</div>
+            <div class="comparison-value" id="beforeUtil">45%</div>
+          </div>
+          <div class="comparison-arrow">→</div>
+          <div class="comparison-box after">
+            <div class="comparison-label">After Payment</div>
+            <div class="comparison-value" id="afterUtil">28%</div>
+          </div>
+        </div>
+        
+        <div class="lw-result-item lw-text-center lw-mb-24">
+          <div class="lw-result-item-label">Utilization Improvement</div>
+          <div class="lw-result-item-value green" id="improvement">-17%</div>
+        </div>
+        
+        <!-- Payment Allocation -->
+        <div class="lw-label">Recommended Payment Allocation</div>
+        <div class="allocation-row header">
+          <div>#</div>
+          <div>Card</div>
+          <div>Pay</div>
+          <div>Util Change</div>
+          <div>New Util</div>
+        </div>
+        <div id="allocationTable"></div>
+        
+        <!-- Decision Box -->
+        <div class="decision-box" id="decisionBox">
+          <div class="decision-icon">✓</div>
+          <div class="decision-title" id="decisionTitle">Pay Chase Sapphire First</div>
+          <div class="decision-text" id="decisionText">
+            This card has the <span class="decision-highlight">highest utilization (78%)</span>, so paying it down first will have the biggest impact on your overall credit score.
+          </div>
+        </div>
+      </div>
+
+      <!-- What This Means -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon amber">💡</div>
+          <div>
+            <div class="lw-card-title">What This Means</div>
+            <div class="lw-card-subtitle">Understanding your utilization impact</div>
+          </div>
+        </div>
+        
+        <div id="whatThisMeans">
+          <p>Credit utilization is the <strong>second most important factor</strong> in your credit score, accounting for about 30% of your FICO score.</p>
+        </div>
+        
+        <div class="lw-mt-24" id="guidanceSection">
+          <div class="lw-label">📋 Your Action Plan</div>
+          <ul id="guidanceList" style="margin-top: 12px; padding-left: 20px;">
+            <li style="margin-bottom: 8px; color: var(--lw-text-secondary);">Loading recommendations...</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="lw-card">
+      <div class="empty-state">
+        <div class="empty-state-icon">💳</div>
+        <div class="lw-label">Add your credit cards above</div>
+        <p style="color: var(--lw-text-muted); font-size: 14px; margin-top: 8px;">Enter your card details to see utilization analysis and optimal paydown strategy</p>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <section class="lw-content">
+      <h2>How Credit Utilization Affects Your Score</h2>
+      <p>Credit utilization ratio—the percentage of your available credit you're currently using—is one of the most powerful factors affecting your credit score. It accounts for approximately <strong>30% of your FICO score</strong>, making it the second most important factor after payment history.</p>
+      
+      <p>The calculation is simple: divide your total credit card balances by your total credit limits. If you have $3,000 in balances across cards with $10,000 total limit, your utilization is 30%.</p>
+
+      <h3>The Utilization Sweet Spot</h3>
+      <p>Credit scoring models view utilization in tiers:</p>
+      <ul>
+        <li><strong>Excellent (1-9%):</strong> Shows responsible credit use without appearing inactive</li>
+        <li><strong>Good (10-29%):</strong> Healthy utilization that won't hurt your score</li>
+        <li><strong>Fair (30-49%):</strong> Starting to negatively impact scores</li>
+        <li><strong>Poor (50%+):</strong> Significantly hurting your credit score</li>
+      </ul>
+
+      <h2>Why Payment Order Matters</h2>
+      <p>Credit bureaus look at both your <strong>overall utilization</strong> and <strong>per-card utilization</strong>. Having one card maxed out at 90% can hurt your score even if your overall utilization is only 30%. This is why strategic paydown order matters.</p>
+      
+      <p>Our calculator prioritizes paying down cards with the highest individual utilization first, as this approach typically yields the greatest credit score improvement per dollar spent.</p>
+
+      <h3>The Fastest Way to Improve Your Score</h3>
+      <p>Unlike other credit factors that take years to build, utilization has <strong>no memory</strong>. The moment your card issuer reports a lower balance (usually once per month), your score can improve immediately. This makes utilization reduction one of the fastest credit repair strategies available.</p>
+
+      <h2>Strategic Tips for Maximum Impact</h2>
+      <ul>
+        <li><strong>Time your payments:</strong> Pay down balances before your statement closing date, not just the due date</li>
+        <li><strong>Request limit increases:</strong> Higher limits with same balances = lower utilization</li>
+        <li><strong>Keep old cards open:</strong> Closing cards reduces total credit and increases utilization</li>
+        <li><strong>Spread spending:</strong> Use multiple cards instead of maxing one out</li>
+        <li><strong>Pay twice monthly:</strong> Keep balances low throughout the billing cycle</li>
+      </ul>
+
+      <!-- FAQ Section -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">What is credit utilization and why does it matter?</button>
+          <div class="lw-faq-a">
+            <p>Credit utilization is the percentage of your available credit that you're using. It's calculated by dividing your total credit card balances by your total credit limits. Utilization accounts for about 30% of your credit score—the second most important factor after payment history. Lower utilization (ideally under 30%) signals to lenders that you manage credit responsibly.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">What's the best credit utilization percentage for a good score?</button>
+          <div class="lw-faq-a">
+            <p>Experts recommend keeping utilization under 30% for a good score, and under 10% for the best scores. However, having 0% utilization isn't ideal either—using a small amount shows you're actively managing credit. The sweet spot is typically 1-10% utilization across all cards.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">Should I pay down one card completely or spread payments across cards?</button>
+          <div class="lw-faq-a">
+            <p>For maximum utilization improvement, prioritize paying down cards with the highest individual utilization first. High utilization on any single card can hurt your score even if overall utilization is low. Our calculator finds the optimal payment strategy to lower both individual and overall utilization most effectively.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">How quickly does credit utilization affect my score?</button>
+          <div class="lw-faq-a">
+            <p>Unlike other factors, credit utilization has no memory—it only reflects your current balances. When card issuers report lower balances (typically monthly), your score updates almost immediately. This makes utilization one of the fastest ways to improve your credit score.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">Does closing a credit card hurt utilization?</button>
+          <div class="lw-faq-a">
+            <p>Yes, closing a card reduces your total available credit, which increases your overall utilization percentage. For example, if you have $10,000 in limits with $3,000 balance (30% utilization), closing a $5,000 limit card would spike utilization to 60%. Consider keeping cards open even if unused.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="lw-related">
+      <h2>Related Tools</h2>
+      <div class="lw-related-grid">
+        <a href="/credit-card-payoff-calculator/" class="lw-related-link">
+          <span class="dot"></span>Credit Card Payoff Calculator
+        </a>
+        <a href="/debt-payoff-calculator/" class="lw-related-link">
+          <span class="dot"></span>Debt Payoff Calculator
+        </a>
+        <a href="/debt-payoff-optimizer/" class="lw-related-link">
+          <span class="dot"></span>Debt Payoff Optimizer
+        </a>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <p class="lw-disclaimer">
+      This calculator provides estimates for educational purposes only. Credit score impacts vary by individual and scoring model. Always verify information with your card issuers and credit bureaus.
+    </p>
+  </main>
+
+  <!-- Footer -->
+  <footer class="lw-footer">
+    <p>© 2025 PocketWise. Free financial calculators for smarter decisions.</p>
+    <p><a href="/">Home</a></p>
+  </footer>
+
+  <script>
+    // State
+    let cardCount = 0;
+    let cards = [];
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      addCard(); // Start with one card
+      addCard(); // Add a second for better UX
+    });
+
+    // Add card row
+    function addCard() {
+      cardCount++;
+      const cardId = cardCount;
+      const row = document.createElement('div');
+      row.className = 'card-row';
+      row.id = `card-row-${cardId}`;
+      row.innerHTML = `
+        <div class="lw-form-group">
+          <label class="lw-label">Card Name</label>
+          <input type="text" class="lw-input" id="cardName-${cardId}" placeholder="e.g., Chase Sapphire" oninput="calculate()">
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">Credit Limit</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input" id="cardLimit-${cardId}" inputmode="decimal" placeholder="5,000" oninput="formatCurrency(this); calculate()">
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">Current Balance</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input" id="cardBalance-${cardId}" inputmode="decimal" placeholder="2,500" oninput="formatCurrency(this); calculate()">
+          </div>
+        </div>
+        <div class="remove-btn-wrap">
+          <button class="remove-card-btn" onclick="removeCard(${cardId})" title="Remove card">×</button>
+        </div>
+      `;
+      document.getElementById('cardRows').appendChild(row);
+      updateRemoveButtons();
+      calculate();
+    }
+
+    // Remove card row
+    function removeCard(id) {
+      const row = document.getElementById(`card-row-${id}`);
+      if (row) {
+        row.remove();
+        updateRemoveButtons();
+        calculate();
+      }
+    }
+
+    // Update remove button states
+    function updateRemoveButtons() {
+      const rows = document.querySelectorAll('.card-row');
+      const buttons = document.querySelectorAll('.remove-card-btn');
+      buttons.forEach(btn => {
+        btn.disabled = rows.length <= 1;
+      });
+    }
+
+    // Format currency input
+    function formatCurrency(input) {
+      let value = input.value.replace(/[^0-9.]/g, '');
+      const parts = value.split('.');
+      if (parts.length > 2) {
+        value = parts[0] + '.' + parts.slice(1).join('');
+      }
+      if (parts[0]) {
+        parts[0] = parseInt(parts[0]).toLocaleString();
+      }
+      input.value = parts.join('.');
+    }
+
+    // Parse currency
+    function parseCurrency(str) {
+      if (!str) return 0;
+      return parseFloat(str.replace(/[^0-9.]/g, '')) || 0;
+    }
+
+    // Get utilization color class
+    function getUtilColor(util) {
+      if (util < 30) return 'green';
+      if (util < 50) return 'yellow';
+      return 'red';
+    }
+
+    // Calculate optimal paydown
+    function calculate() {
+      // Gather card data
+      const rows = document.querySelectorAll('.card-row');
+      cards = [];
+      
+      rows.forEach(row => {
+        const id = row.id.replace('card-row-', '');
+        const name = document.getElementById(`cardName-${id}`)?.value || `Card ${id}`;
+        const limit = parseCurrency(document.getElementById(`cardLimit-${id}`)?.value);
+        const balance = parseCurrency(document.getElementById(`cardBalance-${id}`)?.value);
+        
+        if (limit > 0) {
+          cards.push({
+            id,
+            name: name || `Card ${id}`,
+            limit,
+            balance,
+            utilization: (balance / limit) * 100
+          });
+        }
+      });
+
+      const paymentAmount = parseCurrency(document.getElementById('paymentAmount').value);
+
+      // Show/hide sections
+      const resultsSection = document.getElementById('resultsSection');
+      const emptyState = document.getElementById('emptyState');
+      const paydownCard = document.getElementById('paydownCard');
+
+      if (cards.length === 0) {
+        resultsSection.classList.add('lw-hidden');
+        emptyState.classList.remove('lw-hidden');
+        return;
+      }
+
+      resultsSection.classList.remove('lw-hidden');
+      emptyState.classList.add('lw-hidden');
+
+      // Calculate totals
+      const totalBalance = cards.reduce((sum, c) => sum + c.balance, 0);
+      const totalCredit = cards.reduce((sum, c) => sum + c.limit, 0);
+      const overallUtil = totalCredit > 0 ? (totalBalance / totalCredit) * 100 : 0;
+
+      // Update summary
+      document.getElementById('totalBalance').textContent = '$' + totalBalance.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
+      document.getElementById('totalCredit').textContent = '$' + totalCredit.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
+      
+      const overallUtilEl = document.getElementById('overallUtil');
+      overallUtilEl.textContent = overallUtil.toFixed(1) + '%';
+      overallUtilEl.className = 'lw-result-item-value ' + getUtilColor(overallUtil);
+
+      // Update meter
+      const meterPos = Math.min(overallUtil, 100);
+      document.getElementById('meterPointer').style.left = meterPos + '%';
+
+      // Per-card utilization
+      const cardUtilResults = document.getElementById('cardUtilResults');
+      cardUtilResults.innerHTML = cards.map(c => {
+        const utilColor = getUtilColor(c.utilization);
+        const fillWidth = Math.min(c.utilization, 100);
+        return `
+          <div class="card-result-item">
+            <div>
+              <div class="card-result-name">${escapeHtml(c.name)}</div>
+              <div class="card-result-balance">$${c.balance.toLocaleString()} / $${c.limit.toLocaleString()}</div>
+            </div>
+            <div class="card-result-util">
+              <div class="utilization-gauge">
+                <div class="utilization-gauge-fill ${utilColor}" style="width: ${fillWidth}%"></div>
+              </div>
+            </div>
+            <div class="card-result-util">
+              <div class="card-result-util-text ${utilColor}">${c.utilization.toFixed(1)}%</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Paydown calculation
+      if (paymentAmount <= 0) {
+        paydownCard.style.display = 'none';
+        return;
+      }
+      paydownCard.style.display = 'block';
+
+      // Sort by utilization (highest first) for optimal paydown
+      const sortedCards = [...cards].sort((a, b) => b.utilization - a.utilization);
+      
+      // Allocate payments
+      let remainingPayment = paymentAmount;
+      const allocations = sortedCards.map(card => ({
+        ...card,
+        payment: 0,
+        newBalance: card.balance,
+        newUtilization: card.utilization
+      }));
+
+      // Strategy: Pay down highest utilization cards first
+      for (let alloc of allocations) {
+        if (remainingPayment <= 0) break;
+        
+        const maxPayment = alloc.balance; // Can't pay more than balance
+        const payment = Math.min(remainingPayment, maxPayment);
+        
+        alloc.payment = payment;
+        alloc.newBalance = alloc.balance - payment;
+        alloc.newUtilization = alloc.limit > 0 ? (alloc.newBalance / alloc.limit) * 100 : 0;
+        
+        remainingPayment -= payment;
+      }
+
+      // Calculate new overall utilization
+      const newTotalBalance = allocations.reduce((sum, c) => sum + c.newBalance, 0);
+      const newOverallUtil = totalCredit > 0 ? (newTotalBalance / totalCredit) * 100 : 0;
+      const utilImprovement = overallUtil - newOverallUtil;
+
+      // Update comparison
+      document.getElementById('beforeUtil').textContent = overallUtil.toFixed(1) + '%';
+      document.getElementById('afterUtil').textContent = newOverallUtil.toFixed(1) + '%';
+      document.getElementById('improvement').textContent = '-' + utilImprovement.toFixed(1) + '%';
+
+      // Update allocation table
+      const allocationTable = document.getElementById('allocationTable');
+      const allocsWithPayment = allocations.filter(a => a.payment > 0);
+      
+      if (allocsWithPayment.length === 0) {
+        allocationTable.innerHTML = '<div class="empty-state" style="padding: 24px;"><p>Enter a payment amount to see recommendations</p></div>';
+      } else {
+        allocationTable.innerHTML = allocsWithPayment.map((a, i) => {
+          const newUtilColor = getUtilColor(a.newUtilization);
+          return `
+            <div class="allocation-row">
+              <div class="allocation-priority">${i + 1}</div>
+              <div class="allocation-card-name">${escapeHtml(a.name)}</div>
+              <div class="allocation-amount">$${a.payment.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0})}</div>
+              <div class="allocation-util-change">
+                ${a.utilization.toFixed(0)}% <span class="arrow">→</span> ${a.newUtilization.toFixed(0)}%
+              </div>
+              <div class="allocation-new-util ${newUtilColor}">${a.newUtilization.toFixed(1)}%</div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Update decision box
+      const topCard = allocsWithPayment[0];
+      if (topCard) {
+        document.getElementById('decisionTitle').textContent = `Pay ${topCard.name} First`;
+        
+        let reason = '';
+        if (topCard.utilization >= 50) {
+          reason = `This card has <span class="decision-highlight">critical utilization (${topCard.utilization.toFixed(0)}%)</span>. Paying it down will have the biggest positive impact on your credit score.`;
+        } else if (topCard.utilization >= 30) {
+          reason = `This card has <span class="decision-highlight">elevated utilization (${topCard.utilization.toFixed(0)}%)</span>. Lowering it below 30% will help your score.`;
+        } else {
+          reason = `This card has the <span class="decision-highlight">highest utilization</span> among your cards. Keeping all cards below 30% maintains optimal credit health.`;
+        }
+        
+        document.getElementById('decisionText').innerHTML = reason;
+      }
+
+      // Update "What This Means" section
+      updateGuidance(overallUtil, newOverallUtil, cards, allocations);
+    }
+
+    function updateGuidance(beforeUtil, afterUtil, cards, allocations) {
+      const whatThisMeans = document.getElementById('whatThisMeans');
+      const guidanceList = document.getElementById('guidanceList');
+      
+      let meaning = '';
+      let guidance = [];
+      
+      // Determine overall situation
+      if (beforeUtil >= 50) {
+        meaning = `<p>Your current utilization of <strong>${beforeUtil.toFixed(1)}%</strong> is in the "poor" range and is likely significantly hurting your credit score. The good news: utilization has no memory, so paying down balances can improve your score quickly.</p>`;
+      } else if (beforeUtil >= 30) {
+        meaning = `<p>Your current utilization of <strong>${beforeUtil.toFixed(1)}%</strong> is starting to negatively impact your score. Getting below 30% should be your primary goal for credit health.</p>`;
+      } else if (beforeUtil >= 10) {
+        meaning = `<p>Your utilization of <strong>${beforeUtil.toFixed(1)}%</strong> is in the healthy range! You're managing credit well. For the best possible scores, aim for under 10%.</p>`;
+      } else {
+        meaning = `<p>Excellent! Your utilization of <strong>${beforeUtil.toFixed(1)}%</strong> is in the optimal range for credit scoring. Keep it up!</p>`;
+      }
+
+      // Calculate improvement context
+      const improvement = beforeUtil - afterUtil;
+      if (afterUtil < 30 && beforeUtil >= 30) {
+        meaning += `<p>After your planned payment, you'll drop below the critical <strong>30% threshold</strong>—this should provide a noticeable boost to your credit score.</p>`;
+      } else if (afterUtil < 10 && beforeUtil >= 10) {
+        meaning += `<p>Your payment will bring you into the <strong>optimal sub-10% zone</strong>, which is associated with the highest credit scores.</p>`;
+      }
+
+      whatThisMeans.innerHTML = meaning;
+
+      // Build action plan
+      guidance = [];
+      
+      // Check for high-utilization cards remaining
+      const highUtilCards = allocations.filter(a => a.newUtilization >= 50);
+      const medUtilCards = allocations.filter(a => a.newUtilization >= 30 && a.newUtilization < 50);
+      
+      if (highUtilCards.length > 0) {
+        guidance.push(`<strong>Priority:</strong> ${highUtilCards.map(c => c.name).join(', ')} will still have 50%+ utilization. Focus additional payments here.`);
+      }
+      
+      if (medUtilCards.length > 0) {
+        guidance.push(`${medUtilCards.map(c => c.name).join(', ')} will be between 30-50%. Getting these under 30% is your next goal.`);
+      }
+      
+      if (afterUtil < 30) {
+        guidance.push('✓ Your overall utilization will be under 30%—the threshold most scoring models consider "good."');
+      }
+      
+      if (afterUtil < 10) {
+        guidance.push('✓ You\'ll be under 10% utilization—associated with the highest credit scores!');
+      }
+      
+      // Timing advice
+      guidance.push('<strong>Timing tip:</strong> Make payments before your statement closing date (not just due date) for the balance to be reported to bureaus.');
+      
+      // Additional context
+      if (cards.length >= 3) {
+        guidance.push('Having multiple cards with low balances is better for your score than one card with all spending.');
+      }
+
+      guidanceList.innerHTML = guidance.map(g => `<li style="margin-bottom: 10px; color: var(--lw-text-secondary);">${g}</li>`).join('');
+    }
+
+    // Escape HTML
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // Mobile menu toggle
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    // FAQ toggle
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      item.classList.toggle('open');
+    }
+  </script>
+</body>
+</html>

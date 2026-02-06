@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loan Consolidation Savings Calculator | Should I Consolidate My Debt?</title>
+  <meta name="description" content="Free debt consolidation calculator. See how much you could save by consolidating multiple loans into one. Compare interest costs, monthly payments, and find your break-even point.">
+  <meta name="keywords" content="debt consolidation calculator, should I consolidate my loans, consolidate debt savings, loan consolidation interest, debt consolidation break even">
+  <link rel="canonical" href="https://lendwise.app/loan-consolidation-calculator/">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "When should I consolidate my loans?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Loan consolidation makes sense when you can get a lower interest rate than the weighted average of your current loans, typically at least 1-2% lower. It also helps if you want to simplify multiple payments into one, or extend your term to lower monthly payments (though this may cost more in total interest)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I calculate if debt consolidation will save me money?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Compare the total interest you'll pay on all current loans versus the total interest on a consolidation loan. Include any consolidation fees. If the consolidated total (interest + fees) is less than your current path, consolidation saves money. Also calculate your break-even point—how long until monthly savings exceed the fees paid."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What interest rate do I need for consolidation to make sense?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Generally, your consolidation rate should be lower than the weighted average APR of your existing loans. If you have loans at 18%, 12%, and 8%, your weighted average might be 13%. A consolidation loan at 10% or lower would likely save money, depending on fees and term length."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does debt consolidation hurt my credit score?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Initially, applying for a consolidation loan causes a hard inquiry, which may temporarily lower your score by 5-10 points. However, consolidation can improve your credit over time by reducing credit utilization, establishing a positive payment history, and diversifying your credit mix."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are the hidden costs of loan consolidation?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Watch for origination fees (1-8% of loan amount), balance transfer fees (3-5%), prepayment penalties on existing loans, and extended terms that increase total interest paid. Some consolidation loans also have variable rates that can increase over time."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <span class="lw-logo-icon">L</span>
+        LendWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/debt-payoff-calculator/">Debt Payoff</a></li>
+        <li><a href="/credit-card-payoff-calculator/">Credit Cards</a></li>
+        <li><a href="/personal-loan-calculator/">Personal Loans</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="toggleMobile()" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu" id="mobileMenu">
+      <a href="/">Home</a>
+      <a href="/debt-payoff-calculator/">Debt Payoff</a>
+      <a href="/credit-card-payoff-calculator/">Credit Cards</a>
+      <a href="/personal-loan-calculator/">Personal Loans</a>
+    </div>
+  </nav>
+
+  <main class="lw-main wide">
+    <!-- Hero -->
+    <header class="lw-hero">
+      <span class="lw-badge">Debt Management</span>
+      <h1>Loan Consolidation <span class="accent">Savings</span> Calculator</h1>
+      <p class="subtitle">Should you consolidate your debt? Add your existing loans and see exactly how much you could save with a consolidation loan.</p>
+    </header>
+
+    <!-- Calculator Card -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">📋</div>
+        <div>
+          <div class="lw-card-title">Your Current Loans</div>
+          <div class="lw-card-subtitle">Add all loans you're considering consolidating</div>
+        </div>
+      </div>
+
+      <!-- Loans Container -->
+      <div id="loansContainer">
+        <div class="loan-row" data-loan-id="1">
+          <div class="loan-row-header">
+            <span class="loan-number">Loan 1</span>
+            <button type="button" class="remove-loan-btn" onclick="removeLoan(1)" title="Remove loan">×</button>
+          </div>
+          <div class="lw-grid-2 loan-inputs">
+            <div class="lw-form-group">
+              <label class="lw-label">Loan Name</label>
+              <input type="text" class="lw-input loan-name" placeholder="e.g., Credit Card, Car Loan" oninput="calculate()">
+            </div>
+            <div class="lw-form-group">
+              <label class="lw-label">Balance Owed</label>
+              <div class="lw-input-prefix">
+                <span class="prefix">$</span>
+                <input type="number" class="lw-input loan-balance" placeholder="5,000" oninput="calculate()">
+              </div>
+            </div>
+            <div class="lw-form-group">
+              <label class="lw-label">APR</label>
+              <div class="lw-input-suffix">
+                <input type="number" class="lw-input loan-apr" step="0.1" placeholder="18.9" oninput="calculate()">
+                <span class="suffix">%</span>
+              </div>
+            </div>
+            <div class="lw-form-group">
+              <label class="lw-label">Monthly Payment</label>
+              <div class="lw-input-prefix">
+                <span class="prefix">$</span>
+                <input type="number" class="lw-input loan-payment" placeholder="150" oninput="calculate()">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="lw-btn lw-btn-secondary lw-mt-16" onclick="addLoan()" style="width:100%;">
+        + Add Another Loan
+      </button>
+    </div>
+
+    <!-- Consolidation Options -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">🔄</div>
+        <div>
+          <div class="lw-card-title">Consolidation Loan Options</div>
+          <div class="lw-card-subtitle">Enter the terms of your potential consolidation loan</div>
+        </div>
+      </div>
+
+      <div class="lw-grid-3">
+        <div class="lw-form-group">
+          <label class="lw-label">New Interest Rate</label>
+          <div class="lw-input-suffix">
+            <input type="number" id="newRate" class="lw-input" step="0.1" value="9.5" placeholder="9.5" oninput="calculate()">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">Loan Term</label>
+          <div class="lw-input-suffix">
+            <input type="number" id="newTerm" class="lw-input" value="48" placeholder="48" oninput="calculate()">
+            <span class="suffix">months</span>
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">Consolidation Fees</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="consolFees" class="lw-input" value="0" placeholder="0" oninput="calculate()">
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-range-group lw-mt-16">
+        <div class="lw-range-header">
+          <label class="lw-label" style="margin-bottom:0">Quick Rate Adjustment</label>
+          <span class="lw-range-value" id="rateSliderValue">9.5%</span>
+        </div>
+        <input type="range" class="lw-range" id="rateSlider" min="4" max="25" step="0.1" value="9.5" oninput="updateRateFromSlider()">
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--lw-text-muted);margin-top:4px;">
+          <span>4%</span>
+          <span>25%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsSection" style="display:none;">
+      <!-- Primary Result -->
+      <div class="lw-result-hero" id="resultHero">
+        <div class="lw-result-label">Total Savings with Consolidation</div>
+        <div class="lw-result-number">
+          <span class="currency">$</span><span id="totalSavings">0</span>
+        </div>
+        <div class="lw-result-sub" id="savingsSub">over the life of your loan</div>
+      </div>
+
+      <!-- Decision Guidance -->
+      <div class="lw-card" id="decisionCard">
+        <div class="lw-card-header">
+          <div class="lw-card-icon" id="decisionIcon">✅</div>
+          <div>
+            <div class="lw-card-title" id="decisionTitle">Consolidation Recommended</div>
+            <div class="lw-card-subtitle" id="decisionSubtitle">Based on your numbers</div>
+          </div>
+        </div>
+        <div id="decisionContent">
+          <p id="decisionText" style="color:var(--lw-text-secondary);line-height:1.7;margin-bottom:16px;"></p>
+          <div class="decision-threshold" id="thresholdBox">
+            <strong>Rate Threshold:</strong> <span id="rateThreshold">Consolidation helps only if rate ≤ X%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Before vs After Comparison -->
+      <div class="lw-grid-2">
+        <div class="lw-card comparison-card current">
+          <div class="comparison-label">📊 Current Path</div>
+          <div class="comparison-title">Keep Separate Loans</div>
+          <div class="comparison-stats">
+            <div class="stat-row">
+              <span>Monthly Payment</span>
+              <span class="stat-value" id="currentMonthly">$0</span>
+            </div>
+            <div class="stat-row">
+              <span>Total Interest</span>
+              <span class="stat-value" id="currentInterest">$0</span>
+            </div>
+            <div class="stat-row">
+              <span>Payoff Time</span>
+              <span class="stat-value" id="currentTime">0 months</span>
+            </div>
+            <div class="stat-row">
+              <span>Total Cost</span>
+              <span class="stat-value total" id="currentTotal">$0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lw-card comparison-card consolidated">
+          <div class="comparison-label">🔄 Consolidated</div>
+          <div class="comparison-title">Single New Loan</div>
+          <div class="comparison-stats">
+            <div class="stat-row">
+              <span>Monthly Payment</span>
+              <span class="stat-value" id="newMonthly">$0</span>
+            </div>
+            <div class="stat-row">
+              <span>Total Interest</span>
+              <span class="stat-value" id="newInterest">$0</span>
+            </div>
+            <div class="stat-row">
+              <span>Payoff Time</span>
+              <span class="stat-value" id="newTime">0 months</span>
+            </div>
+            <div class="stat-row">
+              <span>Total Cost</span>
+              <span class="stat-value total" id="newTotal">$0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key Metrics -->
+      <div class="lw-result-grid">
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Monthly Savings</div>
+          <div class="lw-result-item-value" id="monthlySavings">$0</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Interest Savings</div>
+          <div class="lw-result-item-value green" id="interestSavings">$0</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Weighted Avg APR</div>
+          <div class="lw-result-item-value sky" id="weightedApr">0%</div>
+        </div>
+      </div>
+
+      <!-- Interest Savings Visualization -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon amber">📈</div>
+          <div>
+            <div class="lw-card-title">Interest Cost Comparison</div>
+            <div class="lw-card-subtitle">Visual breakdown of interest paid</div>
+          </div>
+        </div>
+
+        <div class="lw-bar-chart">
+          <div class="lw-bar-row">
+            <div class="lw-bar-label">Current Path</div>
+            <div class="lw-bar-track">
+              <div class="lw-bar-fill rose" id="currentBar" style="width:100%;">
+                <span class="lw-bar-amount" id="currentBarAmount">$0</span>
+              </div>
+            </div>
+          </div>
+          <div class="lw-bar-row">
+            <div class="lw-bar-label">Consolidated</div>
+            <div class="lw-bar-track">
+              <div class="lw-bar-fill green" id="consolidatedBar" style="width:50%;">
+                <span class="lw-bar-amount" id="consolidatedBarAmount">$0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="savings-highlight" id="savingsHighlight">
+          <div class="savings-icon">💰</div>
+          <div class="savings-text">
+            <strong>You save <span id="savingsPercent">0%</span> in interest!</strong>
+            <span id="savingsDetail">That's $0 kept in your pocket.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Break-Even Analysis -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon violet">⏱️</div>
+          <div>
+            <div class="lw-card-title">Break-Even Analysis</div>
+            <div class="lw-card-subtitle">When do your savings exceed the fees?</div>
+          </div>
+        </div>
+
+        <div id="breakEvenContent">
+          <div class="break-even-visual">
+            <div class="break-even-timeline">
+              <div class="timeline-bar">
+                <div class="timeline-fill" id="breakEvenFill" style="width:0%"></div>
+                <div class="timeline-marker" id="breakEvenMarker" style="left:0%">
+                  <span class="marker-label" id="breakEvenLabel">0 mo</span>
+                </div>
+              </div>
+              <div class="timeline-labels">
+                <span>Start</span>
+                <span id="loanEndLabel">48 months</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="break-even-stats lw-grid-3 lw-mt-24">
+            <div class="be-stat">
+              <div class="be-stat-label">Consolidation Fees</div>
+              <div class="be-stat-value" id="beFees">$0</div>
+            </div>
+            <div class="be-stat">
+              <div class="be-stat-label">Break-Even Point</div>
+              <div class="be-stat-value highlight" id="bePoint">0 months</div>
+            </div>
+            <div class="be-stat">
+              <div class="be-stat-label">Net Savings After Break-Even</div>
+              <div class="be-stat-value green" id="beNetSavings">$0</div>
+            </div>
+          </div>
+
+          <p id="breakEvenExplain" style="margin-top:20px;color:var(--lw-text-secondary);font-size:14px;line-height:1.7;"></p>
+        </div>
+      </div>
+
+      <!-- Loan Details Table -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon blue">📑</div>
+          <div>
+            <div class="lw-card-title">Your Loans Breakdown</div>
+            <div class="lw-card-subtitle">Individual loan analysis</div>
+          </div>
+        </div>
+
+        <div class="lw-table-wrap">
+          <table class="lw-table">
+            <thead>
+              <tr>
+                <th>Loan</th>
+                <th>Balance</th>
+                <th>APR</th>
+                <th>Monthly Pmt</th>
+                <th>Est. Interest</th>
+                <th>Months Left</th>
+              </tr>
+            </thead>
+            <tbody id="loanTableBody">
+            </tbody>
+            <tfoot id="loanTableFoot">
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- What This Means -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon green">💡</div>
+          <div>
+            <div class="lw-card-title">What This Means</div>
+            <div class="lw-card-subtitle">Understanding your consolidation options</div>
+          </div>
+        </div>
+
+        <div id="meaningContent" style="color:var(--lw-text-secondary);line-height:1.8;">
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <section class="lw-content">
+      <h2>How the Loan Consolidation Calculator Works</h2>
+      <p>Our debt consolidation calculator helps you make an informed decision about whether combining multiple loans into a single payment makes financial sense. Simply enter your current loans and compare them against potential consolidation offers.</p>
+
+      <h3>What is Debt Consolidation?</h3>
+      <p>Debt consolidation combines multiple debts—credit cards, personal loans, medical bills—into a single loan with one monthly payment. The goal is typically to secure a lower interest rate, reduce your monthly payment, or simplify your finances by having just one bill to track.</p>
+
+      <h3>When Does Consolidation Save Money?</h3>
+      <p>Consolidation saves money when:</p>
+      <ul>
+        <li><strong>Lower interest rate:</strong> Your new rate is lower than the weighted average of your current loans</li>
+        <li><strong>Shorter term:</strong> You pay off debt faster, reducing total interest</li>
+        <li><strong>Fees are reasonable:</strong> Origination fees don't outweigh interest savings</li>
+        <li><strong>You won't add new debt:</strong> Consolidating only helps if you don't rack up new balances</li>
+      </ul>
+
+      <h3>The Break-Even Point</h3>
+      <p>The break-even point tells you how long it takes for your monthly savings to exceed any upfront fees. If you plan to keep the loan past this point, consolidation makes financial sense. If you might pay it off sooner, the fees could outweigh your savings.</p>
+
+      <h2>Should I Consolidate My Loans?</h2>
+      <p>Use this checklist to decide:</p>
+      <ul>
+        <li>✅ Your new rate is at least 1-2% lower than your weighted average</li>
+        <li>✅ You can afford the new monthly payment comfortably</li>
+        <li>✅ The break-even point is shorter than your planned loan term</li>
+        <li>✅ You're committed to not taking on new debt</li>
+        <li>✅ Your credit score qualifies you for good consolidation rates</li>
+      </ul>
+
+      <h3>Types of Consolidation Loans</h3>
+      <ul>
+        <li><strong>Personal loans:</strong> Fixed rates, fixed terms, no collateral required</li>
+        <li><strong>Balance transfer cards:</strong> 0% intro APR for 12-21 months, then higher rates</li>
+        <li><strong>Home equity loans:</strong> Lower rates but your home is collateral</li>
+        <li><strong>401(k) loans:</strong> Borrow from yourself, but risks retirement savings</li>
+      </ul>
+
+      <!-- FAQ Section -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">When should I consolidate my loans?</button>
+          <div class="lw-faq-a">
+            <p>Loan consolidation makes sense when you can get a lower interest rate than the weighted average of your current loans, typically at least 1-2% lower. It also helps if you want to simplify multiple payments into one, or extend your term to lower monthly payments (though this may cost more in total interest).</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">How do I calculate if debt consolidation will save me money?</button>
+          <div class="lw-faq-a">
+            <p>Compare the total interest you'll pay on all current loans versus the total interest on a consolidation loan. Include any consolidation fees. If the consolidated total (interest + fees) is less than your current path, consolidation saves money. Also calculate your break-even point—how long until monthly savings exceed the fees paid.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">What interest rate do I need for consolidation to make sense?</button>
+          <div class="lw-faq-a">
+            <p>Generally, your consolidation rate should be lower than the weighted average APR of your existing loans. If you have loans at 18%, 12%, and 8%, your weighted average might be 13%. A consolidation loan at 10% or lower would likely save money, depending on fees and term length.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">Does debt consolidation hurt my credit score?</button>
+          <div class="lw-faq-a">
+            <p>Initially, applying for a consolidation loan causes a hard inquiry, which may temporarily lower your score by 5-10 points. However, consolidation can improve your credit over time by reducing credit utilization, establishing a positive payment history, and diversifying your credit mix.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">What are the hidden costs of loan consolidation?</button>
+          <div class="lw-faq-a">
+            <p>Watch for origination fees (1-8% of loan amount), balance transfer fees (3-5%), prepayment penalties on existing loans, and extended terms that increase total interest paid. Some consolidation loans also have variable rates that can increase over time.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/debt-payoff-calculator/" class="lw-related-link">
+          <span class="dot"></span>Debt Payoff Calculator
+        </a>
+        <a href="/credit-card-payoff-calculator/" class="lw-related-link">
+          <span class="dot"></span>Credit Card Payoff
+        </a>
+        <a href="/personal-loan-calculator/" class="lw-related-link">
+          <span class="dot"></span>Personal Loan Calculator
+        </a>
+        <a href="/debt-to-income-calculator/" class="lw-related-link">
+          <span class="dot"></span>Debt-to-Income Ratio
+        </a>
+        <a href="/apr-calculator/" class="lw-related-link">
+          <span class="dot"></span>APR Calculator
+        </a>
+        <a href="/savings-goal-calculator/" class="lw-related-link">
+          <span class="dot"></span>Savings Goal Calculator
+        </a>
+      </div>
+    </section>
+
+    <p class="lw-disclaimer">
+      This calculator provides estimates for educational purposes only. Actual loan terms, rates, and savings may vary. 
+      Consult with a financial advisor before making debt consolidation decisions.
+    </p>
+  </main>
+
+  <footer class="lw-footer">
+    <a href="/">← Back to LendWise Home</a>
+  </footer>
+
+  <style>
+    /* Loan Row Styles */
+    .loan-row {
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      padding: 20px;
+      margin-bottom: 16px;
+      border: 1px solid var(--lw-border);
+      position: relative;
+    }
+    .loan-row-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .loan-number {
+      font-weight: 600;
+      color: var(--lw-navy);
+      font-size: 14px;
+    }
+    .remove-loan-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: var(--lw-slate-200);
+      color: var(--lw-slate-500);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--lw-transition);
+    }
+    .remove-loan-btn:hover {
+      background: var(--lw-rose-50);
+      color: var(--lw-rose);
+    }
+    .loan-row:only-child .remove-loan-btn {
+      display: none;
+    }
+    .loan-inputs .lw-form-group {
+      margin-bottom: 0;
+    }
+
+    /* Comparison Cards */
+    .comparison-card {
+      text-align: center;
+    }
+    .comparison-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .comparison-card.current .comparison-label { color: var(--lw-rose); }
+    .comparison-card.consolidated .comparison-label { color: var(--lw-emerald); }
+    .comparison-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--lw-navy);
+      margin-bottom: 20px;
+    }
+    .comparison-stats {
+      text-align: left;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--lw-border-light);
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+    }
+    .stat-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: var(--lw-navy);
+    }
+    .stat-value.total {
+      font-size: 16px;
+    }
+    .comparison-card.current .stat-value.total { color: var(--lw-rose); }
+    .comparison-card.consolidated .stat-value.total { color: var(--lw-emerald); }
+
+    /* Decision Box */
+    .decision-threshold {
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius-sm);
+      padding: 12px 16px;
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+      border-left: 4px solid var(--lw-sky);
+    }
+    .decision-threshold strong {
+      color: var(--lw-navy);
+    }
+
+    /* Savings Highlight */
+    .savings-highlight {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--lw-emerald-50);
+      border-radius: var(--lw-radius);
+      padding: 16px 20px;
+      margin-top: 20px;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    .savings-highlight.negative {
+      background: var(--lw-rose-50);
+      border-color: rgba(244, 63, 94, 0.2);
+    }
+    .savings-icon {
+      font-size: 28px;
+    }
+    .savings-text {
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+      line-height: 1.5;
+    }
+    .savings-text strong {
+      color: var(--lw-emerald-dark);
+      display: block;
+      font-size: 16px;
+      margin-bottom: 2px;
+    }
+    .savings-highlight.negative .savings-text strong {
+      color: var(--lw-rose-dark);
+    }
+
+    /* Break-Even Visual */
+    .break-even-visual {
+      padding: 20px 0;
+    }
+    .timeline-bar {
+      height: 12px;
+      background: var(--lw-slate-200);
+      border-radius: var(--lw-radius-full);
+      position: relative;
+      overflow: visible;
+    }
+    .timeline-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--lw-amber), var(--lw-emerald));
+      border-radius: var(--lw-radius-full);
+      transition: width 0.6s ease;
+    }
+    .timeline-marker {
+      position: absolute;
+      top: -8px;
+      transform: translateX(-50%);
+      transition: left 0.6s ease;
+    }
+    .marker-label {
+      display: block;
+      background: var(--lw-navy);
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--lw-radius-full);
+      white-space: nowrap;
+      position: relative;
+    }
+    .marker-label::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid var(--lw-navy);
+    }
+    .timeline-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--lw-text-muted);
+    }
+
+    /* Break-Even Stats */
+    .be-stat {
+      text-align: center;
+      padding: 16px;
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+    }
+    .be-stat-label {
+      font-size: 12px;
+      color: var(--lw-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .be-stat-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--lw-navy);
+    }
+    .be-stat-value.highlight { color: var(--lw-amber); }
+    .be-stat-value.green { color: var(--lw-emerald); }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .loan-inputs.lw-grid-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+      .lw-grid-3 {
+        grid-template-columns: 1fr;
+      }
+      .break-even-stats.lw-grid-3 {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+    }
+    @media (max-width: 480px) {
+      .loan-inputs.lw-grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <script>
+    let loanCounter = 1;
+
+    function toggleMobile() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      item.classList.toggle('open');
+    }
+
+    function addLoan() {
+      loanCounter++;
+      const container = document.getElementById('loansContainer');
+      const loanHtml = `
+        <div class="loan-row" data-loan-id="${loanCounter}">
+          <div class="loan-row-header">
+            <span class="loan-number">Loan ${loanCounter}</span>
+            <button type="button" class="remove-loan-btn" onclick="removeLoan(${loanCounter})" title="Remove loan">×</button>
+          </div>
+          <div class="lw-grid-2 loan-inputs">
+            <div class="lw-form-group">
+              <label class="lw-label">Loan Name</label>
+              <input type="text" class="lw-input loan-name" placeholder="e.g., Credit Card, Car Loan" oninput="calculate()">
+            </div>
+            <div class="lw-form-group">
+              <label class="lw-label">Balance Owed</label>
+              <div class="lw-input-prefix">
+                <span class="prefix">$</span>
+                <input type="number" class="lw-input loan-balance" placeholder="5,000" oninput="calculate()">
+              </div>
+            </div>
+            <div class="lw-form-group">
+              <label class="lw-label">APR</label>
+              <div class="lw-input-suffix">
+                <input type="number" class="lw-input loan-apr" step="0.1" placeholder="18.9" oninput="calculate()">
+                <span class="suffix">%</span>
+              </div>
+            </div>
+            <div class="lw-form-group">
+              <label class="lw-label">Monthly Payment</label>
+              <div class="lw-input-prefix">
+                <span class="prefix">$</span>
+                <input type="number" class="lw-input loan-payment" placeholder="150" oninput="calculate()">
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      container.insertAdjacentHTML('beforeend', loanHtml);
+      renumberLoans();
+      calculate();
+    }
+
+    function removeLoan(id) {
+      const row = document.querySelector(`[data-loan-id="${id}"]`);
+      if (row) {
+        row.remove();
+        renumberLoans();
+        calculate();
+      }
+    }
+
+    function renumberLoans() {
+      const rows = document.querySelectorAll('.loan-row');
+      rows.forEach((row, index) => {
+        row.querySelector('.loan-number').textContent = `Loan ${index + 1}`;
+      });
+    }
+
+    function updateRateFromSlider() {
+      const slider = document.getElementById('rateSlider');
+      const rateInput = document.getElementById('newRate');
+      const display = document.getElementById('rateSliderValue');
+      rateInput.value = slider.value;
+      display.textContent = slider.value + '%';
+      calculate();
+    }
+
+    function formatCurrency(num) {
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(num);
+    }
+
+    function formatNumber(num) {
+      return new Intl.NumberFormat('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(num);
+    }
+
+    function getLoans() {
+      const rows = document.querySelectorAll('.loan-row');
+      const loans = [];
+      rows.forEach(row => {
+        const name = row.querySelector('.loan-name').value || 'Unnamed Loan';
+        const balance = parseFloat(row.querySelector('.loan-balance').value) || 0;
+        const apr = parseFloat(row.querySelector('.loan-apr').value) || 0;
+        const payment = parseFloat(row.querySelector('.loan-payment').value) || 0;
+        if (balance > 0 && payment > 0) {
+          loans.push({ name, balance, apr, payment });
+        }
+      });
+      return loans;
+    }
+
+    function calculateLoanPayoff(balance, apr, payment) {
+      // Calculate months to payoff and total interest
+      const monthlyRate = apr / 100 / 12;
+      let remaining = balance;
+      let totalInterest = 0;
+      let months = 0;
+      const maxMonths = 600; // 50 years cap
+
+      if (monthlyRate === 0) {
+        months = Math.ceil(balance / payment);
+        return { months, totalInterest: 0, totalPaid: balance };
+      }
+
+      while (remaining > 0 && months < maxMonths) {
+        const interestCharge = remaining * monthlyRate;
+        totalInterest += interestCharge;
+        const principal = Math.min(payment - interestCharge, remaining);
+        
+        if (principal <= 0) {
+          // Payment doesn't cover interest
+          return { months: Infinity, totalInterest: Infinity, totalPaid: Infinity };
+        }
+        
+        remaining -= principal;
+        months++;
+      }
+
+      return {
+        months,
+        totalInterest,
+        totalPaid: balance + totalInterest
+      };
+    }
+
+    function calculateMonthlyPayment(principal, annualRate, months) {
+      const r = annualRate / 100 / 12;
+      if (r === 0) return principal / months;
+      return principal * (r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
+    }
+
+    function calculateTotalInterest(principal, monthlyPayment, months) {
+      return (monthlyPayment * months) - principal;
+    }
+
+    function findBreakEvenRate(loans, term, fees) {
+      // Binary search for the rate where total cost equals current path
+      const totalBalance = loans.reduce((sum, l) => sum + l.balance, 0);
+      let currentTotalInterest = 0;
+      let maxPayoffMonths = 0;
+
+      loans.forEach(loan => {
+        const result = calculateLoanPayoff(loan.balance, loan.apr, loan.payment);
+        currentTotalInterest += result.totalInterest;
+        maxPayoffMonths = Math.max(maxPayoffMonths, result.months);
+      });
+
+      const currentTotalCost = totalBalance + currentTotalInterest;
+
+      // Binary search
+      let low = 0, high = 50;
+      for (let i = 0; i < 50; i++) {
+        const mid = (low + high) / 2;
+        const payment = calculateMonthlyPayment(totalBalance + fees, mid, term);
+        const totalInterest = calculateTotalInterest(totalBalance + fees, payment, term);
+        const totalCost = totalBalance + fees + totalInterest;
+
+        if (totalCost > currentTotalCost) {
+          high = mid;
+        } else {
+          low = mid;
+        }
+      }
+      return (low + high) / 2;
+    }
+
+    function calculate() {
+      const loans = getLoans();
+      const newRate = parseFloat(document.getElementById('newRate').value) || 0;
+      const newTerm = parseInt(document.getElementById('newTerm').value) || 48;
+      const fees = parseFloat(document.getElementById('consolFees').value) || 0;
+
+      // Sync slider with input
+      document.getElementById('rateSlider').value = newRate;
+      document.getElementById('rateSliderValue').textContent = newRate + '%';
+
+      if (loans.length === 0) {
+        document.getElementById('resultsSection').style.display = 'none';
+        return;
+      }
+
+      document.getElementById('resultsSection').style.display = 'block';
+
+      // Calculate current path
+      let totalBalance = 0;
+      let totalCurrentPayment = 0;
+      let totalCurrentInterest = 0;
+      let maxPayoffMonths = 0;
+      let weightedRateSum = 0;
+
+      const loanDetails = [];
+
+      loans.forEach(loan => {
+        totalBalance += loan.balance;
+        totalCurrentPayment += loan.payment;
+        weightedRateSum += loan.balance * loan.apr;
+
+        const result = calculateLoanPayoff(loan.balance, loan.apr, loan.payment);
+        totalCurrentInterest += result.totalInterest;
+        maxPayoffMonths = Math.max(maxPayoffMonths, result.months);
+
+        loanDetails.push({
+          ...loan,
+          interest: result.totalInterest,
+          months: result.months
+        });
+      });
+
+      const weightedApr = totalBalance > 0 ? weightedRateSum / totalBalance : 0;
+
+      // Calculate consolidated loan
+      const consolidatedBalance = totalBalance + fees;
+      const newMonthlyPayment = calculateMonthlyPayment(consolidatedBalance, newRate, newTerm);
+      const newTotalInterest = calculateTotalInterest(consolidatedBalance, newMonthlyPayment, newTerm);
+      const newTotalCost = totalBalance + fees + newTotalInterest;
+
+      // Current totals
+      const currentTotalCost = totalBalance + totalCurrentInterest;
+
+      // Savings
+      const totalSavings = currentTotalCost - newTotalCost;
+      const monthlySavings = totalCurrentPayment - newMonthlyPayment;
+      const interestSavings = totalCurrentInterest - newTotalInterest;
+
+      // Break-even rate
+      const breakEvenRate = findBreakEvenRate(loans, newTerm, fees);
+
+      // Break-even point (months until fee savings exceed fees)
+      let breakEvenMonths = 0;
+      if (monthlySavings > 0 && fees > 0) {
+        breakEvenMonths = Math.ceil(fees / monthlySavings);
+      } else if (fees === 0) {
+        breakEvenMonths = 0;
+      }
+
+      // Update UI
+      updateResults({
+        totalBalance,
+        totalCurrentPayment,
+        totalCurrentInterest,
+        currentTotalCost,
+        maxPayoffMonths,
+        weightedApr,
+        newMonthlyPayment,
+        newTotalInterest,
+        newTotalCost,
+        newTerm,
+        fees,
+        totalSavings,
+        monthlySavings,
+        interestSavings,
+        breakEvenRate,
+        breakEvenMonths,
+        loanDetails,
+        newRate,
+        loans
+      });
+    }
+
+    function updateResults(data) {
+      const isSaving = data.totalSavings > 0;
+      const isHigherRate = data.newRate > data.weightedApr;
+
+      // Hero result
+      document.getElementById('totalSavings').textContent = formatNumber(Math.abs(data.totalSavings));
+      const heroEl = document.getElementById('resultHero');
+      if (isSaving) {
+        heroEl.style.background = 'linear-gradient(135deg, #059669 0%, #10B981 100%)';
+        document.getElementById('savingsSub').textContent = 'saved over the life of your loan';
+      } else {
+        heroEl.style.background = 'linear-gradient(135deg, #E11D48 0%, #F43F5E 100%)';
+        document.getElementById('savingsSub').textContent = 'more than keeping separate loans';
+      }
+
+      // Decision guidance
+      const decisionIcon = document.getElementById('decisionIcon');
+      const decisionTitle = document.getElementById('decisionTitle');
+      const decisionText = document.getElementById('decisionText');
+      const decisionCard = document.getElementById('decisionCard');
+
+      if (isSaving && data.breakEvenMonths < data.newTerm) {
+        decisionIcon.textContent = '✅';
+        decisionIcon.className = 'lw-card-icon green';
+        decisionTitle.textContent = 'Consolidation Recommended';
+        decisionText.textContent = `Based on your numbers, consolidating saves you ${formatCurrency(data.totalSavings)} overall. Your new rate of ${data.newRate.toFixed(1)}% is ${(data.weightedApr - data.newRate).toFixed(1)} percentage points lower than your current weighted average of ${data.weightedApr.toFixed(1)}%.`;
+      } else if (!isSaving && isHigherRate) {
+        decisionIcon.textContent = '❌';
+        decisionIcon.className = 'lw-card-icon rose';
+        decisionTitle.textContent = 'Consolidation Not Recommended';
+        decisionText.textContent = `At ${data.newRate.toFixed(1)}%, the consolidation rate is higher than your weighted average of ${data.weightedApr.toFixed(1)}%. You would pay ${formatCurrency(Math.abs(data.totalSavings))} more in total costs. Consider negotiating a lower rate or keeping your current loans.`;
+      } else {
+        decisionIcon.textContent = '⚠️';
+        decisionIcon.className = 'lw-card-icon amber';
+        decisionTitle.textContent = 'Proceed with Caution';
+        decisionText.textContent = `The savings are marginal. You'd ${isSaving ? 'save' : 'lose'} ${formatCurrency(Math.abs(data.totalSavings))} overall. ${data.breakEvenMonths > 0 ? `It takes ${data.breakEvenMonths} months to break even on fees.` : ''} Consider whether simplifying payments is worth the marginal financial difference.`;
+      }
+
+      document.getElementById('rateThreshold').textContent = `Consolidation helps only if your rate ≤ ${data.breakEvenRate.toFixed(1)}%`;
+
+      // Comparison cards
+      document.getElementById('currentMonthly').textContent = formatCurrency(data.totalCurrentPayment);
+      document.getElementById('currentInterest').textContent = formatCurrency(data.totalCurrentInterest);
+      document.getElementById('currentTime').textContent = data.maxPayoffMonths + ' months';
+      document.getElementById('currentTotal').textContent = formatCurrency(data.currentTotalCost);
+
+      document.getElementById('newMonthly').textContent = formatCurrency(data.newMonthlyPayment);
+      document.getElementById('newInterest').textContent = formatCurrency(data.newTotalInterest);
+      document.getElementById('newTime').textContent = data.newTerm + ' months';
+      document.getElementById('newTotal').textContent = formatCurrency(data.newTotalCost);
+
+      // Key metrics
+      const monthlySavingsEl = document.getElementById('monthlySavings');
+      monthlySavingsEl.textContent = (data.monthlySavings >= 0 ? '' : '-') + formatCurrency(Math.abs(data.monthlySavings));
+      monthlySavingsEl.className = 'lw-result-item-value ' + (data.monthlySavings >= 0 ? 'green' : 'rose');
+
+      const interestSavingsEl = document.getElementById('interestSavings');
+      interestSavingsEl.textContent = (data.interestSavings >= 0 ? '' : '-') + formatCurrency(Math.abs(data.interestSavings));
+      interestSavingsEl.className = 'lw-result-item-value ' + (data.interestSavings >= 0 ? 'green' : 'rose');
+
+      document.getElementById('weightedApr').textContent = data.weightedApr.toFixed(1) + '%';
+
+      // Interest bar chart
+      const maxInterest = Math.max(data.totalCurrentInterest, data.newTotalInterest + data.fees);
+      const currentBarWidth = maxInterest > 0 ? (data.totalCurrentInterest / maxInterest) * 100 : 0;
+      const consolidatedBarWidth = maxInterest > 0 ? ((data.newTotalInterest + data.fees) / maxInterest) * 100 : 0;
+
+      document.getElementById('currentBar').style.width = Math.max(currentBarWidth, 15) + '%';
+      document.getElementById('currentBarAmount').textContent = formatCurrency(data.totalCurrentInterest);
+      document.getElementById('consolidatedBar').style.width = Math.max(consolidatedBarWidth, 15) + '%';
+      document.getElementById('consolidatedBarAmount').textContent = formatCurrency(data.newTotalInterest + data.fees);
+
+      // Savings highlight
+      const savingsHighlight = document.getElementById('savingsHighlight');
+      const savingsPercent = data.totalCurrentInterest > 0 ? ((data.interestSavings / data.totalCurrentInterest) * 100) : 0;
+      
+      if (data.interestSavings >= 0) {
+        savingsHighlight.className = 'savings-highlight';
+        document.querySelector('.savings-icon').textContent = '💰';
+        document.getElementById('savingsPercent').textContent = savingsPercent.toFixed(0) + '%';
+        document.getElementById('savingsDetail').textContent = `That's ${formatCurrency(data.interestSavings)} kept in your pocket.`;
+      } else {
+        savingsHighlight.className = 'savings-highlight negative';
+        document.querySelector('.savings-icon').textContent = '⚠️';
+        document.getElementById('savingsPercent').textContent = Math.abs(savingsPercent).toFixed(0) + '% more';
+        document.getElementById('savingsDetail').textContent = `That's ${formatCurrency(Math.abs(data.interestSavings))} extra in interest costs.`;
+      }
+
+      // Break-even analysis
+      document.getElementById('beFees').textContent = formatCurrency(data.fees);
+      document.getElementById('loanEndLabel').textContent = data.newTerm + ' months';
+
+      if (data.fees === 0) {
+        document.getElementById('bePoint').textContent = 'Immediate';
+        document.getElementById('breakEvenFill').style.width = '0%';
+        document.getElementById('breakEvenMarker').style.left = '0%';
+        document.getElementById('breakEvenLabel').textContent = 'Day 1';
+        document.getElementById('beNetSavings').textContent = formatCurrency(data.totalSavings);
+        document.getElementById('breakEvenExplain').textContent = 'With no upfront fees, you start saving immediately if the consolidation rate is favorable.';
+      } else if (data.monthlySavings <= 0) {
+        document.getElementById('bePoint').textContent = 'Never';
+        document.getElementById('breakEvenFill').style.width = '100%';
+        document.getElementById('breakEvenMarker').style.left = '100%';
+        document.getElementById('breakEvenLabel').textContent = 'N/A';
+        document.getElementById('beNetSavings').textContent = formatCurrency(0);
+        document.getElementById('beNetSavings').className = 'be-stat-value rose';
+        document.getElementById('breakEvenExplain').textContent = `Your monthly payment would actually increase, so you never recover the ${formatCurrency(data.fees)} in fees. This consolidation doesn't make financial sense.`;
+      } else {
+        const bePercent = Math.min((data.breakEvenMonths / data.newTerm) * 100, 100);
+        document.getElementById('bePoint').textContent = data.breakEvenMonths + ' months';
+        document.getElementById('breakEvenFill').style.width = bePercent + '%';
+        document.getElementById('breakEvenMarker').style.left = bePercent + '%';
+        document.getElementById('breakEvenLabel').textContent = data.breakEvenMonths + ' mo';
+        
+        const netSavingsAfterBreakEven = data.totalSavings;
+        document.getElementById('beNetSavings').textContent = formatCurrency(netSavingsAfterBreakEven);
+        document.getElementById('beNetSavings').className = 'be-stat-value ' + (netSavingsAfterBreakEven >= 0 ? 'green' : 'rose');
+        
+        if (data.breakEvenMonths < data.newTerm) {
+          document.getElementById('breakEvenExplain').textContent = `After ${data.breakEvenMonths} months, your monthly savings of ${formatCurrency(data.monthlySavings)} will have covered the ${formatCurrency(data.fees)} in fees. From that point on, every payment represents pure savings compared to your current loans.`;
+        } else {
+          document.getElementById('breakEvenExplain').textContent = `It would take ${data.breakEvenMonths} months to break even on fees, but your loan term is only ${data.newTerm} months. You won't fully recover the consolidation costs before the loan is paid off.`;
+        }
+      }
+
+      // Loan details table
+      const tbody = document.getElementById('loanTableBody');
+      const tfoot = document.getElementById('loanTableFoot');
+      tbody.innerHTML = '';
+      
+      data.loanDetails.forEach(loan => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${loan.name}</td>
+          <td class="num">${formatCurrency(loan.balance)}</td>
+          <td class="num">${loan.apr.toFixed(1)}%</td>
+          <td class="num">${formatCurrency(loan.payment)}</td>
+          <td class="num">${formatCurrency(loan.interest)}</td>
+          <td class="num">${loan.months}</td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      tfoot.innerHTML = `
+        <tr style="background:var(--lw-slate-50);font-weight:600;">
+          <td>Total / Weighted</td>
+          <td class="num">${formatCurrency(data.totalBalance)}</td>
+          <td class="num">${data.weightedApr.toFixed(1)}%</td>
+          <td class="num">${formatCurrency(data.totalCurrentPayment)}</td>
+          <td class="num">${formatCurrency(data.totalCurrentInterest)}</td>
+          <td class="num">${data.maxPayoffMonths}</td>
+        </tr>
+      `;
+
+      // What this means content
+      const meaningEl = document.getElementById('meaningContent');
+      let meaningHtml = '';
+
+      if (isSaving) {
+        meaningHtml = `
+          <p><strong>The bottom line:</strong> Consolidating your ${data.loans.length} loan${data.loans.length > 1 ? 's' : ''} into a single ${data.newRate}% loan would save you <strong>${formatCurrency(data.totalSavings)}</strong> over ${data.newTerm} months.</p>
+          <p>Your current loans have a weighted average APR of <strong>${data.weightedApr.toFixed(1)}%</strong>. By consolidating at <strong>${data.newRate}%</strong>, you're locking in a rate that's <strong>${(data.weightedApr - data.newRate).toFixed(1)} percentage points lower</strong>.</p>
+          ${data.monthlySavings > 0 ? `<p>You'll also free up <strong>${formatCurrency(data.monthlySavings)}/month</strong> in cash flow, which you could put toward savings, investments, or paying down the consolidation loan faster.</p>` : `<p>Note: Your monthly payment will be <strong>${formatCurrency(Math.abs(data.monthlySavings))} higher</strong>, but you'll pay off the debt faster and save on total interest.</p>`}
+          ${data.fees > 0 ? `<p>The ${formatCurrency(data.fees)} in consolidation fees will be recovered after <strong>${data.breakEvenMonths} months</strong>—well before your ${data.newTerm}-month term ends.</p>` : ''}
+        `;
+      } else {
+        meaningHtml = `
+          <p><strong>The bottom line:</strong> At current terms, consolidation would cost you <strong>${formatCurrency(Math.abs(data.totalSavings))} more</strong> than keeping your existing loans.</p>
+          <p>Your weighted average APR is <strong>${data.weightedApr.toFixed(1)}%</strong>, ${data.newRate > data.weightedApr ? `which is lower than the consolidation rate of <strong>${data.newRate}%</strong>.` : `and while the ${data.newRate}% rate is lower, the combination of fees and/or longer term increases your total cost.`}</p>
+          <p><strong>What to do instead:</strong></p>
+          <ul style="margin-top:8px;padding-left:20px;">
+            <li>Shop for a consolidation loan with a rate below ${data.breakEvenRate.toFixed(1)}%</li>
+            <li>Focus extra payments on your highest-APR loan first (debt avalanche method)</li>
+            <li>Consider a balance transfer card with 0% intro APR if you can pay it off during the promo period</li>
+          </ul>
+        `;
+      }
+
+      meaningEl.innerHTML = meaningHtml;
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set sample data for demonstration
+      document.querySelector('.loan-name').value = 'Credit Card';
+      document.querySelector('.loan-balance').value = '8500';
+      document.querySelector('.loan-apr').value = '22.9';
+      document.querySelector('.loan-payment').value = '250';
+      
+      calculate();
+    });
+  </script>
+</body>
+</html>

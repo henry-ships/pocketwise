@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>401k Paycheck Impact Calculator | See How Much Your Contribution Really Costs</title>
+  <meta name="description" content="Calculate the real impact of 401k contributions on your take-home pay. See how tax savings reduce the actual cost of retirement contributions per paycheck.">
+  <meta name="keywords" content="401k paycheck impact, retirement contribution take home pay, how much does 401k reduce paycheck, paycheck calculator with 401k">
+  <link rel="canonical" href="https://pocketwise.app/401k-paycheck-impact/">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="401k Paycheck Impact Calculator">
+  <meta property="og:description" content="See the real cost of your 401k contribution after tax savings. Each 1% costs less than you think!">
+  <meta property="og:type" content="website">
+  
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How much does a 401k contribution reduce my paycheck?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A 401k contribution reduces your paycheck by less than the contribution amount because it's taken out pre-tax. For example, if you're in the 22% federal tax bracket and contribute $100, your take-home pay only drops by about $78 (not $100) because you save on taxes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why does my 401k contribution cost less than I expect?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Traditional 401k contributions are made with pre-tax dollars. This means every dollar you contribute reduces your taxable income, so you pay less in federal and state income taxes. The tax savings effectively subsidize your retirement contribution."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the real cost of contributing 1% to my 401k?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The real cost depends on your tax bracket. If you're in the 22% federal bracket with 5% state tax, each 1% contribution only costs you about 73 cents per dollar contributed. Our calculator shows your exact cost based on your specific situation."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I max out my 401k contribution?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If you can afford it, maximizing your 401k contribution provides significant tax benefits, especially if your employer offers matching. Use this calculator to see the actual impact on your paycheck and determine what contribution level works for your budget."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does 401k contribution affect my take-home pay?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Your 401k contribution reduces both your gross pay and your tax liability. The net effect on take-home pay is smaller than the contribution amount itself. For example, a $500/month contribution might only reduce your take-home by $350-$400 depending on your tax situation."
+        }
+      }
+    ]
+  }
+  </script>
+  
+  <style>
+    /* Waterfall Chart Styles */
+    .waterfall-chart {
+      padding: 20px 0;
+    }
+    .waterfall-bar {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+      gap: 12px;
+    }
+    .waterfall-label {
+      width: 130px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--lw-text-secondary);
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .waterfall-track {
+      flex: 1;
+      height: 36px;
+      background: var(--lw-slate-100);
+      border-radius: var(--lw-radius-sm);
+      position: relative;
+      overflow: hidden;
+    }
+    .waterfall-fill {
+      height: 100%;
+      border-radius: var(--lw-radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 12px;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      position: absolute;
+      left: 0;
+    }
+    .waterfall-fill.gross { background: linear-gradient(90deg, var(--lw-sky), var(--lw-sky-light)); }
+    .waterfall-fill.deduction { background: linear-gradient(90deg, var(--lw-amber), var(--lw-amber-light)); }
+    .waterfall-fill.tax { background: linear-gradient(90deg, var(--lw-rose), var(--lw-rose-light)); }
+    .waterfall-fill.retirement { background: linear-gradient(90deg, var(--lw-violet), var(--lw-violet-light)); }
+    .waterfall-fill.net { background: linear-gradient(90deg, var(--lw-emerald), var(--lw-emerald-light)); }
+    .waterfall-amount {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: white;
+      white-space: nowrap;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+    
+    /* Tax Savings Highlight */
+    .tax-savings-box {
+      background: linear-gradient(135deg, var(--lw-emerald-50), #D1FAE5);
+      border: 2px solid var(--lw-emerald);
+      border-radius: var(--lw-radius-lg);
+      padding: 24px;
+      text-align: center;
+      margin: 24px 0;
+    }
+    .tax-savings-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--lw-emerald-dark);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .tax-savings-amount {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--lw-emerald-dark);
+      margin-bottom: 4px;
+    }
+    .tax-savings-sub {
+      font-size: 14px;
+      color: var(--lw-emerald-dark);
+      opacity: 0.8;
+    }
+    
+    /* Decision Box */
+    .decision-box {
+      background: linear-gradient(135deg, var(--lw-sky-50), #DBEAFE);
+      border-left: 4px solid var(--lw-sky);
+      border-radius: var(--lw-radius);
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+    .decision-box strong {
+      color: var(--lw-sky-dark);
+      font-size: 15px;
+    }
+    .decision-box p {
+      margin: 8px 0 0;
+      color: var(--lw-slate-700);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    
+    /* Comparison Cards */
+    .comparison-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .compare-card {
+      background: var(--lw-card);
+      border-radius: var(--lw-radius);
+      padding: 20px;
+      text-align: center;
+      border: 1px solid var(--lw-border-light);
+    }
+    .compare-card.highlight {
+      border-color: var(--lw-emerald);
+      background: var(--lw-emerald-50);
+    }
+    .compare-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--lw-text-muted);
+      margin-bottom: 8px;
+    }
+    .compare-card.highlight .compare-label {
+      color: var(--lw-emerald-dark);
+    }
+    .compare-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--lw-navy);
+    }
+    .compare-card.highlight .compare-value {
+      color: var(--lw-emerald-dark);
+    }
+    .compare-value .strikethrough {
+      text-decoration: line-through;
+      opacity: 0.5;
+      font-size: 20px;
+    }
+    
+    /* Slider Enhancement */
+    .contribution-slider-wrap {
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--lw-text-muted);
+      margin-top: 8px;
+    }
+    
+    /* Legend */
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--lw-border-light);
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--lw-text-secondary);
+    }
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+    .legend-dot.gross { background: var(--lw-sky); }
+    .legend-dot.deduction { background: var(--lw-amber); }
+    .legend-dot.tax { background: var(--lw-rose); }
+    .legend-dot.retirement { background: var(--lw-violet); }
+    .legend-dot.net { background: var(--lw-emerald); }
+    
+    @media (max-width: 768px) {
+      .waterfall-label { width: 100px; font-size: 12px; }
+      .waterfall-track { height: 32px; }
+      .comparison-row { grid-template-columns: 1fr; }
+      .tax-savings-amount { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <span class="lw-logo-icon">P</span>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/401k-paycheck-impact/" class="active">401k Impact</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu" id="mobileMenu">
+      <a href="/">Home</a>
+      <a href="/401k-paycheck-impact/">401k Paycheck Impact</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- Hero -->
+    <section class="lw-hero">
+      <span class="lw-badge green">Retirement Planning</span>
+      <h1>401k <span class="accent">Paycheck Impact</span> Calculator</h1>
+      <p class="subtitle">See the real cost of your 401k contribution after tax savings. Spoiler: it's less than you think!</p>
+    </section>
+
+    <!-- Calculator Card -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">💰</div>
+        <div>
+          <div class="lw-card-title">Your Paycheck Details</div>
+          <div class="lw-card-subtitle">Enter your salary and tax information</div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Gross Annual Salary</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input" id="salary" value="75,000" inputmode="numeric" oninput="formatAndCalculate(this)">
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">Pay Frequency</label>
+          <select class="lw-select" id="payFrequency" onchange="calculate()">
+            <option value="52">Weekly (52 paychecks/year)</option>
+            <option value="26" selected>Bi-weekly (26 paychecks/year)</option>
+            <option value="24">Semi-monthly (24 paychecks/year)</option>
+            <option value="12">Monthly (12 paychecks/year)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Federal Tax Bracket</label>
+          <select class="lw-select" id="federalBracket" onchange="calculate()">
+            <option value="0.10">10%</option>
+            <option value="0.12">12%</option>
+            <option value="0.22" selected>22%</option>
+            <option value="0.24">24%</option>
+            <option value="0.32">32%</option>
+            <option value="0.35">35%</option>
+            <option value="0.37">37%</option>
+          </select>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">State Tax Rate <span class="lw-label-hint">(0% if none)</span></label>
+          <div class="lw-input-suffix">
+            <input type="text" class="lw-input" id="stateRate" value="5" inputmode="decimal" oninput="formatAndCalculate(this, true)">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-form-group">
+        <label class="lw-label">Pre-Tax Deductions <span class="lw-label-hint">(health insurance, HSA, FSA per paycheck)</span></label>
+        <div class="lw-input-prefix">
+          <span class="prefix">$</span>
+          <input type="text" class="lw-input" id="preTaxDeductions" value="200" inputmode="numeric" oninput="formatAndCalculate(this)">
+        </div>
+      </div>
+
+      <!-- Contribution Slider -->
+      <div class="contribution-slider-wrap">
+        <div class="lw-range-header">
+          <label class="lw-label" style="margin-bottom: 0;">401k Contribution %</label>
+          <span class="lw-range-value" id="contributionDisplay">6%</span>
+        </div>
+        <input type="range" class="lw-range" id="contribution" min="0" max="25" value="6" step="1" oninput="updateContribution()">
+        <div class="slider-labels">
+          <span>0%</span>
+          <span>5%</span>
+          <span>10%</span>
+          <span>15%</span>
+          <span>20%</span>
+          <span>25%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="results">
+      <!-- Primary Result Hero -->
+      <div class="lw-result-hero">
+        <div class="lw-result-label">Your Take-Home Pay Per Paycheck</div>
+        <div class="lw-result-number">
+          <span class="currency">$</span><span id="netPaycheck">2,019</span>
+        </div>
+        <div class="lw-result-sub">After <span id="contributionSummary">6%</span> 401k contribution</div>
+      </div>
+
+      <!-- Paycheck Breakdown Grid -->
+      <div class="lw-result-grid">
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Gross Paycheck</div>
+          <div class="lw-result-item-value" id="grossPaycheck">$2,885</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Without 401k</div>
+          <div class="lw-result-item-value" id="netWithout401k">$2,192</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">With 401k</div>
+          <div class="lw-result-item-value green" id="netWith401k">$2,019</div>
+        </div>
+      </div>
+
+      <!-- Tax Savings Highlight -->
+      <div class="tax-savings-box">
+        <div class="tax-savings-label">💸 Tax Savings Per Paycheck</div>
+        <div class="tax-savings-amount" id="taxSavings">$47</div>
+        <div class="tax-savings-sub">You save this much in taxes by contributing pre-tax!</div>
+      </div>
+
+      <!-- The Key Insight -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon green">🎯</div>
+          <div>
+            <div class="lw-card-title">The Real Cost of Your Contribution</div>
+            <div class="lw-card-subtitle">What it actually costs you per paycheck</div>
+          </div>
+        </div>
+
+        <div class="comparison-row">
+          <div class="compare-card">
+            <div class="compare-label">Contribution Amount</div>
+            <div class="compare-value strikethrough" id="contributionAmount">$173</div>
+          </div>
+          <div class="compare-card highlight">
+            <div class="compare-label">Actual Take-Home Reduction</div>
+            <div class="compare-value" id="actualReduction">$126</div>
+          </div>
+        </div>
+
+        <div class="decision-box">
+          <strong>💡 What This Means</strong>
+          <p id="decisionText">Each 1% contribution costs only <strong>$21</strong> per paycheck (not $29) due to tax savings. You're getting $29 toward retirement for just $21 out of pocket!</p>
+        </div>
+      </div>
+
+      <!-- Paycheck Waterfall Chart -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon violet">📊</div>
+          <div>
+            <div class="lw-card-title">Paycheck Breakdown</div>
+            <div class="lw-card-subtitle">Visual breakdown of where your money goes</div>
+          </div>
+        </div>
+
+        <div class="waterfall-chart">
+          <div class="waterfall-bar">
+            <div class="waterfall-label">Gross Pay</div>
+            <div class="waterfall-track">
+              <div class="waterfall-fill gross" id="barGross" style="width: 100%">
+                <span class="waterfall-amount" id="barGrossAmt">$2,885</span>
+              </div>
+            </div>
+          </div>
+          <div class="waterfall-bar">
+            <div class="waterfall-label">Pre-Tax Deductions</div>
+            <div class="waterfall-track">
+              <div class="waterfall-fill deduction" id="barDeductions" style="width: 7%">
+                <span class="waterfall-amount" id="barDeductionsAmt">−$200</span>
+              </div>
+            </div>
+          </div>
+          <div class="waterfall-bar">
+            <div class="waterfall-label">401k Contribution</div>
+            <div class="waterfall-track">
+              <div class="waterfall-fill retirement" id="bar401k" style="width: 6%">
+                <span class="waterfall-amount" id="bar401kAmt">−$173</span>
+              </div>
+            </div>
+          </div>
+          <div class="waterfall-bar">
+            <div class="waterfall-label">Federal Tax</div>
+            <div class="waterfall-track">
+              <div class="waterfall-fill tax" id="barFederal" style="width: 19%">
+                <span class="waterfall-amount" id="barFederalAmt">−$553</span>
+              </div>
+            </div>
+          </div>
+          <div class="waterfall-bar">
+            <div class="waterfall-label">State Tax</div>
+            <div class="waterfall-track">
+              <div class="waterfall-fill tax" id="barState" style="width: 4%">
+                <span class="waterfall-amount" id="barStateAmt">−$126</span>
+              </div>
+            </div>
+          </div>
+          <div class="waterfall-bar">
+            <div class="waterfall-label"><strong>Take-Home</strong></div>
+            <div class="waterfall-track">
+              <div class="waterfall-fill net" id="barNet" style="width: 70%">
+                <span class="waterfall-amount" id="barNetAmt">$2,019</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-legend">
+          <div class="legend-item"><span class="legend-dot gross"></span> Gross Pay</div>
+          <div class="legend-item"><span class="legend-dot deduction"></span> Pre-Tax Deductions</div>
+          <div class="legend-item"><span class="legend-dot retirement"></span> 401k</div>
+          <div class="legend-item"><span class="legend-dot tax"></span> Taxes</div>
+          <div class="legend-item"><span class="legend-dot net"></span> Take-Home</div>
+        </div>
+      </div>
+
+      <!-- Per 1% Cost Card -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon amber">📈</div>
+          <div>
+            <div class="lw-card-title">Cost Per 1% Contribution</div>
+            <div class="lw-card-subtitle">How much each percentage point really costs</div>
+          </div>
+        </div>
+
+        <div class="lw-result-grid">
+          <div class="lw-result-item">
+            <div class="lw-result-item-label">1% Equals</div>
+            <div class="lw-result-item-value" id="onePercentAmount">$29</div>
+          </div>
+          <div class="lw-result-item">
+            <div class="lw-result-item-label">Real Cost</div>
+            <div class="lw-result-item-value green" id="onePercentCost">$21</div>
+          </div>
+          <div class="lw-result-item">
+            <div class="lw-result-item-label">You Save</div>
+            <div class="lw-result-item-value sky" id="onePercentSavings">$8</div>
+          </div>
+        </div>
+
+        <p style="text-align: center; color: var(--lw-text-secondary); margin-top: 16px; font-size: 14px;">
+          For every $1 you contribute, it only costs you <strong id="effectiveCost">$0.73</strong> out of pocket
+        </p>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <section class="lw-content">
+      <h2>Understanding Your 401k Paycheck Impact</h2>
+      <p>Many people avoid increasing their 401k contributions because they think it will dramatically reduce their paycheck. But here's the truth: <strong>401k contributions cost less than you think</strong> because they're taken out before taxes.</p>
+
+      <h3>How Pre-Tax Contributions Work</h3>
+      <p>When you contribute to a traditional 401k, the money comes out of your paycheck <em>before</em> federal and state income taxes are calculated. This means:</p>
+      <ul>
+        <li>Your taxable income is reduced by your contribution amount</li>
+        <li>You pay less in federal and state taxes</li>
+        <li>The actual reduction in your take-home pay is less than your contribution</li>
+      </ul>
+
+      <h3>Example: The Real Cost of a 6% Contribution</h3>
+      <p>Let's say you earn $75,000/year, paid bi-weekly. Your gross paycheck is about $2,885. If you contribute 6% ($173), you might expect your take-home to drop by $173. But if you're in the 22% federal bracket with 5% state tax:</p>
+      <ul>
+        <li><strong>Contribution amount:</strong> $173</li>
+        <li><strong>Tax savings:</strong> $47 (27% of $173)</li>
+        <li><strong>Actual cost to you:</strong> $126</li>
+      </ul>
+      <p>You're putting $173 toward retirement but only "feeling" $126 less in your pocket!</p>
+
+      <h2>Why This Matters for Your Retirement</h2>
+      <p>Understanding the true cost of 401k contributions helps you make smarter decisions about your retirement savings. When you realize that a 6% contribution only costs you about 4.4% of your gross pay in take-home reduction, it becomes easier to increase your savings rate.</p>
+
+      <h3>Maximizing Employer Match</h3>
+      <p>If your employer offers a 401k match (say, 50% of your contribution up to 6%), you're essentially getting free money. With the tax savings on top of that, the effective return on your contribution is exceptional.</p>
+
+      <h3>How Much Should You Contribute?</h3>
+      <p>Financial experts generally recommend saving 10-15% of your income for retirement, including employer matches. Use this calculator to find a contribution level that balances your current budget needs with your retirement goals.</p>
+
+      <!-- FAQ Section -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">How much does a 401k contribution reduce my paycheck?</button>
+          <div class="lw-faq-a">
+            <p>A 401k contribution reduces your paycheck by less than the contribution amount because it's taken out pre-tax. For example, if you're in the 22% federal tax bracket and contribute $100, your take-home pay only drops by about $78 (not $100) because you save on taxes.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">Why does my 401k contribution cost less than I expect?</button>
+          <div class="lw-faq-a">
+            <p>Traditional 401k contributions are made with pre-tax dollars. This means every dollar you contribute reduces your taxable income, so you pay less in federal and state income taxes. The tax savings effectively subsidize your retirement contribution.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">What is the real cost of contributing 1% to my 401k?</button>
+          <div class="lw-faq-a">
+            <p>The real cost depends on your tax bracket. If you're in the 22% federal bracket with 5% state tax, each 1% contribution only costs you about 73 cents per dollar contributed. Our calculator shows your exact cost based on your specific situation.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">Should I max out my 401k contribution?</button>
+          <div class="lw-faq-a">
+            <p>If you can afford it, maximizing your 401k contribution provides significant tax benefits, especially if your employer offers matching. Use this calculator to see the actual impact on your paycheck and determine what contribution level works for your budget.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">How does this differ from a Roth 401k?</button>
+          <div class="lw-faq-a">
+            <p>Roth 401k contributions are made with after-tax dollars, meaning they don't provide immediate tax savings. The full contribution amount reduces your take-home pay. However, Roth 401k withdrawals in retirement are tax-free, which can be beneficial if you expect to be in a higher tax bracket later.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/" class="lw-related-link">
+          <span class="dot"></span>
+          All PocketWise Tools
+        </a>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <div class="lw-disclaimer">
+      <p>This calculator provides estimates for educational purposes only. Actual paycheck amounts may vary based on additional deductions, FICA taxes, and other withholdings. Consult a tax professional for personalized advice.</p>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="lw-footer">
+    <p>© 2025 PocketWise. Free financial calculators for smarter decisions.</p>
+  </footer>
+
+  <script>
+    // Format number with commas
+    function formatNumber(num) {
+      return Math.round(num).toLocaleString('en-US');
+    }
+
+    // Format currency
+    function formatCurrency(num) {
+      return '$' + formatNumber(num);
+    }
+
+    // Parse number from formatted string
+    function parseNumber(str) {
+      return parseFloat(str.replace(/[^0-9.-]/g, '')) || 0;
+    }
+
+    // Format input and recalculate
+    function formatAndCalculate(input, isPercent = false) {
+      if (!isPercent) {
+        const value = parseNumber(input.value);
+        const cursorPos = input.selectionStart;
+        const oldLength = input.value.length;
+        input.value = formatNumber(value);
+        const newLength = input.value.length;
+        input.setSelectionRange(cursorPos + (newLength - oldLength), cursorPos + (newLength - oldLength));
+      }
+      calculate();
+    }
+
+    // Update contribution display
+    function updateContribution() {
+      const contribution = document.getElementById('contribution').value;
+      document.getElementById('contributionDisplay').textContent = contribution + '%';
+      calculate();
+    }
+
+    // Main calculation
+    function calculate() {
+      // Get inputs
+      const salary = parseNumber(document.getElementById('salary').value);
+      const payPeriods = parseInt(document.getElementById('payFrequency').value);
+      const federalRate = parseFloat(document.getElementById('federalBracket').value);
+      const stateRate = parseFloat(document.getElementById('stateRate').value) / 100;
+      const preTaxDeductions = parseNumber(document.getElementById('preTaxDeductions').value);
+      const contributionPct = parseInt(document.getElementById('contribution').value) / 100;
+
+      // Calculate paycheck amounts
+      const grossPaycheck = salary / payPeriods;
+      const contribution401k = grossPaycheck * contributionPct;
+      
+      // Taxable income WITH 401k contribution
+      const taxableWith401k = grossPaycheck - preTaxDeductions - contribution401k;
+      const federalTaxWith = taxableWith401k * federalRate;
+      const stateTaxWith = taxableWith401k * stateRate;
+      const netWith401k = taxableWith401k - federalTaxWith - stateTaxWith;
+
+      // Taxable income WITHOUT 401k contribution
+      const taxableWithout401k = grossPaycheck - preTaxDeductions;
+      const federalTaxWithout = taxableWithout401k * federalRate;
+      const stateTaxWithout = taxableWithout401k * stateRate;
+      const netWithout401k = taxableWithout401k - federalTaxWithout - stateTaxWithout;
+
+      // Tax savings from 401k
+      const taxSavings = (federalTaxWithout + stateTaxWithout) - (federalTaxWith + stateTaxWith);
+      
+      // Actual reduction in take-home
+      const actualReduction = netWithout401k - netWith401k;
+      
+      // Per 1% calculations
+      const onePercentAmount = grossPaycheck * 0.01;
+      const combinedTaxRate = federalRate + stateRate;
+      const onePercentCost = onePercentAmount * (1 - combinedTaxRate);
+      const onePercentSavings = onePercentAmount - onePercentCost;
+
+      // Update primary result
+      document.getElementById('netPaycheck').textContent = formatNumber(netWith401k);
+      document.getElementById('contributionSummary').textContent = (contributionPct * 100) + '%';
+
+      // Update result grid
+      document.getElementById('grossPaycheck').textContent = formatCurrency(grossPaycheck);
+      document.getElementById('netWithout401k').textContent = formatCurrency(netWithout401k);
+      document.getElementById('netWith401k').textContent = formatCurrency(netWith401k);
+
+      // Update tax savings box
+      document.getElementById('taxSavings').textContent = formatCurrency(taxSavings);
+
+      // Update comparison cards
+      document.getElementById('contributionAmount').textContent = formatCurrency(contribution401k);
+      document.getElementById('actualReduction').textContent = formatCurrency(actualReduction);
+
+      // Update decision text
+      const decisionText = document.getElementById('decisionText');
+      if (contributionPct > 0) {
+        decisionText.innerHTML = `Each 1% contribution costs only <strong>${formatCurrency(onePercentCost)}</strong> per paycheck (not ${formatCurrency(onePercentAmount)}) due to tax savings. You're getting ${formatCurrency(onePercentAmount)} toward retirement for just ${formatCurrency(onePercentCost)} out of pocket!`;
+      } else {
+        decisionText.innerHTML = `Start contributing to see how much you could save! Each 1% would cost only <strong>${formatCurrency(onePercentCost)}</strong> per paycheck (not ${formatCurrency(onePercentAmount)}) due to tax savings.`;
+      }
+
+      // Update per 1% card
+      document.getElementById('onePercentAmount').textContent = formatCurrency(onePercentAmount);
+      document.getElementById('onePercentCost').textContent = formatCurrency(onePercentCost);
+      document.getElementById('onePercentSavings').textContent = formatCurrency(onePercentSavings);
+      document.getElementById('effectiveCost').textContent = '$' + (1 - combinedTaxRate).toFixed(2);
+
+      // Update waterfall chart
+      updateWaterfallChart(grossPaycheck, preTaxDeductions, contribution401k, federalTaxWith, stateTaxWith, netWith401k);
+    }
+
+    // Update waterfall chart bars
+    function updateWaterfallChart(gross, deductions, contrib401k, federalTax, stateTax, net) {
+      const maxValue = gross;
+      
+      // Calculate percentages
+      const deductionsPct = (deductions / maxValue) * 100;
+      const contrib401kPct = (contrib401k / maxValue) * 100;
+      const federalPct = (federalTax / maxValue) * 100;
+      const statePct = (stateTax / maxValue) * 100;
+      const netPct = (net / maxValue) * 100;
+
+      // Update bars
+      document.getElementById('barGross').style.width = '100%';
+      document.getElementById('barGrossAmt').textContent = formatCurrency(gross);
+
+      document.getElementById('barDeductions').style.width = Math.max(deductionsPct, 5) + '%';
+      document.getElementById('barDeductionsAmt').textContent = '−' + formatCurrency(deductions);
+
+      document.getElementById('bar401k').style.width = Math.max(contrib401kPct, 3) + '%';
+      document.getElementById('bar401kAmt').textContent = '−' + formatCurrency(contrib401k);
+
+      document.getElementById('barFederal').style.width = Math.max(federalPct, 5) + '%';
+      document.getElementById('barFederalAmt').textContent = '−' + formatCurrency(federalTax);
+
+      document.getElementById('barState').style.width = Math.max(statePct, 3) + '%';
+      document.getElementById('barStateAmt').textContent = '−' + formatCurrency(stateTax);
+
+      document.getElementById('barNet').style.width = netPct + '%';
+      document.getElementById('barNetAmt').textContent = formatCurrency(net);
+    }
+
+    // Toggle FAQ
+    function toggleFaq(button) {
+      const item = button.parentElement;
+      item.classList.toggle('open');
+    }
+
+    // Toggle mobile menu
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', calculate);
+  </script>
+</body>
+</html>

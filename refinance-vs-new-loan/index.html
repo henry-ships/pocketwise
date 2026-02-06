@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Refinance vs New Loan Calculator | Should I Refinance or Get a New Loan?</title>
+  <meta name="description" content="Free refinance vs new loan comparison calculator. Compare keeping your current loan, refinancing, or taking out a new loan. Find the option that saves you the most money.">
+  <meta name="keywords" content="refinance vs new loan, refinance or take new loan, loan refinance comparison, refinance decision calculator, should I refinance or get new loan">
+  <link rel="canonical" href="https://lendwise.tools/refinance-vs-new-loan/">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Refinance vs New Loan Calculator | PocketWise">
+  <meta property="og:description" content="Compare keeping your current loan, refinancing, or taking a new loan. See total costs, monthly payments, and which option saves you the most.">
+  <meta property="og:type" content="website">
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Should I refinance my loan or take out a new loan?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The choice depends on several factors: Refinance if you want to keep the same loan type with better terms (lower rate or different term). Take a new loan if you need additional funds, want to consolidate multiple debts, or your current loan type doesn't allow refinancing. Compare total costs including fees, monthly payments, and total interest to determine which saves more money over time."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between refinancing and getting a new loan?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Refinancing replaces your existing loan with a new one, typically at a different interest rate or term, using the current balance. A new loan is a completely separate loan that may be for a different amount, different purpose, or from a different lender. Refinancing usually has lower fees since it's modifying an existing relationship, while new loans may have origination fees and require new credit approval."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When does refinancing make more sense than a new loan?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Refinancing typically makes sense when: 1) Interest rates have dropped significantly since your original loan, 2) Your credit score has improved and you qualify for better rates, 3) You want to change your loan term (shorten or extend), 4) You want to remove PMI or switch from adjustable to fixed rate. Refinancing usually has lower closing costs than a new loan."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What fees are involved in refinancing vs getting a new loan?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Refinancing typically costs 2-5% of the loan amount in closing costs, including appraisal fees, title insurance, and lender fees. New loans may have origination fees (0.5-1% of loan amount), application fees, and potentially higher closing costs. Compare the total fees against the monthly and total savings to calculate your break-even point."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I calculate the break-even point for refinancing?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "To calculate break-even: Divide total closing costs by monthly savings. For example, if refinancing costs $6,000 and saves $200/month, break-even is 30 months (6,000 ÷ 200). If you plan to keep the loan longer than the break-even period, refinancing makes financial sense. Our calculator computes this automatically for all options."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is it better to pay off my current loan or refinance?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If you have the funds to pay off your loan entirely, that eliminates all future interest payments—usually the best financial choice if you don't need the liquidity. However, if interest rates are very low and you could invest the payoff amount at higher returns, keeping or refinancing the loan while investing might yield better results. Consider your financial goals, emergency fund needs, and investment opportunities."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <span class="lw-logo-icon">P</span>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">All Tools</a></li>
+        <li><a href="/refinance-vs-new-loan/" class="active">Refinance vs New Loan</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu" id="mobileMenu">
+      <a href="/">All Tools</a>
+      <a href="/refinance-vs-new-loan/">Refinance vs New Loan</a>
+    </div>
+  </nav>
+
+  <main class="lw-main wide">
+    <!-- Hero -->
+    <section class="lw-hero">
+      <span class="lw-badge">LOAN COMPARISON</span>
+      <h1>Refinance vs <span class="accent">New Loan</span></h1>
+      <p class="subtitle">Compare your options: keep your current loan, refinance it, or take out a new loan. See which saves you the most money.</p>
+    </section>
+
+    <!-- Existing Loan Inputs -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon amber">📋</div>
+        <div>
+          <div class="lw-card-title">Current Loan Details</div>
+          <div class="lw-card-subtitle">Your existing loan information</div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Current Balance Owed</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input" id="currentBalance" placeholder="150,000" inputmode="numeric">
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">Current Interest Rate</label>
+          <div class="lw-input-suffix">
+            <input type="text" class="lw-input" id="currentRate" placeholder="7.5" inputmode="decimal">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Remaining Term</label>
+          <div class="lw-input-suffix">
+            <input type="text" class="lw-input" id="remainingTerm" placeholder="48" inputmode="numeric">
+            <span class="suffix">months</span>
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">Current Monthly Payment <span class="lw-label-hint">(P&I)</span></label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input" id="currentPayment" placeholder="3,628" inputmode="numeric">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Refinance Option -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">🔄</div>
+        <div>
+          <div class="lw-card-title">Refinance Option</div>
+          <div class="lw-card-subtitle">New rate/term on your existing balance</div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">New Interest Rate</label>
+          <div class="lw-input-suffix">
+            <input type="text" class="lw-input" id="refiRate" placeholder="5.9" inputmode="decimal">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">New Loan Term</label>
+          <div class="lw-input-suffix">
+            <input type="text" class="lw-input" id="refiTerm" placeholder="48" inputmode="numeric">
+            <span class="suffix">months</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-form-group">
+        <label class="lw-label">Refinance Closing Costs <span class="lw-label-hint">(fees, points, etc.)</span></label>
+        <div class="lw-input-prefix">
+          <span class="prefix">$</span>
+          <input type="text" class="lw-input" id="refiCosts" placeholder="2,500" inputmode="numeric">
+        </div>
+      </div>
+    </div>
+
+    <!-- New Loan Option -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">✨</div>
+        <div>
+          <div class="lw-card-title">New Loan Option</div>
+          <div class="lw-card-subtitle">Completely new loan (may be different amount)</div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">New Loan Amount</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input" id="newLoanAmount" placeholder="150,000" inputmode="numeric">
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">Interest Rate</label>
+          <div class="lw-input-suffix">
+            <input type="text" class="lw-input" id="newLoanRate" placeholder="6.2" inputmode="decimal">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Loan Term</label>
+          <div class="lw-input-suffix">
+            <input type="text" class="lw-input" id="newLoanTerm" placeholder="60" inputmode="numeric">
+            <span class="suffix">months</span>
+          </div>
+        </div>
+
+        <div class="lw-form-group">
+          <label class="lw-label">Fees & Origination Costs</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input" id="newLoanFees" placeholder="3,000" inputmode="numeric">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsSection" class="lw-hidden">
+      <!-- Winner Hero -->
+      <div class="lw-result-hero" id="decisionHero">
+        <div class="lw-result-label">RECOMMENDED OPTION</div>
+        <div class="lw-result-number" id="recommendation" style="font-size: 32px; letter-spacing: -1px;">Calculating...</div>
+        <div class="lw-result-sub" id="recommendationSub"></div>
+      </div>
+
+      <!-- Three-Way Comparison Cards -->
+      <div class="comparison-grid-3">
+        <!-- Keep Current Card -->
+        <div class="comparison-card current" id="currentCard">
+          <div class="comparison-header">
+            <span class="comparison-icon">📋</span>
+            <h3>Keep Current</h3>
+          </div>
+          <div class="winner-badge" id="currentWinnerBadge">👑 BEST</div>
+          
+          <div class="comparison-main-value">
+            <div class="comparison-label">Monthly Payment</div>
+            <div class="comparison-amount" id="currentPaymentDisplay">$0</div>
+          </div>
+
+          <div class="comparison-details">
+            <div class="comparison-row">
+              <span>Interest Rate</span>
+              <span class="comparison-value" id="currentRateDisplay">--</span>
+            </div>
+            <div class="comparison-row">
+              <span>Remaining Balance</span>
+              <span class="comparison-value" id="currentBalanceDisplay">$0</span>
+            </div>
+            <div class="comparison-row">
+              <span>Remaining Term</span>
+              <span class="comparison-value" id="currentTermDisplay">--</span>
+            </div>
+            <div class="comparison-row">
+              <span>Total Interest Left</span>
+              <span class="comparison-value" id="currentInterestDisplay">$0</span>
+            </div>
+            <div class="comparison-row">
+              <span>Upfront Costs</span>
+              <span class="comparison-value">$0</span>
+            </div>
+            <div class="comparison-row highlight">
+              <span>Total Cost</span>
+              <span class="comparison-value" id="currentTotalDisplay">$0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Refinance Card -->
+        <div class="comparison-card refinance" id="refiCard">
+          <div class="comparison-header">
+            <span class="comparison-icon">🔄</span>
+            <h3>Refinance</h3>
+          </div>
+          <div class="winner-badge" id="refiWinnerBadge">👑 BEST</div>
+          
+          <div class="comparison-main-value">
+            <div class="comparison-label">Monthly Payment</div>
+            <div class="comparison-amount" id="refiPaymentDisplay">$0</div>
+            <div class="comparison-change" id="refiPaymentChange"></div>
+          </div>
+
+          <div class="comparison-details">
+            <div class="comparison-row">
+              <span>Interest Rate</span>
+              <span class="comparison-value" id="refiRateDisplay">--</span>
+            </div>
+            <div class="comparison-row">
+              <span>Loan Amount</span>
+              <span class="comparison-value" id="refiAmountDisplay">$0</span>
+            </div>
+            <div class="comparison-row">
+              <span>New Term</span>
+              <span class="comparison-value" id="refiTermDisplay">--</span>
+            </div>
+            <div class="comparison-row">
+              <span>Total Interest</span>
+              <span class="comparison-value" id="refiInterestDisplay">$0</span>
+            </div>
+            <div class="comparison-row">
+              <span>Closing Costs</span>
+              <span class="comparison-value" id="refiCostsDisplay">$0</span>
+            </div>
+            <div class="comparison-row highlight">
+              <span>Total Cost</span>
+              <span class="comparison-value" id="refiTotalDisplay">$0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- New Loan Card -->
+        <div class="comparison-card newloan" id="newLoanCard">
+          <div class="comparison-header">
+            <span class="comparison-icon">✨</span>
+            <h3>New Loan</h3>
+          </div>
+          <div class="winner-badge" id="newLoanWinnerBadge">👑 BEST</div>
+          
+          <div class="comparison-main-value">
+            <div class="comparison-label">Monthly Payment</div>
+            <div class="comparison-amount" id="newLoanPaymentDisplay">$0</div>
+            <div class="comparison-change" id="newLoanPaymentChange"></div>
+          </div>
+
+          <div class="comparison-details">
+            <div class="comparison-row">
+              <span>Interest Rate</span>
+              <span class="comparison-value" id="newLoanRateDisplay">--</span>
+            </div>
+            <div class="comparison-row">
+              <span>Loan Amount</span>
+              <span class="comparison-value" id="newLoanAmountDisplay">$0</span>
+            </div>
+            <div class="comparison-row">
+              <span>Term</span>
+              <span class="comparison-value" id="newLoanTermDisplay">--</span>
+            </div>
+            <div class="comparison-row">
+              <span>Total Interest</span>
+              <span class="comparison-value" id="newLoanInterestDisplay">$0</span>
+            </div>
+            <div class="comparison-row">
+              <span>Fees</span>
+              <span class="comparison-value" id="newLoanFeesDisplay">$0</span>
+            </div>
+            <div class="comparison-row highlight">
+              <span>Total Cost</span>
+              <span class="comparison-value" id="newLoanTotalDisplay">$0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Cost Visualization -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon violet">📊</div>
+          <div>
+            <div class="lw-card-title">Total Cost Comparison</div>
+            <div class="lw-card-subtitle">All payments + fees over the loan life</div>
+          </div>
+        </div>
+
+        <div class="lw-bar-chart">
+          <div class="lw-bar-row">
+            <div class="lw-bar-label">Keep Current</div>
+            <div class="lw-bar-track">
+              <div class="lw-bar-fill amber" id="currentBar" style="width: 0%">
+                <span class="lw-bar-amount" id="currentBarAmount">$0</span>
+              </div>
+            </div>
+          </div>
+          <div class="lw-bar-row">
+            <div class="lw-bar-label">Refinance</div>
+            <div class="lw-bar-track">
+              <div class="lw-bar-fill blue" id="refiBar" style="width: 0%">
+                <span class="lw-bar-amount" id="refiBarAmount">$0</span>
+              </div>
+            </div>
+          </div>
+          <div class="lw-bar-row">
+            <div class="lw-bar-label">New Loan</div>
+            <div class="lw-bar-track">
+              <div class="lw-bar-fill green" id="newLoanBar" style="width: 0%">
+                <span class="lw-bar-amount" id="newLoanBarAmount">$0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="savings-highlight" id="savingsHighlight">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+
+      <!-- Interest Paid Comparison -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon rose">💸</div>
+          <div>
+            <div class="lw-card-title">Interest Paid Comparison</div>
+            <div class="lw-card-subtitle">Total interest over each loan's life</div>
+          </div>
+        </div>
+
+        <div class="interest-comparison-grid">
+          <div class="interest-item">
+            <div class="interest-label">Keep Current</div>
+            <div class="interest-value" id="currentInterestBar">$0</div>
+            <div class="interest-bar-track">
+              <div class="interest-bar amber" id="currentInterestFill"></div>
+            </div>
+          </div>
+          <div class="interest-item">
+            <div class="interest-label">Refinance</div>
+            <div class="interest-value" id="refiInterestBar">$0</div>
+            <div class="interest-bar-track">
+              <div class="interest-bar blue" id="refiInterestFill"></div>
+            </div>
+          </div>
+          <div class="interest-item">
+            <div class="interest-label">New Loan</div>
+            <div class="interest-value" id="newLoanInterestBar">$0</div>
+            <div class="interest-bar-track">
+              <div class="interest-bar green" id="newLoanInterestFill"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="interest-insight" id="interestInsight">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+
+      <!-- Break-Even Analysis -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon amber">⏱️</div>
+          <div>
+            <div class="lw-card-title">Break-Even Timeline</div>
+            <div class="lw-card-subtitle">When fees pay off in savings vs. keeping current</div>
+          </div>
+        </div>
+
+        <div class="breakeven-grid">
+          <div class="breakeven-item">
+            <div class="breakeven-label">Refinance Break-Even</div>
+            <div class="breakeven-value" id="refiBreakeven">--</div>
+            <div class="breakeven-note" id="refiBreakevenNote">months to recoup closing costs</div>
+          </div>
+          <div class="breakeven-item">
+            <div class="breakeven-label">New Loan Break-Even</div>
+            <div class="breakeven-value" id="newLoanBreakeven">--</div>
+            <div class="breakeven-note" id="newLoanBreakevenNote">months to recoup fees</div>
+          </div>
+        </div>
+
+        <div class="breakeven-insight" id="breakevenInsight">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+
+      <!-- What This Means -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon blue">💡</div>
+          <div>
+            <div class="lw-card-title">What This Means</div>
+            <div class="lw-card-subtitle">Plain English decision guidance</div>
+          </div>
+        </div>
+        <div id="explanationText" style="color: var(--lw-text-secondary); line-height: 1.8;">
+          <!-- Explanation will be rendered here -->
+        </div>
+      </div>
+
+      <!-- Decision Guidance -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon green">🎯</div>
+          <div>
+            <div class="lw-card-title">Decision Guidance</div>
+            <div class="lw-card-subtitle">When each option makes sense</div>
+          </div>
+        </div>
+
+        <div class="decision-grid">
+          <div class="decision-item keep">
+            <h4>📋 Keep Current Loan If...</h4>
+            <ul>
+              <li>Your rate is already competitive</li>
+              <li>You'll pay off the loan soon</li>
+              <li>Closing costs exceed potential savings</li>
+              <li>You've already paid most of the interest</li>
+              <li>You plan to sell/pay off within 1-2 years</li>
+            </ul>
+          </div>
+          <div class="decision-item refi">
+            <h4>🔄 Refinance If...</h4>
+            <ul>
+              <li>Rates dropped 0.5%+ since your loan</li>
+              <li>Your credit score improved significantly</li>
+              <li>You want to shorten or extend the term</li>
+              <li>You'll stay past the break-even point</li>
+              <li>Lower closing costs than new loan</li>
+            </ul>
+          </div>
+          <div class="decision-item newloan">
+            <h4>✨ Take New Loan If...</h4>
+            <ul>
+              <li>You need additional funds beyond balance</li>
+              <li>Current lender won't refinance</li>
+              <li>Better rate from new lender</li>
+              <li>Consolidating multiple loans</li>
+              <li>Switching loan types (e.g., secured to unsecured)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <section class="lw-content">
+      <h2>Refinance vs New Loan: Making the Right Choice</h2>
+      <p>When you're looking to change your loan terms or get a better rate, you have three main options: <strong>keep your current loan</strong>, <strong>refinance it</strong>, or <strong>take out a completely new loan</strong>. Each option has distinct advantages depending on your situation, current rates, and financial goals.</p>
+
+      <h3>What Is Loan Refinancing?</h3>
+      <p><strong>Refinancing</strong> means replacing your existing loan with a new one, typically with the same lender or a different one. The new loan pays off your current balance, and you start fresh with new terms—potentially a lower interest rate, different loan length, or both.</p>
+      <p>Refinancing is common for mortgages, auto loans, personal loans, and student loans. The key advantage is that you're working with your existing balance, which may qualify for lower closing costs or fees than a brand new loan.</p>
+
+      <h3>When Should You Refinance Instead of Taking a New Loan?</h3>
+      <p><strong>Refinancing typically makes sense when:</strong></p>
+      <ul>
+        <li><strong>Rates have dropped</strong> — Even a 0.5% rate reduction can save thousands over a loan's lifetime</li>
+        <li><strong>Your credit improved</strong> — Better credit scores qualify for better rates</li>
+        <li><strong>You want different terms</strong> — Shorten your loan for faster payoff, or extend it for lower payments</li>
+        <li><strong>Same loan amount works</strong> — You don't need more (or less) than your current balance</li>
+        <li><strong>Closing costs are reasonable</strong> — Refinance fees are often lower than new loan origination fees</li>
+      </ul>
+
+      <h3>When Is a New Loan Better Than Refinancing?</h3>
+      <p><strong>A new loan makes more sense when:</strong></p>
+      <ul>
+        <li><strong>You need different funding</strong> — More money than your current balance, or less</li>
+        <li><strong>Current lender won't refinance</strong> — Some loans or lenders don't offer refinancing</li>
+        <li><strong>Another lender offers better terms</strong> — Shopping around found a significantly better deal</li>
+        <li><strong>Consolidating multiple loans</strong> — Combining several debts into one new loan</li>
+        <li><strong>Changing loan types</strong> — Moving from adjustable to fixed, secured to unsecured, etc.</li>
+      </ul>
+
+      <h2>Understanding Total Cost vs. Monthly Payment</h2>
+      <p>When comparing options, don't just look at monthly payments—consider the <strong>total cost</strong> including all interest and fees. A lower monthly payment with a longer term might actually cost you more in total.</p>
+      <p>For example: A $20,000 loan at 7% for 48 months costs $23,037 total. The same loan at 6% for 60 months has lower payments but costs $23,199 total. The "better rate" option costs more because of the longer term!</p>
+
+      <h3>How to Use This Calculator</h3>
+      <p>Enter your current loan details, then input the refinance and new loan options you're considering. The calculator instantly shows:</p>
+      <ul>
+        <li><strong>Monthly payment comparison</strong> — Side-by-side payment amounts for all options</li>
+        <li><strong>Total cost comparison</strong> — Principal + all interest + all fees</li>
+        <li><strong>Interest paid</strong> — How much goes to interest for each option</li>
+        <li><strong>Break-even timeline</strong> — How long until new options' savings exceed their fees</li>
+        <li><strong>Winner badge</strong> — Visual indicator of the lowest total cost option</li>
+      </ul>
+
+      <h2>Important Considerations</h2>
+      <h3>Closing Costs and Fees</h3>
+      <p>Both refinancing and new loans come with costs. Refinancing typically costs 2-5% of the loan amount for mortgages, or flat fees ($200-500) for auto and personal loans. New loans may have origination fees, application fees, and similar closing costs.</p>
+      <p>Always factor these into your comparison—a slightly lower rate might not save money if fees are high.</p>
+
+      <h3>Loan Term Decisions</h3>
+      <p>Shorter terms mean higher payments but less total interest. Longer terms mean lower payments but more interest paid. Consider your monthly budget and your payoff goals.</p>
+
+      <h3>Your Timeline</h3>
+      <p>If you plan to sell your home, pay off the loan early, or refinance again soon, the break-even point matters a lot. Don't pay $5,000 in fees to save $50/month if you're selling in a year.</p>
+
+      <!-- FAQ Section -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Should I refinance my loan or take out a new loan?</button>
+          <div class="lw-faq-a">
+            <p>The choice depends on several factors: Refinance if you want to keep the same loan type with better terms (lower rate or different term). Take a new loan if you need additional funds, want to consolidate multiple debts, or your current loan type doesn't allow refinancing. Use this calculator to compare total costs for your specific situation.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">What is the difference between refinancing and getting a new loan?</button>
+          <div class="lw-faq-a">
+            <p>Refinancing replaces your existing loan with a new one at different terms, using your current balance. A new loan is completely separate—potentially for a different amount, purpose, or from a different lender. Refinancing usually has lower fees, while new loans offer more flexibility in amount and lender choice.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">When does refinancing make more sense than a new loan?</button>
+          <div class="lw-faq-a">
+            <p>Refinancing makes sense when rates have dropped significantly, your credit has improved, you want to change your loan term, or you want lower closing costs. It's best when you're satisfied with your current loan amount and just want better terms.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">What fees are involved in refinancing vs getting a new loan?</button>
+          <div class="lw-faq-a">
+            <p>Refinancing for mortgages typically costs 2-5% of the loan amount. Auto and personal loan refinancing may have flat fees of $200-500. New loans may have origination fees (0.5-1%), application fees, and closing costs. Compare total fees against monthly and total savings to find your break-even point.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">How do I calculate the break-even point for refinancing?</button>
+          <div class="lw-faq-a">
+            <p>Divide total fees by monthly savings. If refinancing costs $3,000 and saves $100/month vs. your current loan, break-even is 30 months. If you'll keep the loan longer than that, refinancing makes financial sense. Our calculator computes this automatically.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Is it better to pay off my current loan or refinance?</button>
+          <div class="lw-faq-a">
+            <p>If you can afford to pay off the loan entirely, you'll save all remaining interest—usually the best financial choice. However, if rates are very low and you could invest the payoff amount at higher returns, keeping the loan while investing might be better. Consider your emergency fund needs and investment opportunities.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="lw-related">
+      <h2>Related Loan Tools</h2>
+      <div class="lw-related-grid">
+        <a href="/refinance-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Refinance Calculator
+        </a>
+        <a href="/loan-comparison-tool/" class="lw-related-link">
+          <span class="dot"></span>
+          Loan Comparison Tool
+        </a>
+        <a href="/refinance-break-even/" class="lw-related-link">
+          <span class="dot"></span>
+          Refinance Break-Even Calculator
+        </a>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <div class="lw-disclaimer">
+      This calculator provides estimates for educational purposes only. Actual payments, rates, and fees may vary based on your lender, credit, and loan type. Consult with a financial professional before making loan decisions.
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="lw-footer">
+    <p>© 2025 PocketWise Financial Tools. <a href="/">Explore All Calculators</a></p>
+  </footer>
+
+  <style>
+    /* Three-Column Comparison Grid */
+    .comparison-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 900px) {
+      .comparison-grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Comparison Cards */
+    .comparison-card {
+      background: var(--lw-card);
+      border-radius: var(--lw-radius-lg);
+      overflow: hidden;
+      box-shadow: var(--lw-shadow);
+      border: 2px solid var(--lw-border-light);
+      transition: all var(--lw-transition);
+      position: relative;
+    }
+    .comparison-card.winner {
+      border-color: var(--lw-emerald);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15), var(--lw-shadow-lg);
+    }
+    .comparison-card.winner .comparison-header {
+      background: linear-gradient(135deg, var(--lw-emerald) 0%, var(--lw-teal) 100%);
+    }
+    .comparison-card.winner .comparison-header h3 {
+      color: white;
+    }
+    .comparison-card.winner .comparison-icon {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .winner-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: linear-gradient(135deg, #FBBF24, #F59E0B);
+      color: #78350F;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--lw-radius-full);
+      display: none;
+      z-index: 10;
+      animation: badge-pulse 2s ease-in-out infinite;
+    }
+    .comparison-card.winner .winner-badge {
+      display: block;
+    }
+    @keyframes badge-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .comparison-header {
+      padding: 16px 20px;
+      background: var(--lw-slate-50);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--lw-border-light);
+    }
+    .comparison-header h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--lw-navy);
+      margin: 0;
+      flex: 1;
+    }
+    .comparison-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--lw-radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .comparison-card.current .comparison-icon { background: var(--lw-amber-50); }
+    .comparison-card.refinance .comparison-icon { background: var(--lw-sky-100); }
+    .comparison-card.newloan .comparison-icon { background: var(--lw-emerald-50); }
+
+    .comparison-main-value {
+      padding: 24px 20px;
+      text-align: center;
+      background: var(--lw-card);
+    }
+    .comparison-label {
+      font-size: 11px;
+      color: var(--lw-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .comparison-amount {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--lw-navy);
+      letter-spacing: -1px;
+    }
+    .comparison-change {
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    .comparison-change.savings { color: var(--lw-emerald); }
+    .comparison-change.increase { color: var(--lw-rose); }
+
+    .comparison-details {
+      padding: 0 20px 20px;
+      background: var(--lw-card);
+    }
+    .comparison-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--lw-border-light);
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+    }
+    .comparison-row:last-child {
+      border-bottom: none;
+    }
+    .comparison-row.highlight {
+      background: var(--lw-slate-50);
+      margin: 10px -20px 0;
+      padding: 12px 20px;
+      border-radius: 0 0 var(--lw-radius) var(--lw-radius);
+      border-bottom: none;
+      font-weight: 600;
+      color: var(--lw-navy);
+    }
+    .comparison-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: var(--lw-navy);
+      font-size: 13px;
+    }
+
+    /* Savings Highlight */
+    .savings-highlight {
+      margin-top: 24px;
+      padding: 20px;
+      background: var(--lw-emerald-50);
+      border-radius: var(--lw-radius);
+      text-align: center;
+      border-left: 4px solid var(--lw-emerald);
+    }
+    .savings-highlight strong {
+      color: var(--lw-emerald-dark);
+      font-size: 18px;
+    }
+    .savings-highlight p {
+      margin: 0;
+      color: var(--lw-text-secondary);
+      font-size: 15px;
+    }
+
+    /* Interest Comparison */
+    .interest-comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 600px) {
+      .interest-comparison-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .interest-item {
+      text-align: center;
+    }
+    .interest-label {
+      font-size: 12px;
+      color: var(--lw-text-muted);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .interest-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--lw-navy);
+      margin-bottom: 8px;
+    }
+    .interest-bar-track {
+      height: 8px;
+      background: var(--lw-slate-100);
+      border-radius: var(--lw-radius-full);
+      overflow: hidden;
+    }
+    .interest-bar {
+      height: 100%;
+      border-radius: var(--lw-radius-full);
+      transition: width 0.8s ease;
+    }
+    .interest-bar.amber { background: linear-gradient(90deg, var(--lw-amber), var(--lw-amber-light)); }
+    .interest-bar.blue { background: linear-gradient(90deg, var(--lw-sky), var(--lw-sky-light)); }
+    .interest-bar.green { background: linear-gradient(90deg, var(--lw-emerald), var(--lw-emerald-light)); }
+
+    .interest-insight {
+      padding: 16px 20px;
+      background: var(--lw-sky-50);
+      border-radius: var(--lw-radius);
+      color: var(--lw-sky-dark);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* Break-Even Grid */
+    .breakeven-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 600px) {
+      .breakeven-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .breakeven-item {
+      text-align: center;
+      padding: 24px;
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+    }
+    .breakeven-label {
+      font-size: 13px;
+      color: var(--lw-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .breakeven-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--lw-navy);
+    }
+    .breakeven-note {
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+      margin-top: 4px;
+    }
+    .breakeven-insight {
+      padding: 16px 20px;
+      background: var(--lw-amber-50);
+      border-radius: var(--lw-radius);
+      color: #92400E;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* Decision Grid */
+    .decision-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 768px) {
+      .decision-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .decision-item {
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      padding: 20px;
+    }
+    .decision-item.keep { border-top: 3px solid var(--lw-amber); }
+    .decision-item.refi { border-top: 3px solid var(--lw-sky); }
+    .decision-item.newloan { border-top: 3px solid var(--lw-emerald); }
+    .decision-item h4 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--lw-navy);
+      margin-bottom: 12px;
+    }
+    .decision-item ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .decision-item li {
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+      padding: 5px 0 5px 18px;
+      position: relative;
+      line-height: 1.4;
+    }
+    .decision-item li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--lw-emerald);
+      font-weight: bold;
+      font-size: 12px;
+    }
+  </style>
+
+  <script>
+    // Utility functions
+    function parseNumber(str) {
+      if (!str) return 0;
+      return parseFloat(str.replace(/[^0-9.-]/g, '')) || 0;
+    }
+
+    function formatCurrency(num) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(num);
+    }
+
+    function formatCurrencyPrecise(num) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(num);
+    }
+
+    function formatInput(input) {
+      const value = parseNumber(input.value);
+      if (value > 0) {
+        input.value = value.toLocaleString('en-US');
+      }
+    }
+
+    // Calculate monthly payment
+    function calculateMonthlyPayment(principal, annualRate, months) {
+      if (principal <= 0 || months <= 0) return 0;
+      if (annualRate === 0) return principal / months;
+      const monthlyRate = annualRate / 100 / 12;
+      return principal * (monthlyRate * Math.pow(1 + monthlyRate, months)) / 
+             (Math.pow(1 + monthlyRate, months) - 1);
+    }
+
+    // Calculate total interest
+    function calculateTotalInterest(principal, annualRate, months) {
+      const payment = calculateMonthlyPayment(principal, annualRate, months);
+      return (payment * months) - principal;
+    }
+
+    // Main calculation
+    function calculate() {
+      // Get current loan values
+      const currentBalance = parseNumber(document.getElementById('currentBalance').value);
+      const currentRate = parseNumber(document.getElementById('currentRate').value);
+      const remainingTerm = parseNumber(document.getElementById('remainingTerm').value);
+      const currentPayment = parseNumber(document.getElementById('currentPayment').value) || 
+                            calculateMonthlyPayment(currentBalance, currentRate, remainingTerm);
+
+      // Get refinance values
+      const refiRate = parseNumber(document.getElementById('refiRate').value);
+      const refiTerm = parseNumber(document.getElementById('refiTerm').value);
+      const refiCosts = parseNumber(document.getElementById('refiCosts').value);
+
+      // Get new loan values
+      const newLoanAmount = parseNumber(document.getElementById('newLoanAmount').value);
+      const newLoanRate = parseNumber(document.getElementById('newLoanRate').value);
+      const newLoanTerm = parseNumber(document.getElementById('newLoanTerm').value);
+      const newLoanFees = parseNumber(document.getElementById('newLoanFees').value);
+
+      // Validate minimum inputs
+      if (currentBalance <= 0 || remainingTerm <= 0) {
+        document.getElementById('resultsSection').classList.add('lw-hidden');
+        return;
+      }
+
+      // Show results
+      document.getElementById('resultsSection').classList.remove('lw-hidden');
+
+      // Calculate CURRENT loan scenario
+      const calcCurrentPayment = calculateMonthlyPayment(currentBalance, currentRate, remainingTerm);
+      const displayCurrentPayment = currentPayment > 0 ? currentPayment : calcCurrentPayment;
+      const currentInterest = calculateTotalInterest(currentBalance, currentRate, remainingTerm);
+      const currentTotal = currentBalance + currentInterest;
+
+      // Calculate REFINANCE scenario (same balance, new rate/term)
+      const refiPayment = refiRate > 0 && refiTerm > 0 
+        ? calculateMonthlyPayment(currentBalance, refiRate, refiTerm)
+        : 0;
+      const refiInterest = refiRate > 0 && refiTerm > 0 
+        ? calculateTotalInterest(currentBalance, refiRate, refiTerm)
+        : 0;
+      const refiTotal = refiPayment > 0 
+        ? currentBalance + refiInterest + refiCosts
+        : Infinity;
+
+      // Calculate NEW LOAN scenario
+      const newLoanPayment = newLoanAmount > 0 && newLoanRate > 0 && newLoanTerm > 0
+        ? calculateMonthlyPayment(newLoanAmount, newLoanRate, newLoanTerm)
+        : 0;
+      const newLoanInterest = newLoanAmount > 0 && newLoanRate > 0 && newLoanTerm > 0
+        ? calculateTotalInterest(newLoanAmount, newLoanRate, newLoanTerm)
+        : 0;
+      const newLoanTotal = newLoanPayment > 0
+        ? newLoanAmount + newLoanInterest + newLoanFees
+        : Infinity;
+
+      // Determine winner (lowest total cost)
+      const totals = [
+        { name: 'current', total: currentTotal, valid: true },
+        { name: 'refi', total: refiTotal, valid: refiPayment > 0 },
+        { name: 'newLoan', total: newLoanTotal, valid: newLoanPayment > 0 }
+      ].filter(o => o.valid);
+
+      totals.sort((a, b) => a.total - b.total);
+      const winner = totals[0].name;
+      const bestSavings = totals.length > 1 ? totals[1].total - totals[0].total : 0;
+
+      // Update cards - Current
+      document.getElementById('currentPaymentDisplay').textContent = formatCurrencyPrecise(displayCurrentPayment);
+      document.getElementById('currentRateDisplay').textContent = currentRate.toFixed(2) + '%';
+      document.getElementById('currentBalanceDisplay').textContent = formatCurrency(currentBalance);
+      document.getElementById('currentTermDisplay').textContent = remainingTerm + ' mo';
+      document.getElementById('currentInterestDisplay').textContent = formatCurrency(currentInterest);
+      document.getElementById('currentTotalDisplay').textContent = formatCurrency(currentTotal);
+
+      // Update cards - Refinance
+      if (refiPayment > 0) {
+        document.getElementById('refiPaymentDisplay').textContent = formatCurrencyPrecise(refiPayment);
+        const refiDiff = displayCurrentPayment - refiPayment;
+        const refiChangeEl = document.getElementById('refiPaymentChange');
+        if (refiDiff > 0) {
+          refiChangeEl.textContent = `↓ ${formatCurrency(refiDiff)}/mo savings`;
+          refiChangeEl.className = 'comparison-change savings';
+        } else if (refiDiff < 0) {
+          refiChangeEl.textContent = `↑ ${formatCurrency(Math.abs(refiDiff))}/mo more`;
+          refiChangeEl.className = 'comparison-change increase';
+        } else {
+          refiChangeEl.textContent = 'Same payment';
+          refiChangeEl.className = 'comparison-change';
+        }
+        document.getElementById('refiRateDisplay').textContent = refiRate.toFixed(2) + '%';
+        document.getElementById('refiAmountDisplay').textContent = formatCurrency(currentBalance);
+        document.getElementById('refiTermDisplay').textContent = refiTerm + ' mo';
+        document.getElementById('refiInterestDisplay').textContent = formatCurrency(refiInterest);
+        document.getElementById('refiCostsDisplay').textContent = formatCurrency(refiCosts);
+        document.getElementById('refiTotalDisplay').textContent = formatCurrency(refiTotal);
+      } else {
+        document.getElementById('refiPaymentDisplay').textContent = '--';
+        document.getElementById('refiPaymentChange').textContent = 'Enter refinance details';
+        document.getElementById('refiPaymentChange').className = 'comparison-change';
+        document.getElementById('refiRateDisplay').textContent = '--';
+        document.getElementById('refiAmountDisplay').textContent = '--';
+        document.getElementById('refiTermDisplay').textContent = '--';
+        document.getElementById('refiInterestDisplay').textContent = '--';
+        document.getElementById('refiCostsDisplay').textContent = '--';
+        document.getElementById('refiTotalDisplay').textContent = '--';
+      }
+
+      // Update cards - New Loan
+      if (newLoanPayment > 0) {
+        document.getElementById('newLoanPaymentDisplay').textContent = formatCurrencyPrecise(newLoanPayment);
+        const newLoanDiff = displayCurrentPayment - newLoanPayment;
+        const newLoanChangeEl = document.getElementById('newLoanPaymentChange');
+        if (newLoanDiff > 0) {
+          newLoanChangeEl.textContent = `↓ ${formatCurrency(newLoanDiff)}/mo savings`;
+          newLoanChangeEl.className = 'comparison-change savings';
+        } else if (newLoanDiff < 0) {
+          newLoanChangeEl.textContent = `↑ ${formatCurrency(Math.abs(newLoanDiff))}/mo more`;
+          newLoanChangeEl.className = 'comparison-change increase';
+        } else {
+          newLoanChangeEl.textContent = 'Same payment';
+          newLoanChangeEl.className = 'comparison-change';
+        }
+        document.getElementById('newLoanRateDisplay').textContent = newLoanRate.toFixed(2) + '%';
+        document.getElementById('newLoanAmountDisplay').textContent = formatCurrency(newLoanAmount);
+        document.getElementById('newLoanTermDisplay').textContent = newLoanTerm + ' mo';
+        document.getElementById('newLoanInterestDisplay').textContent = formatCurrency(newLoanInterest);
+        document.getElementById('newLoanFeesDisplay').textContent = formatCurrency(newLoanFees);
+        document.getElementById('newLoanTotalDisplay').textContent = formatCurrency(newLoanTotal);
+      } else {
+        document.getElementById('newLoanPaymentDisplay').textContent = '--';
+        document.getElementById('newLoanPaymentChange').textContent = 'Enter new loan details';
+        document.getElementById('newLoanPaymentChange').className = 'comparison-change';
+        document.getElementById('newLoanRateDisplay').textContent = '--';
+        document.getElementById('newLoanAmountDisplay').textContent = '--';
+        document.getElementById('newLoanTermDisplay').textContent = '--';
+        document.getElementById('newLoanInterestDisplay').textContent = '--';
+        document.getElementById('newLoanFeesDisplay').textContent = '--';
+        document.getElementById('newLoanTotalDisplay').textContent = '--';
+      }
+
+      // Update winner styling
+      document.getElementById('currentCard').classList.toggle('winner', winner === 'current');
+      document.getElementById('refiCard').classList.toggle('winner', winner === 'refi');
+      document.getElementById('newLoanCard').classList.toggle('winner', winner === 'newLoan');
+
+      // Update recommendation hero
+      const recommendation = document.getElementById('recommendation');
+      const recommendationSub = document.getElementById('recommendationSub');
+      const decisionHero = document.getElementById('decisionHero');
+
+      if (winner === 'current') {
+        recommendation.textContent = '📋 Keep Your Current Loan';
+        recommendationSub.textContent = bestSavings > 0 
+          ? `Saves ${formatCurrency(bestSavings)} compared to the next best option`
+          : 'Already the most cost-effective option';
+        decisionHero.style.background = 'linear-gradient(135deg, #B45309 0%, #F59E0B 100%)';
+      } else if (winner === 'refi') {
+        recommendation.textContent = '🔄 Refinance Your Loan';
+        recommendationSub.textContent = `Saves ${formatCurrency(bestSavings)} over the next best option`;
+        decisionHero.style.background = 'linear-gradient(135deg, #0284C7 0%, #0EA5E9 100%)';
+      } else {
+        recommendation.textContent = '✨ Take the New Loan';
+        recommendationSub.textContent = `Saves ${formatCurrency(bestSavings)} over the next best option`;
+        decisionHero.style.background = 'linear-gradient(135deg, #059669 0%, #10B981 100%)';
+      }
+
+      // Update bar chart
+      const validTotals = [currentTotal];
+      if (refiTotal !== Infinity) validTotals.push(refiTotal);
+      if (newLoanTotal !== Infinity) validTotals.push(newLoanTotal);
+      const maxTotal = Math.max(...validTotals);
+
+      document.getElementById('currentBarAmount').textContent = formatCurrency(currentTotal);
+      document.getElementById('refiBarAmount').textContent = refiTotal !== Infinity ? formatCurrency(refiTotal) : '--';
+      document.getElementById('newLoanBarAmount').textContent = newLoanTotal !== Infinity ? formatCurrency(newLoanTotal) : '--';
+
+      setTimeout(() => {
+        document.getElementById('currentBar').style.width = `${(currentTotal / maxTotal) * 100}%`;
+        document.getElementById('refiBar').style.width = refiTotal !== Infinity 
+          ? `${(refiTotal / maxTotal) * 100}%` 
+          : '10%';
+        document.getElementById('newLoanBar').style.width = newLoanTotal !== Infinity 
+          ? `${(newLoanTotal / maxTotal) * 100}%` 
+          : '10%';
+      }, 100);
+
+      // Update savings highlight
+      const savingsHighlight = document.getElementById('savingsHighlight');
+      if (bestSavings > 0 && winner !== 'current') {
+        savingsHighlight.innerHTML = `<p><strong>You'll save ${formatCurrency(bestSavings)}</strong> by choosing to ${winner === 'refi' ? 'refinance' : 'take the new loan'} instead of the next best option.</p>`;
+      } else if (winner === 'current') {
+        savingsHighlight.innerHTML = `<p><strong>Your current loan is the best option.</strong> The alternatives don't save enough to justify their fees.</p>`;
+      } else {
+        savingsHighlight.innerHTML = `<p>Enter all options to see savings comparison.</p>`;
+      }
+
+      // Update interest comparison
+      const interestValues = [currentInterest];
+      if (refiInterest > 0) interestValues.push(refiInterest);
+      if (newLoanInterest > 0) interestValues.push(newLoanInterest);
+      const maxInterest = Math.max(...interestValues);
+
+      document.getElementById('currentInterestBar').textContent = formatCurrency(currentInterest);
+      document.getElementById('refiInterestBar').textContent = refiInterest > 0 ? formatCurrency(refiInterest) : '--';
+      document.getElementById('newLoanInterestBar').textContent = newLoanInterest > 0 ? formatCurrency(newLoanInterest) : '--';
+
+      setTimeout(() => {
+        document.getElementById('currentInterestFill').style.width = `${(currentInterest / maxInterest) * 100}%`;
+        document.getElementById('refiInterestFill').style.width = refiInterest > 0 
+          ? `${(refiInterest / maxInterest) * 100}%` 
+          : '5%';
+        document.getElementById('newLoanInterestFill').style.width = newLoanInterest > 0 
+          ? `${(newLoanInterest / maxInterest) * 100}%` 
+          : '5%';
+      }, 100);
+
+      // Interest insight
+      const interestInsight = document.getElementById('interestInsight');
+      const lowestInterest = Math.min(...interestValues.filter(v => v > 0));
+      const interestSavings = currentInterest - lowestInterest;
+      if (interestSavings > 0 && lowestInterest < currentInterest) {
+        const lowestOption = lowestInterest === refiInterest ? 'refinancing' : 'the new loan';
+        interestInsight.innerHTML = `<strong>💡 Interest savings:</strong> ${lowestOption} saves you ${formatCurrency(interestSavings)} in interest compared to keeping your current loan.`;
+      } else {
+        interestInsight.innerHTML = `<strong>💡 Your current loan</strong> has competitive interest costs. Make sure any new option's savings exceed its fees.`;
+      }
+
+      // Break-even analysis
+      const refiMonthlySavings = displayCurrentPayment - refiPayment;
+      const newLoanMonthlySavings = displayCurrentPayment - newLoanPayment;
+
+      const refiBreakeven = refiMonthlySavings > 0 && refiCosts > 0 
+        ? Math.ceil(refiCosts / refiMonthlySavings) 
+        : null;
+      const newLoanBreakeven = newLoanMonthlySavings > 0 && newLoanFees > 0 
+        ? Math.ceil(newLoanFees / newLoanMonthlySavings) 
+        : null;
+
+      document.getElementById('refiBreakeven').textContent = refiBreakeven !== null ? refiBreakeven : 'N/A';
+      document.getElementById('refiBreakevenNote').textContent = refiBreakeven !== null 
+        ? `months to recoup ${formatCurrency(refiCosts)}` 
+        : refiPayment > 0 ? 'No monthly savings vs. current' : 'Enter refinance details';
+
+      document.getElementById('newLoanBreakeven').textContent = newLoanBreakeven !== null ? newLoanBreakeven : 'N/A';
+      document.getElementById('newLoanBreakevenNote').textContent = newLoanBreakeven !== null 
+        ? `months to recoup ${formatCurrency(newLoanFees)}` 
+        : newLoanPayment > 0 ? 'No monthly savings vs. current' : 'Enter new loan details';
+
+      // Break-even insight
+      const breakevenInsight = document.getElementById('breakevenInsight');
+      if (refiBreakeven !== null && newLoanBreakeven !== null) {
+        if (refiBreakeven < newLoanBreakeven) {
+          breakevenInsight.innerHTML = `<strong>⚡ Refinance breaks even ${newLoanBreakeven - refiBreakeven} months faster.</strong> If you might pay off or refinance again soon, the faster break-even matters.`;
+        } else if (newLoanBreakeven < refiBreakeven) {
+          breakevenInsight.innerHTML = `<strong>⚡ New loan breaks even ${refiBreakeven - newLoanBreakeven} months faster.</strong> Despite potentially higher fees, the monthly savings add up quicker.`;
+        } else {
+          breakevenInsight.innerHTML = `<strong>⚡ Both options break even around the same time.</strong> Focus on total cost savings over the full loan term.`;
+        }
+      } else if (refiBreakeven !== null) {
+        breakevenInsight.innerHTML = `<strong>⚡ Refinance breaks even in ${refiBreakeven} months.</strong> If you'll keep the loan longer than that, refinancing saves money.`;
+      } else if (newLoanBreakeven !== null) {
+        breakevenInsight.innerHTML = `<strong>⚡ New loan breaks even in ${newLoanBreakeven} months.</strong> Keep it longer than that to benefit from the savings.`;
+      } else {
+        breakevenInsight.innerHTML = `<strong>💡 Neither option produces monthly savings vs. your current loan.</strong> Consider if you really need to change—your current terms may be competitive.`;
+      }
+
+      // Update explanation
+      updateExplanation(
+        currentBalance, currentRate, remainingTerm, displayCurrentPayment,
+        refiRate, refiTerm, refiCosts, refiPayment, refiTotal,
+        newLoanAmount, newLoanRate, newLoanTerm, newLoanFees, newLoanPayment, newLoanTotal,
+        currentTotal, winner, bestSavings
+      );
+    }
+
+    function updateExplanation(
+      currentBalance, currentRate, remainingTerm, currentPayment,
+      refiRate, refiTerm, refiCosts, refiPayment, refiTotal,
+      newLoanAmount, newLoanRate, newLoanTerm, newLoanFees, newLoanPayment, newLoanTotal,
+      currentTotal, winner, bestSavings
+    ) {
+      const container = document.getElementById('explanationText');
+      let html = '';
+
+      html += `<p><strong>Your situation:</strong> You have a ${formatCurrency(currentBalance)} loan at ${currentRate}% with ${remainingTerm} months remaining. Current payment: ${formatCurrencyPrecise(currentPayment)}/month.</p>`;
+
+      if (refiPayment > 0) {
+        const refiVsCurrent = currentTotal - refiTotal;
+        html += `<p><strong>Refinance option:</strong> Same ${formatCurrency(currentBalance)} balance at ${refiRate}% for ${refiTerm} months. Payment: ${formatCurrencyPrecise(refiPayment)}/month. Total cost: ${formatCurrency(refiTotal)} (${refiVsCurrent > 0 ? 'saves' : 'costs'} ${formatCurrency(Math.abs(refiVsCurrent))} vs. current).</p>`;
+      }
+
+      if (newLoanPayment > 0) {
+        const newVsCurrent = currentTotal - newLoanTotal;
+        html += `<p><strong>New loan option:</strong> ${formatCurrency(newLoanAmount)} at ${newLoanRate}% for ${newLoanTerm} months. Payment: ${formatCurrencyPrecise(newLoanPayment)}/month. Total cost: ${formatCurrency(newLoanTotal)} (${newVsCurrent > 0 ? 'saves' : 'costs'} ${formatCurrency(Math.abs(newVsCurrent))} vs. current).</p>`;
+      }
+
+      // Winner explanation
+      if (winner === 'current') {
+        html += `<p style="background: var(--lw-amber-50); padding: 12px 16px; border-radius: var(--lw-radius); border-left: 3px solid var(--lw-amber);"><strong>📋 Recommendation: Keep your current loan.</strong> `;
+        
+        if (refiPayment > 0 && refiTotal > currentTotal) {
+          const extraCost = refiTotal - currentTotal;
+          html += `Refinancing would actually cost you ${formatCurrency(extraCost)} more—the fees and/or new terms don't beat your current deal. `;
+        }
+        if (newLoanPayment > 0 && newLoanTotal > currentTotal) {
+          const extraCost = newLoanTotal - currentTotal;
+          html += `The new loan would cost ${formatCurrency(extraCost)} more overall. `;
+        }
+        html += `Your current terms are competitive!</p>`;
+
+      } else if (winner === 'refi') {
+        const feeThreshold = refiCosts;
+        html += `<p style="background: var(--lw-sky-50); padding: 12px 16px; border-radius: var(--lw-radius); border-left: 3px solid var(--lw-sky);"><strong>🔄 Recommendation: Refinance your loan.</strong> `;
+        html += `Even with ${formatCurrency(refiCosts)} in closing costs, you'll save ${formatCurrency(bestSavings)} over the loan's life. `;
+        
+        if (newLoanPayment > 0 && newLoanTotal > refiTotal) {
+          html += `The new loan option costs ${formatCurrency(newLoanTotal - refiTotal)} more than refinancing. `;
+        }
+        
+        html += `<strong>Refinance wins because closing costs are under ${formatCurrency(feeThreshold + bestSavings)}.</strong></p>`;
+
+      } else {
+        html += `<p style="background: var(--lw-emerald-50); padding: 12px 16px; border-radius: var(--lw-radius); border-left: 3px solid var(--lw-emerald);"><strong>✨ Recommendation: Take the new loan.</strong> `;
+        
+        if (newLoanAmount !== currentBalance) {
+          html += `The different loan amount (${formatCurrency(newLoanAmount)} vs. ${formatCurrency(currentBalance)}) combined with better terms makes this the best choice. `;
+        }
+        
+        html += `You'll save ${formatCurrency(bestSavings)} compared to the next best option. `;
+        
+        if (refiPayment > 0 && refiTotal > newLoanTotal) {
+          html += `<strong>New loan beats refinance because:</strong> ${newLoanRate < refiRate ? 'better rate' : 'better overall terms'} despite ${newLoanFees > refiCosts ? 'higher' : 'comparable'} fees.</p>`;
+        } else {
+          html += `</p>`;
+        }
+      }
+
+      container.innerHTML = html;
+    }
+
+    // Input formatting and events
+    const currencyInputs = ['currentBalance', 'currentPayment', 'refiCosts', 'newLoanAmount', 'newLoanFees'];
+    const allInputs = ['currentBalance', 'currentRate', 'remainingTerm', 'currentPayment', 
+                       'refiRate', 'refiTerm', 'refiCosts',
+                       'newLoanAmount', 'newLoanRate', 'newLoanTerm', 'newLoanFees'];
+    
+    allInputs.forEach(id => {
+      const input = document.getElementById(id);
+      
+      input.addEventListener('input', () => {
+        calculate();
+      });
+
+      if (currencyInputs.includes(id)) {
+        input.addEventListener('blur', () => {
+          formatInput(input);
+        });
+      }
+    });
+
+    // FAQ accordion
+    document.querySelectorAll('.lw-faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const wasOpen = item.classList.contains('open');
+        
+        // Close all
+        document.querySelectorAll('.lw-faq-item').forEach(i => i.classList.remove('open'));
+        
+        // Toggle current
+        if (!wasOpen) item.classList.add('open');
+      });
+    });
+
+    // Mobile menu
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', calculate);
+  </script>
+</body>
+</html>

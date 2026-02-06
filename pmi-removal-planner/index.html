@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PMI Removal Planner | When Can You Stop Paying PMI? | LendWise</title>
+  <meta name="description" content="Calculate when you can remove PMI from your mortgage. See your current LTV, PMI removal date, and how extra payments can help you eliminate PMI faster and save money.">
+  <meta name="keywords" content="PMI removal calculator, when can PMI be removed, how to remove PMI early, loan to value PMI, mortgage insurance removal, PMI cancellation, 78% LTV, 80% LTV">
+  <link rel="canonical" href="https://lendwise.tools/pmi-removal-planner/">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="PMI Removal Planner | When Can You Stop Paying PMI?">
+  <meta property="og:description" content="Find out exactly when you can remove PMI and how much you'll save. See the impact of extra payments on your PMI removal date.">
+  <meta property="og:type" content="website">
+  
+  <style>
+    /* LTV Gauge Styles */
+    .ltv-gauge-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px;
+      background: linear-gradient(180deg, var(--lw-slate-50) 0%, var(--lw-card) 100%);
+      border-radius: var(--lw-radius-lg);
+      margin-bottom: 24px;
+    }
+    
+    .ltv-gauge {
+      position: relative;
+      width: 280px;
+      height: 160px;
+      margin-bottom: 16px;
+    }
+    
+    .ltv-gauge svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+    
+    .gauge-bg {
+      fill: none;
+      stroke: var(--lw-slate-200);
+      stroke-width: 24;
+      stroke-linecap: round;
+    }
+    
+    .gauge-danger-zone {
+      fill: none;
+      stroke: var(--lw-rose-50);
+      stroke-width: 24;
+      stroke-linecap: round;
+    }
+    
+    .gauge-fill {
+      fill: none;
+      stroke-width: 24;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.8s ease, stroke 0.3s ease;
+    }
+    
+    .gauge-fill.high { stroke: var(--lw-rose); }
+    .gauge-fill.medium { stroke: var(--lw-amber); }
+    .gauge-fill.low { stroke: var(--lw-emerald); }
+    
+    .gauge-marker {
+      fill: var(--lw-slate-600);
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    .gauge-label-80, .gauge-label-78 {
+      position: absolute;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    
+    .gauge-label-80 {
+      top: 75px;
+      right: 15px;
+      background: var(--lw-amber-50);
+      color: #B45309;
+    }
+    
+    .gauge-label-78 {
+      top: 55px;
+      right: 0;
+      background: var(--lw-emerald-50);
+      color: var(--lw-emerald-dark);
+    }
+    
+    .ltv-current {
+      text-align: center;
+    }
+    
+    .ltv-current-label {
+      font-size: 12px;
+      color: var(--lw-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    
+    .ltv-current-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+    
+    .ltv-current-value.high { color: var(--lw-rose); }
+    .ltv-current-value.medium { color: var(--lw-amber); }
+    .ltv-current-value.low { color: var(--lw-emerald); }
+    
+    .ltv-status {
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    
+    /* Timeline Styles */
+    .timeline-container {
+      padding: 20px 0;
+    }
+    
+    .timeline {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 30px 0;
+    }
+    
+    .timeline-track {
+      flex: 1;
+      height: 8px;
+      background: var(--lw-slate-200);
+      border-radius: 4px;
+      position: relative;
+    }
+    
+    .timeline-progress {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.8s ease;
+    }
+    
+    .timeline-progress.without-extra {
+      background: var(--lw-slate-400);
+    }
+    
+    .timeline-progress.with-extra {
+      background: linear-gradient(90deg, var(--lw-emerald), var(--lw-teal));
+    }
+    
+    .timeline-marker {
+      position: absolute;
+      top: -28px;
+      transform: translateX(-50%);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    
+    .timeline-marker.start {
+      left: 0;
+      transform: translateX(0);
+      background: var(--lw-sky-100);
+      color: var(--lw-sky-dark);
+    }
+    
+    .timeline-marker.without-extra {
+      background: var(--lw-slate-100);
+      color: var(--lw-slate-600);
+    }
+    
+    .timeline-marker.with-extra {
+      background: var(--lw-emerald-50);
+      color: var(--lw-emerald-dark);
+    }
+    
+    .timeline-endpoint {
+      position: absolute;
+      bottom: -24px;
+      transform: translateX(-50%);
+      font-size: 10px;
+      color: var(--lw-text-muted);
+    }
+    
+    .timeline-endpoint.start {
+      left: 0;
+      transform: translateX(0);
+    }
+    
+    .timeline-dot {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 3px solid var(--lw-card);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .timeline-dot.without-extra {
+      background: var(--lw-slate-500);
+    }
+    
+    .timeline-dot.with-extra {
+      background: var(--lw-emerald);
+    }
+    
+    /* Savings Highlight */
+    .savings-highlight {
+      background: linear-gradient(135deg, var(--lw-emerald-50) 0%, rgba(16, 185, 129, 0.05) 100%);
+      border: 2px solid var(--lw-emerald);
+      border-radius: var(--lw-radius-lg);
+      padding: 24px;
+      text-align: center;
+      margin: 24px 0;
+    }
+    
+    .savings-icon {
+      font-size: 36px;
+      margin-bottom: 12px;
+    }
+    
+    .savings-amount {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--lw-emerald-dark);
+      margin-bottom: 4px;
+    }
+    
+    .savings-label {
+      font-size: 14px;
+      color: var(--lw-emerald-dark);
+      font-weight: 600;
+    }
+    
+    /* Running PMI Total */
+    .pmi-running-total {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: var(--lw-rose-50);
+      border-radius: var(--lw-radius);
+      margin-top: 16px;
+      border-left: 4px solid var(--lw-rose);
+    }
+    
+    .pmi-running-label {
+      font-size: 14px;
+      color: var(--lw-rose-dark);
+      font-weight: 500;
+    }
+    
+    .pmi-running-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--lw-rose-dark);
+    }
+    
+    /* What This Means */
+    .meaning-box {
+      background: var(--lw-sky-50);
+      border-radius: var(--lw-radius);
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 4px solid var(--lw-sky);
+    }
+    
+    .meaning-title {
+      font-weight: 700;
+      color: var(--lw-sky-dark);
+      font-size: 14px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .meaning-text {
+      color: var(--lw-slate-700);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    
+    /* Decision Box */
+    .decision-box {
+      background: linear-gradient(135deg, var(--lw-navy) 0%, var(--lw-slate-800) 100%);
+      border-radius: var(--lw-radius-lg);
+      padding: 24px;
+      margin: 24px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .decision-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(ellipse at 30% 0%, rgba(16, 185, 129, 0.15) 0%, transparent 50%);
+    }
+    
+    .decision-box * {
+      position: relative;
+    }
+    
+    .decision-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    
+    .decision-icon {
+      font-size: 24px;
+    }
+    
+    .decision-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--lw-emerald-light);
+      font-weight: 600;
+    }
+    
+    .decision-text {
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+    
+    .decision-text strong {
+      color: var(--lw-emerald-light);
+    }
+    
+    /* Comparison Cards */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+    
+    .comparison-card {
+      padding: 20px;
+      border-radius: var(--lw-radius);
+      text-align: center;
+    }
+    
+    .comparison-card.without {
+      background: var(--lw-slate-100);
+      border: 1px solid var(--lw-slate-200);
+    }
+    
+    .comparison-card.with {
+      background: var(--lw-emerald-50);
+      border: 2px solid var(--lw-emerald);
+    }
+    
+    .comparison-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    
+    .comparison-card.without .comparison-label {
+      color: var(--lw-slate-500);
+    }
+    
+    .comparison-card.with .comparison-label {
+      color: var(--lw-emerald-dark);
+    }
+    
+    .comparison-date {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    
+    .comparison-card.without .comparison-date {
+      color: var(--lw-slate-700);
+    }
+    
+    .comparison-card.with .comparison-date {
+      color: var(--lw-emerald-dark);
+    }
+    
+    .comparison-months {
+      font-size: 13px;
+      font-weight: 500;
+    }
+    
+    .comparison-card.without .comparison-months {
+      color: var(--lw-slate-500);
+    }
+    
+    .comparison-card.with .comparison-months {
+      color: var(--lw-emerald);
+    }
+    
+    /* Already Eligible */
+    .eligible-banner {
+      background: linear-gradient(135deg, var(--lw-emerald) 0%, var(--lw-teal) 100%);
+      border-radius: var(--lw-radius-lg);
+      padding: 32px;
+      text-align: center;
+      color: white;
+      margin-bottom: 24px;
+    }
+    
+    .eligible-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+    
+    .eligible-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    
+    .eligible-text {
+      font-size: 16px;
+      opacity: 0.95;
+    }
+    
+    /* Mobile */
+    @media (max-width: 768px) {
+      .ltv-gauge {
+        width: 240px;
+        height: 140px;
+      }
+      
+      .ltv-current-value {
+        font-size: 36px;
+      }
+      
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .timeline-marker {
+        font-size: 10px;
+        padding: 3px 6px;
+      }
+    }
+  </style>
+  
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "When can I remove PMI from my mortgage?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can request PMI removal when your loan-to-value (LTV) ratio reaches 80% of the original home value. PMI is automatically canceled when your LTV reaches 78% based on your original amortization schedule, or when you reach the midpoint of your loan term."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What's the difference between 80% and 78% LTV for PMI removal?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "At 80% LTV, you can REQUEST PMI removal from your lender (you must contact them). At 78% LTV, PMI is AUTOMATICALLY canceled by law under the Homeowners Protection Act. The 80% threshold lets you remove PMI sooner, but requires action on your part."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How can I remove PMI early?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can remove PMI early by: 1) Making extra principal payments to reach 80% LTV faster, 2) Getting a new appraisal if your home has appreciated significantly, 3) Refinancing to a new loan without PMI, or 4) Making improvements that increase your home's value."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does home appreciation help remove PMI?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, if your home has appreciated in value, you may qualify for PMI removal sooner. However, for loans less than 2 years old, the LTV must reach 75%. For loans 2-5 years old, you need 80% LTV. You'll typically need a new appraisal to prove the increased value."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much does PMI typically cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "PMI typically costs between 0.5% to 1% of the original loan amount per year. For a $300,000 loan, that's $1,500 to $3,000 per year ($125 to $250 per month). The exact cost depends on your credit score, down payment, and loan type."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">L</div>
+        LendWise
+      </a>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">☰</button>
+      <ul class="lw-nav-links">
+        <li><a href="/">All Tools</a></li>
+        <li><a href="/mortgage-payment-calculator/">Payment Calculator</a></li>
+        <li><a href="/pmi-removal-planner/" class="active">PMI Planner</a></li>
+      </ul>
+    </div>
+    <div class="lw-mobile-menu">
+      <a href="/">All Tools</a>
+      <a href="/mortgage-payment-calculator/">Payment Calculator</a>
+      <a href="/pmi-removal-planner/">PMI Planner</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <section class="lw-hero">
+      <span class="lw-badge green">FREE CALCULATOR</span>
+      <h1>PMI <span class="accent">Removal</span> Planner</h1>
+      <p class="subtitle">Find out exactly when you can stop paying Private Mortgage Insurance and how extra payments can accelerate your path to PMI freedom.</p>
+    </section>
+
+    <!-- Input Card -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">🏠</div>
+        <div>
+          <div class="lw-card-title">Your Loan Details</div>
+          <div class="lw-card-subtitle">Enter your current mortgage information</div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Current Home Value</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" id="homeValue" class="lw-input" placeholder="350,000" inputmode="numeric">
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">Original Purchase Price</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" id="purchasePrice" class="lw-input" placeholder="325,000" inputmode="numeric">
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Current Loan Balance</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" id="loanBalance" class="lw-input" placeholder="290,000" inputmode="numeric">
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">Monthly PMI Cost</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" id="monthlyPmi" class="lw-input" placeholder="175" inputmode="numeric">
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Monthly Payment <span class="lw-label-hint">(Principal & Interest only)</span></label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" id="monthlyPayment" class="lw-input" placeholder="1,850" inputmode="numeric">
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">Interest Rate</label>
+          <div class="lw-input-suffix">
+            <input type="text" id="interestRate" class="lw-input" placeholder="6.5" inputmode="decimal">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Extra Monthly Payment <span class="lw-label-hint">(optional)</span></label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" id="extraPayment" class="lw-input" placeholder="200" inputmode="numeric">
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">Annual Appreciation Rate <span class="lw-label-hint">(estimated)</span></label>
+          <div class="lw-input-suffix">
+            <input type="text" id="appreciationRate" class="lw-input" placeholder="3" inputmode="decimal" value="3">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="results" class="lw-hidden">
+      
+      <!-- Already Eligible Banner -->
+      <div id="eligibleBanner" class="eligible-banner lw-hidden">
+        <div class="eligible-icon">🎉</div>
+        <div class="eligible-title">You May Already Qualify for PMI Removal!</div>
+        <div class="eligible-text" id="eligibleText">Your LTV is already at or below 80%. Contact your lender to request PMI cancellation.</div>
+      </div>
+
+      <!-- LTV Gauge -->
+      <div class="ltv-gauge-container">
+        <div class="ltv-gauge">
+          <svg viewBox="0 0 280 160">
+            <!-- Background arc -->
+            <path class="gauge-bg" d="M 30 140 A 110 110 0 0 1 250 140" />
+            <!-- Danger zone (above 80%) highlight -->
+            <path class="gauge-danger-zone" d="M 30 140 A 110 110 0 0 1 250 140" stroke-dasharray="345.58" stroke-dashoffset="276.46" />
+            <!-- Fill arc -->
+            <path id="gaugeFill" class="gauge-fill high" d="M 30 140 A 110 110 0 0 1 250 140" stroke-dasharray="345.58" stroke-dashoffset="345.58" />
+            <!-- Markers -->
+            <text class="gauge-marker" x="20" y="155">100%</text>
+            <text class="gauge-marker" x="130" y="25">50%</text>
+            <text class="gauge-marker" x="245" y="155">0%</text>
+          </svg>
+          <div class="gauge-label-80">80% Request</div>
+          <div class="gauge-label-78">78% Auto</div>
+        </div>
+        <div class="ltv-current">
+          <div class="ltv-current-label">Current LTV</div>
+          <div id="currentLtv" class="ltv-current-value high">--.--%</div>
+          <div id="ltvStatus" class="ltv-status" style="color: var(--lw-text-secondary);">Calculating...</div>
+        </div>
+      </div>
+
+      <!-- Comparison Grid -->
+      <div id="comparisonSection">
+        <div class="comparison-grid">
+          <div class="comparison-card without">
+            <div class="comparison-label">Without Extra Payments</div>
+            <div id="dateWithout" class="comparison-date">--</div>
+            <div id="monthsWithout" class="comparison-months">-- months from now</div>
+          </div>
+          <div class="comparison-card with">
+            <div class="comparison-label">With Extra Payments</div>
+            <div id="dateWith" class="comparison-date">--</div>
+            <div id="monthsWith" class="comparison-months">-- months from now</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline -->
+      <div id="timelineSection" class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon green">📅</div>
+          <div>
+            <div class="lw-card-title">PMI Removal Timeline</div>
+            <div class="lw-card-subtitle">When you'll reach 80% LTV (request removal)</div>
+          </div>
+        </div>
+        <div class="timeline-container">
+          <div class="timeline">
+            <div class="timeline-track">
+              <div id="timelineWithout" class="timeline-progress without-extra" style="width: 0%"></div>
+              <div id="timelineWith" class="timeline-progress with-extra" style="width: 0%"></div>
+              <div id="markerWithout" class="timeline-dot without-extra" style="left: 0%"></div>
+              <div id="markerWith" class="timeline-dot with-extra" style="left: 0%"></div>
+            </div>
+            <div class="timeline-marker start">Today</div>
+            <div id="labelWithout" class="timeline-marker without-extra" style="left: 50%">Without extra</div>
+            <div id="labelWith" class="timeline-marker with-extra" style="left: 30%">With extra</div>
+            <div class="timeline-endpoint start">Now</div>
+            <div id="endpointWithout" class="timeline-endpoint" style="left: 100%">--</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Savings Highlight -->
+      <div id="savingsSection" class="savings-highlight lw-hidden">
+        <div class="savings-icon">💰</div>
+        <div id="savingsAmount" class="savings-amount">$0</div>
+        <div class="savings-label">Total PMI Savings with Extra Payments</div>
+      </div>
+
+      <!-- PMI Costs -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon rose">💸</div>
+          <div>
+            <div class="lw-card-title">PMI Cost Breakdown</div>
+            <div class="lw-card-subtitle">What you'll pay if you don't remove PMI early</div>
+          </div>
+        </div>
+        
+        <div class="lw-result-grid lw-grid-3">
+          <div class="lw-result-item">
+            <div class="lw-result-item-label">Total PMI (No Extra)</div>
+            <div id="totalPmiWithout" class="lw-result-item-value rose">$--</div>
+          </div>
+          <div class="lw-result-item">
+            <div class="lw-result-item-label">Total PMI (With Extra)</div>
+            <div id="totalPmiWith" class="lw-result-item-value">$--</div>
+          </div>
+          <div class="lw-result-item">
+            <div class="lw-result-item-label">PMI Avoided</div>
+            <div id="pmiAvoided" class="lw-result-item-value green">$--</div>
+          </div>
+        </div>
+        
+        <div class="pmi-running-total">
+          <span class="pmi-running-label">📊 PMI paid per year at current rate:</span>
+          <span id="annualPmi" class="pmi-running-value">$--</span>
+        </div>
+      </div>
+
+      <!-- What This Means -->
+      <div class="meaning-box">
+        <div class="meaning-title">💡 What This Means</div>
+        <div id="meaningText" class="meaning-text">Enter your loan details above to see when you can remove PMI.</div>
+      </div>
+
+      <!-- Decision Box -->
+      <div id="decisionBox" class="decision-box">
+        <div class="decision-header">
+          <span class="decision-icon">⚡</span>
+          <span class="decision-label">Your Decision</span>
+        </div>
+        <div id="decisionText" class="decision-text">Enter your loan details to see your personalized recommendation.</div>
+      </div>
+
+      <!-- Detail Table -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon violet">📊</div>
+          <div>
+            <div class="lw-card-title">Key Milestones</div>
+            <div class="lw-card-subtitle">Important LTV thresholds for PMI removal</div>
+          </div>
+        </div>
+        
+        <div class="lw-table-wrap">
+          <table class="lw-table">
+            <thead>
+              <tr>
+                <th>Milestone</th>
+                <th>Without Extra</th>
+                <th>With Extra</th>
+                <th>Months Saved</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>80% LTV</strong> <small>(Request removal)</small></td>
+                <td id="m80Without" class="num">--</td>
+                <td id="m80With" class="num">--</td>
+                <td id="m80Saved" class="num" style="color: var(--lw-emerald)">--</td>
+              </tr>
+              <tr>
+                <td><strong>78% LTV</strong> <small>(Auto cancellation)</small></td>
+                <td id="m78Without" class="num">--</td>
+                <td id="m78With" class="num">--</td>
+                <td id="m78Saved" class="num" style="color: var(--lw-emerald)">--</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <div class="lw-content">
+      <h2>When Can You Remove PMI From Your Mortgage?</h2>
+      <p>Private Mortgage Insurance (PMI) is required when you put less than 20% down on a conventional mortgage. While PMI protects the lender, it adds to your monthly costs. The good news? <strong>You can remove PMI once you've built enough equity</strong> in your home.</p>
+      
+      <h3>The Two PMI Removal Thresholds</h3>
+      <p>Under the Homeowners Protection Act (HPA), there are two key loan-to-value (LTV) ratios for PMI removal:</p>
+      <ul>
+        <li><strong>80% LTV (Request Removal):</strong> Once your loan balance drops to 80% of your home's original purchase price, you can request PMI cancellation from your lender. You must be current on payments and have a good payment history.</li>
+        <li><strong>78% LTV (Automatic Cancellation):</strong> Your lender must automatically cancel PMI when your loan balance reaches 78% of the original value, based on your original amortization schedule.</li>
+      </ul>
+      
+      <h3>How to Remove PMI Early</h3>
+      <p>You don't have to wait for your regular payments to bring you to 80% LTV. Here are strategies to eliminate PMI faster:</p>
+      <ul>
+        <li><strong>Make extra principal payments:</strong> Even an extra $100-200/month toward principal can significantly accelerate your path to 80% LTV.</li>
+        <li><strong>Request a new appraisal:</strong> If your home has appreciated significantly, a new appraisal might show you've already reached 80% LTV based on current market value.</li>
+        <li><strong>Refinance:</strong> If you have 20% equity, you can refinance to a new loan without PMI (consider closing costs vs. PMI savings).</li>
+        <li><strong>Home improvements:</strong> Strategic improvements can increase your home's value, helping you reach the 80% LTV threshold sooner.</li>
+      </ul>
+      
+      <h3>Understanding LTV for PMI Calculations</h3>
+      <p>For PMI removal requests at 80% LTV:</p>
+      <ul>
+        <li><strong>Loans less than 2 years old:</strong> LTV must reach 75% if using current appraised value</li>
+        <li><strong>Loans 2-5 years old:</strong> LTV must reach 80% using current appraised value</li>
+        <li><strong>Loans over 5 years old:</strong> LTV must reach 80%, and appraisal requirements may be more flexible</li>
+      </ul>
+      
+      <h3>The True Cost of PMI</h3>
+      <p>PMI typically costs between 0.5% and 1% of your original loan amount annually. On a $300,000 loan, that's $1,500-$3,000 per year—or $125-$250 per month. Over several years of payments, <strong>PMI can cost you tens of thousands of dollars</strong>. That's why removing it as soon as possible makes financial sense.</p>
+      
+      <!-- FAQ Section -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">When can I remove PMI from my mortgage?</button>
+          <div class="lw-faq-a">
+            <p>You can request PMI removal when your loan-to-value (LTV) ratio reaches 80% of the original home value. PMI is automatically canceled when your LTV reaches 78% based on your original amortization schedule, or when you reach the midpoint of your loan term.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">What's the difference between 80% and 78% LTV for PMI removal?</button>
+          <div class="lw-faq-a">
+            <p>At 80% LTV, you can REQUEST PMI removal from your lender (you must contact them and typically provide documentation). At 78% LTV, PMI is AUTOMATICALLY canceled by law under the Homeowners Protection Act. The 80% threshold lets you remove PMI sooner, but requires action on your part.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">How can I remove PMI early?</button>
+          <div class="lw-faq-a">
+            <p>You can remove PMI early by: 1) Making extra principal payments to reach 80% LTV faster, 2) Getting a new appraisal if your home has appreciated significantly, 3) Refinancing to a new loan without PMI, or 4) Making improvements that increase your home's value.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Does home appreciation help remove PMI?</button>
+          <div class="lw-faq-a">
+            <p>Yes, if your home has appreciated in value, you may qualify for PMI removal sooner. However, for loans less than 2 years old, the LTV must reach 75%. For loans 2-5 years old, you need 80% LTV. You'll typically need a new appraisal (at your expense) to prove the increased value.</p>
+          </div>
+        </div>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">How much does PMI typically cost?</button>
+          <div class="lw-faq-a">
+            <p>PMI typically costs between 0.5% to 1% of the original loan amount per year. For a $300,000 loan, that's $1,500 to $3,000 per year ($125 to $250 per month). The exact cost depends on your credit score, down payment size, and loan type.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Tools -->
+    <div class="lw-related">
+      <h2>Related Mortgage Tools</h2>
+      <div class="lw-related-grid">
+        <a href="/mortgage-payment-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Mortgage Payment Calculator
+        </a>
+        <a href="/rent-vs-buy-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Rent vs. Buy Calculator
+        </a>
+        <a href="/extra-payment-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Extra Payment Calculator
+        </a>
+      </div>
+    </div>
+
+    <p class="lw-disclaimer">This calculator provides estimates for informational purposes only. PMI removal eligibility depends on your specific loan terms, lender policies, and payment history. Contact your mortgage servicer for exact requirements and to initiate PMI removal.</p>
+  </main>
+
+  <footer class="lw-footer">
+    <p>© 2025 LendWise. All rights reserved. | <a href="/">Back to Home</a></p>
+  </footer>
+
+  <script>
+    // Format currency
+    const formatCurrency = (num) => {
+      if (num === null || isNaN(num)) return '$--';
+      return '$' + num.toLocaleString('en-US', { maximumFractionDigits: 0 });
+    };
+
+    // Format percentage
+    const formatPercent = (num, decimals = 2) => {
+      if (num === null || isNaN(num)) return '--.--';
+      return num.toFixed(decimals) + '%';
+    };
+
+    // Parse input value
+    const parseInput = (val) => {
+      if (!val) return 0;
+      return parseFloat(val.replace(/[^0-9.-]/g, '')) || 0;
+    };
+
+    // Format input as currency on blur
+    const formatInputAsCurrency = (input) => {
+      const val = parseInput(input.value);
+      if (val > 0) {
+        input.value = val.toLocaleString('en-US');
+      }
+    };
+
+    // Add month formatting helper
+    const formatMonthYear = (date) => {
+      return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    };
+
+    // Calculate months to reach target LTV
+    const calculateMonthsToLTV = (balance, purchasePrice, payment, rate, targetLTV, extraPayment = 0) => {
+      const targetBalance = purchasePrice * targetLTV;
+      if (balance <= targetBalance) return 0;
+      
+      const monthlyRate = rate / 100 / 12;
+      let currentBalance = balance;
+      let months = 0;
+      const maxMonths = 360; // 30 years max
+      
+      while (currentBalance > targetBalance && months < maxMonths) {
+        const interest = currentBalance * monthlyRate;
+        const principal = payment - interest + extraPayment;
+        
+        if (principal <= 0) return maxMonths; // Payment doesn't cover interest
+        
+        currentBalance -= principal;
+        months++;
+      }
+      
+      return months;
+    };
+
+    // Calculate future date
+    const getFutureDate = (months) => {
+      const date = new Date();
+      date.setMonth(date.getMonth() + months);
+      return date;
+    };
+
+    // Update gauge visualization
+    const updateGauge = (ltv) => {
+      const gaugeFill = document.getElementById('gaugeFill');
+      const currentLtvEl = document.getElementById('currentLtv');
+      const ltvStatusEl = document.getElementById('ltvStatus');
+      
+      // Clamp LTV between 0 and 100 for display
+      const clampedLtv = Math.max(0, Math.min(100, ltv));
+      
+      // Calculate stroke offset (345.58 is full arc length)
+      // Gauge goes from 100% on left to 0% on right
+      const arcLength = 345.58;
+      const offset = arcLength * (1 - clampedLtv / 100);
+      gaugeFill.style.strokeDashoffset = offset;
+      
+      // Update color class based on LTV
+      gaugeFill.classList.remove('high', 'medium', 'low');
+      currentLtvEl.classList.remove('high', 'medium', 'low');
+      
+      if (ltv > 80) {
+        gaugeFill.classList.add('high');
+        currentLtvEl.classList.add('high');
+        ltvStatusEl.textContent = 'Above 80% — PMI required';
+        ltvStatusEl.style.color = 'var(--lw-rose)';
+      } else if (ltv > 78) {
+        gaugeFill.classList.add('medium');
+        currentLtvEl.classList.add('medium');
+        ltvStatusEl.textContent = 'Request PMI removal now!';
+        ltvStatusEl.style.color = 'var(--lw-amber)';
+      } else {
+        gaugeFill.classList.add('low');
+        currentLtvEl.classList.add('low');
+        ltvStatusEl.textContent = 'Eligible for auto-cancellation';
+        ltvStatusEl.style.color = 'var(--lw-emerald)';
+      }
+      
+      currentLtvEl.textContent = formatPercent(ltv);
+    };
+
+    // Update timeline visualization
+    const updateTimeline = (monthsWithout, monthsWith) => {
+      const maxMonths = Math.max(monthsWithout, 60); // At least 5 years for scale
+      
+      const progressWithout = document.getElementById('timelineWithout');
+      const progressWith = document.getElementById('timelineWith');
+      const markerWithout = document.getElementById('markerWithout');
+      const markerWith = document.getElementById('markerWith');
+      const labelWithout = document.getElementById('labelWithout');
+      const labelWith = document.getElementById('labelWith');
+      const endpointWithout = document.getElementById('endpointWithout');
+      
+      const pctWithout = Math.min((monthsWithout / maxMonths) * 100, 100);
+      const pctWith = Math.min((monthsWith / maxMonths) * 100, 100);
+      
+      progressWithout.style.width = pctWithout + '%';
+      markerWithout.style.left = pctWithout + '%';
+      labelWithout.style.left = pctWithout + '%';
+      
+      if (monthsWith > 0 && monthsWith < monthsWithout) {
+        progressWith.style.width = pctWith + '%';
+        markerWith.style.left = pctWith + '%';
+        labelWith.style.left = pctWith + '%';
+        markerWith.style.display = 'block';
+        labelWith.style.display = 'block';
+        progressWith.style.display = 'block';
+        
+        const dateWith = getFutureDate(monthsWith);
+        labelWith.textContent = formatMonthYear(dateWith);
+      } else {
+        markerWith.style.display = 'none';
+        labelWith.style.display = 'none';
+        progressWith.style.display = 'none';
+      }
+      
+      const dateWithout = getFutureDate(monthsWithout);
+      labelWithout.textContent = formatMonthYear(dateWithout);
+      endpointWithout.textContent = monthsWithout + ' mo';
+      endpointWithout.style.left = '100%';
+    };
+
+    // Main calculation function
+    const calculate = () => {
+      const homeValue = parseInput(document.getElementById('homeValue').value);
+      const purchasePrice = parseInput(document.getElementById('purchasePrice').value);
+      const loanBalance = parseInput(document.getElementById('loanBalance').value);
+      const monthlyPmi = parseInput(document.getElementById('monthlyPmi').value);
+      const monthlyPayment = parseInput(document.getElementById('monthlyPayment').value);
+      const interestRate = parseInput(document.getElementById('interestRate').value);
+      const extraPayment = parseInput(document.getElementById('extraPayment').value);
+      const appreciationRate = parseInput(document.getElementById('appreciationRate').value);
+      
+      // Validate required inputs
+      if (!purchasePrice || !loanBalance || !monthlyPayment || !interestRate) {
+        document.getElementById('results').classList.add('lw-hidden');
+        return;
+      }
+      
+      // Use home value or purchase price for current LTV
+      const currentValue = homeValue || purchasePrice;
+      
+      // Calculate current LTV based on purchase price (standard for PMI)
+      const currentLtvPurchase = (loanBalance / purchasePrice) * 100;
+      // Calculate current LTV based on current value (for display)
+      const currentLtvValue = (loanBalance / currentValue) * 100;
+      
+      // Show results
+      document.getElementById('results').classList.remove('lw-hidden');
+      
+      // Update gauge with purchase-price LTV (used for PMI calculations)
+      updateGauge(currentLtvPurchase);
+      
+      // Calculate months to 80% and 78% LTV
+      const months80Without = calculateMonthsToLTV(loanBalance, purchasePrice, monthlyPayment, interestRate, 0.80, 0);
+      const months78Without = calculateMonthsToLTV(loanBalance, purchasePrice, monthlyPayment, interestRate, 0.78, 0);
+      const months80With = calculateMonthsToLTV(loanBalance, purchasePrice, monthlyPayment, interestRate, 0.80, extraPayment);
+      const months78With = calculateMonthsToLTV(loanBalance, purchasePrice, monthlyPayment, interestRate, 0.78, extraPayment);
+      
+      // Check if already eligible
+      const eligibleBanner = document.getElementById('eligibleBanner');
+      const eligibleText = document.getElementById('eligibleText');
+      
+      if (currentLtvPurchase <= 78) {
+        eligibleBanner.classList.remove('lw-hidden');
+        eligibleText.textContent = `Your LTV is ${formatPercent(currentLtvPurchase)}! Your lender should automatically cancel PMI. If they haven't, contact them immediately.`;
+      } else if (currentLtvPurchase <= 80) {
+        eligibleBanner.classList.remove('lw-hidden');
+        eligibleText.textContent = `Your LTV is ${formatPercent(currentLtvPurchase)}! You can request PMI removal from your lender today. Call them to start the process.`;
+      } else {
+        eligibleBanner.classList.add('lw-hidden');
+      }
+      
+      // Update comparison cards
+      const date80Without = getFutureDate(months80Without);
+      const date80With = getFutureDate(months80With);
+      
+      document.getElementById('dateWithout').textContent = formatMonthYear(date80Without);
+      document.getElementById('monthsWithout').textContent = months80Without + ' months from now';
+      document.getElementById('dateWith').textContent = formatMonthYear(date80With);
+      document.getElementById('monthsWith').textContent = months80With + ' months from now';
+      
+      // Update timeline
+      updateTimeline(months80Without, extraPayment > 0 ? months80With : 0);
+      
+      // Calculate PMI costs
+      const totalPmiWithout = monthlyPmi * months80Without;
+      const totalPmiWith = monthlyPmi * months80With;
+      const pmiSaved = totalPmiWithout - totalPmiWith;
+      const monthsSaved = months80Without - months80With;
+      
+      document.getElementById('totalPmiWithout').textContent = formatCurrency(totalPmiWithout);
+      document.getElementById('totalPmiWith').textContent = formatCurrency(totalPmiWith);
+      document.getElementById('pmiAvoided').textContent = formatCurrency(pmiSaved);
+      document.getElementById('annualPmi').textContent = formatCurrency(monthlyPmi * 12);
+      
+      // Show savings section if extra payments help
+      const savingsSection = document.getElementById('savingsSection');
+      if (extraPayment > 0 && pmiSaved > 0) {
+        savingsSection.classList.remove('lw-hidden');
+        document.getElementById('savingsAmount').textContent = formatCurrency(pmiSaved);
+      } else {
+        savingsSection.classList.add('lw-hidden');
+      }
+      
+      // Update milestone table
+      document.getElementById('m80Without').textContent = formatMonthYear(date80Without);
+      document.getElementById('m80With').textContent = formatMonthYear(date80With);
+      document.getElementById('m80Saved').textContent = monthsSaved > 0 ? monthsSaved + ' mo' : '--';
+      
+      const date78Without = getFutureDate(months78Without);
+      const date78With = getFutureDate(months78With);
+      const months78Saved = months78Without - months78With;
+      
+      document.getElementById('m78Without').textContent = formatMonthYear(date78Without);
+      document.getElementById('m78With').textContent = formatMonthYear(date78With);
+      document.getElementById('m78Saved').textContent = months78Saved > 0 ? months78Saved + ' mo' : '--';
+      
+      // Update meaning text
+      const meaningText = document.getElementById('meaningText');
+      if (currentLtvPurchase <= 78) {
+        meaningText.textContent = `Your loan-to-value ratio is ${formatPercent(currentLtvPurchase)}, which is at or below the 78% automatic cancellation threshold. Under federal law, your lender must cancel PMI. Contact them if you're still being charged.`;
+      } else if (currentLtvPurchase <= 80) {
+        meaningText.textContent = `Your LTV of ${formatPercent(currentLtvPurchase)} qualifies you to request PMI removal. Write to your lender requesting cancellation. You may need to pay for an appraisal and have a clean payment history.`;
+      } else {
+        const equity = 100 - currentLtvPurchase;
+        meaningText.textContent = `You currently have ${equity.toFixed(1)}% equity in your home. You need to reach 20% equity (80% LTV) to request PMI removal. Based on your payment schedule, this will take about ${months80Without} months without extra payments.`;
+      }
+      
+      // Update decision text
+      const decisionText = document.getElementById('decisionText');
+      if (currentLtvPurchase <= 80) {
+        decisionText.innerHTML = `<strong>Action required:</strong> Contact your lender today to request PMI cancellation. You've already reached the equity threshold needed to eliminate this ${formatCurrency(monthlyPmi)}/month expense.`;
+      } else if (extraPayment > 0 && monthsSaved > 0) {
+        const extraCost = extraPayment * months80With;
+        const netBenefit = pmiSaved - extraCost;
+        decisionText.innerHTML = `Extra payments of <strong>${formatCurrency(extraPayment)}/month</strong> will remove PMI <strong>${monthsSaved} months earlier</strong>, saving <strong>${formatCurrency(pmiSaved)}</strong> in PMI costs. Your total extra payments: ${formatCurrency(extraCost)}.`;
+      } else if (monthlyPmi > 0) {
+        decisionText.innerHTML = `Without extra payments, you'll pay <strong>${formatCurrency(totalPmiWithout)}</strong> in PMI over the next ${months80Without} months. Try adding an extra payment amount above to see how much faster you can eliminate PMI.`;
+      } else {
+        decisionText.textContent = 'Enter your monthly PMI cost to see your personalized savings estimate.';
+      }
+    };
+
+    // Input event listeners
+    const inputs = ['homeValue', 'purchasePrice', 'loanBalance', 'monthlyPmi', 'monthlyPayment', 'interestRate', 'extraPayment', 'appreciationRate'];
+    
+    inputs.forEach(id => {
+      const input = document.getElementById(id);
+      input.addEventListener('input', calculate);
+      input.addEventListener('blur', function() {
+        if (id !== 'interestRate' && id !== 'appreciationRate') {
+          formatInputAsCurrency(this);
+        }
+      });
+    });
+
+    // FAQ accordion
+    document.querySelectorAll('.lw-faq-q').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const item = this.parentElement;
+        const wasOpen = item.classList.contains('open');
+        document.querySelectorAll('.lw-faq-item').forEach(i => i.classList.remove('open'));
+        if (!wasOpen) item.classList.add('open');
+      });
+    });
+
+    // Initial calculation with any pre-filled values
+    calculate();
+  </script>
+</body>
+</html>

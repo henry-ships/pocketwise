@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Equity Growth Projection Calculator — See How Fast Your Equity Grows</title>
+  <meta name="description" content="Free home equity calculator: project your equity growth over 1, 5, 10, and 15 years. See how appreciation and mortgage payments build wealth. Compare with extra payments.">
+  <meta name="keywords" content="home equity calculator, how fast does home equity grow, mortgage equity projection, equity growth over time">
+  <link rel="canonical" href="https://pocketwise.io/home-equity-projection/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* Stacked Bar Chart */
+    .equity-chart {
+      margin: 24px 0;
+    }
+    .equity-bar-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 12px;
+    }
+    .equity-bar-year {
+      width: 55px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--lw-slate-600);
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .equity-bar-track {
+      flex: 1;
+      height: 36px;
+      background: var(--lw-slate-100);
+      border-radius: var(--lw-radius-full);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+    }
+    .equity-bar-appreciation {
+      height: 100%;
+      background: linear-gradient(90deg, var(--lw-teal), var(--lw-teal-light));
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      transition: width 0.6s ease;
+      min-width: 0;
+    }
+    .equity-bar-principal {
+      height: 100%;
+      background: linear-gradient(90deg, var(--lw-sky), var(--lw-sky-light));
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      transition: width 0.6s ease;
+      min-width: 0;
+    }
+    .equity-bar-value {
+      width: 90px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--lw-navy);
+      text-align: left;
+      flex-shrink: 0;
+    }
+    .chart-legend {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--lw-slate-600);
+    }
+    .legend-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+    }
+    .legend-dot.appreciation { background: linear-gradient(135deg, var(--lw-teal), var(--lw-teal-light)); }
+    .legend-dot.principal { background: linear-gradient(135deg, var(--lw-sky), var(--lw-sky-light)); }
+    
+    /* LTV Milestones */
+    .ltv-milestones {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .ltv-milestone {
+      background: var(--lw-card);
+      border: 2px solid var(--lw-border);
+      border-radius: var(--lw-radius);
+      padding: 16px;
+      text-align: center;
+      transition: all var(--lw-transition);
+    }
+    .ltv-milestone.achieved {
+      border-color: var(--lw-emerald);
+      background: var(--lw-emerald-50);
+    }
+    .ltv-milestone-pct {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--lw-navy);
+    }
+    .ltv-milestone.achieved .ltv-milestone-pct {
+      color: var(--lw-emerald-dark);
+    }
+    .ltv-milestone-label {
+      font-size: 11px;
+      color: var(--lw-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+    .ltv-milestone-time {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--lw-slate-600);
+      margin-top: 8px;
+    }
+    .ltv-milestone.achieved .ltv-milestone-time {
+      color: var(--lw-emerald-dark);
+    }
+    
+    /* Comparison Highlight */
+    .comparison-box {
+      background: linear-gradient(135deg, var(--lw-amber-50), #FEF3C7);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      border-radius: var(--lw-radius-lg);
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .comparison-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #92400E;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .comparison-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .comparison-stat {
+      text-align: center;
+    }
+    .comparison-stat-label {
+      font-size: 12px;
+      color: #B45309;
+      margin-bottom: 4px;
+    }
+    .comparison-stat-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #92400E;
+    }
+    
+    /* What This Means */
+    .insight-box {
+      background: var(--lw-sky-50);
+      border-left: 4px solid var(--lw-sky);
+      border-radius: 0 var(--lw-radius) var(--lw-radius) 0;
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+    .insight-title {
+      font-weight: 700;
+      color: var(--lw-sky-dark);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .insight-text {
+      font-size: 15px;
+      color: var(--lw-slate-700);
+      line-height: 1.6;
+    }
+    
+    /* Decision Box */
+    .decision-box {
+      background: linear-gradient(135deg, var(--lw-emerald-50), #D1FAE5);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: var(--lw-radius-lg);
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .decision-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--lw-emerald-dark);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .decision-text {
+      font-size: 15px;
+      color: #065F46;
+      line-height: 1.6;
+    }
+    
+    @media (max-width: 768px) {
+      .ltv-milestones {
+        grid-template-columns: 1fr;
+      }
+      .comparison-stats {
+        grid-template-columns: 1fr;
+      }
+      .equity-bar-year {
+        width: 45px;
+        font-size: 12px;
+      }
+      .equity-bar-value {
+        width: 75px;
+        font-size: 11px;
+      }
+    }
+  </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How fast does home equity grow?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Home equity grows through two mechanisms: property appreciation (typically 3-5% annually in normal markets) and principal paydown from mortgage payments. With a 4% appreciation rate on a $400,000 home, you'd gain about $16,000 in equity from appreciation alone in the first year. Combined with mortgage payments, total equity growth can range from $20,000-$40,000 annually."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do extra mortgage payments grow equity faster than appreciation?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It depends on your appreciation rate and how much extra you pay. In high-appreciation markets (5%+), appreciation typically builds more equity than extra payments. However, extra payments provide guaranteed returns equal to your mortgage interest rate. A $500/month extra payment could add $90,000+ in equity over 15 years while saving tens of thousands in interest."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a good LTV ratio?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Below 80% LTV is ideal—it eliminates PMI requirements and provides refinancing flexibility. At 50% LTV, you have significant equity for a HELOC or cash-out refinance. Below 25% LTV means you own most of your home outright and have excellent financial security."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I calculate my current home equity?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Home equity = Current home value - Mortgage balance owed. If your home is worth $400,000 and you owe $280,000, your equity is $120,000 (30% of home value). Use recent comparable sales or online estimates for current value, and check your mortgage statement for the exact payoff amount."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can home equity decrease?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. While your principal paydown always adds equity, home values can decline during market downturns. If your home loses value faster than you pay down the mortgage, your equity decreases. This is why building equity through both appreciation and aggressive principal payments provides more security."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+<nav class="lw-nav">
+  <div class="lw-nav-inner">
+    <a href="/" class="lw-logo">
+      <span class="lw-logo-icon">P</span>
+      PocketWise
+    </a>
+    <button class="lw-hamburger" onclick="toggleMenu()" aria-label="Menu">☰</button>
+    <ul class="lw-nav-links">
+      <li><a href="/">All Tools</a></li>
+      <li><a href="/mortgage-calculator/">Mortgage</a></li>
+      <li><a href="/home-affordability/">Affordability</a></li>
+    </ul>
+  </div>
+</nav>
+<div class="lw-mobile-menu" id="mobileMenu">
+  <a href="/">All Tools</a>
+  <a href="/mortgage-calculator/">Mortgage Calculator</a>
+  <a href="/home-affordability/">Home Affordability</a>
+</div>
+
+<main class="lw-main">
+  <header class="lw-hero">
+    <span class="lw-badge green">🏠 Home Equity</span>
+    <h1>Home Equity <span class="accent">Growth Projection</span></h1>
+    <p class="subtitle">See how your home equity grows over time through appreciation and mortgage payments. Compare the impact of extra payments.</p>
+  </header>
+
+  <!-- Calculator Inputs -->
+  <div class="lw-card">
+    <div class="lw-card-header">
+      <div class="lw-card-icon blue">📊</div>
+      <div>
+        <div class="lw-card-title">Your Home Details</div>
+        <div class="lw-card-subtitle">Enter your current mortgage information</div>
+      </div>
+    </div>
+
+    <div class="lw-grid-2">
+      <div class="lw-form-group">
+        <label class="lw-label">Current Home Value</label>
+        <div class="lw-input-prefix">
+          <span class="prefix">$</span>
+          <input type="text" id="homeValue" class="lw-input" value="400,000" inputmode="numeric">
+        </div>
+      </div>
+      <div class="lw-form-group">
+        <label class="lw-label">Current Loan Balance</label>
+        <div class="lw-input-prefix">
+          <span class="prefix">$</span>
+          <input type="text" id="loanBalance" class="lw-input" value="320,000" inputmode="numeric">
+        </div>
+      </div>
+    </div>
+
+    <div class="lw-range-group">
+      <div class="lw-range-header">
+        <label class="lw-label">Annual Appreciation Rate</label>
+        <span class="lw-range-value" id="appreciationValue">4%</span>
+      </div>
+      <input type="range" id="appreciationRate" class="lw-range" min="0" max="10" step="0.5" value="4">
+    </div>
+
+    <div class="lw-grid-2">
+      <div class="lw-form-group">
+        <label class="lw-label">Monthly Mortgage Payment <span class="lw-label-hint">(P&I only)</span></label>
+        <div class="lw-input-prefix">
+          <span class="prefix">$</span>
+          <input type="text" id="monthlyPayment" class="lw-input" value="1,900" inputmode="numeric">
+        </div>
+      </div>
+      <div class="lw-form-group">
+        <label class="lw-label">Interest Rate</label>
+        <div class="lw-input-suffix">
+          <input type="text" id="interestRate" class="lw-input" value="6.5" inputmode="decimal">
+          <span class="suffix">%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lw-form-group">
+      <label class="lw-label">Extra Monthly Payment <span class="lw-label-hint">(optional)</span></label>
+      <div class="lw-input-prefix">
+        <span class="prefix">$</span>
+        <input type="text" id="extraPayment" class="lw-input" value="0" inputmode="numeric">
+      </div>
+    </div>
+  </div>
+
+  <!-- Primary Result -->
+  <div class="lw-result-hero" id="resultHero">
+    <div class="lw-result-label">Projected Equity in 15 Years</div>
+    <div class="lw-result-number"><span class="currency">$</span><span id="equity15yr">0</span></div>
+    <div class="lw-result-sub">Starting equity: <span id="startingEquity">$0</span> → <span id="equityGrowth">+$0</span> growth</div>
+  </div>
+
+  <!-- Equity Over Time Grid -->
+  <div class="lw-result-grid">
+    <div class="lw-result-item">
+      <div class="lw-result-item-label">1 Year</div>
+      <div class="lw-result-item-value" id="equity1yr">$0</div>
+    </div>
+    <div class="lw-result-item">
+      <div class="lw-result-item-label">5 Years</div>
+      <div class="lw-result-item-value" id="equity5yr">$0</div>
+    </div>
+    <div class="lw-result-item">
+      <div class="lw-result-item-label">10 Years</div>
+      <div class="lw-result-item-value" id="equity10yr">$0</div>
+    </div>
+  </div>
+
+  <!-- Stacked Bar Chart -->
+  <div class="lw-card">
+    <div class="lw-card-header">
+      <div class="lw-card-icon green">📈</div>
+      <div>
+        <div class="lw-card-title">Equity Growth Breakdown</div>
+        <div class="lw-card-subtitle">Appreciation vs. principal paydown over time</div>
+      </div>
+    </div>
+    
+    <div class="equity-chart" id="equityChart"></div>
+    
+    <div class="chart-legend">
+      <div class="legend-item">
+        <div class="legend-dot appreciation"></div>
+        <span>From Appreciation</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot principal"></div>
+        <span>From Principal Paydown</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- LTV Milestones -->
+  <div class="lw-card">
+    <div class="lw-card-header">
+      <div class="lw-card-icon violet">🎯</div>
+      <div>
+        <div class="lw-card-title">LTV Milestones</div>
+        <div class="lw-card-subtitle">When you'll reach key loan-to-value ratios</div>
+      </div>
+    </div>
+    
+    <div class="ltv-milestones" id="ltvMilestones">
+      <div class="ltv-milestone" id="ltv80">
+        <div class="ltv-milestone-pct">80%</div>
+        <div class="ltv-milestone-label">No PMI Required</div>
+        <div class="ltv-milestone-time" id="ltv80time">—</div>
+      </div>
+      <div class="ltv-milestone" id="ltv50">
+        <div class="ltv-milestone-pct">50%</div>
+        <div class="ltv-milestone-label">Strong Equity Position</div>
+        <div class="ltv-milestone-time" id="ltv50time">—</div>
+      </div>
+      <div class="ltv-milestone" id="ltv25">
+        <div class="ltv-milestone-pct">25%</div>
+        <div class="ltv-milestone-label">Majority Ownership</div>
+        <div class="ltv-milestone-time" id="ltv25time">—</div>
+      </div>
+    </div>
+    
+    <div class="lw-progress">
+      <div class="lw-progress-fill" id="ltvProgress" style="width: 0%"></div>
+    </div>
+    <div class="lw-flex lw-justify-between" style="font-size:12px;color:var(--lw-text-muted);margin-top:6px;">
+      <span>Current LTV: <strong id="currentLTV">80%</strong></span>
+      <span>15-Year LTV: <strong id="futureLTV">0%</strong></span>
+    </div>
+  </div>
+
+  <!-- What This Means -->
+  <div class="insight-box">
+    <div class="insight-title">💡 What This Means</div>
+    <div class="insight-text" id="insightText">
+      Your equity is projected to grow significantly over time...
+    </div>
+  </div>
+
+  <!-- Comparison Box (shows when extra payment > 0) -->
+  <div class="comparison-box" id="comparisonBox" style="display:none;">
+    <div class="comparison-title">⚡ Extra Payment Impact</div>
+    <div class="comparison-stats">
+      <div class="comparison-stat">
+        <div class="comparison-stat-label">Additional Equity (15yr)</div>
+        <div class="comparison-stat-value" id="extraEquityGain">$0</div>
+      </div>
+      <div class="comparison-stat">
+        <div class="comparison-stat-label">Interest Saved</div>
+        <div class="comparison-stat-value" id="interestSaved">$0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decision Guidance -->
+  <div class="decision-box">
+    <div class="decision-title">✅ Decision Guidance</div>
+    <div class="decision-text" id="decisionText">
+      Based on your inputs, here's what you should consider...
+    </div>
+  </div>
+
+  <!-- Year-by-Year Table -->
+  <div class="lw-card">
+    <div class="lw-card-header">
+      <div class="lw-card-icon amber">📋</div>
+      <div>
+        <div class="lw-card-title">Year-by-Year Projection</div>
+        <div class="lw-card-subtitle">Detailed equity growth schedule</div>
+      </div>
+    </div>
+    
+    <div class="lw-table-wrap">
+      <table class="lw-table">
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Home Value</th>
+            <th>Loan Balance</th>
+            <th>Total Equity</th>
+            <th>LTV</th>
+          </tr>
+        </thead>
+        <tbody id="projectionTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SEO Content -->
+  <section class="lw-content">
+    <h2>How Fast Does Home Equity Grow?</h2>
+    <p>Home equity—the difference between your home's value and what you owe—grows through two powerful mechanisms: <strong>property appreciation</strong> and <strong>principal paydown</strong>. Understanding how these work together helps you make smarter decisions about your mortgage strategy.</p>
+    
+    <h3>The Two Engines of Equity Growth</h3>
+    <p><strong>Appreciation</strong> is the increase in your home's market value over time. Historically, U.S. home prices have appreciated about 3-5% annually on average, though this varies significantly by location and market conditions. A 4% annual appreciation on a $400,000 home adds $16,000 in equity the first year alone—and this compounds over time.</p>
+    
+    <p><strong>Principal paydown</strong> happens with every mortgage payment you make. Early in your mortgage, most of your payment goes to interest. But as your balance decreases, more goes toward principal—accelerating your equity growth over time.</p>
+    
+    <h3>The Power of Extra Payments</h3>
+    <p>Extra mortgage payments go directly to principal, bypassing interest charges entirely. This creates a guaranteed return equal to your mortgage interest rate. With a 6.5% mortgage, every extra dollar you pay earns you an effective 6.5% return—better than many investments, and completely risk-free.</p>
+    
+    <p>Extra payments also accelerate your journey to key LTV milestones, potentially eliminating PMI sooner and increasing your refinancing options.</p>
+
+    <h2>Understanding LTV Milestones</h2>
+    <p>Your loan-to-value ratio (LTV) affects your borrowing options and costs:</p>
+    <ul>
+      <li><strong>80% LTV:</strong> The magic number for eliminating PMI. Once you reach 20% equity (80% LTV), you can request PMI removal, saving $100-300+ monthly.</li>
+      <li><strong>50% LTV:</strong> You qualify for the best HELOC rates and cash-out refinance terms. Lenders see you as low-risk.</li>
+      <li><strong>25% LTV:</strong> You own most of your home outright. This provides maximum financial security and flexibility.</li>
+    </ul>
+
+    <h2>Equity Growth Strategies</h2>
+    <h3>In High-Appreciation Markets</h3>
+    <p>If your local market appreciates faster than your mortgage rate, appreciation will likely build more equity than extra payments. However, appreciation isn't guaranteed—extra payments provide certain returns regardless of market conditions.</p>
+    
+    <h3>In Stable or Slow-Growth Markets</h3>
+    <p>Extra payments become more valuable when appreciation is modest. The guaranteed return of paying down your mortgage often beats the uncertain returns of a slow-appreciation market.</p>
+
+    <div class="lw-faq">
+      <h2>Frequently Asked Questions</h2>
+      
+      <div class="lw-faq-item">
+        <button class="lw-faq-q" onclick="toggleFaq(this)">How fast does home equity grow?</button>
+        <div class="lw-faq-a">
+          <p>Home equity grows through two mechanisms: property appreciation (typically 3-5% annually in normal markets) and principal paydown from mortgage payments. With a 4% appreciation rate on a $400,000 home, you'd gain about $16,000 in equity from appreciation alone in the first year. Combined with mortgage payments, total equity growth can range from $20,000-$40,000 annually.</p>
+        </div>
+      </div>
+      
+      <div class="lw-faq-item">
+        <button class="lw-faq-q" onclick="toggleFaq(this)">Do extra mortgage payments grow equity faster than appreciation?</button>
+        <div class="lw-faq-a">
+          <p>It depends on your appreciation rate and how much extra you pay. In high-appreciation markets (5%+), appreciation typically builds more equity than extra payments. However, extra payments provide guaranteed returns equal to your mortgage interest rate. A $500/month extra payment could add $90,000+ in equity over 15 years while saving tens of thousands in interest.</p>
+        </div>
+      </div>
+      
+      <div class="lw-faq-item">
+        <button class="lw-faq-q" onclick="toggleFaq(this)">What is a good LTV ratio?</button>
+        <div class="lw-faq-a">
+          <p>Below 80% LTV is ideal—it eliminates PMI requirements and provides refinancing flexibility. At 50% LTV, you have significant equity for a HELOC or cash-out refinance. Below 25% LTV means you own most of your home outright and have excellent financial security.</p>
+        </div>
+      </div>
+      
+      <div class="lw-faq-item">
+        <button class="lw-faq-q" onclick="toggleFaq(this)">How do I calculate my current home equity?</button>
+        <div class="lw-faq-a">
+          <p>Home equity = Current home value - Mortgage balance owed. If your home is worth $400,000 and you owe $280,000, your equity is $120,000 (30% of home value). Use recent comparable sales or online estimates for current value, and check your mortgage statement for the exact payoff amount.</p>
+        </div>
+      </div>
+      
+      <div class="lw-faq-item">
+        <button class="lw-faq-q" onclick="toggleFaq(this)">Can home equity decrease?</button>
+        <div class="lw-faq-a">
+          <p>Yes. While your principal paydown always adds equity, home values can decline during market downturns. If your home loses value faster than you pay down the mortgage, your equity decreases. This is why building equity through both appreciation and aggressive principal payments provides more security.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Tools -->
+  <section class="lw-related">
+    <h2>Related Calculators</h2>
+    <div class="lw-related-grid">
+      <a href="/mortgage-calculator/" class="lw-related-link">
+        <span class="dot"></span>
+        Mortgage Calculator
+      </a>
+      <a href="/home-affordability/" class="lw-related-link">
+        <span class="dot"></span>
+        Home Affordability
+      </a>
+      <a href="/extra-payment-calculator/" class="lw-related-link">
+        <span class="dot"></span>
+        Extra Payment Calculator
+      </a>
+    </div>
+  </section>
+
+  <div class="lw-disclaimer">
+    This calculator provides estimates for educational purposes only. Actual results depend on market conditions, your specific loan terms, and other factors. Consult a financial advisor for personalized advice.
+  </div>
+</main>
+
+<footer class="lw-footer">
+  <p>&copy; 2025 PocketWise. Free financial calculators for everyone.</p>
+  <p><a href="/">Home</a></p>
+</footer>
+
+<script>
+// Utility functions
+function parseNum(str) {
+  return parseFloat(String(str).replace(/[^0-9.-]/g, '')) || 0;
+}
+
+function formatCurrency(num) {
+  return num.toLocaleString('en-US', { maximumFractionDigits: 0 });
+}
+
+function formatCurrencyFull(num) {
+  return '$' + formatCurrency(num);
+}
+
+// Input formatting
+function formatInput(input) {
+  const val = parseNum(input.value);
+  if (!isNaN(val) && val > 0) {
+    input.value = formatCurrency(val);
+  }
+}
+
+// Calculate amortization with extra payments
+function calculateAmortization(principal, annualRate, monthlyPayment, extraMonthly, months) {
+  const monthlyRate = annualRate / 12;
+  let balance = principal;
+  let totalPrincipalPaid = 0;
+  let totalInterestPaid = 0;
+  const schedule = [];
+  
+  for (let month = 1; month <= months && balance > 0; month++) {
+    const interestPayment = balance * monthlyRate;
+    let principalPayment = monthlyPayment - interestPayment + extraMonthly;
+    
+    if (principalPayment > balance) {
+      principalPayment = balance;
+    }
+    
+    balance -= principalPayment;
+    totalPrincipalPaid += principalPayment;
+    totalInterestPaid += interestPayment;
+    
+    if (month % 12 === 0 || balance <= 0) {
+      schedule.push({
+        year: Math.ceil(month / 12),
+        balance: Math.max(0, balance),
+        principalPaid: totalPrincipalPaid,
+        interestPaid: totalInterestPaid
+      });
+    }
+  }
+  
+  return schedule;
+}
+
+// Main calculation
+function calculate() {
+  const homeValue = parseNum(document.getElementById('homeValue').value);
+  const loanBalance = parseNum(document.getElementById('loanBalance').value);
+  const appreciationRate = parseFloat(document.getElementById('appreciationRate').value) / 100;
+  const monthlyPayment = parseNum(document.getElementById('monthlyPayment').value);
+  const interestRate = parseFloat(document.getElementById('interestRate').value) / 100;
+  const extraPayment = parseNum(document.getElementById('extraPayment').value);
+  
+  if (homeValue <= 0 || loanBalance <= 0 || monthlyPayment <= 0 || interestRate <= 0) {
+    return;
+  }
+  
+  const startingEquity = homeValue - loanBalance;
+  const currentLTV = (loanBalance / homeValue) * 100;
+  
+  // Calculate amortization schedules
+  const scheduleWithExtra = calculateAmortization(loanBalance, interestRate, monthlyPayment, extraPayment, 180);
+  const scheduleWithout = calculateAmortization(loanBalance, interestRate, monthlyPayment, 0, 180);
+  
+  // Build projection data
+  const years = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+  const projections = [];
+  let maxEquity = 0;
+  
+  years.forEach((year, idx) => {
+    const futureValue = homeValue * Math.pow(1 + appreciationRate, year);
+    const appreciationGain = futureValue - homeValue;
+    
+    const amortData = scheduleWithExtra[idx] || scheduleWithExtra[scheduleWithExtra.length - 1];
+    const newBalance = amortData ? amortData.balance : 0;
+    const principalPaid = loanBalance - newBalance;
+    
+    const totalEquity = futureValue - newBalance;
+    const ltv = newBalance > 0 ? (newBalance / futureValue) * 100 : 0;
+    
+    projections.push({
+      year,
+      homeValue: futureValue,
+      loanBalance: newBalance,
+      equity: totalEquity,
+      appreciationEquity: appreciationGain,
+      principalEquity: principalPaid,
+      ltv
+    });
+    
+    if (totalEquity > maxEquity) maxEquity = totalEquity;
+  });
+  
+  // Update main results
+  document.getElementById('startingEquity').textContent = formatCurrencyFull(startingEquity);
+  document.getElementById('equity1yr').textContent = formatCurrencyFull(projections[0].equity);
+  document.getElementById('equity5yr').textContent = formatCurrencyFull(projections[4].equity);
+  document.getElementById('equity10yr').textContent = formatCurrencyFull(projections[9].equity);
+  document.getElementById('equity15yr').textContent = formatCurrency(projections[14].equity);
+  document.getElementById('equityGrowth').textContent = '+' + formatCurrencyFull(projections[14].equity - startingEquity);
+  
+  // LTV display
+  document.getElementById('currentLTV').textContent = currentLTV.toFixed(1) + '%';
+  document.getElementById('futureLTV').textContent = projections[14].ltv.toFixed(1) + '%';
+  document.getElementById('ltvProgress').style.width = Math.max(0, 100 - projections[14].ltv) + '%';
+  
+  // LTV Milestones
+  updateLTVMilestone('ltv80', 80, projections, currentLTV);
+  updateLTVMilestone('ltv50', 50, projections, currentLTV);
+  updateLTVMilestone('ltv25', 25, projections, currentLTV);
+  
+  // Build stacked bar chart
+  buildEquityChart(projections, maxEquity);
+  
+  // Build table
+  buildTable(projections);
+  
+  // Extra payment comparison
+  if (extraPayment > 0) {
+    const withoutExtraProjections = [];
+    years.forEach((year, idx) => {
+      const futureValue = homeValue * Math.pow(1 + appreciationRate, year);
+      const amortData = scheduleWithout[idx] || scheduleWithout[scheduleWithout.length - 1];
+      const newBalance = amortData ? amortData.balance : 0;
+      withoutExtraProjections.push({
+        year,
+        equity: futureValue - newBalance,
+        interestPaid: amortData ? amortData.interestPaid : 0
+      });
+    });
+    
+    const extraEquityGain = projections[14].equity - withoutExtraProjections[14].equity;
+    const interestWithExtra = scheduleWithExtra[scheduleWithExtra.length - 1]?.interestPaid || 0;
+    const interestWithout = scheduleWithout[14]?.interestPaid || 0;
+    const interestSaved = interestWithout - interestWithExtra;
+    
+    document.getElementById('extraEquityGain').textContent = formatCurrencyFull(extraEquityGain);
+    document.getElementById('interestSaved').textContent = formatCurrencyFull(Math.max(0, interestSaved));
+    document.getElementById('comparisonBox').style.display = 'block';
+  } else {
+    document.getElementById('comparisonBox').style.display = 'none';
+  }
+  
+  // Insight text
+  updateInsight(projections, startingEquity, appreciationRate, extraPayment);
+  
+  // Decision guidance
+  updateDecision(projections, appreciationRate, interestRate, extraPayment, currentLTV);
+}
+
+function updateLTVMilestone(elementId, targetLTV, projections, currentLTV) {
+  const milestone = document.getElementById(elementId);
+  const timeEl = document.getElementById(elementId + 'time');
+  
+  if (currentLTV <= targetLTV) {
+    milestone.classList.add('achieved');
+    timeEl.textContent = '✓ Already there';
+    return;
+  }
+  
+  const yearReached = projections.find(p => p.ltv <= targetLTV);
+  if (yearReached) {
+    milestone.classList.add('achieved');
+    timeEl.textContent = yearReached.year === 1 ? 'Year 1' : `~${yearReached.year} years`;
+  } else {
+    milestone.classList.remove('achieved');
+    timeEl.textContent = '15+ years';
+  }
+}
+
+function buildEquityChart(projections, maxEquity) {
+  const container = document.getElementById('equityChart');
+  const displayYears = [1, 3, 5, 7, 10, 15];
+  
+  let html = '';
+  displayYears.forEach(year => {
+    const p = projections[year - 1];
+    const appreciationWidth = (p.appreciationEquity / maxEquity) * 100;
+    const principalWidth = (p.principalEquity / maxEquity) * 100;
+    
+    html += `
+      <div class="equity-bar-row">
+        <div class="equity-bar-year">Year ${year}</div>
+        <div class="equity-bar-track">
+          <div class="equity-bar-appreciation" style="width:${appreciationWidth}%"></div>
+          <div class="equity-bar-principal" style="width:${principalWidth}%"></div>
+        </div>
+        <div class="equity-bar-value">${formatCurrencyFull(p.equity)}</div>
+      </div>
+    `;
+  });
+  
+  container.innerHTML = html;
+}
+
+function buildTable(projections) {
+  const tbody = document.getElementById('projectionTable');
+  let html = '';
+  
+  projections.forEach(p => {
+    html += `
+      <tr>
+        <td>${p.year}</td>
+        <td class="num">${formatCurrencyFull(p.homeValue)}</td>
+        <td class="num">${formatCurrencyFull(p.loanBalance)}</td>
+        <td class="num" style="color:var(--lw-emerald)">${formatCurrencyFull(p.equity)}</td>
+        <td class="num">${p.ltv.toFixed(1)}%</td>
+      </tr>
+    `;
+  });
+  
+  tbody.innerHTML = html;
+}
+
+function updateInsight(projections, startingEquity, appreciationRate, extraPayment) {
+  const year15 = projections[14];
+  const totalGrowth = year15.equity - startingEquity;
+  const appreciationPct = (year15.appreciationEquity / totalGrowth * 100).toFixed(0);
+  const principalPct = (year15.principalEquity / totalGrowth * 100).toFixed(0);
+  
+  let text = `Over 15 years, your equity is projected to grow from ${formatCurrencyFull(startingEquity)} to ${formatCurrencyFull(year15.equity)}—a gain of <strong>${formatCurrencyFull(totalGrowth)}</strong>. `;
+  
+  text += `About <strong>${appreciationPct}%</strong> of this growth comes from home appreciation at ${(appreciationRate * 100).toFixed(1)}% annually, `;
+  text += `while <strong>${principalPct}%</strong> comes from paying down your mortgage principal.`;
+  
+  if (extraPayment > 0) {
+    text += ` Your extra ${formatCurrencyFull(extraPayment)}/month payment accelerates equity building significantly.`;
+  }
+  
+  document.getElementById('insightText').innerHTML = text;
+}
+
+function updateDecision(projections, appreciationRate, interestRate, extraPayment, currentLTV) {
+  const year15 = projections[14];
+  let text = '';
+  
+  if (appreciationRate > interestRate) {
+    text = `<strong>Appreciation is outpacing your interest rate</strong> (${(appreciationRate * 100).toFixed(1)}% vs ${(interestRate * 100).toFixed(1)}%). In this scenario, your home's rising value builds equity faster than extra payments would. However, extra payments still provide guaranteed returns and reduce risk if the market slows. `;
+  } else {
+    text = `<strong>Extra payments may be your best equity strategy</strong>. At ${(interestRate * 100).toFixed(1)}% interest vs ${(appreciationRate * 100).toFixed(1)}% appreciation, paying down principal gives you a guaranteed return higher than expected appreciation. `;
+  }
+  
+  if (currentLTV > 80) {
+    const milestone80 = projections.find(p => p.ltv <= 80);
+    if (milestone80) {
+      text += `You'll hit 80% LTV in about ${milestone80.year} year${milestone80.year > 1 ? 's' : ''}, enabling PMI removal. `;
+      if (extraPayment === 0) {
+        text += `Consider extra payments to reach this milestone faster and eliminate PMI sooner.`;
+      }
+    }
+  } else {
+    text += `You've already passed the 80% LTV threshold—no PMI concerns. Focus on your long-term wealth building strategy.`;
+  }
+  
+  document.getElementById('decisionText').innerHTML = text;
+}
+
+// Event listeners
+document.getElementById('homeValue').addEventListener('input', function() { formatInput(this); calculate(); });
+document.getElementById('loanBalance').addEventListener('input', function() { formatInput(this); calculate(); });
+document.getElementById('monthlyPayment').addEventListener('input', function() { formatInput(this); calculate(); });
+document.getElementById('extraPayment').addEventListener('input', function() { formatInput(this); calculate(); });
+document.getElementById('interestRate').addEventListener('input', calculate);
+
+document.getElementById('appreciationRate').addEventListener('input', function() {
+  document.getElementById('appreciationValue').textContent = this.value + '%';
+  calculate();
+});
+
+// FAQ toggle
+function toggleFaq(btn) {
+  const item = btn.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.lw-faq-item').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// Mobile menu
+function toggleMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', calculate);
+</script>
+
+</body>
+</html>

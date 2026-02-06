@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fee Drag Comparison Tool | See How Investment Fees Erode Your Returns</title>
+  <meta name="description" content="Compare investment fee impact over time. See how expense ratios from 0.03% to 1%+ cost you thousands in lost returns. Free investment fee drag calculator.">
+  <meta name="keywords" content="investment fee drag calculator, expense ratio impact calculator, how fees affect returns, fund fee cost over time, fee comparison tool">
+  <link rel="canonical" href="https://pocketwise.app/fee-drag-calculator/">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Fee Drag Comparison Tool | See How Investment Fees Cost You">
+  <meta property="og:description" content="Compare up to 3 fee levels and see exactly how much investment fees cost you over time.">
+  <meta property="og:type" content="website">
+  
+  <style>
+    /* Chart Container */
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 320px;
+      margin: 24px 0;
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      overflow: hidden;
+    }
+    #growthChart {
+      width: 100%;
+      height: 100%;
+    }
+    
+    /* Chart Legend */
+    .chart-legend {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--lw-text-secondary);
+    }
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .legend-dot.fee1 { background: #10B981; }
+    .legend-dot.fee2 { background: #F59E0B; }
+    .legend-dot.fee3 { background: #F43F5E; }
+    
+    /* Fee Inputs Grid */
+    .fee-inputs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .fee-input-card {
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      padding: 16px;
+      text-align: center;
+      border: 2px solid transparent;
+      transition: all var(--lw-transition);
+    }
+    .fee-input-card.active {
+      border-color: var(--lw-sky);
+      background: var(--lw-sky-50);
+    }
+    .fee-input-card label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .fee-input-card.low label { color: #059669; }
+    .fee-input-card.mid label { color: #B45309; }
+    .fee-input-card.high label { color: #E11D48; }
+    .fee-input-card input {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid var(--lw-slate-200);
+      border-radius: var(--lw-radius-sm);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      font-weight: 600;
+      text-align: center;
+      background: white;
+    }
+    .fee-input-card input:focus {
+      outline: none;
+      border-color: var(--lw-sky);
+    }
+    
+    /* Preset Buttons */
+    .preset-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+      justify-content: center;
+    }
+    .preset-btn {
+      padding: 8px 14px;
+      background: var(--lw-slate-100);
+      border: 1px solid var(--lw-slate-200);
+      border-radius: var(--lw-radius-full);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--lw-slate-600);
+      cursor: pointer;
+      transition: all var(--lw-transition);
+    }
+    .preset-btn:hover {
+      background: var(--lw-sky-50);
+      border-color: var(--lw-sky);
+      color: var(--lw-sky-dark);
+    }
+    
+    /* Comparison Table */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+    .comparison-table th {
+      background: var(--lw-slate-50);
+      padding: 14px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--lw-slate-500);
+      border-bottom: 2px solid var(--lw-border);
+    }
+    .comparison-table td {
+      padding: 16px;
+      text-align: center;
+      border-bottom: 1px solid var(--lw-border-light);
+    }
+    .comparison-table tr:hover td {
+      background: var(--lw-slate-50);
+    }
+    .comparison-table .fee-col {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+    }
+    .comparison-table .fee-col.low { color: #059669; }
+    .comparison-table .fee-col.mid { color: #B45309; }
+    .comparison-table .fee-col.high { color: #E11D48; }
+    .comparison-table .value-cell {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .comparison-table .lost-cell {
+      color: var(--lw-rose);
+    }
+    
+    /* Lost Money Visualization */
+    .lost-money-bars {
+      margin: 24px 0;
+    }
+    .lost-bar-item {
+      margin-bottom: 20px;
+    }
+    .lost-bar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .lost-bar-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--lw-text);
+    }
+    .lost-bar-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--lw-rose);
+    }
+    .lost-bar-track {
+      height: 24px;
+      background: var(--lw-slate-100);
+      border-radius: var(--lw-radius-full);
+      overflow: hidden;
+      position: relative;
+    }
+    .lost-bar-fill {
+      height: 100%;
+      border-radius: var(--lw-radius-full);
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 12px;
+    }
+    .lost-bar-fill.low { background: linear-gradient(90deg, #10B981, #34D399); }
+    .lost-bar-fill.mid { background: linear-gradient(90deg, #F59E0B, #FBBF24); }
+    .lost-bar-fill.high { background: linear-gradient(90deg, #F43F5E, #FB7185); }
+    .lost-bar-pct {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: white;
+    }
+    
+    /* Decision Callout */
+    .decision-callout {
+      background: linear-gradient(135deg, var(--lw-navy) 0%, var(--lw-slate-800) 100%);
+      border-radius: var(--lw-radius-lg);
+      padding: 28px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .decision-callout::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(ellipse at 30% 0%, rgba(244, 63, 94, 0.15) 0%, transparent 60%);
+    }
+    .decision-callout * { position: relative; }
+    .decision-icon {
+      font-size: 32px;
+      margin-bottom: 16px;
+    }
+    .decision-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .decision-text {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--lw-slate-300);
+    }
+    .decision-text strong {
+      color: white;
+    }
+    .decision-highlight {
+      display: inline-block;
+      background: rgba(244, 63, 94, 0.2);
+      padding: 2px 10px;
+      border-radius: var(--lw-radius-full);
+      color: #FB7185;
+      font-weight: 600;
+      margin: 0 4px;
+    }
+    
+    /* What This Means */
+    .insight-box {
+      background: var(--lw-amber-50);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      border-radius: var(--lw-radius);
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .insight-box.green {
+      background: var(--lw-emerald-50);
+      border-color: rgba(16, 185, 129, 0.2);
+    }
+    .insight-title {
+      font-weight: 700;
+      color: var(--lw-navy);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .insight-text {
+      font-size: 15px;
+      color: var(--lw-text-secondary);
+      line-height: 1.6;
+    }
+    
+    /* Form Row */
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    
+    @media (max-width: 768px) {
+      .fee-inputs-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      .chart-container {
+        height: 280px;
+      }
+      .chart-legend {
+        gap: 16px;
+      }
+      .comparison-table {
+        font-size: 14px;
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px 8px;
+      }
+      .comparison-table .value-cell {
+        font-size: 15px;
+      }
+    }
+  </style>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is fee drag in investing?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Fee drag refers to the reduction in investment returns caused by fees such as expense ratios, advisor fees, and trading costs. Over time, even small fees compound and significantly reduce your portfolio's growth potential. A 1% annual fee can cost you over 25% of your total returns over 30 years."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much do investment fees really cost over time?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Investment fees compound over time, meaning their true cost is much higher than the stated percentage. For example, on a $100,000 portfolio growing at 7% annually, a 1% fee costs approximately $170,000 over 30 years compared to a 0.03% index fund fee, which would only cost about $6,000 over the same period."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a good expense ratio for mutual funds and ETFs?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Index funds typically have expense ratios between 0.03% and 0.20%, which is considered excellent. Actively managed funds often charge 0.50% to 1.00% or more. Financial advisors may add another 0.50% to 1.00% on top of fund fees. Generally, keeping total investment costs below 0.25% is ideal for long-term wealth building."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does paying higher fees guarantee better investment returns?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Research consistently shows that higher fees do not correlate with better performance. In fact, lower-cost index funds outperform most actively managed funds over long periods. The only guaranteed result of higher fees is lower net returns in your portfolio."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I calculate the true cost of investment fees?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "To calculate fee drag: 1) Calculate your portfolio's growth without fees, 2) Calculate growth with fees subtracted from annual returns, 3) The difference is your total fee drag. Use our Fee Drag Comparison Tool above to see exactly how different fee levels affect your specific portfolio."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">P</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">All Tools</a></li>
+        <li><a href="/compound-interest-calculator/">Compound Interest</a></li>
+        <li><a href="/investment-growth-calculator/">Investment Growth</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="toggleMenu()" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu" id="mobileMenu">
+      <a href="/">All Tools</a>
+      <a href="/compound-interest-calculator/">Compound Interest</a>
+      <a href="/investment-growth-calculator/">Investment Growth</a>
+    </div>
+  </nav>
+
+  <main class="lw-main wide">
+    <!-- Hero -->
+    <section class="lw-hero">
+      <span class="lw-badge rose">Investment Fees</span>
+      <h1>Fee Drag <span class="accent">Comparison Tool</span></h1>
+      <p class="subtitle">See exactly how investment fees erode your returns over time. Compare up to 3 fee levels and discover the true cost of expense ratios.</p>
+    </section>
+
+    <!-- Calculator Input -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon rose">📊</div>
+        <div>
+          <div class="lw-card-title">Your Investment Details</div>
+          <div class="lw-card-subtitle">Enter your portfolio information</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="lw-form-group">
+          <label class="lw-label">Starting Portfolio Value</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" id="startValue" class="lw-input" value="100,000" inputmode="numeric">
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">Annual Contribution</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" id="annualContribution" class="lw-input" value="12,000" inputmode="numeric">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="lw-form-group">
+          <label class="lw-label">Expected Return (before fees) <span class="lw-label-hint">Typical: 7-10%</span></label>
+          <div class="lw-input-suffix">
+            <input type="number" id="expectedReturn" class="lw-input" value="7" step="0.1" min="0" max="30">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">Time Horizon</label>
+          <div class="lw-input-suffix">
+            <input type="number" id="timeHorizon" class="lw-input" value="30" step="1" min="1" max="50">
+            <span class="suffix">years</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fee Levels -->
+      <div class="lw-form-group">
+        <label class="lw-label">Compare Fee Levels (Expense Ratios)</label>
+        <div class="fee-inputs-grid">
+          <div class="fee-input-card low">
+            <label>Low-Cost (Index)</label>
+            <input type="number" id="fee1" value="0.03" step="0.01" min="0" max="5">
+            <span style="font-size: 12px; color: var(--lw-text-muted);">%/year</span>
+          </div>
+          <div class="fee-input-card mid">
+            <label>Mid-Range (Active)</label>
+            <input type="number" id="fee2" value="0.50" step="0.01" min="0" max="5">
+            <span style="font-size: 12px; color: var(--lw-text-muted);">%/year</span>
+          </div>
+          <div class="fee-input-card high">
+            <label>High (Advisor + Fund)</label>
+            <input type="number" id="fee3" value="1.00" step="0.01" min="0" max="5">
+            <span style="font-size: 12px; color: var(--lw-text-muted);">%/year</span>
+          </div>
+        </div>
+        <div class="preset-buttons">
+          <button class="preset-btn" onclick="applyPreset(0.03, 0.50, 1.00)">Index vs Active vs Advisor</button>
+          <button class="preset-btn" onclick="applyPreset(0.03, 0.20, 0.75)">ETF Comparison</button>
+          <button class="preset-btn" onclick="applyPreset(0.10, 0.50, 1.50)">Low vs Mid vs High</button>
+          <button class="preset-btn" onclick="applyPreset(0.03, 1.00, 2.00)">Extreme Comparison</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="results">
+      <!-- Growth Chart -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon blue">📈</div>
+          <div>
+            <div class="lw-card-title">Portfolio Growth Comparison</div>
+            <div class="lw-card-subtitle">See how fees compound over time</div>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="growthChart"></canvas>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <span class="legend-dot fee1"></span>
+            <span id="legend1">0.03% Fee</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot fee2"></span>
+            <span id="legend2">0.50% Fee</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot fee3"></span>
+            <span id="legend3">1.00% Fee</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparison Table -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon amber">🔢</div>
+          <div>
+            <div class="lw-card-title">Side-by-Side Comparison</div>
+            <div class="lw-card-subtitle">Final values and total fee impact</div>
+          </div>
+        </div>
+        <div class="lw-table-wrap">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th><span class="fee-col low" id="th1">0.03%</span></th>
+                <th><span class="fee-col mid" id="th2">0.50%</span></th>
+                <th><span class="fee-col high" id="th3">1.00%</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Ending Balance</strong></td>
+                <td class="value-cell" id="end1">$1,234,567</td>
+                <td class="value-cell" id="end2">$1,100,000</td>
+                <td class="value-cell" id="end3">$980,000</td>
+              </tr>
+              <tr>
+                <td>Total Contributions</td>
+                <td class="num" id="contrib1">$460,000</td>
+                <td class="num" id="contrib2">$460,000</td>
+                <td class="num" id="contrib3">$460,000</td>
+              </tr>
+              <tr>
+                <td>Total Growth</td>
+                <td class="num" style="color: #10B981;" id="growth1">$774,567</td>
+                <td class="num" style="color: #10B981;" id="growth2">$640,000</td>
+                <td class="num" style="color: #10B981;" id="growth3">$520,000</td>
+              </tr>
+              <tr>
+                <td><strong>Total Fees Paid</strong></td>
+                <td class="num lost-cell" id="fees1">$5,432</td>
+                <td class="num lost-cell" id="fees2">$85,000</td>
+                <td class="num lost-cell" id="fees3">$170,000</td>
+              </tr>
+              <tr>
+                <td><strong>Value Lost to Fees</strong></td>
+                <td class="num" id="lost1">—</td>
+                <td class="num lost-cell" id="lost2">$134,567</td>
+                <td class="num lost-cell" id="lost3">$254,567</td>
+              </tr>
+              <tr>
+                <td><strong>% of Gains Lost</strong></td>
+                <td class="num" id="pctLost1">Baseline</td>
+                <td class="num lost-cell" id="pctLost2">17.4%</td>
+                <td class="num lost-cell" id="pctLost3">32.9%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Money Lost Visualization -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon rose">💸</div>
+          <div>
+            <div class="lw-card-title">Money Lost to Fees</div>
+            <div class="lw-card-subtitle">Compared to lowest-fee option</div>
+          </div>
+        </div>
+        <div class="lost-money-bars">
+          <div class="lost-bar-item">
+            <div class="lost-bar-header">
+              <span class="lost-bar-label" id="lostLabel1">0.03% Fee (Baseline)</span>
+              <span class="lost-bar-value" id="lostValue1">$0 lost</span>
+            </div>
+            <div class="lost-bar-track">
+              <div class="lost-bar-fill low" id="lostBar1" style="width: 5%;">
+                <span class="lost-bar-pct">0%</span>
+              </div>
+            </div>
+          </div>
+          <div class="lost-bar-item">
+            <div class="lost-bar-header">
+              <span class="lost-bar-label" id="lostLabel2">0.50% Fee</span>
+              <span class="lost-bar-value" id="lostValue2">$134,567 lost</span>
+            </div>
+            <div class="lost-bar-track">
+              <div class="lost-bar-fill mid" id="lostBar2" style="width: 52%;">
+                <span class="lost-bar-pct" id="lostPct2">52%</span>
+              </div>
+            </div>
+          </div>
+          <div class="lost-bar-item">
+            <div class="lost-bar-header">
+              <span class="lost-bar-label" id="lostLabel3">1.00% Fee</span>
+              <span class="lost-bar-value" id="lostValue3">$254,567 lost</span>
+            </div>
+            <div class="lost-bar-track">
+              <div class="lost-bar-fill high" id="lostBar3" style="width: 100%;">
+                <span class="lost-bar-pct" id="lostPct3">100%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Decision Callout -->
+      <div class="decision-callout" id="decisionCallout">
+        <div class="decision-icon">⚠️</div>
+        <div class="decision-title">The True Cost of That 1% Fee</div>
+        <div class="decision-text" id="decisionText">
+          A <strong>0.50% fee</strong> costs you <span class="decision-highlight">$134,567</span> over 30 years — that's <strong>17.4% of your total gains</strong> gone. Switching to a 0.03% index fund could buy you an extra 2 years of retirement income.
+        </div>
+      </div>
+
+      <!-- What This Means -->
+      <div class="insight-box">
+        <div class="insight-title">💡 What This Means</div>
+        <div class="insight-text" id="insightText">
+          The difference between a 0.03% and 1.00% fee might seem small, but it compounds dramatically over time. Your money isn't just paying fees — it's also losing the growth that money could have generated. This "fee drag" is one of the biggest controllable factors in long-term wealth building.
+        </div>
+      </div>
+
+      <div class="insight-box green">
+        <div class="insight-title">✅ Actionable Guidance</div>
+        <div class="insight-text" id="guidanceText">
+          <strong>Check your current funds:</strong> Look up the expense ratio in your 401(k) or IRA. If you're paying over 0.50%, consider switching to low-cost index funds when available. Total market or S&P 500 index funds often charge 0.03-0.10% — saving you tens of thousands over your investing lifetime.
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <section class="lw-content">
+      <h2>How Investment Fee Drag Works</h2>
+      <p>Fee drag is the hidden tax on your investment returns. Unlike taxes you pay once, fees compound against you every single year. A 1% annual fee doesn't just take 1% of your money — it takes 1% of your money <em>plus</em> all the growth that 1% would have generated.</p>
+      
+      <h3>The Compound Effect of Fees</h3>
+      <p>Here's why fee drag is so powerful: fees are calculated on your entire balance, including previous gains. As your portfolio grows, you pay more in absolute dollars. Meanwhile, the money lost to fees stops growing entirely.</p>
+      <p>Consider this: $10,000 at 7% annual return becomes $76,123 after 30 years. At 6% return (after a 1% fee), it only reaches $57,435. That 1% fee cost you <strong>$18,688</strong> — or 25% of your potential gains — on just $10,000.</p>
+
+      <h3>Types of Investment Fees</h3>
+      <p>Understanding where fees come from helps you minimize them:</p>
+      <ul>
+        <li><strong>Expense Ratios:</strong> Annual percentage charged by mutual funds and ETFs. Index funds: 0.03-0.20%. Active funds: 0.50-1.50%.</li>
+        <li><strong>Advisor Fees:</strong> Financial advisors typically charge 0.50-1.25% of assets under management annually.</li>
+        <li><strong>Trading Costs:</strong> Commissions, bid-ask spreads, and market impact from frequent trading.</li>
+        <li><strong>12b-1 Fees:</strong> Marketing and distribution fees hidden inside some mutual funds (0.25-1.00%).</li>
+        <li><strong>Load Fees:</strong> One-time sales charges of 3-5% when buying (front-load) or selling (back-load) certain funds.</li>
+      </ul>
+
+      <h3>The "1% Doesn't Matter" Myth</h3>
+      <p>Some argue that paying 1% for professional management is worth it. The data disagrees: over 90% of actively managed funds underperform their benchmark index over 15+ year periods. You're paying more to get less.</p>
+      <p>The only guaranteed outcome of higher fees is lower returns. Any advisor promising to beat the market by more than their fee is making a claim most professionals can't deliver.</p>
+
+      <h2>How to Minimize Fee Drag</h2>
+      <p>Reducing fees is one of the few guaranteed ways to improve your investment returns:</p>
+      <ol>
+        <li><strong>Choose low-cost index funds:</strong> Vanguard, Fidelity, and Schwab offer total market and S&P 500 funds with expense ratios under 0.05%.</li>
+        <li><strong>Check your 401(k) options:</strong> Many employer plans now include low-cost index options. If not, advocate for them or maximize your IRA instead.</li>
+        <li><strong>Avoid actively managed funds:</strong> Higher fees rarely correlate with better performance.</li>
+        <li><strong>Consider fee-only advisors:</strong> If you need advice, flat-fee or hourly advisors cost less than AUM-based fees for larger portfolios.</li>
+        <li><strong>Minimize trading:</strong> Buy and hold reduces transaction costs and tax drag.</li>
+      </ol>
+
+      <!-- FAQ Section -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">What is fee drag in investing?</button>
+          <div class="lw-faq-a">
+            <p>Fee drag refers to the reduction in investment returns caused by fees such as expense ratios, advisor fees, and trading costs. Over time, even small fees compound and significantly reduce your portfolio's growth potential. A 1% annual fee can cost you over 25% of your total returns over 30 years.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">How much do investment fees really cost over time?</button>
+          <div class="lw-faq-a">
+            <p>Investment fees compound over time, meaning their true cost is much higher than the stated percentage. For example, on a $100,000 portfolio growing at 7% annually, a 1% fee costs approximately $170,000 over 30 years compared to a 0.03% index fund fee, which would only cost about $6,000 over the same period.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">What is a good expense ratio for mutual funds and ETFs?</button>
+          <div class="lw-faq-a">
+            <p>Index funds typically have expense ratios between 0.03% and 0.20%, which is considered excellent. Actively managed funds often charge 0.50% to 1.00% or more. Financial advisors may add another 0.50% to 1.00% on top of fund fees. Generally, keeping total investment costs below 0.25% is ideal for long-term wealth building.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">Does paying higher fees guarantee better investment returns?</button>
+          <div class="lw-faq-a">
+            <p>No. Research consistently shows that higher fees do not correlate with better performance. In fact, lower-cost index funds outperform most actively managed funds over long periods. The only guaranteed result of higher fees is lower net returns in your portfolio.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="toggleFaq(this)">How do I calculate the true cost of investment fees?</button>
+          <div class="lw-faq-a">
+            <p>To calculate fee drag: 1) Calculate your portfolio's growth without fees, 2) Calculate growth with fees subtracted from annual returns, 3) The difference is your total fee drag. Use our Fee Drag Comparison Tool above to see exactly how different fee levels affect your specific portfolio.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/compound-interest-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Compound Interest Calculator
+        </a>
+        <a href="/investment-growth-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Investment Growth Calculator
+        </a>
+        <a href="/retirement-savings-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Retirement Savings Calculator
+        </a>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <div class="lw-disclaimer">
+      This calculator is for educational purposes only. Past performance does not guarantee future results. Actual investment returns will vary. Consult a licensed financial advisor for personalized advice.
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="lw-footer">
+    <p>© 2025 PocketWise. Free financial calculators for everyone.</p>
+    <p style="margin-top: 8px;"><a href="/">Home</a></p>
+  </footer>
+
+  <script>
+    // Format currency
+    function formatCurrency(num) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0
+      }).format(num);
+    }
+
+    // Format percentage
+    function formatPct(num) {
+      return num.toFixed(1) + '%';
+    }
+
+    // Parse number from formatted input
+    function parseNumber(str) {
+      return parseFloat(str.replace(/[^0-9.-]/g, '')) || 0;
+    }
+
+    // Format input on blur
+    function formatInput(input) {
+      const value = parseNumber(input.value);
+      input.value = new Intl.NumberFormat('en-US').format(value);
+    }
+
+    // Calculate portfolio growth with fees
+    function calculateGrowth(startValue, annualContribution, returnRate, feeRate, years) {
+      const netReturn = returnRate - feeRate;
+      let balance = startValue;
+      let totalContributions = startValue;
+      let totalFeesPaid = 0;
+      const yearlyData = [balance];
+
+      for (let year = 1; year <= years; year++) {
+        // Contribution at start of year
+        balance += annualContribution;
+        totalContributions += annualContribution;
+        
+        // Calculate growth before fees
+        const growthBeforeFees = balance * (returnRate / 100);
+        
+        // Calculate fee on balance
+        const feeAmount = balance * (feeRate / 100);
+        totalFeesPaid += feeAmount;
+        
+        // Apply net growth
+        balance = balance * (1 + netReturn / 100);
+        yearlyData.push(balance);
+      }
+
+      return {
+        endingBalance: balance,
+        totalContributions,
+        totalGrowth: balance - totalContributions,
+        totalFeesPaid,
+        yearlyData
+      };
+    }
+
+    // Draw chart
+    function drawChart(data1, data2, data3, years) {
+      const canvas = document.getElementById('growthChart');
+      const ctx = canvas.getContext('2d');
+      
+      // Set canvas size
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width * 2;
+      canvas.height = rect.height * 2;
+      ctx.scale(2, 2);
+      
+      const width = rect.width;
+      const height = rect.height;
+      const padding = { top: 30, right: 20, bottom: 40, left: 70 };
+      const chartWidth = width - padding.left - padding.right;
+      const chartHeight = height - padding.top - padding.bottom;
+
+      // Clear
+      ctx.clearRect(0, 0, width, height);
+
+      // Find max value
+      const allValues = [...data1, ...data2, ...data3];
+      const maxValue = Math.max(...allValues);
+      const minValue = 0;
+
+      // Scale functions
+      const scaleX = (i) => padding.left + (i / years) * chartWidth;
+      const scaleY = (v) => padding.top + chartHeight - ((v - minValue) / (maxValue - minValue)) * chartHeight;
+
+      // Draw grid lines
+      ctx.strokeStyle = '#E2E8F0';
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 5; i++) {
+        const y = padding.top + (chartHeight / 5) * i;
+        ctx.beginPath();
+        ctx.moveTo(padding.left, y);
+        ctx.lineTo(width - padding.right, y);
+        ctx.stroke();
+      }
+
+      // Y-axis labels
+      ctx.fillStyle = '#64748B';
+      ctx.font = '11px Inter, sans-serif';
+      ctx.textAlign = 'right';
+      for (let i = 0; i <= 5; i++) {
+        const value = maxValue - (maxValue / 5) * i;
+        const y = padding.top + (chartHeight / 5) * i;
+        ctx.fillText(formatCurrency(value), padding.left - 8, y + 4);
+      }
+
+      // X-axis labels
+      ctx.textAlign = 'center';
+      const step = Math.ceil(years / 6);
+      for (let i = 0; i <= years; i += step) {
+        ctx.fillText('Year ' + i, scaleX(i), height - padding.bottom + 20);
+      }
+
+      // Draw lines
+      function drawLine(data, color) {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 3;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        data.forEach((value, i) => {
+          const x = scaleX(i);
+          const y = scaleY(value);
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+
+        // Draw endpoint dot
+        const lastX = scaleX(data.length - 1);
+        const lastY = scaleY(data[data.length - 1]);
+        ctx.beginPath();
+        ctx.arc(lastX, lastY, 5, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+      }
+
+      // Draw in order (lowest fee on top)
+      drawLine(data3, '#F43F5E');
+      drawLine(data2, '#F59E0B');
+      drawLine(data1, '#10B981');
+    }
+
+    // Apply preset fees
+    function applyPreset(f1, f2, f3) {
+      document.getElementById('fee1').value = f1;
+      document.getElementById('fee2').value = f2;
+      document.getElementById('fee3').value = f3;
+      calculate();
+    }
+
+    // Main calculation
+    function calculate() {
+      const startValue = parseNumber(document.getElementById('startValue').value);
+      const annualContribution = parseNumber(document.getElementById('annualContribution').value);
+      const expectedReturn = parseFloat(document.getElementById('expectedReturn').value) || 7;
+      const years = parseInt(document.getElementById('timeHorizon').value) || 30;
+      
+      const fee1 = parseFloat(document.getElementById('fee1').value) || 0;
+      const fee2 = parseFloat(document.getElementById('fee2').value) || 0;
+      const fee3 = parseFloat(document.getElementById('fee3').value) || 0;
+
+      // Calculate for each fee level
+      const result1 = calculateGrowth(startValue, annualContribution, expectedReturn, fee1, years);
+      const result2 = calculateGrowth(startValue, annualContribution, expectedReturn, fee2, years);
+      const result3 = calculateGrowth(startValue, annualContribution, expectedReturn, fee3, years);
+
+      // Update legend
+      document.getElementById('legend1').textContent = fee1 + '% Fee';
+      document.getElementById('legend2').textContent = fee2 + '% Fee';
+      document.getElementById('legend3').textContent = fee3 + '% Fee';
+
+      // Update table headers
+      document.getElementById('th1').textContent = fee1 + '%';
+      document.getElementById('th2').textContent = fee2 + '%';
+      document.getElementById('th3').textContent = fee3 + '%';
+
+      // Update table values
+      document.getElementById('end1').textContent = formatCurrency(result1.endingBalance);
+      document.getElementById('end2').textContent = formatCurrency(result2.endingBalance);
+      document.getElementById('end3').textContent = formatCurrency(result3.endingBalance);
+
+      document.getElementById('contrib1').textContent = formatCurrency(result1.totalContributions);
+      document.getElementById('contrib2').textContent = formatCurrency(result2.totalContributions);
+      document.getElementById('contrib3').textContent = formatCurrency(result3.totalContributions);
+
+      document.getElementById('growth1').textContent = formatCurrency(result1.totalGrowth);
+      document.getElementById('growth2').textContent = formatCurrency(result2.totalGrowth);
+      document.getElementById('growth3').textContent = formatCurrency(result3.totalGrowth);
+
+      document.getElementById('fees1').textContent = formatCurrency(result1.totalFeesPaid);
+      document.getElementById('fees2').textContent = formatCurrency(result2.totalFeesPaid);
+      document.getElementById('fees3').textContent = formatCurrency(result3.totalFeesPaid);
+
+      // Value lost compared to lowest fee
+      const lost2 = result1.endingBalance - result2.endingBalance;
+      const lost3 = result1.endingBalance - result3.endingBalance;
+
+      document.getElementById('lost1').textContent = '—';
+      document.getElementById('lost2').textContent = formatCurrency(lost2);
+      document.getElementById('lost3').textContent = formatCurrency(lost3);
+
+      // Percentage of gains lost
+      const pctLost2 = result1.totalGrowth > 0 ? (lost2 / result1.totalGrowth) * 100 : 0;
+      const pctLost3 = result1.totalGrowth > 0 ? (lost3 / result1.totalGrowth) * 100 : 0;
+
+      document.getElementById('pctLost1').textContent = 'Baseline';
+      document.getElementById('pctLost2').textContent = formatPct(pctLost2);
+      document.getElementById('pctLost3').textContent = formatPct(pctLost3);
+
+      // Update lost money bars
+      document.getElementById('lostLabel1').textContent = fee1 + '% Fee (Baseline)';
+      document.getElementById('lostLabel2').textContent = fee2 + '% Fee';
+      document.getElementById('lostLabel3').textContent = fee3 + '% Fee';
+
+      document.getElementById('lostValue1').textContent = '$0 lost';
+      document.getElementById('lostValue2').textContent = formatCurrency(lost2) + ' lost';
+      document.getElementById('lostValue3').textContent = formatCurrency(lost3) + ' lost';
+
+      const maxLost = Math.max(lost2, lost3, 1);
+      const bar2Pct = Math.max(5, (lost2 / maxLost) * 100);
+      const bar3Pct = Math.max(5, (lost3 / maxLost) * 100);
+
+      document.getElementById('lostBar1').style.width = '5%';
+      document.getElementById('lostBar2').style.width = bar2Pct + '%';
+      document.getElementById('lostBar3').style.width = bar3Pct + '%';
+
+      document.getElementById('lostPct2').textContent = formatPct(pctLost2) + ' of gains';
+      document.getElementById('lostPct3').textContent = formatPct(pctLost3) + ' of gains';
+
+      // Update decision callout
+      const decisionText = document.getElementById('decisionText');
+      decisionText.innerHTML = `
+        A <strong>${fee2}% fee</strong> costs you <span class="decision-highlight">${formatCurrency(lost2)}</span> over ${years} years — that's <strong>${formatPct(pctLost2)} of your total gains</strong> gone.
+        The higher <strong>${fee3}% fee</strong> costs <span class="decision-highlight">${formatCurrency(lost3)}</span> — a staggering <strong>${formatPct(pctLost3)} of gains</strong> lost to fees alone.
+      `;
+
+      // Update insight text
+      const insightText = document.getElementById('insightText');
+      const costPerMonth2 = lost2 / (years * 12);
+      insightText.innerHTML = `
+        The difference between a ${fee1}% and ${fee3}% fee might seem small, but it compounds dramatically over ${years} years. 
+        That ${fee2}% fee effectively costs you <strong>${formatCurrency(costPerMonth2)}/month</strong> in lost future wealth.
+        Your money isn't just paying fees — it's also losing the growth that money could have generated.
+      `;
+
+      // Update guidance
+      const guidanceText = document.getElementById('guidanceText');
+      const yearsOfRetirement = lost3 / (annualContribution || 50000);
+      guidanceText.innerHTML = `
+        <strong>Switching from ${fee3}% to ${fee1}%</strong> would save you ${formatCurrency(lost3)} over ${years} years — 
+        that's equivalent to <strong>${yearsOfRetirement.toFixed(1)} extra years</strong> of your current annual contributions. 
+        Check your 401(k) and IRA for low-cost index fund options (look for expense ratios under 0.10%).
+      `;
+
+      // Draw chart
+      drawChart(result1.yearlyData, result2.yearlyData, result3.yearlyData, years);
+    }
+
+    // Toggle FAQ
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      item.classList.toggle('open');
+    }
+
+    // Toggle mobile menu
+    function toggleMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    // Input event listeners
+    document.getElementById('startValue').addEventListener('input', calculate);
+    document.getElementById('startValue').addEventListener('blur', function() { formatInput(this); });
+    document.getElementById('annualContribution').addEventListener('input', calculate);
+    document.getElementById('annualContribution').addEventListener('blur', function() { formatInput(this); });
+    document.getElementById('expectedReturn').addEventListener('input', calculate);
+    document.getElementById('timeHorizon').addEventListener('input', calculate);
+    document.getElementById('fee1').addEventListener('input', calculate);
+    document.getElementById('fee2').addEventListener('input', calculate);
+    document.getElementById('fee3').addEventListener('input', calculate);
+
+    // Handle window resize for chart
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(calculate, 100);
+    });
+
+    // Initial calculation
+    calculate();
+  </script>
+</body>
+</html>

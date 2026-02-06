@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homeownership Tax Benefit Estimator — Mortgage Interest Deduction Calculator | PocketWise</title>
+  <meta name="description" content="Calculate your potential tax savings from homeownership. Compare itemizing vs standard deduction, see mortgage interest deduction benefits, and understand SALT cap impacts.">
+  <meta name="keywords" content="mortgage interest tax deduction calculator, homeownership tax benefits, does owning a home save taxes, property tax deduction calculator">
+  <link rel="canonical" href="https://pocketwise.io/homeownership-tax-benefits/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .lw-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .comparison-visual { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+    .comparison-column { background: var(--lw-slate-50); border-radius: var(--lw-radius); padding: 24px; text-align: center; position: relative; border: 2px solid transparent; transition: all var(--lw-transition); }
+    .comparison-column.winner { border-color: var(--lw-emerald); background: var(--lw-emerald-50); }
+    .comparison-column.winner::after { content: '✓ BETTER OPTION'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--lw-emerald); color: white; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: var(--lw-radius-full); letter-spacing: 0.5px; }
+    .comparison-title { font-size: 14px; font-weight: 600; color: var(--lw-slate-600); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .comparison-amount { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 32px; font-weight: 700; color: var(--lw-navy); }
+    .comparison-sub { font-size: 13px; color: var(--lw-text-muted); margin-top: 4px; }
+    .salt-breakdown { background: var(--lw-amber-50); border-radius: var(--lw-radius); padding: 16px 20px; margin: 20px 0; border-left: 4px solid var(--lw-amber); }
+    .salt-title { font-weight: 600; color: var(--lw-slate-700); font-size: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .salt-detail { font-size: 14px; color: var(--lw-text-secondary); line-height: 1.6; }
+    .salt-detail strong { color: var(--lw-navy); }
+    .decision-box { padding: 24px; border-radius: var(--lw-radius-lg); text-align: center; margin-top: 20px; }
+    .decision-box.good { background: linear-gradient(135deg, var(--lw-emerald-50) 0%, #D1FAE5 100%); border: 1px solid rgba(16, 185, 129, 0.2); }
+    .decision-box.neutral { background: linear-gradient(135deg, var(--lw-sky-50) 0%, #E0F2FE 100%); border: 1px solid rgba(14, 165, 233, 0.2); }
+    .decision-icon { font-size: 40px; margin-bottom: 12px; }
+    .decision-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; font-weight: 700; color: var(--lw-navy); margin-bottom: 8px; }
+    .decision-text { font-size: 15px; color: var(--lw-text-secondary); line-height: 1.6; max-width: 500px; margin: 0 auto; }
+    .means-box { background: var(--lw-slate-50); border-radius: var(--lw-radius); padding: 20px; margin-top: 20px; }
+    .means-title { font-weight: 600; color: var(--lw-slate-700); font-size: 14px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .means-text { font-size: 14px; color: var(--lw-text-secondary); line-height: 1.7; }
+    .deduction-bar-wrap { margin: 24px 0; }
+    .deduction-bar-label { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; }
+    .deduction-bar-label span:first-child { font-weight: 500; color: var(--lw-slate-600); }
+    .deduction-bar-label span:last-child { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--lw-navy); }
+    .deduction-bar { height: 32px; background: var(--lw-slate-100); border-radius: var(--lw-radius-full); overflow: hidden; position: relative; }
+    .deduction-bar-fill { height: 100%; border-radius: var(--lw-radius-full); transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; justify-content: flex-end; padding: 0 12px; }
+    .deduction-bar-fill.standard { background: linear-gradient(90deg, var(--lw-slate-400), var(--lw-slate-500)); }
+    .deduction-bar-fill.itemized { background: linear-gradient(90deg, var(--lw-sky), var(--lw-teal)); }
+    .breakdown-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+    .breakdown-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--lw-card); border-radius: var(--lw-radius-sm); border: 1px solid var(--lw-border-light); }
+    .breakdown-item-label { font-size: 13px; color: var(--lw-text-secondary); display: flex; align-items: center; gap: 8px; }
+    .breakdown-item-label .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .breakdown-item-label .dot.interest { background: var(--lw-sky); }
+    .breakdown-item-label .dot.property { background: var(--lw-teal); }
+    .breakdown-item-label .dot.salt { background: var(--lw-amber); }
+    .breakdown-item-label .dot.other { background: var(--lw-violet); }
+    .breakdown-item-value { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--lw-navy); font-size: 14px; }
+    .tax-rate-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .tax-rate-badge { padding: 6px 12px; border-radius: var(--lw-radius-full); font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid var(--lw-slate-200); background: var(--lw-card); color: var(--lw-slate-600); transition: all var(--lw-transition); }
+    .tax-rate-badge:hover { border-color: var(--lw-sky); color: var(--lw-sky-dark); }
+    .tax-rate-badge.active { background: var(--lw-sky); color: white; border-color: var(--lw-sky); }
+    @media (max-width: 768px) {
+      .lw-form-row { grid-template-columns: 1fr; }
+      .comparison-visual { grid-template-columns: 1fr; }
+      .breakdown-grid { grid-template-columns: 1fr; }
+      .comparison-amount { font-size: 26px; }
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I deduct mortgage interest on my taxes?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, homeowners can deduct mortgage interest on loans up to $750,000 ($375,000 if married filing separately) for homes purchased after December 15, 2017. For older mortgages, the limit is $1 million. However, you must itemize deductions instead of taking the standard deduction to claim this benefit."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the SALT cap and how does it affect my deductions?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The SALT (State and Local Tax) cap limits your combined deduction for state income taxes, local taxes, and property taxes to $10,000 per year ($5,000 if married filing separately). This cap was introduced in 2018 and affects homeowners in high-tax states who previously could deduct unlimited property taxes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I itemize or take the standard deduction?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You should itemize only if your total itemized deductions (mortgage interest, property taxes up to SALT cap, charitable donations, etc.) exceed your standard deduction. For 2024, the standard deduction is $14,600 for single filers and $29,200 for married couples filing jointly."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does owning a home really save money on taxes?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It depends on your situation. Homeownership can provide tax benefits if your itemized deductions exceed the standard deduction. With the higher standard deduction since 2018, many homeowners find it no longer makes sense to itemize. Use our calculator to see your specific tax benefit."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I calculate my marginal tax rate?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Your marginal tax rate is the tax bracket you fall into based on your taxable income. For 2024, federal brackets are 10%, 12%, 22%, 24%, 32%, 35%, and 37%. Your marginal rate determines how much you save per dollar of deductions—a 22% rate means each $1,000 in deductions saves $220 in taxes."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <!-- NAVIGATION -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">L</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/mortgage-calculator/">Mortgage</a></li>
+        <li><a href="/home-affordability-calculator/">Affordability</a></li>
+        <li><a href="/refinance-calculator/">Refinance</a></li>
+        <li><a href="/homeownership-tax-benefits/" class="active">Tax Benefits</a></li>
+        <li><a href="/">All Tools</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu">
+      <a href="/">All Tools</a>
+      <a href="/mortgage-calculator/">Mortgage Calculator</a>
+      <a href="/home-affordability-calculator/">Home Affordability</a>
+      <a href="/refinance-calculator/">Refinance Calculator</a>
+      <a href="/homeownership-tax-benefits/">Tax Benefits</a>
+      <a href="/rent-vs-buy/">Rent vs Buy</a>
+      <a href="/mortgage-points-calculator/">Mortgage Points</a>
+      <a href="/amortization-schedule/">Amortization Schedule</a>
+      <a href="/debt-to-income-calculator/">Debt-to-Income</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- HERO -->
+    <div class="lw-hero">
+      <span class="lw-badge green">🏠 Tax Planning</span>
+      <h1>Homeownership <span class="accent">Tax Benefits</span></h1>
+      <p class="subtitle">Calculate if itemizing your mortgage interest and property taxes saves you more than the standard deduction.</p>
+    </div>
+
+    <!-- CALCULATOR -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">📝</div>
+        <div>
+          <div class="lw-card-title">Your Tax Situation</div>
+          <div class="lw-card-subtitle">Enter your homeownership costs and tax info</div>
+        </div>
+      </div>
+
+      <div class="lw-form-row">
+        <div class="lw-form-group">
+          <label class="lw-label" for="mortgageInterest">Annual Mortgage Interest</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" class="lw-input lw-mono" id="mortgageInterest" value="15000" min="0" step="100">
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label" for="propertyTaxes">Annual Property Taxes</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" class="lw-input lw-mono" id="propertyTaxes" value="6000" min="0" step="100">
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-form-group">
+        <label class="lw-label" for="otherSalt">Other State/Local Taxes <span class="lw-label-hint">(income tax, etc.)</span></label>
+        <div class="lw-input-prefix">
+          <span class="prefix">$</span>
+          <input type="number" class="lw-input lw-mono" id="otherSalt" value="5000" min="0" step="100">
+        </div>
+      </div>
+
+      <div class="lw-form-group">
+        <label class="lw-label" for="otherItemized">Other Itemized Deductions <span class="lw-label-hint">(charitable, medical, etc.)</span></label>
+        <div class="lw-input-prefix">
+          <span class="prefix">$</span>
+          <input type="number" class="lw-input lw-mono" id="otherItemized" value="2000" min="0" step="100">
+        </div>
+      </div>
+
+      <div class="lw-form-group">
+        <label class="lw-label">Filing Status</label>
+        <div class="lw-toggle-group" id="filingToggle">
+          <button class="lw-toggle-btn" data-val="single">Single</button>
+          <button class="lw-toggle-btn active" data-val="married">Married Filing Jointly</button>
+          <button class="lw-toggle-btn" data-val="married-sep">Married Separately</button>
+          <button class="lw-toggle-btn" data-val="hoh">Head of Household</button>
+        </div>
+      </div>
+
+      <div class="lw-form-group">
+        <label class="lw-label" for="taxRate">Marginal Tax Rate</label>
+        <div class="tax-rate-badges" id="taxRateBadges">
+          <span class="tax-rate-badge" data-rate="10">10%</span>
+          <span class="tax-rate-badge" data-rate="12">12%</span>
+          <span class="tax-rate-badge active" data-rate="22">22%</span>
+          <span class="tax-rate-badge" data-rate="24">24%</span>
+          <span class="tax-rate-badge" data-rate="32">32%</span>
+          <span class="tax-rate-badge" data-rate="35">35%</span>
+          <span class="tax-rate-badge" data-rate="37">37%</span>
+        </div>
+        <div class="lw-input-suffix lw-mt-16">
+          <input type="number" class="lw-input lw-mono" id="taxRate" value="22" min="0" max="50" step="0.5">
+          <span class="suffix">%</span>
+        </div>
+      </div>
+
+      <div class="lw-form-group">
+        <label class="lw-label" for="standardDeduction">Standard Deduction Amount</label>
+        <div class="lw-input-prefix">
+          <span class="prefix">$</span>
+          <input type="number" class="lw-input lw-mono" id="standardDeduction" value="29200" min="0" step="100">
+        </div>
+        <div style="font-size: 12px; color: var(--lw-text-muted); margin-top: 6px;">
+          2024: Single $14,600 • Married $29,200 • Head of Household $21,900
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="lw-card" id="resultsCard">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">📊</div>
+        <div>
+          <div class="lw-card-title">Itemize vs Standard Deduction</div>
+          <div class="lw-card-subtitle">See which option saves you more</div>
+        </div>
+      </div>
+
+      <!-- Comparison Visual -->
+      <div class="comparison-visual">
+        <div class="comparison-column" id="standardCol">
+          <div class="comparison-title">Standard Deduction</div>
+          <div class="comparison-amount" id="standardAmount">$29,200</div>
+          <div class="comparison-sub">Fixed amount</div>
+        </div>
+        <div class="comparison-column" id="itemizedCol">
+          <div class="comparison-title">Itemized Deductions</div>
+          <div class="comparison-amount" id="itemizedAmount">$27,000</div>
+          <div class="comparison-sub">Your homeownership deductions</div>
+        </div>
+      </div>
+
+      <!-- Bar Comparison -->
+      <div class="deduction-bar-wrap">
+        <div class="deduction-bar-label">
+          <span>Standard Deduction</span>
+          <span id="standardBarLabel">$29,200</span>
+        </div>
+        <div class="deduction-bar">
+          <div class="deduction-bar-fill standard" id="standardBar" style="width: 100%;"></div>
+        </div>
+      </div>
+      <div class="deduction-bar-wrap">
+        <div class="deduction-bar-label">
+          <span>Your Itemized Deductions</span>
+          <span id="itemizedBarLabel">$27,000</span>
+        </div>
+        <div class="deduction-bar">
+          <div class="deduction-bar-fill itemized" id="itemizedBar" style="width: 92%;"></div>
+        </div>
+      </div>
+
+      <!-- Itemized Breakdown -->
+      <div class="breakdown-grid">
+        <div class="breakdown-item">
+          <span class="breakdown-item-label"><span class="dot interest"></span>Mortgage Interest</span>
+          <span class="breakdown-item-value" id="breakdownInterest">$15,000</span>
+        </div>
+        <div class="breakdown-item">
+          <span class="breakdown-item-label"><span class="dot salt"></span>SALT (Capped)</span>
+          <span class="breakdown-item-value" id="breakdownSalt">$10,000</span>
+        </div>
+        <div class="breakdown-item">
+          <span class="breakdown-item-label"><span class="dot other"></span>Other Deductions</span>
+          <span class="breakdown-item-value" id="breakdownOther">$2,000</span>
+        </div>
+        <div class="breakdown-item">
+          <span class="breakdown-item-label"><span class="dot property"></span>Total Itemized</span>
+          <span class="breakdown-item-value" id="breakdownTotal">$27,000</span>
+        </div>
+      </div>
+
+      <!-- SALT Cap Notice -->
+      <div class="salt-breakdown" id="saltNotice" style="display: none;">
+        <div class="salt-title">⚠️ SALT Cap Impact</div>
+        <div class="salt-detail" id="saltDetail">
+          Your state/local taxes total <strong>$11,000</strong> but are capped at <strong>$10,000</strong>.
+          You're losing <strong>$1,000</strong> in potential deductions due to the SALT cap.
+        </div>
+      </div>
+
+      <!-- Decision Box -->
+      <div class="decision-box good" id="decisionBox">
+        <div class="decision-icon" id="decisionIcon">💰</div>
+        <div class="decision-title" id="decisionTitle">Standard Deduction is Better</div>
+        <div class="decision-text" id="decisionText">Taking the standard deduction gives you $2,200 more in deductions, saving you $484 per year in taxes.</div>
+      </div>
+    </div>
+
+    <!-- TAX SAVINGS SUMMARY -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon amber">💵</div>
+        <div>
+          <div class="lw-card-title">Your Tax Benefit Summary</div>
+          <div class="lw-card-subtitle">Based on your optimal deduction choice</div>
+        </div>
+      </div>
+
+      <div class="lw-result-hero">
+        <div class="lw-result-label">Annual Tax Savings</div>
+        <div class="lw-result-number"><span class="currency">$</span><span id="annualSavings">6,424</span></div>
+        <div class="lw-result-sub" id="savingsContext">Based on taking the standard deduction</div>
+      </div>
+
+      <div class="lw-result-grid">
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Monthly Benefit</div>
+          <div class="lw-result-item-value sky" id="monthlyBenefit">$535</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Optimal Deduction</div>
+          <div class="lw-result-item-value green" id="optimalDeduction">$29,200</div>
+        </div>
+        <div class="lw-result-item">
+          <div class="lw-result-item-label">Effective Tax Rate Reduction</div>
+          <div class="lw-result-item-value" id="effectiveReduction">—</div>
+        </div>
+      </div>
+
+      <!-- What This Means -->
+      <div class="means-box">
+        <div class="means-title">💡 What This Means</div>
+        <div class="means-text" id="meansText">
+          With your current situation, taking the standard deduction is the better choice. Your itemized deductions from homeownership ($27,000) don't exceed the standard deduction ($29,200). You still benefit from homeownership in other ways—just not through itemizing your taxes.
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <div class="lw-content">
+      <h2>Understanding Homeownership Tax Benefits</h2>
+      <p>Owning a home can provide significant tax advantages, but since the 2018 tax law changes, the benefits have become more limited for many homeowners. The key question is whether your itemized deductions exceed the standard deduction—if they don't, you won't see direct tax benefits from your mortgage interest and property tax payments.</p>
+
+      <h3>The Mortgage Interest Deduction</h3>
+      <p>Homeowners can deduct interest paid on mortgage debt up to $750,000 (or $1 million for loans originated before December 15, 2017). This is one of the largest potential tax benefits of homeownership, especially in the early years of your mortgage when most of your payment goes toward interest.</p>
+
+      <h3>Property Tax Deduction and the SALT Cap</h3>
+      <p>Prior to 2018, homeowners could deduct unlimited state and local property taxes. Now, the SALT (State and Local Tax) cap limits combined deductions for state income taxes and property taxes to $10,000 ($5,000 if married filing separately). This significantly impacts homeowners in high-tax states like California, New York, New Jersey, and Illinois.</p>
+
+      <h3>Standard Deduction vs. Itemizing</h3>
+      <p>The 2018 tax reform nearly doubled the standard deduction:</p>
+      <ul>
+        <li><strong>Single filers:</strong> $14,600 (2024)</li>
+        <li><strong>Married filing jointly:</strong> $29,200 (2024)</li>
+        <li><strong>Head of household:</strong> $21,900 (2024)</li>
+      </ul>
+      <p>With these higher standard deductions, many homeowners find it no longer makes sense to itemize. You should only itemize if your total itemized deductions exceed your standard deduction.</p>
+
+      <h2>How to Maximize Your Tax Benefits</h2>
+      <p>If you're close to the itemization threshold, consider these strategies:</p>
+      <ul>
+        <li><strong>Bunch deductions:</strong> Combine two years of charitable donations into one year to exceed the standard deduction</li>
+        <li><strong>Time your payments:</strong> Pay January's mortgage in December to add interest to the current tax year</li>
+        <li><strong>Consider other itemized deductions:</strong> Medical expenses, state taxes, and charitable contributions all count</li>
+      </ul>
+
+      <!-- FAQ Section -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Can I deduct mortgage interest on my taxes?</button>
+          <div class="lw-faq-a">
+            <p>Yes, homeowners can deduct mortgage interest on loans up to $750,000 ($375,000 if married filing separately) for homes purchased after December 15, 2017. For older mortgages, the limit is $1 million. However, you must itemize deductions instead of taking the standard deduction to claim this benefit.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">What is the SALT cap and how does it affect my deductions?</button>
+          <div class="lw-faq-a">
+            <p>The SALT (State and Local Tax) cap limits your combined deduction for state income taxes, local taxes, and property taxes to $10,000 per year ($5,000 if married filing separately). This cap was introduced in 2018 and affects homeowners in high-tax states who previously could deduct unlimited property taxes.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Should I itemize or take the standard deduction?</button>
+          <div class="lw-faq-a">
+            <p>You should itemize only if your total itemized deductions exceed your standard deduction. Add up your mortgage interest, property taxes (up to the $10,000 SALT cap), charitable donations, and other eligible deductions. If the total is higher than your standard deduction, itemize. Otherwise, take the standard deduction.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Does owning a home really save money on taxes?</button>
+          <div class="lw-faq-a">
+            <p>It depends on your situation. With the higher standard deduction since 2018, many homeowners no longer benefit from itemizing. However, homeownership still offers other financial benefits like building equity, stable housing costs, and potential appreciation. Use this calculator to see your specific tax benefit.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">How do I calculate my marginal tax rate?</button>
+          <div class="lw-faq-a">
+            <p>Your marginal tax rate is based on your taxable income after deductions. For 2024, federal brackets are 10%, 12%, 22%, 24%, 32%, 35%, and 37%. Look at your tax return or use a tax bracket calculator to find your rate. This determines how much you save per dollar of deductions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED TOOLS -->
+    <div class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/mortgage-calculator/" class="lw-related-link"><span class="dot"></span>Mortgage Calculator</a>
+        <a href="/home-affordability-calculator/" class="lw-related-link"><span class="dot"></span>Home Affordability</a>
+        <a href="/rent-vs-buy/" class="lw-related-link"><span class="dot"></span>Rent vs Buy</a>
+        <a href="/refinance-calculator/" class="lw-related-link"><span class="dot"></span>Refinance Calculator</a>
+        <a href="/amortization-schedule/" class="lw-related-link"><span class="dot"></span>Amortization Schedule</a>
+        <a href="/debt-to-income-calculator/" class="lw-related-link"><span class="dot"></span>Debt-to-Income</a>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <div class="lw-disclaimer">
+      This calculator provides estimates for educational purposes only. Tax laws are complex and change frequently. Consult a qualified tax professional for personalized advice. PocketWise does not provide tax, legal, or financial advice.
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="lw-footer">
+    <p>© 2024 <a href="/">PocketWise</a>. Free financial calculators.</p>
+  </footer>
+
+  <script>
+    // ===== DOM ELEMENTS =====
+    const mortgageInterestEl = document.getElementById('mortgageInterest');
+    const propertyTaxesEl = document.getElementById('propertyTaxes');
+    const otherSaltEl = document.getElementById('otherSalt');
+    const otherItemizedEl = document.getElementById('otherItemized');
+    const taxRateEl = document.getElementById('taxRate');
+    const standardDeductionEl = document.getElementById('standardDeduction');
+    const filingToggle = document.getElementById('filingToggle');
+    const taxRateBadges = document.getElementById('taxRateBadges');
+
+    // Results
+    const standardAmountEl = document.getElementById('standardAmount');
+    const itemizedAmountEl = document.getElementById('itemizedAmount');
+    const standardBarLabelEl = document.getElementById('standardBarLabel');
+    const itemizedBarLabelEl = document.getElementById('itemizedBarLabel');
+    const standardBarEl = document.getElementById('standardBar');
+    const itemizedBarEl = document.getElementById('itemizedBar');
+    const standardColEl = document.getElementById('standardCol');
+    const itemizedColEl = document.getElementById('itemizedCol');
+    const breakdownInterestEl = document.getElementById('breakdownInterest');
+    const breakdownSaltEl = document.getElementById('breakdownSalt');
+    const breakdownOtherEl = document.getElementById('breakdownOther');
+    const breakdownTotalEl = document.getElementById('breakdownTotal');
+    const saltNoticeEl = document.getElementById('saltNotice');
+    const saltDetailEl = document.getElementById('saltDetail');
+    const decisionBoxEl = document.getElementById('decisionBox');
+    const decisionIconEl = document.getElementById('decisionIcon');
+    const decisionTitleEl = document.getElementById('decisionTitle');
+    const decisionTextEl = document.getElementById('decisionText');
+    const annualSavingsEl = document.getElementById('annualSavings');
+    const savingsContextEl = document.getElementById('savingsContext');
+    const monthlyBenefitEl = document.getElementById('monthlyBenefit');
+    const optimalDeductionEl = document.getElementById('optimalDeduction');
+    const effectiveReductionEl = document.getElementById('effectiveReduction');
+    const meansTextEl = document.getElementById('meansText');
+
+    // ===== STANDARD DEDUCTION BY FILING STATUS =====
+    const standardDeductions = {
+      'single': 14600,
+      'married': 29200,
+      'married-sep': 14600,
+      'hoh': 21900
+    };
+
+    // SALT caps by filing status
+    const saltCaps = {
+      'single': 10000,
+      'married': 10000,
+      'married-sep': 5000,
+      'hoh': 10000
+    };
+
+    let currentFilingStatus = 'married';
+
+    // ===== FORMAT CURRENCY =====
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(amount);
+    }
+
+    function formatNumber(amount) {
+      return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(amount);
+    }
+
+    // ===== CALCULATE =====
+    function calculate() {
+      const mortgageInterest = parseFloat(mortgageInterestEl.value) || 0;
+      const propertyTaxes = parseFloat(propertyTaxesEl.value) || 0;
+      const otherSalt = parseFloat(otherSaltEl.value) || 0;
+      const otherItemized = parseFloat(otherItemizedEl.value) || 0;
+      const taxRate = (parseFloat(taxRateEl.value) || 0) / 100;
+      const standardDeduction = parseFloat(standardDeductionEl.value) || 0;
+
+      // SALT cap calculation
+      const saltCap = saltCaps[currentFilingStatus];
+      const totalSaltBeforeCap = propertyTaxes + otherSalt;
+      const saltDeduction = Math.min(totalSaltBeforeCap, saltCap);
+      const saltLost = Math.max(0, totalSaltBeforeCap - saltCap);
+
+      // Total itemized deductions
+      const totalItemized = mortgageInterest + saltDeduction + otherItemized;
+
+      // Determine which is better
+      const itemizeIsBetter = totalItemized > standardDeduction;
+      const deductionDifference = Math.abs(totalItemized - standardDeduction);
+      const optimalDeduction = itemizeIsBetter ? totalItemized : standardDeduction;
+      const taxSavingsFromOptimal = optimalDeduction * taxRate;
+      const additionalSavingsOrLoss = deductionDifference * taxRate;
+
+      // Update comparison visual
+      standardAmountEl.textContent = formatCurrency(standardDeduction);
+      itemizedAmountEl.textContent = formatCurrency(totalItemized);
+      standardBarLabelEl.textContent = formatCurrency(standardDeduction);
+      itemizedBarLabelEl.textContent = formatCurrency(totalItemized);
+
+      // Bar widths
+      const maxDeduction = Math.max(standardDeduction, totalItemized);
+      const standardPct = (standardDeduction / maxDeduction) * 100;
+      const itemizedPct = (totalItemized / maxDeduction) * 100;
+      standardBarEl.style.width = standardPct + '%';
+      itemizedBarEl.style.width = itemizedPct + '%';
+
+      // Winner highlighting
+      standardColEl.classList.toggle('winner', !itemizeIsBetter);
+      itemizedColEl.classList.toggle('winner', itemizeIsBetter);
+
+      // Breakdown
+      breakdownInterestEl.textContent = formatCurrency(mortgageInterest);
+      breakdownSaltEl.textContent = formatCurrency(saltDeduction);
+      breakdownOtherEl.textContent = formatCurrency(otherItemized);
+      breakdownTotalEl.textContent = formatCurrency(totalItemized);
+
+      // SALT notice
+      if (saltLost > 0) {
+        saltNoticeEl.style.display = 'block';
+        saltDetailEl.innerHTML = `Your state/local taxes total <strong>${formatCurrency(totalSaltBeforeCap)}</strong> but are capped at <strong>${formatCurrency(saltCap)}</strong>. You're losing <strong>${formatCurrency(saltLost)}</strong> in potential deductions due to the SALT cap.`;
+      } else {
+        saltNoticeEl.style.display = 'none';
+      }
+
+      // Decision box
+      if (itemizeIsBetter) {
+        decisionBoxEl.className = 'decision-box good';
+        decisionIconEl.textContent = '🎉';
+        decisionTitleEl.textContent = 'Itemizing Saves You Money!';
+        decisionTextEl.textContent = `Tax benefits save you ${formatCurrency(additionalSavingsOrLoss)} per year by itemizing instead of taking the standard deduction. Your itemized deductions (${formatCurrency(totalItemized)}) exceed the standard deduction by ${formatCurrency(deductionDifference)}.`;
+      } else {
+        decisionBoxEl.className = 'decision-box neutral';
+        decisionIconEl.textContent = '📋';
+        decisionTitleEl.textContent = 'Standard Deduction is Better for You';
+        decisionTextEl.textContent = `The standard deduction (${formatCurrency(standardDeduction)}) exceeds your itemized deductions by ${formatCurrency(deductionDifference)}. Taking the standard deduction saves you ${formatCurrency(additionalSavingsOrLoss)} more per year.`;
+      }
+
+      // Summary section
+      annualSavingsEl.textContent = formatNumber(Math.round(taxSavingsFromOptimal));
+      savingsContextEl.textContent = `Based on taking the ${itemizeIsBetter ? 'itemized deductions' : 'standard deduction'}`;
+      monthlyBenefitEl.textContent = formatCurrency(Math.round(taxSavingsFromOptimal / 12));
+      optimalDeductionEl.textContent = formatCurrency(optimalDeduction);
+
+      // Effective rate reduction - show as percentage of income saved
+      const effectiveRateReduction = ((taxRate * 100) * (optimalDeduction / 100000)).toFixed(1);
+      effectiveReductionEl.textContent = `${(taxRate * 100).toFixed(0)}%`;
+
+      // What this means
+      if (itemizeIsBetter) {
+        meansTextEl.innerHTML = `<strong>Great news!</strong> Your homeownership deductions of ${formatCurrency(totalItemized)} exceed the standard deduction of ${formatCurrency(standardDeduction)}. By itemizing, you'll reduce your taxable income by ${formatCurrency(deductionDifference)} more than if you took the standard deduction. At your ${(taxRate * 100).toFixed(0)}% marginal tax rate, this means <strong>${formatCurrency(additionalSavingsOrLoss)} in additional tax savings</strong> per year from homeownership.${saltLost > 0 ? ` Note: You're losing ${formatCurrency(saltLost)} in deductions due to the SALT cap—this would save you even more without the cap.` : ''}`;
+      } else if (totalItemized > 0) {
+        meansTextEl.innerHTML = `With your current situation, taking the standard deduction is the better choice. Your itemized deductions from homeownership (${formatCurrency(totalItemized)}) don't exceed the standard deduction (${formatCurrency(standardDeduction)}). You still benefit from homeownership in other ways—building equity, stable housing costs, and potential appreciation—just not through itemizing your taxes. <strong>Consider increasing charitable donations</strong> or other deductions if you want to make itemizing worthwhile.`;
+      } else {
+        meansTextEl.textContent = 'Enter your homeownership costs above to see if itemizing makes sense for your tax situation.';
+      }
+    }
+
+    // ===== EVENT LISTENERS =====
+    // Inputs
+    [mortgageInterestEl, propertyTaxesEl, otherSaltEl, otherItemizedEl, taxRateEl, standardDeductionEl].forEach(el => {
+      el.addEventListener('input', calculate);
+    });
+
+    // Filing status toggle
+    filingToggle.querySelectorAll('.lw-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        filingToggle.querySelectorAll('.lw-toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilingStatus = btn.dataset.val;
+        standardDeductionEl.value = standardDeductions[currentFilingStatus];
+        calculate();
+      });
+    });
+
+    // Tax rate badges
+    taxRateBadges.querySelectorAll('.tax-rate-badge').forEach(badge => {
+      badge.addEventListener('click', () => {
+        taxRateBadges.querySelectorAll('.tax-rate-badge').forEach(b => b.classList.remove('active'));
+        badge.classList.add('active');
+        taxRateEl.value = badge.dataset.rate;
+        calculate();
+      });
+    });
+
+    // Sync tax rate input with badges
+    taxRateEl.addEventListener('input', () => {
+      const rate = parseFloat(taxRateEl.value);
+      taxRateBadges.querySelectorAll('.tax-rate-badge').forEach(badge => {
+        badge.classList.toggle('active', parseFloat(badge.dataset.rate) === rate);
+      });
+    });
+
+    // FAQ accordions
+    document.querySelectorAll('.lw-faq-item').forEach(item => {
+      item.querySelector('.lw-faq-q').addEventListener('click', () => {
+        item.classList.toggle('open');
+      });
+    });
+
+    // Initial calculation
+    calculate();
+  </script>
+</body>
+</html>

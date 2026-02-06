@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>401(k) Match + Vesting Optimizer | Maximize Your Employer Match | PocketWise</title>
+  <meta name="description" content="Calculate your optimal 401(k) contribution to maximize employer match. See how much free money you're leaving on the table and track your vesting schedule.">
+  <meta name="keywords" content="401k match calculator, maximize 401k match, 401k vesting calculator, employer match optimization, 401k contribution calculator">
+  <link rel="canonical" href="https://pocketwise.app/401k-match-optimizer/">
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="401(k) Match + Vesting Optimizer | PocketWise">
+  <meta property="og:description" content="Stop leaving free money on the table. Calculate your optimal 401(k) contribution to capture the full employer match.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pocketwise.app/401k-match-optimizer/">
+  
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How much should I contribute to my 401(k) to get the full employer match?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You should contribute at least enough to capture the full employer match. For example, if your employer matches 50% of contributions up to 6% of salary, you need to contribute at least 6% to get the full match. Our calculator shows your exact optimal contribution percentage."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a 401(k) vesting schedule?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A vesting schedule determines when you fully own the employer match contributions. Common types include immediate vesting (you own it right away), cliff vesting (100% ownership after a set number of years), and graded vesting (ownership increases gradually over time)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What happens to unvested 401(k) contributions if I leave my job?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Unvested employer contributions are forfeited when you leave. Your own contributions are always 100% yours. This is why understanding your vesting schedule is crucial before making job decisions."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is employer 401(k) match really 'free money'?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes! An employer match is essentially an instant 50-100% return on your contribution. If your employer matches 100% of your contribution, you double your money immediately before any investment gains. Not contributing enough to get the full match is leaving guaranteed returns on the table."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What's the most common employer 401(k) match formula?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The most common formula is 50% match on the first 6% of salary you contribute, which gives you 3% of salary in free employer contributions. Other common formulas include 100% of first 3% plus 50% of next 2%, and dollar-for-dollar match up to 4-6%."
+        }
+      }
+    ]
+  }
+  </script>
+  
+  <style>
+    /* Custom styles for this tool */
+    .match-formula-builder {
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .match-tier {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .match-tier-label {
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+      min-width: 80px;
+    }
+    .match-tier-inputs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .match-tier-input {
+      width: 70px;
+      padding: 8px 10px;
+      border: 2px solid var(--lw-slate-200);
+      border-radius: var(--lw-radius-sm);
+      font-size: 14px;
+      text-align: center;
+    }
+    .match-tier-input:focus {
+      border-color: var(--lw-sky);
+      outline: none;
+    }
+    .match-tier-text {
+      font-size: 13px;
+      color: var(--lw-slate-500);
+    }
+    .add-tier-btn {
+      background: none;
+      border: 1px dashed var(--lw-slate-300);
+      border-radius: var(--lw-radius-sm);
+      padding: 8px 16px;
+      color: var(--lw-slate-500);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all var(--lw-transition);
+    }
+    .add-tier-btn:hover {
+      border-color: var(--lw-sky);
+      color: var(--lw-sky);
+    }
+    .remove-tier-btn {
+      background: none;
+      border: none;
+      color: var(--lw-slate-400);
+      cursor: pointer;
+      font-size: 18px;
+      padding: 4px 8px;
+    }
+    .remove-tier-btn:hover {
+      color: var(--lw-rose);
+    }
+    
+    /* Stacked bar visualization */
+    .stacked-bar-container {
+      margin: 24px 0;
+    }
+    .stacked-bar-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+    }
+    .stacked-bar {
+      height: 48px;
+      background: var(--lw-slate-100);
+      border-radius: var(--lw-radius);
+      overflow: hidden;
+      display: flex;
+      position: relative;
+    }
+    .stacked-bar-segment {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      transition: width 0.5s ease;
+      position: relative;
+    }
+    .stacked-bar-segment.contribution {
+      background: linear-gradient(135deg, var(--lw-sky) 0%, var(--lw-sky-dark) 100%);
+    }
+    .stacked-bar-segment.match {
+      background: linear-gradient(135deg, var(--lw-emerald) 0%, var(--lw-emerald-dark) 100%);
+    }
+    .stacked-bar-segment.potential {
+      background: repeating-linear-gradient(
+        45deg,
+        var(--lw-emerald-50),
+        var(--lw-emerald-50) 5px,
+        rgba(16, 185, 129, 0.2) 5px,
+        rgba(16, 185, 129, 0.2) 10px
+      );
+      border: 2px dashed var(--lw-emerald);
+      border-left: none;
+    }
+    .stacked-bar-text {
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+      white-space: nowrap;
+      padding: 0 8px;
+    }
+    .stacked-bar-segment.potential .stacked-bar-text {
+      color: var(--lw-emerald-dark);
+    }
+    .stacked-bar-legend {
+      display: flex;
+      gap: 20px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+    }
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+    .legend-dot.contribution { background: var(--lw-sky); }
+    .legend-dot.match { background: var(--lw-emerald); }
+    .legend-dot.potential { 
+      background: repeating-linear-gradient(
+        45deg,
+        var(--lw-emerald-50),
+        var(--lw-emerald-50) 2px,
+        rgba(16, 185, 129, 0.3) 2px,
+        rgba(16, 185, 129, 0.3) 4px
+      );
+      border: 1px dashed var(--lw-emerald);
+    }
+    
+    /* Money left on table callout */
+    .money-alert {
+      background: linear-gradient(135deg, var(--lw-rose-50) 0%, #FEE2E2 100%);
+      border: 1px solid var(--lw-rose-light);
+      border-radius: var(--lw-radius);
+      padding: 20px;
+      margin: 20px 0;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .money-alert.success {
+      background: linear-gradient(135deg, var(--lw-emerald-50) 0%, #D1FAE5 100%);
+      border-color: var(--lw-emerald-light);
+    }
+    .money-alert-icon {
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+    .money-alert-content h4 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--lw-rose-dark);
+      margin-bottom: 4px;
+    }
+    .money-alert.success .money-alert-content h4 {
+      color: var(--lw-emerald-dark);
+    }
+    .money-alert-content p {
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+      margin: 0;
+    }
+    .money-alert-amount {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--lw-rose-dark);
+    }
+    .money-alert.success .money-alert-amount {
+      color: var(--lw-emerald-dark);
+    }
+    
+    /* Vesting timeline */
+    .vesting-timeline {
+      margin: 24px 0;
+      position: relative;
+    }
+    .vesting-track {
+      height: 8px;
+      background: var(--lw-slate-200);
+      border-radius: 4px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .vesting-progress {
+      height: 100%;
+      background: linear-gradient(90deg, var(--lw-teal), var(--lw-emerald));
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+    .vesting-marker {
+      position: absolute;
+      top: -8px;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+    .vesting-marker-dot {
+      width: 24px;
+      height: 24px;
+      background: var(--lw-slate-200);
+      border: 3px solid white;
+      border-radius: 50%;
+      margin: 0 auto 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .vesting-marker-dot.filled {
+      background: var(--lw-emerald);
+    }
+    .vesting-marker-dot.current {
+      background: var(--lw-sky);
+      box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.2);
+    }
+    .vesting-marker-label {
+      font-size: 11px;
+      color: var(--lw-text-muted);
+      white-space: nowrap;
+    }
+    .vesting-marker-pct {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--lw-navy);
+    }
+    
+    /* Vesting summary cards */
+    .vesting-summary {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .vesting-stat {
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius-sm);
+      padding: 16px;
+      text-align: center;
+    }
+    .vesting-stat-label {
+      font-size: 12px;
+      color: var(--lw-text-muted);
+      margin-bottom: 4px;
+    }
+    .vesting-stat-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--lw-navy);
+    }
+    .vesting-stat-value.green { color: var(--lw-emerald); }
+    .vesting-stat-value.amber { color: var(--lw-amber); }
+    
+    /* Quick presets */
+    .preset-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .preset-btn {
+      padding: 8px 14px;
+      background: var(--lw-card);
+      border: 1px solid var(--lw-border);
+      border-radius: var(--lw-radius-full);
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+      cursor: pointer;
+      transition: all var(--lw-transition);
+    }
+    .preset-btn:hover {
+      border-color: var(--lw-sky);
+      color: var(--lw-sky);
+    }
+    .preset-btn.active {
+      background: var(--lw-sky);
+      border-color: var(--lw-sky);
+      color: white;
+    }
+    
+    @media (max-width: 768px) {
+      .match-tier {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .match-tier-inputs {
+        width: 100%;
+      }
+      .vesting-summary {
+        grid-template-columns: 1fr;
+      }
+      .stacked-bar-legend {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">P</div>
+        PocketWise
+      </a>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')">☰</button>
+      <ul class="lw-nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/mortgage-calculator/">Mortgage</a></li>
+        <li><a href="/debt-payoff-calculator/">Debt Payoff</a></li>
+        <li><a href="/savings-goal-calculator/">Savings</a></li>
+      </ul>
+    </div>
+    <div class="lw-mobile-menu">
+      <a href="/">Home</a>
+      <a href="/mortgage-calculator/">Mortgage Calculator</a>
+      <a href="/debt-payoff-calculator/">Debt Payoff</a>
+      <a href="/savings-goal-calculator/">Savings Goal</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- Hero Section -->
+    <section class="lw-hero">
+      <span class="lw-badge green">RETIREMENT</span>
+      <h1>401(k) Match + Vesting <span class="accent">Optimizer</span></h1>
+      <p class="subtitle">Stop leaving free money on the table. Calculate your optimal contribution to maximize employer matching and track your vesting schedule.</p>
+    </section>
+
+    <!-- Calculator Section -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">💰</div>
+        <div>
+          <div class="lw-card-title">Your 401(k) Details</div>
+          <div class="lw-card-subtitle">Enter your salary and employer match information</div>
+        </div>
+      </div>
+
+      <!-- Annual Salary -->
+      <div class="lw-form-group">
+        <label class="lw-label">Annual Salary</label>
+        <div class="lw-input-prefix">
+          <span class="prefix">$</span>
+          <input type="text" id="salary" class="lw-input" placeholder="75,000" value="75000" inputmode="numeric">
+        </div>
+      </div>
+
+      <!-- Current Contribution -->
+      <div class="lw-range-group">
+        <div class="lw-range-header">
+          <label class="lw-label">Your Current Contribution</label>
+          <span class="lw-range-value" id="contributionDisplay">4%</span>
+        </div>
+        <input type="range" id="contribution" class="lw-range" min="0" max="23" step="0.5" value="4">
+        <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--lw-text-muted); margin-top: 4px;">
+          <span>0%</span>
+          <span>2025 max: 23%</span>
+        </div>
+      </div>
+
+      <!-- Match Formula -->
+      <div class="lw-form-group">
+        <label class="lw-label">Employer Match Formula</label>
+        <p style="font-size: 13px; color: var(--lw-text-muted); margin-bottom: 12px;">Select a common formula or build your own:</p>
+        
+        <div class="preset-buttons">
+          <button class="preset-btn" data-preset="50-6">50% of first 6%</button>
+          <button class="preset-btn" data-preset="100-3-50-2">100% of 3% + 50% of 2%</button>
+          <button class="preset-btn" data-preset="100-4">100% of first 4%</button>
+          <button class="preset-btn" data-preset="100-6">100% of first 6%</button>
+          <button class="preset-btn" data-preset="custom">Custom</button>
+        </div>
+
+        <div class="match-formula-builder" id="matchBuilder">
+          <div id="matchTiers">
+            <div class="match-tier" data-tier="1">
+              <span class="match-tier-label">Tier 1:</span>
+              <div class="match-tier-inputs">
+                <input type="number" class="match-tier-input match-rate" value="50" min="0" max="100" placeholder="50">
+                <span class="match-tier-text">% match on first</span>
+                <input type="number" class="match-tier-input match-cap" value="6" min="0" max="100" step="0.5" placeholder="6">
+                <span class="match-tier-text">% of salary</span>
+              </div>
+            </div>
+          </div>
+          <button class="add-tier-btn" id="addTierBtn">+ Add another tier</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vesting Schedule -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon violet">📅</div>
+        <div>
+          <div class="lw-card-title">Vesting Schedule</div>
+          <div class="lw-card-subtitle">How long until you own the employer match</div>
+        </div>
+      </div>
+
+      <div class="lw-form-group">
+        <label class="lw-label">Vesting Type</label>
+        <select id="vestingType" class="lw-select">
+          <option value="immediate">Immediate (100% vested)</option>
+          <option value="cliff-1">1-Year Cliff</option>
+          <option value="cliff-2">2-Year Cliff</option>
+          <option value="cliff-3" selected>3-Year Cliff</option>
+          <option value="cliff-4">4-Year Cliff</option>
+          <option value="cliff-5">5-Year Cliff</option>
+          <option value="cliff-6">6-Year Cliff</option>
+          <option value="graded-3">3-Year Graded (33% per year)</option>
+          <option value="graded-4">4-Year Graded (25% per year)</option>
+          <option value="graded-5">5-Year Graded (20% per year)</option>
+          <option value="graded-6">6-Year Graded (0/20/40/60/80/100)</option>
+        </select>
+      </div>
+
+      <div class="lw-range-group">
+        <div class="lw-range-header">
+          <label class="lw-label">Years at Company</label>
+          <span class="lw-range-value" id="tenureDisplay">2 years</span>
+        </div>
+        <input type="range" id="tenure" class="lw-range" min="0" max="10" step="0.5" value="2">
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="results">
+      <!-- Primary Result -->
+      <div class="lw-result-hero">
+        <div class="lw-result-label">Maximum Annual Employer Match</div>
+        <div class="lw-result-number">
+          <span class="currency">$</span><span id="maxMatchAmount">2,250</span>
+        </div>
+        <div class="lw-result-sub" id="matchFormulaText">Based on 50% match of first 6% of salary</div>
+      </div>
+
+      <!-- Money Left on Table Alert -->
+      <div class="money-alert" id="moneyAlert">
+        <div class="money-alert-icon">⚠️</div>
+        <div class="money-alert-content">
+          <h4>You're Leaving Money on the Table!</h4>
+          <p>By contributing only <span id="currentPctAlert">4%</span>, you're missing out on <span class="money-alert-amount" id="leftOnTable">$750</span> in free employer match each year. <strong>Increase to <span id="optimalPctAlert">6%</span></strong> to capture the full match.</p>
+        </div>
+      </div>
+
+      <!-- Match Visualization -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon blue">📊</div>
+          <div>
+            <div class="lw-card-title">Annual Contribution Breakdown</div>
+            <div class="lw-card-subtitle">Your money + employer's free money</div>
+          </div>
+        </div>
+
+        <div class="stacked-bar-container">
+          <div class="stacked-bar-label">
+            <span>$0</span>
+            <span id="totalContribLabel">$5,250 total</span>
+          </div>
+          <div class="stacked-bar" id="stackedBar">
+            <div class="stacked-bar-segment contribution" id="yourContribBar" style="width: 40%;">
+              <span class="stacked-bar-text" id="yourContribText">$3,000</span>
+            </div>
+            <div class="stacked-bar-segment match" id="matchBar" style="width: 20%;">
+              <span class="stacked-bar-text" id="matchText">$1,500</span>
+            </div>
+            <div class="stacked-bar-segment potential" id="potentialBar" style="width: 10%;">
+              <span class="stacked-bar-text" id="potentialText">+$750</span>
+            </div>
+          </div>
+          <div class="stacked-bar-legend">
+            <div class="legend-item">
+              <div class="legend-dot contribution"></div>
+              <span>Your Contribution</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot match"></div>
+              <span>Employer Match</span>
+            </div>
+            <div class="legend-item" id="potentialLegend">
+              <div class="legend-dot potential"></div>
+              <span>Unclaimed Match</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lw-result-grid" style="margin-top: 24px;">
+          <div class="lw-result-item">
+            <div class="lw-result-item-label">Your Annual Contribution</div>
+            <div class="lw-result-item-value sky" id="yourContribAmount">$3,000</div>
+          </div>
+          <div class="lw-result-item">
+            <div class="lw-result-item-label">Employer Match Captured</div>
+            <div class="lw-result-item-value green" id="matchCaptured">$1,500</div>
+          </div>
+          <div class="lw-result-item">
+            <div class="lw-result-item-label">Match Left Unclaimed</div>
+            <div class="lw-result-item-value rose" id="matchUnclaimed">$750</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vesting Visualization -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon amber">⏱️</div>
+          <div>
+            <div class="lw-card-title">Vesting Timeline</div>
+            <div class="lw-card-subtitle">When you own the employer's contributions</div>
+          </div>
+        </div>
+
+        <div class="vesting-timeline" id="vestingTimeline">
+          <div class="vesting-track">
+            <div class="vesting-progress" id="vestingProgress" style="width: 66%;"></div>
+          </div>
+          <!-- Markers added dynamically -->
+        </div>
+
+        <div class="vesting-summary">
+          <div class="vesting-stat">
+            <div class="vesting-stat-label">Current Vesting</div>
+            <div class="vesting-stat-value green" id="currentVesting">66%</div>
+          </div>
+          <div class="vesting-stat">
+            <div class="vesting-stat-label">Vested Match Amount</div>
+            <div class="vesting-stat-value" id="vestedAmount">$990</div>
+          </div>
+          <div class="vesting-stat">
+            <div class="vesting-stat-label">Unvested (At Risk)</div>
+            <div class="vesting-stat-value amber" id="unvestedAmount">$510</div>
+          </div>
+          <div class="vesting-stat">
+            <div class="vesting-stat-label">Full Vesting In</div>
+            <div class="vesting-stat-value" id="fullVestingIn">1 year</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Decision Guidance -->
+      <div class="lw-card">
+        <div class="lw-card-header">
+          <div class="lw-card-icon green">✅</div>
+          <div>
+            <div class="lw-card-title">What This Means</div>
+            <div class="lw-card-subtitle">Your personalized recommendation</div>
+          </div>
+        </div>
+
+        <div id="guidance">
+          <p style="font-size: 16px; line-height: 1.7; color: var(--lw-text-secondary);" id="guidanceText">
+            With your current 4% contribution, you're receiving $1,500 in employer match out of a possible $2,250. 
+            <strong style="color: var(--lw-rose);">You're leaving $750 per year on the table.</strong>
+          </p>
+          
+          <div style="background: var(--lw-emerald-50); border-radius: var(--lw-radius); padding: 20px; margin-top: 20px; border-left: 4px solid var(--lw-emerald);">
+            <p style="font-size: 16px; font-weight: 600; color: var(--lw-emerald-dark); margin: 0;" id="recommendation">
+              💡 Contribute at least 6% to avoid leaving $750 on the table each year!
+            </p>
+          </div>
+
+          <div style="margin-top: 20px; padding: 16px; background: var(--lw-slate-50); border-radius: var(--lw-radius);">
+            <p style="font-size: 14px; color: var(--lw-text-secondary); margin: 0;" id="vestingNote">
+              <strong>Vesting note:</strong> With 2 years at the company and a 3-year cliff vesting schedule, 
+              0% of your employer match is currently vested. Stay another 1 year to become 100% vested.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <section class="lw-content">
+      <h2>How to Maximize Your 401(k) Employer Match</h2>
+      <p>Your employer's 401(k) match is one of the best financial benefits available—it's literally free money added to your retirement savings. Yet according to Financial Engines, Americans leave an estimated <strong>$24 billion</strong> in unclaimed employer matches every year. Don't be one of them.</p>
+
+      <h3>Understanding Your Match Formula</h3>
+      <p>Employer match formulas vary widely. The most common structures include:</p>
+      <ul>
+        <li><strong>Dollar-for-dollar up to X%:</strong> Your employer matches 100% of your contribution up to a certain percentage of salary (e.g., 100% match on first 4%)</li>
+        <li><strong>Partial match up to X%:</strong> Your employer matches a portion of your contribution (e.g., 50% match on first 6% means they contribute 3% when you contribute 6%)</li>
+        <li><strong>Tiered matching:</strong> Different match rates at different contribution levels (e.g., 100% on first 3%, then 50% on next 2%)</li>
+      </ul>
+
+      <h3>The Power of the Full Match</h3>
+      <p>Consider this: If you earn $75,000 and your employer offers a 50% match on the first 6% of salary, contributing the full 6% gets you $2,250 in free money annually. Over a 30-year career with 7% average returns, that $2,250 yearly match grows to over <strong>$200,000</strong>.</p>
+      <p>Leaving even a portion of this match unclaimed has a massive opportunity cost that compounds over time.</p>
+
+      <h3>What is 401(k) Vesting?</h3>
+      <p>Vesting determines when you actually own the employer match contributions. Your own contributions are always 100% yours, but employer contributions often follow a vesting schedule:</p>
+      <ul>
+        <li><strong>Immediate vesting:</strong> You own employer contributions right away</li>
+        <li><strong>Cliff vesting:</strong> You become 100% vested after a set number of years (typically 1-3 years)</li>
+        <li><strong>Graded vesting:</strong> You become vested gradually over time (e.g., 20% per year over 5 years)</li>
+      </ul>
+
+      <h3>Strategic Considerations</h3>
+      <p>Understanding your vesting schedule is crucial for career decisions. If you're 80% vested and considering a job change, staying a few more months could mean keeping thousands more in retirement savings. Use our calculator to see exactly how much is at stake.</p>
+
+      <h2>Frequently Asked Questions</h2>
+      <div class="lw-faq">
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">How much should I contribute to my 401(k) to get the full employer match?</button>
+          <div class="lw-faq-a">
+            <p>You should contribute at least enough to capture the full employer match. For example, if your employer matches 50% of contributions up to 6% of salary, you need to contribute at least 6% to get the full match. Our calculator shows your exact optimal contribution percentage.</p>
+          </div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">What is a 401(k) vesting schedule?</button>
+          <div class="lw-faq-a">
+            <p>A vesting schedule determines when you fully own the employer match contributions. Common types include immediate vesting (you own it right away), cliff vesting (100% ownership after a set number of years), and graded vesting (ownership increases gradually over time).</p>
+          </div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">What happens to unvested 401(k) contributions if I leave my job?</button>
+          <div class="lw-faq-a">
+            <p>Unvested employer contributions are forfeited when you leave. Your own contributions are always 100% yours. This is why understanding your vesting schedule is crucial before making job decisions.</p>
+          </div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">Is employer 401(k) match really "free money"?</button>
+          <div class="lw-faq-a">
+            <p>Yes! An employer match is essentially an instant 50-100% return on your contribution. If your employer matches 100% of your contribution, you double your money immediately before any investment gains. Not contributing enough to get the full match is leaving guaranteed returns on the table.</p>
+          </div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q">What's the most common employer 401(k) match formula?</button>
+          <div class="lw-faq-a">
+            <p>The most common formula is 50% match on the first 6% of salary you contribute, which gives you 3% of salary in free employer contributions. Other common formulas include 100% of first 3% plus 50% of next 2%, and dollar-for-dollar match up to 4-6%.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="lw-related">
+      <h2>Related Tools</h2>
+      <div class="lw-related-grid">
+        <a href="/investment-return-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Investment Return Calculator
+        </a>
+        <a href="/compound-interest-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Compound Interest Calculator
+        </a>
+        <a href="/savings-goal-calculator/" class="lw-related-link">
+          <span class="dot"></span>
+          Savings Goal Calculator
+        </a>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <div class="lw-disclaimer">
+      <p>This calculator provides estimates for educational purposes only. Actual 401(k) matching and vesting terms vary by employer. Consult your HR department or plan documents for specific details. PocketWise is not a registered investment advisor.</p>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="lw-footer">
+    <p>&copy; 2025 PocketWise. Free financial calculators for smarter money decisions.</p>
+    <p style="margin-top: 8px;"><a href="/">Home</a> · <a href="/about/">About</a> · <a href="/contact/">Contact</a></p>
+  </footer>
+
+  <script>
+    // State
+    let matchTiers = [{ rate: 50, cap: 6 }];
+    let tierCount = 1;
+
+    // DOM Elements
+    const salaryInput = document.getElementById('salary');
+    const contributionSlider = document.getElementById('contribution');
+    const contributionDisplay = document.getElementById('contributionDisplay');
+    const vestingTypeSelect = document.getElementById('vestingType');
+    const tenureSlider = document.getElementById('tenure');
+    const tenureDisplay = document.getElementById('tenureDisplay');
+    const matchTiersContainer = document.getElementById('matchTiers');
+    const addTierBtn = document.getElementById('addTierBtn');
+    const presetButtons = document.querySelectorAll('.preset-btn');
+
+    // Format currency
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(amount);
+    }
+
+    function formatNumber(num) {
+      return new Intl.NumberFormat('en-US').format(num);
+    }
+
+    // Parse currency input
+    function parseCurrency(value) {
+      return parseFloat(value.replace(/[^0-9.-]/g, '')) || 0;
+    }
+
+    // Calculate match based on contribution
+    function calculateMatch(salary, contributionPct, tiers) {
+      let matchAmount = 0;
+      let remainingContrib = contributionPct;
+
+      for (let i = 0; i < tiers.length && remainingContrib > 0; i++) {
+        const tier = tiers[i];
+        const tierCap = parseFloat(tier.cap) || 0;
+        const tierRate = (parseFloat(tier.rate) || 0) / 100;
+        
+        // Calculate how much of contribution applies to this tier
+        const applicableContrib = Math.min(remainingContrib, tierCap);
+        
+        // Calculate match for this tier
+        matchAmount += (salary * applicableContrib / 100) * tierRate;
+        
+        // Reduce remaining contribution
+        remainingContrib -= tierCap;
+      }
+
+      return matchAmount;
+    }
+
+    // Calculate max possible match
+    function calculateMaxMatch(salary, tiers) {
+      let maxMatch = 0;
+      for (const tier of tiers) {
+        const tierCap = parseFloat(tier.cap) || 0;
+        const tierRate = (parseFloat(tier.rate) || 0) / 100;
+        maxMatch += (salary * tierCap / 100) * tierRate;
+      }
+      return maxMatch;
+    }
+
+    // Get optimal contribution percentage
+    function getOptimalContribution(tiers) {
+      let total = 0;
+      for (const tier of tiers) {
+        total += parseFloat(tier.cap) || 0;
+      }
+      return total;
+    }
+
+    // Get vesting percentage based on schedule and tenure
+    function getVestingPercentage(vestingType, tenure) {
+      const [type, years] = vestingType.split('-');
+      const yearsNum = parseInt(years) || 0;
+
+      if (type === 'immediate') {
+        return 100;
+      } else if (type === 'cliff') {
+        return tenure >= yearsNum ? 100 : 0;
+      } else if (type === 'graded') {
+        if (yearsNum === 6) {
+          // Special 6-year graded: 0/20/40/60/80/100
+          if (tenure < 2) return 0;
+          if (tenure >= 6) return 100;
+          return (tenure - 1) * 20;
+        } else {
+          const pctPerYear = 100 / yearsNum;
+          return Math.min(100, Math.floor(tenure) * pctPerYear);
+        }
+      }
+      return 0;
+    }
+
+    // Get vesting schedule data for visualization
+    function getVestingSchedule(vestingType) {
+      const [type, years] = vestingType.split('-');
+      const yearsNum = parseInt(years) || 0;
+      const schedule = [];
+
+      if (type === 'immediate') {
+        schedule.push({ year: 0, pct: 100 });
+      } else if (type === 'cliff') {
+        for (let i = 0; i <= yearsNum; i++) {
+          schedule.push({ year: i, pct: i >= yearsNum ? 100 : 0 });
+        }
+      } else if (type === 'graded') {
+        if (yearsNum === 6) {
+          const pcts = [0, 0, 20, 40, 60, 80, 100];
+          for (let i = 0; i <= 6; i++) {
+            schedule.push({ year: i, pct: pcts[i] });
+          }
+        } else {
+          const pctPerYear = 100 / yearsNum;
+          for (let i = 0; i <= yearsNum; i++) {
+            schedule.push({ year: i, pct: Math.min(100, i * pctPerYear) });
+          }
+        }
+      }
+
+      return schedule;
+    }
+
+    // Render vesting timeline
+    function renderVestingTimeline(vestingType, tenure) {
+      const timeline = document.getElementById('vestingTimeline');
+      const schedule = getVestingSchedule(vestingType);
+      const currentVesting = getVestingPercentage(vestingType, tenure);
+
+      // Clear existing markers
+      const existingMarkers = timeline.querySelectorAll('.vesting-marker');
+      existingMarkers.forEach(m => m.remove());
+
+      const track = timeline.querySelector('.vesting-track');
+      const progress = document.getElementById('vestingProgress');
+
+      if (schedule.length === 1 && schedule[0].pct === 100) {
+        // Immediate vesting
+        progress.style.width = '100%';
+        const marker = document.createElement('div');
+        marker.className = 'vesting-marker';
+        marker.style.left = '50%';
+        marker.innerHTML = `
+          <div class="vesting-marker-dot filled"></div>
+          <div class="vesting-marker-label">Immediate</div>
+          <div class="vesting-marker-pct">100%</div>
+        `;
+        timeline.appendChild(marker);
+      } else {
+        const maxYear = schedule[schedule.length - 1].year;
+        progress.style.width = `${(Math.min(tenure, maxYear) / maxYear) * 100}%`;
+
+        schedule.forEach((point, idx) => {
+          const marker = document.createElement('div');
+          marker.className = 'vesting-marker';
+          marker.style.left = `${(point.year / maxYear) * 100}%`;
+          
+          let dotClass = 'vesting-marker-dot';
+          if (tenure >= point.year && point.pct > 0) {
+            dotClass += ' filled';
+          }
+          if (Math.abs(tenure - point.year) < 0.5) {
+            dotClass += ' current';
+          }
+
+          marker.innerHTML = `
+            <div class="${dotClass}"></div>
+            <div class="vesting-marker-label">Year ${point.year}</div>
+            <div class="vesting-marker-pct">${Math.round(point.pct)}%</div>
+          `;
+          timeline.appendChild(marker);
+        });
+      }
+    }
+
+    // Update calculations
+    function updateCalculations() {
+      const salary = parseCurrency(salaryInput.value);
+      const contributionPct = parseFloat(contributionSlider.value);
+      const tenure = parseFloat(tenureSlider.value);
+      const vestingType = vestingTypeSelect.value;
+
+      // Get match tiers from DOM
+      matchTiers = [];
+      document.querySelectorAll('.match-tier').forEach(tierEl => {
+        const rate = tierEl.querySelector('.match-rate').value;
+        const cap = tierEl.querySelector('.match-cap').value;
+        matchTiers.push({ rate: parseFloat(rate) || 0, cap: parseFloat(cap) || 0 });
+      });
+
+      // Calculate values
+      const optimalContribution = getOptimalContribution(matchTiers);
+      const currentMatch = calculateMatch(salary, contributionPct, matchTiers);
+      const maxMatch = calculateMaxMatch(salary, matchTiers);
+      const leftOnTable = maxMatch - currentMatch;
+      const yourContribution = salary * (contributionPct / 100);
+      const vestingPct = getVestingPercentage(vestingType, tenure);
+      const vestedMatch = currentMatch * (vestingPct / 100);
+      const unvestedMatch = currentMatch - vestedMatch;
+
+      // Update displays
+      contributionDisplay.textContent = `${contributionPct}%`;
+      tenureDisplay.textContent = tenure === 1 ? '1 year' : `${tenure} years`;
+
+      // Primary result
+      document.getElementById('maxMatchAmount').textContent = formatNumber(Math.round(maxMatch));
+      
+      // Build formula text
+      let formulaText = 'Based on ';
+      matchTiers.forEach((tier, i) => {
+        if (i > 0) formulaText += ' + ';
+        formulaText += `${tier.rate}% match on ${i === 0 ? 'first' : 'next'} ${tier.cap}% of salary`;
+      });
+      document.getElementById('matchFormulaText').textContent = formulaText;
+
+      // Money alert
+      const moneyAlert = document.getElementById('moneyAlert');
+      if (leftOnTable > 0) {
+        moneyAlert.className = 'money-alert';
+        moneyAlert.querySelector('.money-alert-icon').textContent = '⚠️';
+        moneyAlert.querySelector('h4').textContent = "You're Leaving Money on the Table!";
+        document.getElementById('currentPctAlert').textContent = `${contributionPct}%`;
+        document.getElementById('leftOnTable').textContent = formatCurrency(leftOnTable);
+        document.getElementById('optimalPctAlert').textContent = `${optimalContribution}%`;
+        moneyAlert.querySelector('p').innerHTML = `By contributing only <span id="currentPctAlert">${contributionPct}%</span>, you're missing out on <span class="money-alert-amount" id="leftOnTable">${formatCurrency(leftOnTable)}</span> in free employer match each year. <strong>Increase to <span id="optimalPctAlert">${optimalContribution}%</span></strong> to capture the full match.`;
+      } else {
+        moneyAlert.className = 'money-alert success';
+        moneyAlert.querySelector('.money-alert-icon').textContent = '🎉';
+        moneyAlert.querySelector('h4').textContent = "You're Maximizing Your Match!";
+        moneyAlert.querySelector('p').innerHTML = `Excellent! You're contributing enough to capture the <span class="money-alert-amount">${formatCurrency(maxMatch)}</span> full employer match. That's ${formatCurrency(maxMatch)} in free money every year!`;
+      }
+
+      // Stacked bar visualization
+      const totalPossible = yourContribution + maxMatch;
+      const yourPct = totalPossible > 0 ? (yourContribution / totalPossible) * 100 : 0;
+      const matchPct = totalPossible > 0 ? (currentMatch / totalPossible) * 100 : 0;
+      const potentialPct = totalPossible > 0 ? (leftOnTable / totalPossible) * 100 : 0;
+
+      document.getElementById('yourContribBar').style.width = `${yourPct}%`;
+      document.getElementById('matchBar').style.width = `${matchPct}%`;
+      document.getElementById('potentialBar').style.width = `${potentialPct}%`;
+      document.getElementById('potentialBar').style.display = potentialPct > 0 ? 'flex' : 'none';
+      document.getElementById('potentialLegend').style.display = potentialPct > 0 ? 'flex' : 'none';
+
+      document.getElementById('yourContribText').textContent = formatCurrency(yourContribution);
+      document.getElementById('matchText').textContent = formatCurrency(currentMatch);
+      document.getElementById('potentialText').textContent = `+${formatCurrency(leftOnTable)}`;
+      document.getElementById('totalContribLabel').textContent = `${formatCurrency(yourContribution + maxMatch)} total`;
+
+      // Result grid
+      document.getElementById('yourContribAmount').textContent = formatCurrency(yourContribution);
+      document.getElementById('matchCaptured').textContent = formatCurrency(currentMatch);
+      document.getElementById('matchUnclaimed').textContent = formatCurrency(leftOnTable);
+      document.getElementById('matchUnclaimed').className = leftOnTable > 0 ? 'lw-result-item-value rose' : 'lw-result-item-value green';
+
+      // Vesting
+      renderVestingTimeline(vestingType, tenure);
+      document.getElementById('currentVesting').textContent = `${Math.round(vestingPct)}%`;
+      document.getElementById('vestedAmount').textContent = formatCurrency(vestedMatch);
+      document.getElementById('unvestedAmount').textContent = formatCurrency(unvestedMatch);
+      
+      // Full vesting calculation
+      const schedule = getVestingSchedule(vestingType);
+      let fullVestingYear = 0;
+      for (const point of schedule) {
+        if (point.pct >= 100) {
+          fullVestingYear = point.year;
+          break;
+        }
+      }
+      const yearsToFull = Math.max(0, fullVestingYear - tenure);
+      if (vestingPct >= 100) {
+        document.getElementById('fullVestingIn').textContent = 'Fully vested!';
+      } else if (yearsToFull <= 0.5) {
+        document.getElementById('fullVestingIn').textContent = 'Less than 1 year';
+      } else {
+        document.getElementById('fullVestingIn').textContent = `${Math.ceil(yearsToFull)} year${yearsToFull > 1 ? 's' : ''}`;
+      }
+
+      // Guidance text
+      if (leftOnTable > 0) {
+        document.getElementById('guidanceText').innerHTML = `With your current <strong>${contributionPct}%</strong> contribution, you're receiving <strong>${formatCurrency(currentMatch)}</strong> in employer match out of a possible <strong>${formatCurrency(maxMatch)}</strong>. <strong style="color: var(--lw-rose);">You're leaving ${formatCurrency(leftOnTable)} per year on the table.</strong>`;
+        document.getElementById('recommendation').innerHTML = `💡 Contribute at least ${optimalContribution}% to avoid leaving ${formatCurrency(leftOnTable)} on the table each year!`;
+      } else {
+        document.getElementById('guidanceText').innerHTML = `With your <strong>${contributionPct}%</strong> contribution, you're capturing the <strong>full ${formatCurrency(maxMatch)}</strong> employer match. Well done! Consider if you can contribute more for additional tax-advantaged growth.`;
+        document.getElementById('recommendation').innerHTML = `🎉 You're maximizing your employer match! The 2025 contribution limit is $23,000 (plus $7,500 catch-up if 50+).`;
+      }
+
+      // Vesting note
+      const vestingTypeText = vestingType === 'immediate' ? 'immediate vesting' : vestingType.replace('-', '-year ') + ' vesting schedule';
+      if (vestingPct >= 100) {
+        document.getElementById('vestingNote').innerHTML = `<strong>Vesting note:</strong> Great news! You're 100% vested in your employer match contributions. If you leave, you keep all ${formatCurrency(currentMatch)} of employer match.`;
+      } else if (vestingPct === 0) {
+        document.getElementById('vestingNote').innerHTML = `<strong>Vesting note:</strong> With ${tenure} year${tenure !== 1 ? 's' : ''} at the company and a ${vestingTypeText}, 0% of your employer match is currently vested. Stay another ${Math.ceil(fullVestingYear - tenure)} year${fullVestingYear - tenure > 1 ? 's' : ''} to become 100% vested.`;
+      } else {
+        document.getElementById('vestingNote').innerHTML = `<strong>Vesting note:</strong> With ${tenure} years at the company and a ${vestingTypeText}, ${Math.round(vestingPct)}% of your employer match (${formatCurrency(vestedMatch)}) is currently vested. You'd forfeit ${formatCurrency(unvestedMatch)} if you left today.`;
+      }
+    }
+
+    // Add tier
+    function addTier() {
+      tierCount++;
+      const tierHtml = `
+        <div class="match-tier" data-tier="${tierCount}">
+          <span class="match-tier-label">Tier ${tierCount}:</span>
+          <div class="match-tier-inputs">
+            <input type="number" class="match-tier-input match-rate" value="50" min="0" max="100" placeholder="50">
+            <span class="match-tier-text">% match on next</span>
+            <input type="number" class="match-tier-input match-cap" value="2" min="0" max="100" step="0.5" placeholder="2">
+            <span class="match-tier-text">% of salary</span>
+            <button class="remove-tier-btn" onclick="removeTier(this)">×</button>
+          </div>
+        </div>
+      `;
+      matchTiersContainer.insertAdjacentHTML('beforeend', tierHtml);
+      attachTierListeners();
+      updateCalculations();
+    }
+
+    // Remove tier
+    function removeTier(btn) {
+      btn.closest('.match-tier').remove();
+      updateTierLabels();
+      updateCalculations();
+    }
+
+    // Update tier labels
+    function updateTierLabels() {
+      document.querySelectorAll('.match-tier').forEach((tier, i) => {
+        tier.querySelector('.match-tier-label').textContent = `Tier ${i + 1}:`;
+        if (i > 0) {
+          tier.querySelector('.match-tier-text').textContent = '% match on next';
+        }
+      });
+    }
+
+    // Attach listeners to tier inputs
+    function attachTierListeners() {
+      document.querySelectorAll('.match-tier-input').forEach(input => {
+        input.removeEventListener('input', updateCalculations);
+        input.addEventListener('input', updateCalculations);
+      });
+    }
+
+    // Apply preset
+    function applyPreset(preset) {
+      presetButtons.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      matchTiersContainer.innerHTML = '';
+      tierCount = 0;
+
+      let tiers = [];
+      switch (preset) {
+        case '50-6':
+          tiers = [{ rate: 50, cap: 6 }];
+          break;
+        case '100-3-50-2':
+          tiers = [{ rate: 100, cap: 3 }, { rate: 50, cap: 2 }];
+          break;
+        case '100-4':
+          tiers = [{ rate: 100, cap: 4 }];
+          break;
+        case '100-6':
+          tiers = [{ rate: 100, cap: 6 }];
+          break;
+        case 'custom':
+          tiers = [{ rate: 50, cap: 6 }];
+          break;
+      }
+
+      tiers.forEach((tier, i) => {
+        tierCount++;
+        const tierHtml = `
+          <div class="match-tier" data-tier="${tierCount}">
+            <span class="match-tier-label">Tier ${tierCount}:</span>
+            <div class="match-tier-inputs">
+              <input type="number" class="match-tier-input match-rate" value="${tier.rate}" min="0" max="100" placeholder="50">
+              <span class="match-tier-text">% match on ${i === 0 ? 'first' : 'next'}</span>
+              <input type="number" class="match-tier-input match-cap" value="${tier.cap}" min="0" max="100" step="0.5" placeholder="6">
+              <span class="match-tier-text">% of salary</span>
+              ${i > 0 ? '<button class="remove-tier-btn" onclick="removeTier(this)">×</button>' : ''}
+            </div>
+          </div>
+        `;
+        matchTiersContainer.insertAdjacentHTML('beforeend', tierHtml);
+      });
+
+      attachTierListeners();
+      updateCalculations();
+    }
+
+    // Event listeners
+    salaryInput.addEventListener('input', function() {
+      // Format as currency on blur
+      updateCalculations();
+    });
+
+    salaryInput.addEventListener('blur', function() {
+      const value = parseCurrency(this.value);
+      if (value > 0) {
+        this.value = formatNumber(value);
+      }
+    });
+
+    contributionSlider.addEventListener('input', updateCalculations);
+    vestingTypeSelect.addEventListener('change', updateCalculations);
+    tenureSlider.addEventListener('input', updateCalculations);
+    addTierBtn.addEventListener('click', addTier);
+
+    presetButtons.forEach(btn => {
+      btn.addEventListener('click', function() {
+        applyPreset(this.dataset.preset);
+      });
+    });
+
+    // FAQ toggle
+    document.querySelectorAll('.lw-faq-q').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const item = this.closest('.lw-faq-item');
+        const wasOpen = item.classList.contains('open');
+        document.querySelectorAll('.lw-faq-item').forEach(i => i.classList.remove('open'));
+        if (!wasOpen) item.classList.add('open');
+      });
+    });
+
+    // Initialize
+    attachTierListeners();
+    updateCalculations();
+  </script>
+</body>
+</html>

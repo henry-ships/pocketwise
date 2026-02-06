@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sell vs Refinance vs Stay Calculator | Should I Sell or Refinance?</title>
+  <meta name="description" content="Compare selling your home, refinancing, or staying with your current mortgage. Calculate net proceeds, break-even points, and get personalized decision guidance.">
+  <meta name="keywords" content="sell or refinance calculator, should I sell or refinance, move or refinance decision, sell vs stay calculator">
+  <link rel="canonical" href="https://pocketwise.app/sell-vs-refinance-vs-stay/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* Comparison Cards */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .comparison-card {
+      background: var(--lw-card);
+      border-radius: var(--lw-radius-lg);
+      padding: 24px;
+      border: 2px solid var(--lw-border);
+      position: relative;
+      transition: all var(--lw-transition);
+    }
+    .comparison-card:hover {
+      border-color: var(--lw-slate-300);
+    }
+    .comparison-card.winner {
+      border-color: var(--lw-emerald);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+    }
+    .comparison-card.sell { border-top: 4px solid var(--lw-rose); }
+    .comparison-card.refinance { border-top: 4px solid var(--lw-sky); }
+    .comparison-card.stay { border-top: 4px solid var(--lw-amber); }
+    
+    .winner-badge {
+      position: absolute;
+      top: -12px;
+      right: 16px;
+      background: var(--lw-emerald);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 6px 14px;
+      border-radius: var(--lw-radius-full);
+      display: none;
+      animation: lw-fadeIn 0.3s ease;
+    }
+    .comparison-card.winner .winner-badge {
+      display: block;
+    }
+    
+    .comparison-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .comparison-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--lw-radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .comparison-card.sell .comparison-icon { background: var(--lw-rose-50); }
+    .comparison-card.refinance .comparison-icon { background: var(--lw-sky-100); }
+    .comparison-card.stay .comparison-icon { background: var(--lw-amber-50); }
+    
+    .comparison-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--lw-navy);
+    }
+    
+    .comparison-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      letter-spacing: -1px;
+    }
+    .comparison-card.sell .comparison-value { color: var(--lw-rose); }
+    .comparison-card.refinance .comparison-value { color: var(--lw-sky-dark); }
+    .comparison-card.stay .comparison-value { color: var(--lw-amber); }
+    
+    .comparison-label {
+      font-size: 13px;
+      color: var(--lw-text-muted);
+      margin-bottom: 16px;
+    }
+    
+    .comparison-details {
+      border-top: 1px solid var(--lw-border-light);
+      padding-top: 16px;
+      margin-top: 16px;
+    }
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+    .detail-row:last-child { margin-bottom: 0; }
+    .detail-label { color: var(--lw-text-muted); }
+    .detail-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: var(--lw-navy);
+    }
+    
+    /* Scenario Slider */
+    .scenario-card {
+      background: linear-gradient(135deg, var(--lw-navy) 0%, var(--lw-slate-800) 100%);
+      border-radius: var(--lw-radius-lg);
+      padding: 28px;
+      margin-bottom: 24px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .scenario-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 70% 20%, rgba(14, 165, 233, 0.12) 0%, transparent 60%);
+    }
+    .scenario-card * { position: relative; }
+    
+    .scenario-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+    .scenario-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .scenario-subtitle {
+      font-size: 14px;
+      color: var(--lw-slate-400);
+    }
+    .scenario-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 42px;
+      font-weight: 800;
+      color: var(--lw-sky-light);
+    }
+    .scenario-value span {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--lw-slate-400);
+    }
+    
+    .scenario-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.15);
+      outline: none;
+      margin: 16px 0 12px;
+    }
+    .scenario-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--lw-sky-light), var(--lw-sky));
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(56, 189, 248, 0.4);
+      transition: transform 0.15s ease;
+    }
+    .scenario-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    .scenario-slider::-moz-range-thumb {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--lw-sky-light), var(--lw-sky));
+      cursor: pointer;
+      border: none;
+    }
+    
+    .scenario-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--lw-slate-400);
+    }
+    
+    /* Break-even visualization */
+    .breakeven-visual {
+      background: var(--lw-card);
+      border-radius: var(--lw-radius-lg);
+      padding: 24px;
+      border: 1px solid var(--lw-border-light);
+      margin-bottom: 24px;
+    }
+    .breakeven-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .breakeven-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--lw-navy);
+    }
+    .breakeven-point {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--lw-sky-dark);
+      background: var(--lw-sky-50);
+      padding: 6px 14px;
+      border-radius: var(--lw-radius-full);
+    }
+    
+    .timeline-track {
+      height: 50px;
+      background: var(--lw-slate-100);
+      border-radius: var(--lw-radius);
+      position: relative;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .timeline-segment {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: white;
+    }
+    .timeline-segment.sell-zone {
+      left: 0;
+      background: linear-gradient(90deg, var(--lw-rose), var(--lw-rose-light));
+      border-radius: var(--lw-radius) 0 0 var(--lw-radius);
+    }
+    .timeline-segment.stay-zone {
+      right: 0;
+      background: linear-gradient(90deg, var(--lw-sky), var(--lw-sky-light));
+      border-radius: 0 var(--lw-radius) var(--lw-radius) 0;
+      justify-content: flex-end;
+    }
+    .timeline-marker {
+      position: absolute;
+      top: -8px;
+      bottom: -8px;
+      width: 4px;
+      background: var(--lw-navy);
+      border-radius: 2px;
+      transform: translateX(-50%);
+    }
+    .timeline-marker::before {
+      content: 'YOU';
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--lw-navy);
+      background: var(--lw-amber-50);
+      padding: 2px 8px;
+      border-radius: var(--lw-radius-sm);
+      white-space: nowrap;
+      margin-bottom: 4px;
+    }
+    
+    .timeline-years {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--lw-text-muted);
+    }
+    
+    /* Decision Box */
+    .decision-box {
+      border-radius: var(--lw-radius-lg);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .decision-box.sell {
+      background: linear-gradient(135deg, var(--lw-rose-50), #FFF5F6);
+      border: 1px solid rgba(244, 63, 94, 0.2);
+    }
+    .decision-box.refinance {
+      background: linear-gradient(135deg, var(--lw-sky-50), #F0FAFF);
+      border: 1px solid rgba(14, 165, 233, 0.2);
+    }
+    .decision-box.stay {
+      background: linear-gradient(135deg, var(--lw-amber-50), #FFFCF0);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+    
+    .decision-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .decision-icon {
+      font-size: 28px;
+    }
+    .decision-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--lw-navy);
+    }
+    .decision-text {
+      font-size: 15px;
+      color: var(--lw-text-secondary);
+      line-height: 1.7;
+    }
+    .decision-text strong {
+      color: var(--lw-navy);
+    }
+    
+    /* Cost timeline chart */
+    .cost-chart {
+      background: var(--lw-card);
+      border-radius: var(--lw-radius-lg);
+      padding: 24px;
+      border: 1px solid var(--lw-border-light);
+      margin-bottom: 24px;
+    }
+    .cost-chart-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--lw-navy);
+      margin-bottom: 20px;
+    }
+    
+    .cost-bar-group {
+      margin-bottom: 16px;
+    }
+    .cost-bar-group:last-child { margin-bottom: 0; }
+    .cost-bar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .cost-bar-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--lw-navy);
+    }
+    .cost-bar-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .cost-bar-dot.sell { background: var(--lw-rose); }
+    .cost-bar-dot.refinance { background: var(--lw-sky); }
+    .cost-bar-dot.stay { background: var(--lw-amber); }
+    
+    .cost-bar-amount {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--lw-text-secondary);
+    }
+    .cost-bar-track {
+      height: 24px;
+      background: var(--lw-slate-100);
+      border-radius: var(--lw-radius-full);
+      overflow: hidden;
+    }
+    .cost-bar-fill {
+      height: 100%;
+      border-radius: var(--lw-radius-full);
+      transition: width 0.6s ease;
+    }
+    .cost-bar-fill.sell { background: linear-gradient(90deg, var(--lw-rose), var(--lw-rose-light)); }
+    .cost-bar-fill.refinance { background: linear-gradient(90deg, var(--lw-sky), var(--lw-sky-light)); }
+    .cost-bar-fill.stay { background: linear-gradient(90deg, var(--lw-amber), var(--lw-amber-light)); }
+    
+    /* Input grid */
+    .input-section {
+      margin-bottom: 32px;
+    }
+    .input-section-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--lw-slate-500);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .input-section-title::before {
+      content: '';
+      width: 4px;
+      height: 16px;
+      background: var(--lw-sky);
+      border-radius: 2px;
+    }
+    
+    @media (max-width: 900px) {
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+      .comparison-card {
+        border-top-width: 4px !important;
+        border-left-width: 2px !important;
+      }
+      .scenario-header {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .timeline-segment {
+        font-size: 9px;
+        padding: 0 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <span class="lw-logo-icon">P</span>
+        PocketWise
+      </a>
+      <button class="lw-hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('open')">☰</button>
+      <ul class="lw-nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/sell-vs-refinance-vs-stay/" class="active">Sell vs Refinance</a></li>
+      </ul>
+    </div>
+    <div id="mobileMenu" class="lw-mobile-menu">
+      <a href="/">Home</a>
+      <a href="/sell-vs-refinance-vs-stay/">Sell vs Refinance</a>
+    </div>
+  </nav>
+
+  <main class="lw-main wide">
+    <!-- Hero -->
+    <section class="lw-hero">
+      <span class="lw-badge">Decision Calculator</span>
+      <h1>Should You <span class="accent">Sell, Refinance, or Stay?</span></h1>
+      <p class="subtitle">Compare your options side-by-side. Get personalized guidance based on your timeline, equity, and financial goals.</p>
+    </section>
+
+    <!-- Calculator Card -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">🏠</div>
+        <div>
+          <h2 class="lw-card-title">Your Property Details</h2>
+          <p class="lw-card-subtitle">Enter your current mortgage and property information</p>
+        </div>
+      </div>
+
+      <!-- Current Situation -->
+      <div class="input-section">
+        <div class="input-section-title">Current Situation</div>
+        <div class="lw-grid-2">
+          <div class="lw-form-group">
+            <label class="lw-label">Current Home Value</label>
+            <div class="lw-input-prefix">
+              <span class="prefix">$</span>
+              <input type="text" id="homeValue" class="lw-input" value="450,000" inputmode="numeric">
+            </div>
+          </div>
+          <div class="lw-form-group">
+            <label class="lw-label">Current Loan Balance</label>
+            <div class="lw-input-prefix">
+              <span class="prefix">$</span>
+              <input type="text" id="loanBalance" class="lw-input" value="320,000" inputmode="numeric">
+            </div>
+          </div>
+          <div class="lw-form-group">
+            <label class="lw-label">Current Interest Rate</label>
+            <div class="lw-input-suffix">
+              <input type="text" id="currentRate" class="lw-input" value="6.5" inputmode="decimal">
+              <span class="suffix">%</span>
+            </div>
+          </div>
+          <div class="lw-form-group">
+            <label class="lw-label">Current Monthly Payment <span class="lw-label-hint">(P&I)</span></label>
+            <div class="lw-input-prefix">
+              <span class="prefix">$</span>
+              <input type="text" id="currentPayment" class="lw-input" value="2,023" inputmode="numeric">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Refinance Options -->
+      <div class="input-section">
+        <div class="input-section-title">Refinance Scenario</div>
+        <div class="lw-grid-2">
+          <div class="lw-form-group">
+            <label class="lw-label">New Refinance Rate</label>
+            <div class="lw-input-suffix">
+              <input type="text" id="newRate" class="lw-input" value="5.75" inputmode="decimal">
+              <span class="suffix">%</span>
+            </div>
+          </div>
+          <div class="lw-form-group">
+            <label class="lw-label">Refinance Closing Costs</label>
+            <div class="lw-input-prefix">
+              <span class="prefix">$</span>
+              <input type="text" id="refiClosingCosts" class="lw-input" value="8,000" inputmode="numeric">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Selling Options -->
+      <div class="input-section">
+        <div class="input-section-title">Selling Scenario</div>
+        <div class="lw-grid-2">
+          <div class="lw-form-group">
+            <label class="lw-label">Selling Costs <span class="lw-label-hint">(agent fees, closing, etc.)</span></label>
+            <div class="lw-input-suffix">
+              <input type="text" id="sellingCostsPct" class="lw-input" value="8" inputmode="decimal">
+              <span class="suffix">%</span>
+            </div>
+          </div>
+          <div class="lw-form-group">
+            <label class="lw-label">Expected Monthly Rent <span class="lw-label-hint">(if selling)</span></label>
+            <div class="lw-input-prefix">
+              <span class="prefix">$</span>
+              <input type="text" id="expectedRent" class="lw-input" value="2,200" inputmode="numeric">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scenario Slider -->
+    <div class="scenario-card" id="scenarioCard">
+      <div class="scenario-header">
+        <div>
+          <div class="scenario-title">How Long Will You Stay?</div>
+          <div class="scenario-subtitle">Drag to see how time affects your best option</div>
+        </div>
+        <div class="scenario-value"><span id="yearsDisplay">5</span> <span>years</span></div>
+      </div>
+      <input type="range" id="yearsSlider" class="scenario-slider" min="1" max="15" value="5">
+      <div class="scenario-labels">
+        <span>1 year</span>
+        <span>5 years</span>
+        <span>10 years</span>
+        <span>15 years</span>
+      </div>
+    </div>
+
+    <!-- 3-Way Comparison Cards -->
+    <div class="comparison-grid" id="comparisonGrid">
+      <div class="comparison-card sell" id="sellCard">
+        <span class="winner-badge">✓ Best Option</span>
+        <div class="comparison-header">
+          <div class="comparison-icon">🏷️</div>
+          <div class="comparison-title">Sell</div>
+        </div>
+        <div class="comparison-value" id="sellValue">$94,000</div>
+        <div class="comparison-label">Net proceeds after sale</div>
+        <div class="comparison-details">
+          <div class="detail-row">
+            <span class="detail-label">Home Equity</span>
+            <span class="detail-value" id="sellEquity">$130,000</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Selling Costs</span>
+            <span class="detail-value" id="sellCosts">-$36,000</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label"><span id="yearsLabelSell">5</span>-Year Rent Cost</span>
+            <span class="detail-value" id="sellRentCost">$132,000</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="comparison-card refinance" id="refiCard">
+        <span class="winner-badge">✓ Best Option</span>
+        <div class="comparison-header">
+          <div class="comparison-icon">📉</div>
+          <div class="comparison-title">Refinance</div>
+        </div>
+        <div class="comparison-value" id="refiValue">$1,867</div>
+        <div class="comparison-label">New monthly payment</div>
+        <div class="comparison-details">
+          <div class="detail-row">
+            <span class="detail-label">Monthly Savings</span>
+            <span class="detail-value" id="refiSavings">$156/mo</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Closing Costs</span>
+            <span class="detail-value" id="refiCosts">-$8,000</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label"><span id="yearsLabelRefi">5</span>-Year Net Benefit</span>
+            <span class="detail-value" id="refiNetBenefit">$1,360</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="comparison-card stay" id="stayCard">
+        <span class="winner-badge">✓ Best Option</span>
+        <div class="comparison-header">
+          <div class="comparison-icon">🏡</div>
+          <div class="comparison-title">Stay</div>
+        </div>
+        <div class="comparison-value" id="stayValue">$2,023</div>
+        <div class="comparison-label">Current monthly payment</div>
+        <div class="comparison-details">
+          <div class="detail-row">
+            <span class="detail-label">No Closing Costs</span>
+            <span class="detail-value">$0</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">No Moving Stress</span>
+            <span class="detail-value">✓</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label"><span id="yearsLabelStay">5</span>-Year Total Cost</span>
+            <span class="detail-value" id="stayTotalCost">$121,380</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Break-even Visualization -->
+    <div class="breakeven-visual" id="breakevenVisual">
+      <div class="breakeven-header">
+        <div class="breakeven-title">📊 Break-Even Timeline</div>
+        <div class="breakeven-point" id="breakevenPoint">Refinance breaks even at 4.3 years</div>
+      </div>
+      <div class="timeline-track">
+        <div class="timeline-segment sell-zone" id="sellZone" style="width: 30%">
+          <span>Selling Better</span>
+        </div>
+        <div class="timeline-segment stay-zone" id="stayZone" style="width: 60%">
+          <span>Staying Better</span>
+        </div>
+        <div class="timeline-marker" id="timelineMarker" style="left: 33%"></div>
+      </div>
+      <div class="timeline-years">
+        <span>0 years</span>
+        <span>5 years</span>
+        <span>10 years</span>
+        <span>15 years</span>
+      </div>
+    </div>
+
+    <!-- 5-Year Cost Comparison Chart -->
+    <div class="cost-chart">
+      <div class="cost-chart-title">📈 <span id="costChartYears">5</span>-Year Total Cost Comparison</div>
+      
+      <div class="cost-bar-group">
+        <div class="cost-bar-header">
+          <div class="cost-bar-name">
+            <span class="cost-bar-dot sell"></span>
+            Sell & Rent
+          </div>
+          <span class="cost-bar-amount" id="sellTotalBar">$132,000</span>
+        </div>
+        <div class="cost-bar-track">
+          <div class="cost-bar-fill sell" id="sellBarFill" style="width: 85%"></div>
+        </div>
+      </div>
+      
+      <div class="cost-bar-group">
+        <div class="cost-bar-header">
+          <div class="cost-bar-name">
+            <span class="cost-bar-dot refinance"></span>
+            Refinance
+          </div>
+          <span class="cost-bar-amount" id="refiTotalBar">$120,020</span>
+        </div>
+        <div class="cost-bar-track">
+          <div class="cost-bar-fill refinance" id="refiBarFill" style="width: 77%"></div>
+        </div>
+      </div>
+      
+      <div class="cost-bar-group">
+        <div class="cost-bar-header">
+          <div class="cost-bar-name">
+            <span class="cost-bar-dot stay"></span>
+            Stay Current
+          </div>
+          <span class="cost-bar-amount" id="stayTotalBar">$121,380</span>
+        </div>
+        <div class="cost-bar-track">
+          <div class="cost-bar-fill stay" id="stayBarFill" style="width: 78%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Decision Guidance -->
+    <div class="decision-box" id="decisionBox">
+      <div class="decision-header">
+        <span class="decision-icon" id="decisionIcon">📉</span>
+        <div class="decision-title" id="decisionTitle">Refinancing Is Your Best Move</div>
+      </div>
+      <p class="decision-text" id="decisionText">
+        Based on your timeline of 5 years, <strong>refinancing saves you the most money</strong>. 
+        You'll recover your closing costs in about 4.3 years through lower monthly payments, 
+        then continue saving $156/month thereafter.
+      </p>
+    </div>
+
+    <!-- What This Means -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">💡</div>
+        <div>
+          <h3 class="lw-card-title">What This Means</h3>
+        </div>
+      </div>
+      <div id="meaningContent">
+        <p style="color: var(--lw-text-secondary); line-height: 1.7; margin-bottom: 12px;">
+          Your decision depends heavily on <strong>how long you plan to stay</strong>. Here's the breakdown:
+        </p>
+        <ul style="color: var(--lw-text-secondary); line-height: 1.8; padding-left: 20px;">
+          <li><strong>Selling makes sense</strong> if you're moving within <span id="sellThreshold">2-3 years</span> — you'll unlock your equity and avoid paying for a home you won't use long</li>
+          <li><strong>Refinancing wins</strong> if you're staying <span id="refiThreshold">4+ years</span> — lower payments compound into significant savings over time</li>
+          <li><strong>Staying put works</strong> if rates haven't dropped much or you'll move soon — no closing costs and no hassle</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SEO Content -->
+    <section class="lw-content">
+      <h2>How to Decide: Sell, Refinance, or Stay?</h2>
+      <p>One of the biggest financial decisions homeowners face is whether to sell their home, refinance their mortgage, or simply stay with their current loan. Each option has distinct advantages depending on your financial situation, timeline, and goals.</p>
+
+      <h3>When Selling Makes Sense</h3>
+      <p>Selling your home is often the best choice when:</p>
+      <ul>
+        <li><strong>You're relocating</strong> for work, family, or lifestyle reasons</li>
+        <li><strong>Your home no longer fits</strong> — too big, too small, or wrong location</li>
+        <li><strong>You've built significant equity</strong> and want to cash out</li>
+        <li><strong>Local market conditions favor sellers</strong> with high demand</li>
+        <li><strong>You'll rent or buy cheaper elsewhere</strong> and come out ahead</li>
+      </ul>
+      <p>Remember: selling costs typically run 8-10% of your home's value when you factor in agent commissions, closing costs, repairs, and moving expenses.</p>
+
+      <h3>When Refinancing Wins</h3>
+      <p>Refinancing your mortgage makes the most sense when:</p>
+      <ul>
+        <li><strong>Rates have dropped 0.5%+ below your current rate</strong></li>
+        <li><strong>You plan to stay long enough</strong> to recoup closing costs (usually 3-5 years)</li>
+        <li><strong>Your credit has improved</strong> since your original loan</li>
+        <li><strong>You want to eliminate PMI</strong> with higher home equity</li>
+        <li><strong>You need to switch loan types</strong> (ARM to fixed, 30-year to 15-year)</li>
+      </ul>
+
+      <h3>When Staying Put Is Best</h3>
+      <p>Sometimes the smartest move is doing nothing:</p>
+      <ul>
+        <li><strong>Your current rate is already competitive</strong></li>
+        <li><strong>You're moving within 1-2 years</strong> — closing costs won't pay off</li>
+        <li><strong>Closing costs are too high</strong> relative to potential savings</li>
+        <li><strong>Your loan has favorable terms</strong> you'd lose by refinancing</li>
+      </ul>
+
+      <h2>The Break-Even Calculation</h2>
+      <p>The key to any refinance decision is the <strong>break-even point</strong> — how long until your monthly savings exceed your closing costs.</p>
+      <p><strong>Break-Even Formula:</strong> Closing Costs ÷ Monthly Savings = Months to Break Even</p>
+      <p>For example: $8,000 closing costs ÷ $150/month savings = 53 months (about 4.4 years)</p>
+      <p>If you'll stay longer than your break-even point, refinancing makes financial sense. If you'll move sooner, you're better off keeping your current loan or selling.</p>
+
+      <h2>Hidden Costs to Consider</h2>
+      <p>When comparing options, don't forget these often-overlooked costs:</p>
+      <ul>
+        <li><strong>Selling:</strong> Staging, repairs, inspection issues, carrying costs while listed</li>
+        <li><strong>Refinancing:</strong> Resetting your amortization, potential prepayment penalties</li>
+        <li><strong>Renting after selling:</strong> Security deposits, annual rent increases, lack of equity building</li>
+        <li><strong>Opportunity cost:</strong> What else could you do with the closing costs or sale proceeds?</li>
+      </ul>
+
+      <!-- FAQ Section -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+        
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            How do I know if refinancing is worth it?
+          </button>
+          <div class="lw-faq-a">
+            <p>Refinancing is typically worth it if you can lower your rate by at least 0.5-0.75% AND you'll stay in your home long enough to recoup closing costs. Use the break-even calculation: divide your closing costs by monthly savings to see how many months until you're ahead.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            What are typical selling costs for a home?
+          </button>
+          <div class="lw-faq-a">
+            <p>Total selling costs typically range from 8-10% of your sale price. This includes agent commissions (5-6%), closing costs (1-3%), repairs/staging (1-2%), and moving expenses. On a $400,000 home, expect to pay $32,000-$40,000 in total selling costs.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            Should I refinance if I'm planning to sell in a few years?
+          </button>
+          <div class="lw-faq-a">
+            <p>Generally no. If you're selling within 2-3 years, you likely won't recoup refinancing closing costs through monthly savings. Calculate your break-even point — if it's longer than your expected stay, skip the refinance and either stay or sell.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            What if my home has appreciated significantly?
+          </button>
+          <div class="lw-faq-a">
+            <p>Significant appreciation gives you options! You could sell and pocket the equity, refinance to eliminate PMI or access cash-out, or stay and enjoy your increased net worth. Consider your goals: do you need the cash, want lower payments, or prefer building more equity?</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            How does renting compare to staying in my home?
+          </button>
+          <div class="lw-faq-a">
+            <p>When you rent, 100% of your payment is an expense. With a mortgage, part goes to principal (building equity). However, renting eliminates maintenance costs, property taxes, and provides flexibility. Compare total costs including opportunity cost of your down payment/equity.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/" class="lw-related-link">
+          <span class="dot"></span>
+          Mortgage Payment Calculator
+        </a>
+        <a href="/" class="lw-related-link">
+          <span class="dot"></span>
+          Refinance Break-Even Calculator
+        </a>
+        <a href="/" class="lw-related-link">
+          <span class="dot"></span>
+          Rent vs Buy Calculator
+        </a>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <div class="lw-disclaimer">
+      This calculator provides estimates for educational purposes only. Results do not constitute financial advice. Consult with a mortgage professional for personalized guidance.
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="lw-footer">
+    <p>© 2025 PocketWise. Built to help you make smarter money decisions.</p>
+  </footer>
+
+  <!-- FAQ Schema JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I know if refinancing is worth it?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Refinancing is typically worth it if you can lower your rate by at least 0.5-0.75% AND you'll stay in your home long enough to recoup closing costs. Use the break-even calculation: divide your closing costs by monthly savings to see how many months until you're ahead."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are typical selling costs for a home?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Total selling costs typically range from 8-10% of your sale price. This includes agent commissions (5-6%), closing costs (1-3%), repairs/staging (1-2%), and moving expenses. On a $400,000 home, expect to pay $32,000-$40,000 in total selling costs."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I refinance if I'm planning to sell in a few years?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Generally no. If you're selling within 2-3 years, you likely won't recoup refinancing closing costs through monthly savings. Calculate your break-even point — if it's longer than your expected stay, skip the refinance and either stay or sell."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What if my home has appreciated significantly?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Significant appreciation gives you options! You could sell and pocket the equity, refinance to eliminate PMI or access cash-out, or stay and enjoy your increased net worth. Consider your goals: do you need the cash, want lower payments, or prefer building more equity?"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does renting compare to staying in my home?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "When you rent, 100% of your payment is an expense. With a mortgage, part goes to principal (building equity). However, renting eliminates maintenance costs, property taxes, and provides flexibility. Compare total costs including opportunity cost of your down payment/equity."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script>
+    // Utility functions
+    function parseNumber(str) {
+      return parseFloat(str.replace(/[^0-9.-]/g, '')) || 0;
+    }
+
+    function formatCurrency(num, showCents = false) {
+      if (showCents) {
+        return '$' + num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+      return '$' + Math.round(num).toLocaleString('en-US');
+    }
+
+    function formatInput(input) {
+      const value = parseNumber(input.value);
+      if (!isNaN(value) && value > 0) {
+        input.value = Math.round(value).toLocaleString('en-US');
+      }
+    }
+
+    // Calculate monthly payment
+    function calculateMonthlyPayment(principal, annualRate, years) {
+      const monthlyRate = annualRate / 100 / 12;
+      const numPayments = years * 12;
+      if (monthlyRate === 0) return principal / numPayments;
+      return principal * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1);
+    }
+
+    // Main calculation function
+    function calculate() {
+      // Get inputs
+      const homeValue = parseNumber(document.getElementById('homeValue').value);
+      const loanBalance = parseNumber(document.getElementById('loanBalance').value);
+      const currentRate = parseFloat(document.getElementById('currentRate').value) || 0;
+      const currentPayment = parseNumber(document.getElementById('currentPayment').value);
+      const newRate = parseFloat(document.getElementById('newRate').value) || 0;
+      const refiClosingCosts = parseNumber(document.getElementById('refiClosingCosts').value);
+      const sellingCostsPct = parseFloat(document.getElementById('sellingCostsPct').value) || 0;
+      const expectedRent = parseNumber(document.getElementById('expectedRent').value);
+      const yearsToStay = parseInt(document.getElementById('yearsSlider').value) || 5;
+
+      // Update years display
+      document.getElementById('yearsDisplay').textContent = yearsToStay;
+      document.getElementById('yearsLabelSell').textContent = yearsToStay;
+      document.getElementById('yearsLabelRefi').textContent = yearsToStay;
+      document.getElementById('yearsLabelStay').textContent = yearsToStay;
+      document.getElementById('costChartYears').textContent = yearsToStay;
+
+      // Calculate equity and selling proceeds
+      const equity = homeValue - loanBalance;
+      const sellingCosts = homeValue * (sellingCostsPct / 100);
+      const netProceeds = equity - sellingCosts;
+
+      // Calculate refinance payment (30-year term assumed)
+      const newPayment = calculateMonthlyPayment(loanBalance, newRate, 30);
+      const monthlySavings = currentPayment - newPayment;
+      const totalSavingsOverTime = monthlySavings * yearsToStay * 12;
+      const refiNetBenefit = totalSavingsOverTime - refiClosingCosts;
+
+      // Calculate total costs over the period
+      const sellTotalCost = expectedRent * yearsToStay * 12; // Rent cost if selling
+      const refiTotalCost = (newPayment * yearsToStay * 12) + refiClosingCosts;
+      const stayTotalCost = currentPayment * yearsToStay * 12;
+
+      // Calculate break-even point for refinance
+      const breakevenMonths = monthlySavings > 0 ? refiClosingCosts / monthlySavings : Infinity;
+      const breakevenYears = breakevenMonths / 12;
+
+      // Update SELL card
+      document.getElementById('sellValue').textContent = formatCurrency(netProceeds);
+      document.getElementById('sellEquity').textContent = formatCurrency(equity);
+      document.getElementById('sellCosts').textContent = '-' + formatCurrency(sellingCosts);
+      document.getElementById('sellRentCost').textContent = formatCurrency(sellTotalCost);
+
+      // Update REFINANCE card
+      document.getElementById('refiValue').textContent = formatCurrency(newPayment);
+      document.getElementById('refiSavings').textContent = (monthlySavings >= 0 ? '' : '-') + formatCurrency(Math.abs(monthlySavings)) + '/mo';
+      document.getElementById('refiCosts').textContent = '-' + formatCurrency(refiClosingCosts);
+      document.getElementById('refiNetBenefit').textContent = (refiNetBenefit >= 0 ? '' : '-') + formatCurrency(Math.abs(refiNetBenefit));
+
+      // Update STAY card
+      document.getElementById('stayValue').textContent = formatCurrency(currentPayment);
+      document.getElementById('stayTotalCost').textContent = formatCurrency(stayTotalCost);
+
+      // Update cost comparison bars
+      const maxCost = Math.max(sellTotalCost, refiTotalCost, stayTotalCost);
+      document.getElementById('sellTotalBar').textContent = formatCurrency(sellTotalCost);
+      document.getElementById('refiTotalBar').textContent = formatCurrency(refiTotalCost);
+      document.getElementById('stayTotalBar').textContent = formatCurrency(stayTotalCost);
+      
+      document.getElementById('sellBarFill').style.width = (sellTotalCost / maxCost * 100) + '%';
+      document.getElementById('refiBarFill').style.width = (refiTotalCost / maxCost * 100) + '%';
+      document.getElementById('stayBarFill').style.width = (stayTotalCost / maxCost * 100) + '%';
+
+      // Determine winner based on total housing cost and situation
+      // For selling, we consider: you get net proceeds but pay rent
+      // Net financial position after yearsToStay: netProceeds - sellTotalCost (rent paid)
+      const sellNetPosition = netProceeds - sellTotalCost;
+      // For refi: you pay refiTotalCost but build some equity (simplified: just compare costs)
+      // For stay: you pay stayTotalCost but build some equity
+
+      // Simpler approach: compare housing costs only
+      let winner = 'stay';
+      let lowestCost = stayTotalCost;
+
+      if (refiTotalCost < lowestCost && monthlySavings > 0) {
+        winner = 'refinance';
+        lowestCost = refiTotalCost;
+      }
+
+      // Selling is complex - it's "better" if you're moving anyway or short timeline
+      // We'll say selling wins if timeline is very short (1-2 years) and rent isn't much higher
+      if (yearsToStay <= 2 && sellTotalCost < stayTotalCost * 1.3) {
+        // Short timeline - selling might make sense if you need to move
+        // But we'll only mark it winner if rent is actually cheaper
+        if (sellTotalCost < lowestCost) {
+          winner = 'sell';
+        }
+      }
+
+      // Update winner badges
+      document.querySelectorAll('.comparison-card').forEach(card => card.classList.remove('winner'));
+      if (winner === 'sell') {
+        document.getElementById('sellCard').classList.add('winner');
+      } else if (winner === 'refinance') {
+        document.getElementById('refiCard').classList.add('winner');
+      } else {
+        document.getElementById('stayCard').classList.add('winner');
+      }
+
+      // Update break-even visualization
+      const breakevenPct = Math.min(Math.max(breakevenYears / 15 * 100, 5), 95);
+      const markerPct = yearsToStay / 15 * 100;
+      
+      document.getElementById('sellZone').style.width = breakevenPct + '%';
+      document.getElementById('stayZone').style.width = (100 - breakevenPct) + '%';
+      document.getElementById('timelineMarker').style.left = markerPct + '%';
+
+      if (breakevenYears < 99) {
+        document.getElementById('breakevenPoint').textContent = `Refinance breaks even at ${breakevenYears.toFixed(1)} years`;
+      } else {
+        document.getElementById('breakevenPoint').textContent = `Refinancing doesn't save money`;
+      }
+
+      // Update decision box
+      const decisionBox = document.getElementById('decisionBox');
+      const decisionIcon = document.getElementById('decisionIcon');
+      const decisionTitle = document.getElementById('decisionTitle');
+      const decisionText = document.getElementById('decisionText');
+
+      decisionBox.className = 'decision-box ' + winner;
+
+      if (winner === 'sell') {
+        decisionIcon.textContent = '🏷️';
+        decisionTitle.textContent = 'Selling May Be Your Best Move';
+        decisionText.innerHTML = `With your timeline of <strong>${yearsToStay} year${yearsToStay > 1 ? 's' : ''}</strong>, selling could make sense — especially if you're planning to relocate. You'd walk away with <strong>${formatCurrency(netProceeds)}</strong> in net proceeds after paying off your loan and selling costs.`;
+      } else if (winner === 'refinance') {
+        decisionIcon.textContent = '📉';
+        decisionTitle.textContent = 'Refinancing Is Your Best Move';
+        if (breakevenYears < yearsToStay) {
+          decisionText.innerHTML = `Based on your timeline of <strong>${yearsToStay} years</strong>, <strong>refinancing saves you the most money</strong>. You'll recover your closing costs in about <strong>${breakevenYears.toFixed(1)} years</strong> through lower monthly payments of <strong>${formatCurrency(monthlySavings)}/month</strong>, then continue saving after that.`;
+        } else {
+          decisionText.innerHTML = `Refinancing lowers your payment by <strong>${formatCurrency(monthlySavings)}/month</strong>. While you won't fully break even in ${yearsToStay} years, the lower payment provides valuable cash flow each month.`;
+        }
+      } else {
+        decisionIcon.textContent = '🏡';
+        decisionTitle.textContent = 'Staying Put Makes the Most Sense';
+        if (monthlySavings <= 0) {
+          decisionText.innerHTML = `Your current rate of <strong>${currentRate}%</strong> is already competitive — refinancing to ${newRate}% wouldn't save you money. Keep your current loan and avoid unnecessary closing costs.`;
+        } else {
+          decisionText.innerHTML = `With your timeline of <strong>${yearsToStay} year${yearsToStay > 1 ? 's' : ''}</strong>, the refinancing savings don't justify the closing costs. Your current loan terms work well for now. Revisit if you decide to stay longer or rates drop further.`;
+        }
+      }
+
+      // Update threshold guidance
+      if (breakevenYears < 99 && breakevenYears > 0) {
+        document.getElementById('sellThreshold').textContent = `${Math.max(1, Math.floor(breakevenYears) - 1)}-${Math.floor(breakevenYears)} years`;
+        document.getElementById('refiThreshold').textContent = `${Math.ceil(breakevenYears)}+ years`;
+      }
+    }
+
+    // Event listeners
+    const inputs = ['homeValue', 'loanBalance', 'currentRate', 'currentPayment', 'newRate', 'refiClosingCosts', 'sellingCostsPct', 'expectedRent'];
+    
+    inputs.forEach(id => {
+      const el = document.getElementById(id);
+      el.addEventListener('input', calculate);
+      el.addEventListener('blur', function() {
+        if (!this.value.includes('%') && !this.value.includes('.')) {
+          formatInput(this);
+        }
+      });
+    });
+
+    document.getElementById('yearsSlider').addEventListener('input', calculate);
+
+    // Format currency inputs on load
+    ['homeValue', 'loanBalance', 'currentPayment', 'refiClosingCosts', 'expectedRent'].forEach(id => {
+      formatInput(document.getElementById(id));
+    });
+
+    // Initial calculation
+    calculate();
+  </script>
+</body>
+</html>
