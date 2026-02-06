@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emergency Fund Calculator — Free Online Calculator | PocketWise</title>
+  <meta name="description" content="Calculate your ideal emergency fund size based on actual monthly expenses. See how many months of coverage you need and track your progress to fully funded.">
+  <link rel="canonical" href="https://pocketwise.io/emergency-fund-calculator/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .ef-expenses-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .ef-expense-item {
+      position: relative;
+    }
+    .ef-expense-item .lw-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ef-expense-icon {
+      font-size: 16px;
+    }
+    .ef-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      margin-top: 20px;
+      border: 1px solid var(--lw-border);
+    }
+    .ef-total-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--lw-slate-700);
+    }
+    .ef-total-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--lw-navy);
+    }
+    .ef-months-toggle {
+      display: flex;
+      background: var(--lw-slate-100);
+      border-radius: var(--lw-radius);
+      padding: 4px;
+      gap: 4px;
+      margin: 20px 0;
+    }
+    .ef-months-btn {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      border-radius: var(--lw-radius-sm);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--lw-slate-500);
+      background: transparent;
+      cursor: pointer;
+      transition: all var(--lw-transition);
+      text-align: center;
+    }
+    .ef-months-btn.active {
+      background: var(--lw-card);
+      color: var(--lw-navy);
+      box-shadow: var(--lw-shadow-sm);
+      font-weight: 700;
+    }
+    .ef-months-btn:hover:not(.active) {
+      color: var(--lw-slate-700);
+    }
+    .ef-months-btn small {
+      display: block;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--lw-text-muted);
+      margin-top: 2px;
+    }
+    .ef-progress-section {
+      margin: 24px 0;
+    }
+    .ef-progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 10px;
+    }
+    .ef-progress-current {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--lw-sky-dark);
+    }
+    .ef-progress-target {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--lw-slate-500);
+    }
+    .ef-progress-bar {
+      width: 100%;
+      height: 32px;
+      background: var(--lw-slate-100);
+      border-radius: var(--lw-radius-full);
+      overflow: hidden;
+      position: relative;
+    }
+    .ef-progress-fill {
+      height: 100%;
+      border-radius: var(--lw-radius-full);
+      background: linear-gradient(90deg, var(--lw-emerald), var(--lw-teal));
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 12px;
+    }
+    .ef-progress-fill.low {
+      background: linear-gradient(90deg, var(--lw-rose), var(--lw-amber));
+    }
+    .ef-progress-fill.medium {
+      background: linear-gradient(90deg, var(--lw-amber), var(--lw-emerald));
+    }
+    .ef-progress-pct {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+      white-space: nowrap;
+    }
+    .ef-progress-milestones {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--lw-text-muted);
+    }
+
+    /* Donut Chart */
+    .ef-donut-section {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      margin: 24px 0;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .ef-donut-svg {
+      width: 200px;
+      height: 200px;
+      flex-shrink: 0;
+    }
+    .ef-donut-svg circle {
+      transition: stroke-dasharray 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .ef-donut-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 180px;
+    }
+    .ef-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+    }
+    .ef-legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .ef-legend-amount {
+      margin-left: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--lw-navy);
+    }
+
+    .ef-funded-msg {
+      text-align: center;
+      padding: 16px 20px;
+      border-radius: var(--lw-radius);
+      font-size: 15px;
+      font-weight: 600;
+      margin-top: 20px;
+    }
+    .ef-funded-msg.positive {
+      background: var(--lw-emerald-50);
+      color: var(--lw-emerald-dark);
+    }
+    .ef-funded-msg.needs-work {
+      background: var(--lw-sky-50);
+      color: var(--lw-sky-dark);
+    }
+    .ef-funded-msg.na {
+      background: var(--lw-amber-50);
+      color: #B45309;
+    }
+
+    .ef-tips {
+      margin-top: 24px;
+      padding: 20px;
+      background: var(--lw-sky-50);
+      border-radius: var(--lw-radius);
+      border: 1px solid rgba(14, 165, 233, 0.12);
+    }
+    .ef-tips-title {
+      font-weight: 700;
+      color: var(--lw-sky-dark);
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .ef-tips ul {
+      list-style: none;
+      padding: 0;
+    }
+    .ef-tips li {
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+      padding: 4px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+    .ef-tips li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--lw-sky);
+      font-weight: 700;
+    }
+
+    @media (max-width: 768px) {
+      .ef-expenses-grid { grid-template-columns: 1fr; }
+      .ef-donut-section { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">L</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/mortgage-calculator/">Mortgage</a></li>
+        <li><a href="/auto-loan-calculator/">Auto</a></li>
+        <li><a href="/compound-interest-calculator/">Investing</a></li>
+        <li><a href="/debt-payoff-calculator/">Debt</a></li>
+        <li><a href="/">All Tools</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu">
+      <a href="/">All Tools</a>
+      <a href="/mortgage-calculator/">Mortgage Calculator</a>
+      <a href="/auto-loan-calculator/">Auto Loan Calculator</a>
+      <a href="/personal-loan-calculator/">Personal Loan Calculator</a>
+      <a href="/compound-interest-calculator/">Compound Interest Calculator</a>
+      <a href="/debt-payoff-calculator/">Debt Payoff Calculator</a>
+      <a href="/credit-card-payoff-calculator/">Credit Card Payoff</a>
+      <a href="/home-affordability-calculator/">Home Affordability</a>
+      <a href="/refinance-calculator/">Refinance Calculator</a>
+      <a href="/loan-comparison-tool/">Loan Comparison</a>
+      <a href="/amortization-schedule/">Amortization Schedule</a>
+      <a href="/debt-to-income-calculator/">Debt-to-Income</a>
+      <a href="/apr-calculator/">APR Calculator</a>
+      <a href="/savings-goal-calculator/">Savings Goal Calculator</a>
+      <a href="/investment-return-calculator/">Investment Returns</a>
+      <a href="/emergency-fund-calculator/">Emergency Fund</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- HERO -->
+    <div class="lw-hero">
+      <span class="lw-badge rose">Financial Safety Net</span>
+      <h1>Emergency <span class="accent">Fund</span> Calculator</h1>
+      <p class="subtitle">Find out exactly how much you need in your emergency fund based on your real monthly expenses — and how long it will take to get there.</p>
+    </div>
+
+    <!-- TOOL INTERFACE: Expenses -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon rose">🏠</div>
+        <div>
+          <div class="lw-card-title">Monthly Expenses</div>
+          <div class="lw-card-subtitle">Enter your essential monthly costs</div>
+        </div>
+      </div>
+
+      <div class="ef-expenses-grid">
+        <div class="ef-expense-item">
+          <label class="lw-label"><span class="ef-expense-icon">🏠</span> Housing / Rent</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input ef-expense" id="expHousing" value="1,500" inputmode="numeric">
+          </div>
+        </div>
+        <div class="ef-expense-item">
+          <label class="lw-label"><span class="ef-expense-icon">⚡</span> Utilities</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input ef-expense" id="expUtilities" value="250" inputmode="numeric">
+          </div>
+        </div>
+        <div class="ef-expense-item">
+          <label class="lw-label"><span class="ef-expense-icon">🛒</span> Food / Groceries</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input ef-expense" id="expFood" value="600" inputmode="numeric">
+          </div>
+        </div>
+        <div class="ef-expense-item">
+          <label class="lw-label"><span class="ef-expense-icon">🚗</span> Transportation</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input ef-expense" id="expTransport" value="400" inputmode="numeric">
+          </div>
+        </div>
+        <div class="ef-expense-item">
+          <label class="lw-label"><span class="ef-expense-icon">🛡️</span> Insurance</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input ef-expense" id="expInsurance" value="300" inputmode="numeric">
+          </div>
+        </div>
+        <div class="ef-expense-item">
+          <label class="lw-label"><span class="ef-expense-icon">📦</span> Other Essentials</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input ef-expense" id="expOther" value="200" inputmode="numeric">
+          </div>
+        </div>
+      </div>
+
+      <div class="ef-total-row">
+        <span class="ef-total-label">Total Monthly Expenses</span>
+        <span class="ef-total-value lw-mono" id="totalExpenses">$3,250</span>
+      </div>
+    </div>
+
+    <!-- Coverage & Savings -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon amber">🎯</div>
+        <div>
+          <div class="lw-card-title">Coverage & Savings</div>
+          <div class="lw-card-subtitle">How many months of coverage do you need?</div>
+        </div>
+      </div>
+
+      <label class="lw-label">Months of Coverage</label>
+      <div class="ef-months-toggle" id="monthsToggle">
+        <button class="ef-months-btn" data-months="3">3 months<small>Minimum</small></button>
+        <button class="ef-months-btn active" data-months="6">6 months<small>Recommended</small></button>
+        <button class="ef-months-btn" data-months="9">9 months<small>Conservative</small></button>
+        <button class="ef-months-btn" data-months="12">12 months<small>Maximum safety</small></button>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Current Emergency Savings</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input" id="currentSavings" value="3,000" inputmode="numeric">
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">Monthly Amount You Can Save</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" class="lw-input" id="monthlySave" value="300" inputmode="numeric">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="lw-result-hero" id="resultHero">
+      <div class="lw-result-label">Your Emergency Fund Target</div>
+      <div class="lw-result-number" id="resultTarget">$19,500</div>
+      <div class="lw-result-sub" id="resultSub">6 months of essential expenses</div>
+    </div>
+
+    <!-- Progress -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">📊</div>
+        <div>
+          <div class="lw-card-title">Your Progress</div>
+          <div class="lw-card-subtitle">How close are you to fully funded?</div>
+        </div>
+      </div>
+
+      <div class="ef-progress-section">
+        <div class="ef-progress-header">
+          <span class="ef-progress-current" id="progCurrent">$3,000 saved</span>
+          <span class="ef-progress-target" id="progTarget">$19,500 target</span>
+        </div>
+        <div class="ef-progress-bar">
+          <div class="ef-progress-fill low" id="progFill" style="width: 15%">
+            <span class="ef-progress-pct" id="progPct">15%</span>
+          </div>
+        </div>
+        <div class="ef-progress-milestones">
+          <span>$0</span>
+          <span>25%</span>
+          <span>50%</span>
+          <span>75%</span>
+          <span>100%</span>
+        </div>
+      </div>
+
+      <div class="ef-funded-msg needs-work" id="fundedMsg">
+        💪 You'll be fully funded in 55 months (about 4 years, 7 months)
+      </div>
+    </div>
+
+    <div class="lw-result-grid">
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Monthly Expenses</div>
+        <div class="lw-result-item-value" id="gridExpenses">$3,250</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Gap Remaining</div>
+        <div class="lw-result-item-value rose" id="gridGap">$16,500</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Months to Goal</div>
+        <div class="lw-result-item-value sky" id="gridMonths">55</div>
+      </div>
+    </div>
+
+    <!-- Expense Donut Chart -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon violet">🍩</div>
+        <div>
+          <div class="lw-card-title">Expense Breakdown</div>
+          <div class="lw-card-subtitle">Where your money goes each month</div>
+        </div>
+      </div>
+
+      <div class="ef-donut-section">
+        <svg class="ef-donut-svg" viewBox="0 0 200 200" id="donutChart">
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#E2E8F0" stroke-width="28"/>
+        </svg>
+        <div class="ef-donut-legend" id="donutLegend"></div>
+      </div>
+    </div>
+
+    <!-- Tips -->
+    <div class="lw-card">
+      <div class="ef-tips">
+        <div class="ef-tips-title">💡 Where to Keep Your Emergency Fund</div>
+        <ul>
+          <li>High-yield savings account (HYSA) — earns 4-5% APY while staying fully accessible</li>
+          <li>Money market account — similar rates with check-writing ability</li>
+          <li>Short-term CDs or CD ladder — slightly higher rates for portion you won't need immediately</li>
+          <li>Keep it separate from your checking account to avoid temptation</li>
+          <li>Avoid investing your emergency fund in stocks — you need it liquid and stable</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <div class="lw-content">
+      <h2>How to Calculate Your Emergency Fund</h2>
+      <p>An emergency fund is one of the most important foundations of personal finance. It's a dedicated pool of savings designed to cover unexpected expenses — job loss, medical emergencies, major car repairs, or any financial surprise that would otherwise force you into debt. Our emergency fund calculator helps you determine the right target based on your actual monthly expenses, not generic rules of thumb.</p>
+      <p>The calculator works by adding up your essential monthly costs — housing, utilities, food, transportation, insurance, and other necessities — then multiplying by your chosen coverage period. Most financial experts recommend maintaining three to six months of expenses, though your ideal amount depends on your personal situation.</p>
+
+      <h2>How Many Months Should You Save?</h2>
+      <p>The right number of months depends on several factors unique to your life and career:</p>
+      <ul>
+        <li><strong>3 months:</strong> A reasonable minimum if you have a stable dual-income household, strong job security, or other safety nets like family support. This covers most short-term disruptions like car repairs or minor medical bills.</li>
+        <li><strong>6 months:</strong> The standard recommendation from most financial planners. This provides a solid buffer for job loss in industries with moderate hiring timelines. If you're a single-income household, six months should be your minimum target.</li>
+        <li><strong>9 months:</strong> Ideal for self-employed individuals, freelancers, or people in industries with longer job search timelines. If your income is irregular or seasonal, a larger cushion provides crucial stability.</li>
+        <li><strong>12 months:</strong> The most conservative approach, recommended for single-income families with dependents, people in highly specialized fields, or anyone who would take a long time to replace their income. It's also wise if you own a home with high maintenance costs.</li>
+      </ul>
+
+      <h3>What Counts as an Essential Expense?</h3>
+      <p>Your emergency fund should cover the expenses you cannot avoid — the bills that must be paid even if you lost your income tomorrow. Housing (rent or mortgage), utilities, groceries, transportation to and from work, insurance premiums, and minimum debt payments are all essential. Subscriptions, dining out, entertainment, and discretionary shopping are not — during an emergency, you would cut these expenses immediately.</p>
+      <p>Be honest when entering your numbers. Underestimating your expenses means your fund won't last as long as planned. Overestimating means you'll set a harder-to-reach target. Aim for accuracy by reviewing your bank and credit card statements from the past three months.</p>
+
+      <h3>Building Your Emergency Fund Step by Step</h3>
+      <p>If the total target feels overwhelming, break it into milestones. Start with a mini emergency fund of $1,000 to handle the most common surprises. Then build to one month of expenses, then three, then your full target. Automate your savings by setting up a recurring transfer on payday — even $100 per month adds up. If you receive a tax refund, bonus, or windfall, consider directing part of it to your emergency fund. Every dollar saved is a step closer to financial security and peace of mind.</p>
+
+      <h2>Frequently Asked Questions</h2>
+      <div class="lw-faq">
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">How much should I have in my emergency fund?</button>
+          <div class="lw-faq-a"><p>Most financial experts recommend 3-6 months of essential expenses. The exact amount depends on your job stability, number of income earners in your household, and whether you have dependents. Self-employed individuals and single-income families should aim for 6-12 months.</p></div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Where is the best place to keep my emergency fund?</button>
+          <div class="lw-faq-a"><p>A high-yield savings account (HYSA) is the best option for most people. It offers easy access, FDIC insurance up to $250,000, and competitive interest rates (4-5% APY in 2024-2025). Keep it separate from your everyday checking account to avoid the temptation to spend it.</p></div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Should I pay off debt or build an emergency fund first?</button>
+          <div class="lw-faq-a"><p>Financial experts generally recommend building a small emergency fund ($1,000-$2,000) first, then aggressively paying down high-interest debt, then building your full emergency fund. Without any emergency savings, unexpected expenses will force you back into debt, creating a vicious cycle.</p></div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Does my emergency fund need to be in cash?</button>
+          <div class="lw-faq-a"><p>Your emergency fund should be in liquid, low-risk accounts — not invested in stocks or locked in long-term CDs. The whole point is quick, reliable access when you need it. A high-yield savings account or money market account gives you both safety and modest returns.</p></div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">What if I can't afford to save for an emergency fund?</button>
+          <div class="lw-faq-a"><p>Start small — even $25 or $50 per month makes a difference over time. Look for ways to reduce expenses or increase income temporarily: sell unused items, take on a side gig, or cut one subscription. The most important thing is to start and stay consistent. Automate whatever amount you can, and increase it whenever possible.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED TOOLS -->
+    <div class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/savings-goal-calculator/" class="lw-related-link"><span class="dot"></span> Savings Goal Calculator</a>
+        <a href="/compound-interest-calculator/" class="lw-related-link"><span class="dot"></span> Compound Interest Calculator</a>
+        <a href="/debt-to-income-calculator/" class="lw-related-link"><span class="dot"></span> Debt-to-Income Calculator</a>
+        <a href="/debt-payoff-calculator/" class="lw-related-link"><span class="dot"></span> Debt Payoff Calculator</a>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <p class="lw-disclaimer">
+      <em>This calculator is for educational purposes only. Results are estimates and should not be considered financial advice. Consult a qualified financial advisor for personalized guidance.</em>
+    </p>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="lw-footer">
+    <p>&copy; 2026 PocketWise. Free financial calculators for everyone.</p>
+  </footer>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // Utilities
+    function fmt(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:0, maximumFractionDigits:0}).format(n); }
+    function fmtNum(n) { return new Intl.NumberFormat('en-US').format(Math.round(n)); }
+
+    function parseNum(str) {
+      return parseFloat(String(str).replace(/[^0-9.\-]/g, '')) || 0;
+    }
+
+    function formatInput(el) {
+      var raw = parseNum(el.value);
+      if (!isNaN(raw) && raw >= 0) {
+        el.value = fmtNum(raw);
+      }
+    }
+
+    // State
+    var coverageMonths = 6;
+
+    // Expense categories with colors
+    var categories = [
+      { id: 'expHousing', name: 'Housing', color: '#0EA5E9' },
+      { id: 'expUtilities', name: 'Utilities', color: '#F59E0B' },
+      { id: 'expFood', name: 'Food', color: '#10B981' },
+      { id: 'expTransport', name: 'Transport', color: '#8B5CF6' },
+      { id: 'expInsurance', name: 'Insurance', color: '#F43F5E' },
+      { id: 'expOther', name: 'Other', color: '#64748B' }
+    ];
+
+    // DOM
+    var expenseInputs = document.querySelectorAll('.ef-expense');
+    var currentSavingsInput = document.getElementById('currentSavings');
+    var monthlySaveInput = document.getElementById('monthlySave');
+    var monthBtns = document.querySelectorAll('.ef-months-btn');
+
+    // Format inputs on blur
+    expenseInputs.forEach(function(el) {
+      el.addEventListener('blur', function() { formatInput(this); });
+      el.addEventListener('input', calculate);
+    });
+    currentSavingsInput.addEventListener('blur', function() { formatInput(this); });
+    currentSavingsInput.addEventListener('input', calculate);
+    monthlySaveInput.addEventListener('blur', function() { formatInput(this); });
+    monthlySaveInput.addEventListener('input', calculate);
+
+    // Months toggle
+    monthBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        monthBtns.forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        coverageMonths = parseInt(btn.dataset.months);
+        calculate();
+      });
+    });
+
+    function getExpenses() {
+      var expenses = [];
+      var total = 0;
+      categories.forEach(function(cat) {
+        var val = parseNum(document.getElementById(cat.id).value);
+        expenses.push({ name: cat.name, value: val, color: cat.color });
+        total += val;
+      });
+      return { items: expenses, total: total };
+    }
+
+    function drawDonut(expenses) {
+      var svg = document.getElementById('donutChart');
+      var legend = document.getElementById('donutLegend');
+      var total = expenses.total;
+
+      if (total <= 0) {
+        svg.innerHTML = '<circle cx="100" cy="100" r="80" fill="none" stroke="#E2E8F0" stroke-width="28"/>';
+        legend.innerHTML = '<div class="ef-legend-item" style="color: var(--lw-text-muted);">Enter expenses to see breakdown</div>';
+        return;
+      }
+
+      var circumference = 2 * Math.PI * 80; // ~502.65
+      var offset = 0;
+      var html = '';
+      var legendHtml = '';
+
+      // Center text
+      html += '<circle cx="100" cy="100" r="80" fill="none" stroke="#E2E8F0" stroke-width="28"/>';
+
+      expenses.items.forEach(function(item) {
+        if (item.value <= 0) return;
+        var pct = item.value / total;
+        var dash = pct * circumference;
+        var gap = circumference - dash;
+        html += '<circle cx="100" cy="100" r="80" fill="none" ';
+        html += 'stroke="' + item.color + '" stroke-width="28" ';
+        html += 'stroke-dasharray="' + dash.toFixed(2) + ' ' + gap.toFixed(2) + '" ';
+        html += 'stroke-dashoffset="' + (-offset).toFixed(2) + '" ';
+        html += 'transform="rotate(-90 100 100)" ';
+        html += 'style="transition: stroke-dasharray 0.8s ease, stroke-dashoffset 0.8s ease;"/>';
+        offset += dash;
+
+        legendHtml += '<div class="ef-legend-item">';
+        legendHtml += '<span class="ef-legend-swatch" style="background:' + item.color + '"></span>';
+        legendHtml += '<span>' + item.name + '</span>';
+        legendHtml += '<span class="ef-legend-amount">' + fmt(item.value) + '</span>';
+        legendHtml += '</div>';
+      });
+
+      // Center text overlay
+      html += '<text x="100" y="94" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="20" font-weight="700" fill="#0F172A">' + fmt(total) + '</text>';
+      html += '<text x="100" y="112" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#94A3B8">/month</text>';
+
+      svg.innerHTML = html;
+      legend.innerHTML = legendHtml;
+    }
+
+    function calculate() {
+      var expenses = getExpenses();
+      var total = expenses.total;
+      var target = total * coverageMonths;
+      var current = parseNum(currentSavingsInput.value);
+      var monthlySave = parseNum(monthlySaveInput.value);
+
+      // Total expenses display
+      document.getElementById('totalExpenses').textContent = fmt(total);
+
+      // Hero result
+      document.getElementById('resultTarget').innerHTML = '<span class="currency">$</span>' + fmtNum(target);
+      document.getElementById('resultSub').textContent = coverageMonths + ' months of essential expenses';
+
+      // Progress
+      var pct = target > 0 ? Math.min((current / target) * 100, 100) : 0;
+      var fillEl = document.getElementById('progFill');
+      fillEl.style.width = Math.max(pct, 3) + '%';
+      document.getElementById('progPct').textContent = Math.round(pct) + '%';
+      document.getElementById('progCurrent').textContent = fmt(current) + ' saved';
+      document.getElementById('progTarget').textContent = fmt(target) + ' target';
+
+      // Color coding
+      fillEl.className = 'ef-progress-fill';
+      if (pct < 33) fillEl.classList.add('low');
+      else if (pct < 75) fillEl.classList.add('medium');
+
+      // Gap & months to goal
+      var gap = Math.max(target - current, 0);
+      var monthsToGoal = monthlySave > 0 ? Math.ceil(gap / monthlySave) : Infinity;
+
+      // Funded message
+      var msgEl = document.getElementById('fundedMsg');
+      if (current >= target) {
+        msgEl.textContent = '🎉 Congratulations! Your emergency fund is fully funded!';
+        msgEl.className = 'ef-funded-msg positive';
+      } else if (monthlySave <= 0) {
+        msgEl.textContent = '⚠️ Set a monthly savings amount to see your timeline';
+        msgEl.className = 'ef-funded-msg na';
+      } else if (monthsToGoal <= 12) {
+        msgEl.textContent = '💪 You\'ll be fully funded in ' + monthsToGoal + ' month' + (monthsToGoal !== 1 ? 's' : '') + '!';
+        msgEl.className = 'ef-funded-msg positive';
+      } else {
+        var y = Math.floor(monthsToGoal / 12);
+        var m = monthsToGoal % 12;
+        var timeStr = y + ' year' + (y !== 1 ? 's' : '');
+        if (m > 0) timeStr += ', ' + m + ' month' + (m !== 1 ? 's' : '');
+        msgEl.textContent = '💪 You\'ll be fully funded in ' + monthsToGoal + ' months (about ' + timeStr + ')';
+        msgEl.className = 'ef-funded-msg needs-work';
+      }
+
+      // Result grid
+      document.getElementById('gridExpenses').textContent = fmt(total);
+      document.getElementById('gridGap').textContent = fmt(gap);
+      document.getElementById('gridMonths').textContent = monthsToGoal === Infinity ? '—' : monthsToGoal;
+
+      // Donut
+      drawDonut(expenses);
+    }
+
+    // Init
+    calculate();
+  })();
+  </script>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How much should I have in my emergency fund?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most financial experts recommend 3-6 months of essential expenses. The exact amount depends on your job stability, number of income earners in your household, and whether you have dependents. Self-employed individuals and single-income families should aim for 6-12 months."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where is the best place to keep my emergency fund?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A high-yield savings account (HYSA) is the best option for most people. It offers easy access, FDIC insurance up to $250,000, and competitive interest rates (4-5% APY in 2024-2025). Keep it separate from your everyday checking account to avoid the temptation to spend it."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I pay off debt or build an emergency fund first?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Financial experts generally recommend building a small emergency fund ($1,000-$2,000) first, then aggressively paying down high-interest debt, then building your full emergency fund. Without any emergency savings, unexpected expenses will force you back into debt."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does my emergency fund need to be in cash?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Your emergency fund should be in liquid, low-risk accounts — not invested in stocks or locked in long-term CDs. The whole point is quick, reliable access when you need it. A high-yield savings account or money market account gives you both safety and modest returns."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What if I can't afford to save for an emergency fund?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Start small — even $25 or $50 per month makes a difference over time. Look for ways to reduce expenses or increase income temporarily. The most important thing is to start and stay consistent. Automate whatever amount you can, and increase it whenever possible."
+        }
+      }
+    ]
+  }
+  </script>
+</body>
+</html>

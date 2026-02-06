@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loan Comparison Tool — Free Online Calculator | PocketWise</title>
+  <meta name="description" content="Compare two loan offers side by side. See which saves you more with monthly payment, total interest, total cost, and true APR comparisons.">
+  <link rel="canonical" href="https://pocketwise.io/loan-comparison-tool/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .compare-card {
+      background: var(--lw-card);
+      border-radius: var(--lw-radius-lg);
+      padding: 28px;
+      box-shadow: var(--lw-shadow);
+      border: 2px solid var(--lw-border-light);
+      transition: border-color var(--lw-transition);
+    }
+    .compare-card.winner {
+      border-color: var(--lw-emerald);
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.12), 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+    .compare-card-label {
+      display: inline-block;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: var(--lw-radius-full);
+      margin-bottom: 20px;
+    }
+    .label-a {
+      background: var(--lw-sky-100);
+      color: var(--lw-sky-dark);
+    }
+    .label-b {
+      background: #F3F0FF;
+      color: var(--lw-violet);
+    }
+    .winner-badge {
+      display: inline-block;
+      background: var(--lw-emerald-50);
+      color: var(--lw-emerald-dark);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: var(--lw-radius-full);
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    /* Comparison results table */
+    .compare-results {
+      background: var(--lw-card);
+      border-radius: var(--lw-radius-lg);
+      box-shadow: var(--lw-shadow);
+      border: 1px solid var(--lw-border-light);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .compare-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      border-bottom: 1px solid var(--lw-border-light);
+      transition: background var(--lw-transition);
+    }
+    .compare-row:last-child { border-bottom: none; }
+    .compare-row:hover { background: var(--lw-slate-50); }
+    .compare-row-header {
+      background: var(--lw-slate-50);
+      font-weight: 600;
+    }
+    .compare-cell {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      font-size: 15px;
+    }
+    .compare-cell.metric {
+      font-weight: 600;
+      color: var(--lw-slate-600);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .compare-cell.value {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: var(--lw-navy);
+      justify-content: center;
+    }
+    .compare-cell.value.winner-cell {
+      color: var(--lw-emerald-dark);
+      background: rgba(16, 185, 129, 0.06);
+    }
+    .compare-cell.header-label {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      color: var(--lw-navy);
+      justify-content: center;
+      font-size: 15px;
+    }
+
+    /* Savings banner */
+    .savings-banner {
+      background: linear-gradient(135deg, var(--lw-emerald-dark) 0%, var(--lw-teal-dark) 100%);
+      border-radius: var(--lw-radius-lg);
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      text-align: center;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .savings-banner::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.15) 0%, transparent 60%);
+    }
+    .savings-banner * { position: relative; }
+    .savings-label {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 600;
+      opacity: 0.8;
+      margin-bottom: 6px;
+    }
+    .savings-amount {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      margin-bottom: 6px;
+    }
+    .savings-detail {
+      font-size: 15px;
+      opacity: 0.85;
+    }
+
+    /* Visual bars */
+    .visual-bars {
+      margin: 24px 0;
+    }
+    .visual-bar-group {
+      margin-bottom: 20px;
+    }
+    .visual-bar-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--lw-slate-600);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+    .visual-bar-pair {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .visual-bar-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .visual-bar-tag {
+      width: 50px;
+      font-size: 12px;
+      font-weight: 700;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .visual-bar-tag.tag-a { color: var(--lw-sky-dark); }
+    .visual-bar-tag.tag-b { color: var(--lw-violet); }
+    .visual-bar-track {
+      flex: 1;
+      height: 28px;
+      background: var(--lw-slate-100);
+      border-radius: var(--lw-radius-full);
+      overflow: hidden;
+      position: relative;
+    }
+    .visual-bar-fill {
+      height: 100%;
+      border-radius: var(--lw-radius-full);
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      min-width: 70px;
+    }
+    .visual-bar-fill.bar-a {
+      background: linear-gradient(90deg, var(--lw-sky), var(--lw-sky-light));
+    }
+    .visual-bar-fill.bar-b {
+      background: linear-gradient(90deg, var(--lw-violet), var(--lw-violet-light));
+    }
+    .visual-bar-fill.bar-winner {
+      background: linear-gradient(90deg, var(--lw-emerald), var(--lw-emerald-light));
+    }
+    .visual-bar-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+      .compare-grid { grid-template-columns: 1fr; }
+      .compare-row { grid-template-columns: 1fr; gap: 0; }
+      .compare-row-header { display: none; }
+      .compare-cell.metric {
+        padding: 12px 20px 4px;
+        font-size: 11px;
+      }
+      .compare-cell.value {
+        padding: 4px 20px 12px;
+        justify-content: flex-start;
+      }
+      .compare-cell.value::before {
+        content: attr(data-label);
+        font-family: 'Inter', sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--lw-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-right: 8px;
+      }
+      .savings-amount { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">L</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/mortgage-calculator/">Mortgage</a></li>
+        <li><a href="/auto-loan-calculator/">Auto</a></li>
+        <li><a href="/compound-interest-calculator/">Investing</a></li>
+        <li><a href="/debt-payoff-calculator/">Debt</a></li>
+        <li><a href="/">All Tools</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu">
+      <a href="/">All Tools</a>
+      <a href="/mortgage-calculator/">Mortgage Calculator</a>
+      <a href="/auto-loan-calculator/">Auto Loan Calculator</a>
+      <a href="/personal-loan-calculator/">Personal Loan Calculator</a>
+      <a href="/compound-interest-calculator/">Compound Interest Calculator</a>
+      <a href="/debt-payoff-calculator/">Debt Payoff Calculator</a>
+      <a href="/credit-card-payoff-calculator/">Credit Card Payoff</a>
+      <a href="/home-affordability-calculator/">Home Affordability</a>
+      <a href="/refinance-calculator/">Refinance Calculator</a>
+      <a href="/loan-comparison-tool/">Loan Comparison</a>
+      <a href="/amortization-schedule/">Amortization Schedule</a>
+      <a href="/debt-to-income-calculator/">Debt-to-Income</a>
+      <a href="/apr-calculator/">APR Calculator</a>
+      <a href="/savings-goal-calculator/">Savings Goal Calculator</a>
+      <a href="/investment-return-calculator/">Investment Returns</a>
+      <a href="/emergency-fund-calculator/">Emergency Fund</a>
+    </div>
+  </nav>
+
+  <main class="lw-main wide">
+    <!-- HERO -->
+    <div class="lw-hero">
+      <span class="lw-badge green">Smart Comparison</span>
+      <h1>Loan <span class="accent">Comparison</span> Tool</h1>
+      <p class="subtitle">Put two loan offers side by side and instantly see which one saves you more money over the life of the loan.</p>
+    </div>
+
+    <!-- LOAN INPUT CARDS -->
+    <div class="compare-grid">
+      <!-- LOAN A -->
+      <div class="compare-card" id="cardA">
+        <span class="compare-card-label label-a">Loan A</span>
+
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="amountA">Loan Amount</label>
+            <span class="lw-range-value" id="amountADisplay">$15,000</span>
+          </div>
+          <input type="range" class="lw-range" id="amountA" min="1000" max="500000" step="500" value="15000">
+        </div>
+
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="rateA">Interest Rate</label>
+            <span class="lw-range-value" id="rateADisplay">8.5%</span>
+          </div>
+          <input type="range" class="lw-range" id="rateA" min="0.5" max="36" step="0.1" value="8.5">
+        </div>
+
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="termA">Term (months)</label>
+            <span class="lw-range-value" id="termADisplay">36 mo</span>
+          </div>
+          <input type="range" class="lw-range" id="termA" min="6" max="360" step="1" value="36">
+        </div>
+
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="feeA">Origination Fee</label>
+            <span class="lw-range-value" id="feeADisplay">0%</span>
+          </div>
+          <input type="range" class="lw-range" id="feeA" min="0" max="8" step="0.25" value="0">
+        </div>
+      </div>
+
+      <!-- LOAN B -->
+      <div class="compare-card" id="cardB">
+        <span class="compare-card-label label-b">Loan B</span>
+
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="amountB">Loan Amount</label>
+            <span class="lw-range-value" id="amountBDisplay">$15,000</span>
+          </div>
+          <input type="range" class="lw-range" id="amountB" min="1000" max="500000" step="500" value="15000">
+        </div>
+
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="rateB">Interest Rate</label>
+            <span class="lw-range-value" id="rateBDisplay">11.0%</span>
+          </div>
+          <input type="range" class="lw-range" id="rateB" min="0.5" max="36" step="0.1" value="11">
+        </div>
+
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="termB">Term (months)</label>
+            <span class="lw-range-value" id="termBDisplay">48 mo</span>
+          </div>
+          <input type="range" class="lw-range" id="termB" min="6" max="360" step="1" value="48">
+        </div>
+
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="feeB">Origination Fee</label>
+            <span class="lw-range-value" id="feeBDisplay">3%</span>
+          </div>
+          <input type="range" class="lw-range" id="feeB" min="0" max="8" step="0.25" value="3">
+        </div>
+      </div>
+    </div>
+
+    <!-- SAVINGS BANNER -->
+    <div class="savings-banner" id="savingsBanner">
+      <div class="savings-label">Total Savings</div>
+      <div class="savings-amount" id="savingsAmount">$1,247</div>
+      <div class="savings-detail" id="savingsDetail">Loan A saves you $1,247 over the life of the loan</div>
+    </div>
+
+    <!-- COMPARISON RESULTS TABLE -->
+    <div class="compare-results" id="compareResults">
+      <div class="compare-row compare-row-header">
+        <div class="compare-cell metric">Metric</div>
+        <div class="compare-cell header-label">Loan A</div>
+        <div class="compare-cell header-label">Loan B</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell metric">Monthly Payment</div>
+        <div class="compare-cell value" id="paymentA" data-label="Loan A: ">$473</div>
+        <div class="compare-cell value" id="paymentB" data-label="Loan B: ">$388</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell metric">Total Interest</div>
+        <div class="compare-cell value" id="interestA" data-label="Loan A: ">$2,033</div>
+        <div class="compare-cell value" id="interestB" data-label="Loan B: ">$3,639</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell metric">Total Cost</div>
+        <div class="compare-cell value" id="costA" data-label="Loan A: ">$17,033</div>
+        <div class="compare-cell value" id="costB" data-label="Loan B: ">$18,639</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell metric">True APR</div>
+        <div class="compare-cell value" id="aprA" data-label="Loan A: ">8.5%</div>
+        <div class="compare-cell value" id="aprB" data-label="Loan B: ">13.2%</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell metric">Amount Received</div>
+        <div class="compare-cell value" id="receivedA" data-label="Loan A: ">$15,000</div>
+        <div class="compare-cell value" id="receivedB" data-label="Loan B: ">$14,550</div>
+      </div>
+    </div>
+
+    <!-- VISUAL BARS -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">📊</div>
+        <div>
+          <div class="lw-card-title">Visual Comparison</div>
+          <div class="lw-card-subtitle">See the difference at a glance</div>
+        </div>
+      </div>
+      <div class="visual-bars" id="visualBars">
+        <!-- Generated by JS -->
+      </div>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <div class="lw-content">
+      <h2>How to Compare Loan Offers Effectively</h2>
+      <p>Choosing between two loan offers isn't as simple as picking the lowest interest rate. A loan with a lower rate but higher origination fees — or a longer term — can end up costing you significantly more over time. Our Loan Comparison Tool puts every critical metric side by side so you can make an informed decision based on the total cost of borrowing, not just the headline rate.</p>
+      <p>When you receive competing loan offers, enter the details for each into the tool above. The calculator instantly computes monthly payments, total interest, total cost (including fees), and the true APR for each loan. Green highlights mark the winner in each category, and the savings banner shows you exactly how much you'll save by choosing the better option.</p>
+
+      <h2>Key Metrics to Compare</h2>
+      <h3>Monthly Payment</h3>
+      <p>This is the amount due each month. A lower monthly payment can help your cash flow, but it often comes at the cost of a longer term — which means more total interest. Compare this figure alongside total cost to see the full picture.</p>
+
+      <h3>Total Interest</h3>
+      <p>The total amount of interest you'll pay over the life of the loan. This is where the real difference between two loans becomes apparent. Even a 1-2% rate difference can translate to thousands of dollars over a multi-year loan. Our tool highlights which loan charges less total interest so you can see the lifetime impact immediately.</p>
+
+      <h3>True APR (Annual Percentage Rate)</h3>
+      <p>The APR accounts for both the interest rate and any upfront fees (like origination fees or points), expressed as a single annual rate. This is the most accurate apples-to-apples comparison metric. A loan advertising 7% with a 5% origination fee has a much higher true APR than a loan at 8.5% with no fees. Always compare APR, not just the stated interest rate.</p>
+
+      <h3>Origination Fees</h3>
+      <p>Origination fees are charged by lenders to cover processing costs, typically ranging from 1% to 8% of the loan amount. These fees are usually deducted from your loan proceeds before you receive them, meaning you get less cash but repay the full amount. Our calculator factors these fees into the true APR calculation so you can see their real impact on your borrowing cost.</p>
+
+      <h2>Common Loan Comparison Mistakes</h2>
+      <ul>
+        <li><strong>Only comparing monthly payments:</strong> A lower payment usually means a longer term and more total interest. Always check total cost alongside the monthly figure.</li>
+        <li><strong>Ignoring fees:</strong> A "0% origination fee" loan at a slightly higher rate may cost less overall than a "low rate" loan with a 5% fee. The true APR reveals the real difference.</li>
+        <li><strong>Comparing different loan amounts:</strong> If one lender offers $15,000 and another offers $20,000, the comparison isn't apples to apples. Match the amounts to what you actually need.</li>
+        <li><strong>Forgetting about flexibility:</strong> Beyond the numbers, consider prepayment penalties, payment flexibility, and lender reputation. The cheapest loan isn't always the best if it locks you into rigid terms.</li>
+      </ul>
+
+      <h3>When to Use This Tool</h3>
+      <p>Use the Loan Comparison Tool whenever you're evaluating multiple offers — whether for a personal loan, auto loan, mortgage, or student loan refinance. It's especially valuable during pre-qualification, when lenders give you estimated terms and you need to decide which offer to pursue. Pair it with our <a href="/personal-loan-calculator/">Personal Loan Calculator</a> for a deeper dive into individual loan details, or our <a href="/apr-calculator/">APR Calculator</a> to understand how fees affect your effective rate.</p>
+
+      <!-- FAQ ACCORDION -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Should I always choose the loan with the lowest interest rate?</button>
+          <div class="lw-faq-a">
+            <p>Not necessarily. A loan with a lower interest rate but high origination fees can end up costing more than a slightly higher-rate loan with no fees. The true APR — which accounts for both the rate and fees — is the best single metric for comparison. Also consider the loan term: a lower rate over a longer period may result in more total interest paid than a slightly higher rate over a shorter term.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">What is the most important metric when comparing loans?</button>
+          <div class="lw-faq-a">
+            <p>Total cost (principal + total interest + fees) is the most comprehensive metric because it captures everything you'll pay over the life of the loan. However, if cash flow is a concern, monthly payment matters too. The true APR is best for apples-to-apples rate comparison. We recommend looking at all three together to make the most informed decision.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">How do origination fees affect my loan comparison?</button>
+          <div class="lw-faq-a">
+            <p>Origination fees increase your effective borrowing cost because you receive less money upfront but repay the full loan amount plus interest. For example, a $20,000 loan with a 4% origination fee means you receive $19,200 but make payments on the full $20,000. This effectively raises your APR above the stated interest rate. Our tool calculates the true APR for each loan so you can see the real impact of these fees.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Can I compare loans with different amounts or terms?</button>
+          <div class="lw-faq-a">
+            <p>Yes! Our tool allows you to input different amounts and terms for each loan, which is common in real-world scenarios where lenders offer different maximum amounts or term options. Just keep in mind that when comparing loans with different amounts, the total cost comparison reflects the difference in both borrowing amount and rate, so the APR comparison may be most useful for isolating the rate difference.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Is a shorter loan term always better?</button>
+          <div class="lw-faq-a">
+            <p>A shorter term saves you money on total interest, but requires higher monthly payments. The "better" choice depends on your financial situation. If you can comfortably afford the higher payment without straining your budget (keeping total debt payments under 36% of gross income), the shorter term will save you money. If the higher payment would cause financial stress, a longer term with lower payments might be the safer choice — just understand you'll pay more in total interest.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED TOOLS -->
+    <div class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/personal-loan-calculator/" class="lw-related-link"><span class="dot"></span> Personal Loan Calculator</a>
+        <a href="/auto-loan-calculator/" class="lw-related-link"><span class="dot"></span> Auto Loan Calculator</a>
+        <a href="/mortgage-calculator/" class="lw-related-link"><span class="dot"></span> Mortgage Calculator</a>
+        <a href="/apr-calculator/" class="lw-related-link"><span class="dot"></span> APR Calculator</a>
+        <a href="/amortization-schedule/" class="lw-related-link"><span class="dot"></span> Amortization Schedule</a>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <p class="lw-disclaimer">
+      <em>This calculator is for educational purposes only. Results are estimates and should not be considered financial advice. Actual loan terms, rates, and fees may vary by lender. Consult a qualified financial advisor for personalized guidance.</em>
+    </p>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="lw-footer">
+    <p>&copy; 2026 PocketWise. Free financial calculators for everyone.</p>
+  </footer>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // Utility functions
+    function fmt(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:0, maximumFractionDigits:0}).format(n); }
+    function fmtFull(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:2, maximumFractionDigits:2}).format(n); }
+    function fmtNum(n) { return new Intl.NumberFormat('en-US').format(Math.round(n)); }
+    function fmtPct(n) { return n.toFixed(1) + '%'; }
+    function pmtCalc(rate, nper, pv) {
+      if (rate === 0) return pv / nper;
+      return pv * (rate * Math.pow(1 + rate, nper)) / (Math.pow(1 + rate, nper) - 1);
+    }
+
+    // True APR via Newton's method
+    function calcTrueAPR(netProceeds, monthlyPayment, nMonths) {
+      if (netProceeds <= 0 || monthlyPayment <= 0) return 0;
+      var r = 0.01;
+      for (var i = 0; i < 100; i++) {
+        var pow = Math.pow(1 + r, nMonths);
+        var pvAnnuity = (pow - 1) / (r * pow);
+        var f = netProceeds - monthlyPayment * pvAnnuity;
+        var dpow = nMonths * Math.pow(1 + r, nMonths - 1);
+        var dPvAnnuity = (dpow * r * pow - (pow - 1) * (pow + r * dpow)) / Math.pow(r * pow, 2);
+        var df = -monthlyPayment * dPvAnnuity;
+        if (Math.abs(df) < 1e-12) break;
+        var rNew = r - f / df;
+        if (rNew <= 0) rNew = r / 2;
+        if (Math.abs(rNew - r) < 1e-10) break;
+        r = rNew;
+      }
+      return r * 12 * 100;
+    }
+
+    // Calculate one loan
+    function calcLoan(amount, rate, term, feePct) {
+      var monthlyRate = rate / 100 / 12;
+      var payment = pmtCalc(monthlyRate, term, amount);
+      var totalPaid = payment * term;
+      var totalInterest = totalPaid - amount;
+      var feeAmount = amount * (feePct / 100);
+      var netProceeds = amount - feeAmount;
+      var totalCost = totalPaid;
+      var trueAPR = rate;
+      if (feePct > 0) {
+        trueAPR = calcTrueAPR(netProceeds, payment, term);
+      }
+      return {
+        amount: amount,
+        rate: rate,
+        term: term,
+        feePct: feePct,
+        feeAmount: feeAmount,
+        netProceeds: netProceeds,
+        payment: payment,
+        totalInterest: totalInterest,
+        totalCost: totalCost,
+        trueAPR: trueAPR
+      };
+    }
+
+    // DOM refs
+    var ids = ['amountA','rateA','termA','feeA','amountB','rateB','termB','feeB'];
+    var sliders = {};
+    ids.forEach(function(id) { sliders[id] = document.getElementById(id); });
+
+    function calculate() {
+      // Update display values
+      document.getElementById('amountADisplay').textContent = fmt(parseFloat(sliders.amountA.value));
+      document.getElementById('rateADisplay').textContent = fmtPct(parseFloat(sliders.rateA.value));
+      document.getElementById('termADisplay').textContent = sliders.termA.value + ' mo';
+      document.getElementById('feeADisplay').textContent = fmtPct(parseFloat(sliders.feeA.value));
+      document.getElementById('amountBDisplay').textContent = fmt(parseFloat(sliders.amountB.value));
+      document.getElementById('rateBDisplay').textContent = fmtPct(parseFloat(sliders.rateB.value));
+      document.getElementById('termBDisplay').textContent = sliders.termB.value + ' mo';
+      document.getElementById('feeBDisplay').textContent = fmtPct(parseFloat(sliders.feeB.value));
+
+      var a = calcLoan(
+        parseFloat(sliders.amountA.value),
+        parseFloat(sliders.rateA.value),
+        parseInt(sliders.termA.value),
+        parseFloat(sliders.feeA.value)
+      );
+      var b = calcLoan(
+        parseFloat(sliders.amountB.value),
+        parseFloat(sliders.rateB.value),
+        parseInt(sliders.termB.value),
+        parseFloat(sliders.feeB.value)
+      );
+
+      // Update comparison table with winners
+      function setCell(id, value, isWinner) {
+        var el = document.getElementById(id);
+        el.textContent = value;
+        el.classList.toggle('winner-cell', isWinner);
+      }
+
+      var payWinA = a.payment <= b.payment;
+      setCell('paymentA', fmtFull(a.payment), payWinA);
+      setCell('paymentB', fmtFull(b.payment), !payWinA);
+
+      var intWinA = a.totalInterest <= b.totalInterest;
+      setCell('interestA', fmt(a.totalInterest), intWinA);
+      setCell('interestB', fmt(b.totalInterest), !intWinA);
+
+      var costWinA = a.totalCost <= b.totalCost;
+      setCell('costA', fmt(a.totalCost), costWinA);
+      setCell('costB', fmt(b.totalCost), !costWinA);
+
+      var aprWinA = a.trueAPR <= b.trueAPR;
+      setCell('aprA', fmtPct(a.trueAPR), aprWinA);
+      setCell('aprB', fmtPct(b.trueAPR), !aprWinA);
+
+      var recWinA = a.netProceeds >= b.netProceeds;
+      setCell('receivedA', fmt(a.netProceeds), recWinA);
+      setCell('receivedB', fmt(b.netProceeds), !recWinA);
+
+      // Card winner borders
+      var cardA = document.getElementById('cardA');
+      var cardB = document.getElementById('cardB');
+      cardA.classList.toggle('winner', costWinA);
+      cardB.classList.toggle('winner', !costWinA);
+
+      // Update winner badges
+      var existingBadges = document.querySelectorAll('.winner-badge');
+      existingBadges.forEach(function(b) { b.remove(); });
+      var winnerCard = costWinA ? cardA : cardB;
+      var labelEl = winnerCard.querySelector('.compare-card-label');
+      var badge = document.createElement('span');
+      badge.className = 'winner-badge';
+      badge.textContent = '✓ Best Value';
+      labelEl.parentElement.insertBefore(badge, labelEl.nextSibling);
+
+      // Savings banner
+      var savings = Math.abs(a.totalCost - b.totalCost);
+      var winner = costWinA ? 'A' : 'B';
+      document.getElementById('savingsAmount').textContent = fmt(savings);
+      document.getElementById('savingsDetail').textContent =
+        'Loan ' + winner + ' saves you ' + fmt(savings) + ' over the life of the loan';
+
+      // Visual bars
+      buildVisualBars(a, b);
+    }
+
+    function buildVisualBars(a, b) {
+      var metrics = [
+        { label: 'Monthly Payment', valA: a.payment, valB: b.payment, lower: true },
+        { label: 'Total Interest', valA: a.totalInterest, valB: b.totalInterest, lower: true },
+        { label: 'Total Cost', valA: a.totalCost, valB: b.totalCost, lower: true },
+        { label: 'True APR', valA: a.trueAPR, valB: b.trueAPR, lower: true, pct: true }
+      ];
+
+      var html = '';
+      metrics.forEach(function(m) {
+        var max = Math.max(m.valA, m.valB);
+        if (max === 0) max = 1;
+        var pctA = (m.valA / max) * 100;
+        var pctB = (m.valB / max) * 100;
+        var aWins = m.lower ? m.valA <= m.valB : m.valA >= m.valB;
+        var bWins = !aWins;
+
+        var fmtA = m.pct ? fmtPct(m.valA) : fmt(m.valA);
+        var fmtB = m.pct ? fmtPct(m.valB) : fmt(m.valB);
+
+        html += '<div class="visual-bar-group">';
+        html += '<div class="visual-bar-label">' + m.label + '</div>';
+        html += '<div class="visual-bar-pair">';
+
+        // Loan A bar
+        html += '<div class="visual-bar-item">';
+        html += '<span class="visual-bar-tag tag-a">Loan A</span>';
+        html += '<div class="visual-bar-track">';
+        html += '<div class="visual-bar-fill ' + (aWins ? 'bar-winner' : 'bar-a') + '" style="width:' + Math.max(pctA, 8) + '%">';
+        html += '<span class="visual-bar-val">' + fmtA + '</span>';
+        html += '</div></div></div>';
+
+        // Loan B bar
+        html += '<div class="visual-bar-item">';
+        html += '<span class="visual-bar-tag tag-b">Loan B</span>';
+        html += '<div class="visual-bar-track">';
+        html += '<div class="visual-bar-fill ' + (bWins ? 'bar-winner' : 'bar-b') + '" style="width:' + Math.max(pctB, 8) + '%">';
+        html += '<span class="visual-bar-val">' + fmtB + '</span>';
+        html += '</div></div></div>';
+
+        html += '</div></div>';
+      });
+
+      document.getElementById('visualBars').innerHTML = html;
+    }
+
+    // Bind all sliders
+    ids.forEach(function(id) {
+      sliders[id].addEventListener('input', calculate);
+    });
+
+    // Initial calc
+    calculate();
+  })();
+  </script>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Should I always choose the loan with the lowest interest rate?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Not necessarily. A loan with a lower interest rate but high origination fees can end up costing more than a slightly higher-rate loan with no fees. The true APR — which accounts for both the rate and fees — is the best single metric for comparison."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the most important metric when comparing loans?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Total cost (principal + total interest + fees) is the most comprehensive metric because it captures everything you'll pay over the life of the loan. However, monthly payment and true APR are also important depending on your priorities."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do origination fees affect my loan comparison?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Origination fees increase your effective borrowing cost because you receive less money upfront but repay the full loan amount plus interest. Our tool calculates the true APR for each loan so you can see the real impact of these fees."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I compare loans with different amounts or terms?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes! Our tool allows you to input different amounts and terms for each loan. Just keep in mind that when comparing loans with different amounts, the APR comparison may be most useful for isolating the rate difference."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is a shorter loan term always better?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A shorter term saves money on total interest but requires higher monthly payments. The better choice depends on your financial situation and whether you can comfortably afford the higher payment without straining your budget."
+        }
+      }
+    ]
+  }
+  </script>
+</body>
+</html>

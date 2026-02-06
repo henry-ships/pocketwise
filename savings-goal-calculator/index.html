@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Savings Goal Calculator — Free Online Calculator | PocketWise</title>
+  <meta name="description" content="Calculate how long it takes to reach your savings goal. See growth projections with and without returns, track progress, and plan your financial future.">
+  <link rel="canonical" href="https://pocketwise.io/savings-goal-calculator/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .sg-chart-wrap {
+      position: relative;
+      height: 300px;
+      margin: 24px 0 16px;
+    }
+    .sg-chart {
+      width: 100%;
+      height: 100%;
+    }
+    .sg-target-line {
+      stroke: var(--lw-rose);
+      stroke-width: 2;
+      stroke-dasharray: 8 4;
+    }
+    .sg-savings-line {
+      fill: none;
+      stroke: var(--lw-sky);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .sg-savings-area {
+      fill: url(#savingsGrad);
+      opacity: 0.3;
+    }
+    .sg-no-return-line {
+      fill: none;
+      stroke: var(--lw-slate-300);
+      stroke-width: 2;
+      stroke-dasharray: 6 4;
+      stroke-linecap: round;
+    }
+    .sg-axis-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      fill: var(--lw-slate-400);
+    }
+    .sg-legend {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .sg-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+    }
+    .sg-legend-swatch {
+      width: 20px;
+      height: 3px;
+      border-radius: 2px;
+    }
+    .sg-legend-swatch.solid { background: var(--lw-sky); }
+    .sg-legend-swatch.dashed {
+      background: repeating-linear-gradient(90deg, var(--lw-slate-400) 0 6px, transparent 6px 10px);
+    }
+    .sg-legend-swatch.target {
+      background: repeating-linear-gradient(90deg, var(--lw-rose) 0 6px, transparent 6px 10px);
+    }
+    .sg-progress-wrap {
+      margin: 20px 0;
+    }
+    .sg-progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+      margin-bottom: 6px;
+    }
+    .sg-progress-bar {
+      width: 100%;
+      height: 24px;
+      background: var(--lw-slate-100);
+      border-radius: var(--lw-radius-full);
+      overflow: hidden;
+      position: relative;
+    }
+    .sg-progress-fill {
+      height: 100%;
+      border-radius: var(--lw-radius-full);
+      background: linear-gradient(90deg, var(--lw-sky), var(--lw-teal));
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 10px;
+      min-width: 0;
+    }
+    .sg-progress-pct {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: white;
+      white-space: nowrap;
+    }
+    .sg-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .sg-compare-card {
+      padding: 20px;
+      border-radius: var(--lw-radius);
+      border: 1px solid var(--lw-border-light);
+      text-align: center;
+    }
+    .sg-compare-card.highlight {
+      background: var(--lw-sky-50);
+      border-color: rgba(14, 165, 233, 0.2);
+    }
+    .sg-compare-label {
+      font-size: 12px;
+      color: var(--lw-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .sg-compare-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--lw-navy);
+    }
+    .sg-compare-sub {
+      font-size: 13px;
+      color: var(--lw-text-muted);
+      margin-top: 4px;
+    }
+    .sg-time-saved {
+      text-align: center;
+      padding: 14px;
+      margin-top: 16px;
+      background: var(--lw-emerald-50);
+      border-radius: var(--lw-radius);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--lw-emerald-dark);
+    }
+    @media (max-width: 768px) {
+      .sg-comparison { grid-template-columns: 1fr; }
+      .sg-chart-wrap { height: 240px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">L</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/mortgage-calculator/">Mortgage</a></li>
+        <li><a href="/auto-loan-calculator/">Auto</a></li>
+        <li><a href="/compound-interest-calculator/">Investing</a></li>
+        <li><a href="/debt-payoff-calculator/">Debt</a></li>
+        <li><a href="/">All Tools</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu">
+      <a href="/">All Tools</a>
+      <a href="/mortgage-calculator/">Mortgage Calculator</a>
+      <a href="/auto-loan-calculator/">Auto Loan Calculator</a>
+      <a href="/personal-loan-calculator/">Personal Loan Calculator</a>
+      <a href="/compound-interest-calculator/">Compound Interest Calculator</a>
+      <a href="/debt-payoff-calculator/">Debt Payoff Calculator</a>
+      <a href="/credit-card-payoff-calculator/">Credit Card Payoff</a>
+      <a href="/home-affordability-calculator/">Home Affordability</a>
+      <a href="/refinance-calculator/">Refinance Calculator</a>
+      <a href="/loan-comparison-tool/">Loan Comparison</a>
+      <a href="/amortization-schedule/">Amortization Schedule</a>
+      <a href="/debt-to-income-calculator/">Debt-to-Income</a>
+      <a href="/apr-calculator/">APR Calculator</a>
+      <a href="/savings-goal-calculator/">Savings Goal Calculator</a>
+      <a href="/investment-return-calculator/">Investment Returns</a>
+      <a href="/emergency-fund-calculator/">Emergency Fund</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- HERO -->
+    <div class="lw-hero">
+      <span class="lw-badge green">Savings Planner</span>
+      <h1>Savings <span class="accent">Goal</span> Calculator</h1>
+      <p class="subtitle">Find out exactly how long it takes to reach your savings goal — and how much faster you'll get there with investment returns.</p>
+    </div>
+
+    <!-- TOOL INTERFACE -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">🎯</div>
+        <div>
+          <div class="lw-card-title">Set Your Goal</div>
+          <div class="lw-card-subtitle">Enter your target, savings, and contributions</div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Savings Goal</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" id="goalAmount" class="lw-input" value="25,000" inputmode="numeric">
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">Current Savings</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="text" id="currentSavings" class="lw-input" value="2,000" inputmode="numeric">
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-range-group">
+        <div class="lw-range-header">
+          <label class="lw-label">Monthly Contribution</label>
+          <span class="lw-range-value" id="monthlyDisplay">$500</span>
+        </div>
+        <input type="range" id="monthlyContrib" class="lw-range" min="50" max="5000" step="50" value="500">
+      </div>
+
+      <div class="lw-range-group">
+        <div class="lw-range-header">
+          <label class="lw-label">Expected Annual Return <span class="lw-label-hint">(savings/investment rate)</span></label>
+          <span class="lw-range-value" id="returnDisplay">4.0%</span>
+        </div>
+        <input type="range" id="annualReturn" class="lw-range" min="0" max="15" step="0.25" value="4">
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="lw-result-hero" id="resultHero">
+      <div class="lw-result-label">Time to Reach Your Goal</div>
+      <div class="lw-result-number" id="resultTime">3 years, 7 months</div>
+      <div class="lw-result-sub" id="resultDate">You'll reach your goal by September 2029</div>
+    </div>
+
+    <!-- PROGRESS BAR -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">📊</div>
+        <div>
+          <div class="lw-card-title">Progress to Goal</div>
+          <div class="lw-card-subtitle">Your current savings vs. target</div>
+        </div>
+      </div>
+      <div class="sg-progress-wrap">
+        <div class="sg-progress-labels">
+          <span id="progressCurrent" class="lw-mono">$2,000</span>
+          <span id="progressGoal" class="lw-mono">$25,000</span>
+        </div>
+        <div class="sg-progress-bar">
+          <div class="sg-progress-fill" id="progressFill" style="width: 8%">
+            <span class="sg-progress-pct" id="progressPct">8%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- With/Without Returns Comparison -->
+      <div class="sg-comparison">
+        <div class="sg-compare-card highlight">
+          <div class="sg-compare-label">With Returns</div>
+          <div class="sg-compare-value" id="withReturnsTime">3y 7m</div>
+          <div class="sg-compare-sub" id="withReturnsEarned">Interest earned: $1,840</div>
+        </div>
+        <div class="sg-compare-card">
+          <div class="sg-compare-label">Without Returns</div>
+          <div class="sg-compare-value" id="noReturnsTime">3y 10m</div>
+          <div class="sg-compare-sub" id="noReturnsSaved">Pure savings only</div>
+        </div>
+      </div>
+      <div class="sg-time-saved" id="timeSaved">🚀 Returns save you 3 months!</div>
+    </div>
+
+    <div class="lw-result-grid">
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Total Contributed</div>
+        <div class="lw-result-item-value" id="totalContributed">$23,000</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Interest Earned</div>
+        <div class="lw-result-item-value green" id="interestEarned">$1,840</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Goal Date</div>
+        <div class="lw-result-item-value sky" id="goalDate">Sep 2029</div>
+      </div>
+    </div>
+
+    <!-- GROWTH CHART -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">📈</div>
+        <div>
+          <div class="lw-card-title">Growth Projection</div>
+          <div class="lw-card-subtitle">Savings trajectory toward your goal</div>
+        </div>
+      </div>
+      <div class="sg-chart-wrap">
+        <svg class="sg-chart" id="growthChart" viewBox="0 0 800 300" preserveAspectRatio="none"></svg>
+      </div>
+      <div class="sg-legend">
+        <div class="sg-legend-item"><div class="sg-legend-swatch solid"></div> With returns</div>
+        <div class="sg-legend-item"><div class="sg-legend-swatch dashed"></div> Without returns</div>
+        <div class="sg-legend-item"><div class="sg-legend-swatch target"></div> Goal target</div>
+      </div>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <div class="lw-content">
+      <h2>How to Use the Savings Goal Calculator</h2>
+      <p>Our free savings goal calculator helps you plan your financial future by showing exactly how long it will take to reach any savings target. Whether you're saving for a down payment on a house, building an emergency fund, planning a dream vacation, or setting aside money for a major purchase, this tool gives you a clear roadmap to your goal.</p>
+      <p>Simply enter your target savings amount, how much you currently have saved, your planned monthly contribution, and the expected annual return on your savings or investments. The calculator instantly projects your timeline and shows you how compound returns can accelerate your progress.</p>
+
+      <h2>Understanding Your Results</h2>
+      <p>The savings goal calculator provides several key insights to help you plan effectively:</p>
+      <ul>
+        <li><strong>Time to goal:</strong> The total number of months and years before you reach your savings target, factoring in both regular contributions and investment returns.</li>
+        <li><strong>With vs. without returns:</strong> See the dramatic impact of earning returns on your savings. Even a modest 3-4% annual return in a high-yield savings account (HYSA) can shave months off your timeline.</li>
+        <li><strong>Progress bar:</strong> Visualize how far along you already are. If you have existing savings, you may be closer to your goal than you think.</li>
+        <li><strong>Growth chart:</strong> The projection chart shows your savings trajectory over time, with the goal target line clearly marked so you can see exactly when the two lines meet.</li>
+      </ul>
+
+      <h3>Choosing the Right Return Rate</h3>
+      <p>The expected annual return rate you select significantly affects your results. Here are typical return benchmarks to guide your choice:</p>
+      <ul>
+        <li><strong>0%:</strong> Cash under the mattress — no growth at all.</li>
+        <li><strong>1-2%:</strong> Traditional savings accounts at major banks.</li>
+        <li><strong>4-5%:</strong> High-yield savings accounts or money market funds — great for short-term goals.</li>
+        <li><strong>7-10%:</strong> Diversified stock market investments (S&amp;P 500 historical average) — better for goals 5+ years away.</li>
+        <li><strong>10%+:</strong> Aggressive growth investing — higher risk, suitable for long time horizons.</li>
+      </ul>
+      <p>For short-term goals (under 2 years), consider keeping your return rate conservative at 4-5% since you won't want to expose those funds to stock market volatility. For longer-term goals, a higher rate reflecting equity market returns may be appropriate.</p>
+
+      <h3>Tips to Reach Your Goal Faster</h3>
+      <p>If your projected timeline feels too long, there are practical strategies to speed things up. Increasing your monthly contribution — even by a small amount — has the biggest impact. Automating transfers to your savings account on payday ensures consistency. Looking for higher-yield accounts or low-cost index funds can boost your returns. And reducing discretionary spending by even 5-10% can free up additional savings each month.</p>
+      <p>Consider using the "pay yourself first" method: decide on your savings amount before budgeting for other expenses. Many financial experts recommend saving at least 20% of your after-tax income, though any amount is better than nothing. The key is consistency — regular contributions over time, combined with compound returns, create surprisingly powerful results.</p>
+
+      <h2>Frequently Asked Questions</h2>
+      <div class="lw-faq">
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">How accurate is the savings goal calculator?</button>
+          <div class="lw-faq-a"><p>The calculator provides estimates based on consistent monthly contributions and a fixed annual return rate. In practice, returns vary month to month, especially with market-based investments. For savings accounts with fixed APYs, the projections are quite accurate. For investment-based goals, treat the results as a reasonable estimate rather than a guarantee.</p></div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">What return rate should I use for a high-yield savings account?</button>
+          <div class="lw-faq-a"><p>As of 2024-2025, many high-yield savings accounts offer between 4% and 5% APY. These rates can change over time as the Federal Reserve adjusts interest rates. Use the current rate offered by your bank for the most accurate projection, and keep in mind that rates may decrease in the future.</p></div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Should I invest my savings or keep them in a bank account?</button>
+          <div class="lw-faq-a"><p>It depends on your time horizon. For goals less than 2-3 years away, a high-yield savings account or CD is safest — your principal is protected. For goals 5+ years away, investing in a diversified portfolio may yield higher returns but comes with short-term volatility. Never invest money you'll need soon in the stock market.</p></div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Does this calculator account for inflation?</button>
+          <div class="lw-faq-a"><p>This calculator uses nominal returns (before inflation). If you want to account for inflation, subtract the expected inflation rate (typically 2-3%) from your return rate. For example, if you expect 7% returns and 3% inflation, use 4% as your "real" return rate for a more conservative estimate.</p></div>
+        </div>
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Can I change my monthly contribution amount over time?</button>
+          <div class="lw-faq-a"><p>This calculator assumes a fixed monthly contribution for simplicity. In real life, you can absolutely increase contributions as your income grows. Many people follow the strategy of increasing savings by at least half of every raise they receive. Revisit this calculator periodically to update your numbers and track your progress.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED TOOLS -->
+    <div class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/emergency-fund-calculator/" class="lw-related-link"><span class="dot"></span> Emergency Fund Calculator</a>
+        <a href="/compound-interest-calculator/" class="lw-related-link"><span class="dot"></span> Compound Interest Calculator</a>
+        <a href="/investment-return-calculator/" class="lw-related-link"><span class="dot"></span> Investment Return Calculator</a>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <p class="lw-disclaimer">
+      <em>This calculator is for educational purposes only. Results are estimates and should not be considered financial advice. Consult a qualified financial advisor for personalized guidance.</em>
+    </p>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="lw-footer">
+    <p>&copy; 2026 PocketWise. Free financial calculators for everyone.</p>
+  </footer>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // Utilities
+    function fmt(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:0, maximumFractionDigits:0}).format(n); }
+    function fmtFull(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:2, maximumFractionDigits:2}).format(n); }
+    function fmtNum(n) { return new Intl.NumberFormat('en-US').format(Math.round(n)); }
+    function fmtPct(n) { return n.toFixed(1) + '%'; }
+
+    function parseNum(str) {
+      return parseFloat(String(str).replace(/[^0-9.\-]/g, '')) || 0;
+    }
+
+    function formatInput(el) {
+      var raw = parseNum(el.value);
+      if (!isNaN(raw) && raw >= 0) {
+        el.value = fmtNum(raw);
+      }
+    }
+
+    // DOM
+    var goalInput = document.getElementById('goalAmount');
+    var currentInput = document.getElementById('currentSavings');
+    var monthlySlider = document.getElementById('monthlyContrib');
+    var monthlyDisplay = document.getElementById('monthlyDisplay');
+    var returnSlider = document.getElementById('annualReturn');
+    var returnDisplay = document.getElementById('returnDisplay');
+
+    // Format inputs on blur
+    goalInput.addEventListener('blur', function() { formatInput(this); });
+    currentInput.addEventListener('blur', function() { formatInput(this); });
+
+    // Real-time events
+    [goalInput, currentInput].forEach(function(el) {
+      el.addEventListener('input', calculate);
+    });
+    monthlySlider.addEventListener('input', function() {
+      monthlyDisplay.textContent = fmt(parseFloat(this.value));
+      calculate();
+    });
+    returnSlider.addEventListener('input', function() {
+      returnDisplay.textContent = fmtPct(parseFloat(this.value));
+      calculate();
+    });
+
+    function monthsToGoal(goal, current, monthly, annualRate) {
+      if (current >= goal) return 0;
+      if (monthly <= 0 && annualRate <= 0) return Infinity;
+      var r = annualRate / 100 / 12;
+      var balance = current;
+      var months = 0;
+      var maxMonths = 1200; // 100 years cap
+      if (r === 0) {
+        if (monthly <= 0) return Infinity;
+        return Math.ceil((goal - current) / monthly);
+      }
+      while (balance < goal && months < maxMonths) {
+        balance = balance * (1 + r) + monthly;
+        months++;
+      }
+      return months >= maxMonths ? Infinity : months;
+    }
+
+    function balanceAtMonth(current, monthly, annualRate, month) {
+      var r = annualRate / 100 / 12;
+      var balance = current;
+      for (var i = 0; i < month; i++) {
+        balance = balance * (1 + r) + monthly;
+      }
+      return balance;
+    }
+
+    function formatDuration(months) {
+      if (months === Infinity || months > 1200) return 'Very long time';
+      var y = Math.floor(months / 12);
+      var m = months % 12;
+      if (y === 0) return m + ' month' + (m !== 1 ? 's' : '');
+      if (m === 0) return y + ' year' + (y !== 1 ? 's' : '');
+      return y + ' year' + (y !== 1 ? 's' : '') + ', ' + m + ' month' + (m !== 1 ? 's' : '');
+    }
+
+    function formatShortDuration(months) {
+      if (months === Infinity || months > 1200) return '99y+';
+      var y = Math.floor(months / 12);
+      var m = months % 12;
+      if (y === 0) return m + 'mo';
+      if (m === 0) return y + 'y';
+      return y + 'y ' + m + 'mo';
+    }
+
+    function getGoalDateStr(months) {
+      if (months === Infinity) return '—';
+      var d = new Date();
+      d.setMonth(d.getMonth() + months);
+      var options = { month: 'long', year: 'numeric' };
+      return d.toLocaleDateString('en-US', options);
+    }
+
+    function getGoalDateShort(months) {
+      if (months === Infinity) return '—';
+      var d = new Date();
+      d.setMonth(d.getMonth() + months);
+      var options = { month: 'short', year: 'numeric' };
+      return d.toLocaleDateString('en-US', options);
+    }
+
+    function drawChart(goal, current, monthly, annualRate, monthsWithReturns, monthsNoReturns) {
+      var svg = document.getElementById('growthChart');
+      var totalMonths = Math.max(monthsWithReturns, monthsNoReturns);
+      if (totalMonths === Infinity || totalMonths > 600) totalMonths = Math.min(monthsWithReturns === Infinity ? 120 : monthsWithReturns * 1.3, 120);
+      totalMonths = Math.max(totalMonths, 6);
+      // Add 10% padding
+      var chartMonths = Math.ceil(totalMonths * 1.15);
+
+      var W = 800, H = 300;
+      var padL = 70, padR = 20, padT = 20, padB = 40;
+      var cW = W - padL - padR;
+      var cH = H - padT - padB;
+
+      var maxVal = goal * 1.1;
+      // Ensure no-returns line max is captured
+      var noReturnMax = current + monthly * chartMonths;
+      var returnMax = balanceAtMonth(current, monthly, annualRate, chartMonths);
+      maxVal = Math.max(maxVal, noReturnMax, returnMax) * 1.05;
+
+      function x(month) { return padL + (month / chartMonths) * cW; }
+      function y(val) { return padT + cH - (val / maxVal) * cH; }
+
+      var html = '';
+
+      // Defs
+      html += '<defs>';
+      html += '<linearGradient id="savingsGrad" x1="0" y1="0" x2="0" y2="1">';
+      html += '<stop offset="0%" stop-color="#0EA5E9" stop-opacity="0.3"/>';
+      html += '<stop offset="100%" stop-color="#0EA5E9" stop-opacity="0.02"/>';
+      html += '</linearGradient>';
+      html += '</defs>';
+
+      // Grid lines
+      var ySteps = 5;
+      for (var i = 0; i <= ySteps; i++) {
+        var yy = padT + (i / ySteps) * cH;
+        var val = maxVal * (1 - i / ySteps);
+        html += '<line x1="' + padL + '" y1="' + yy + '" x2="' + (W - padR) + '" y2="' + yy + '" stroke="#E2E8F0" stroke-width="1"/>';
+        html += '<text x="' + (padL - 8) + '" y="' + (yy + 4) + '" text-anchor="end" class="sg-axis-label">' + fmt(val) + '</text>';
+      }
+
+      // X-axis labels
+      var xLabelCount = Math.min(6, chartMonths);
+      for (var i = 0; i <= xLabelCount; i++) {
+        var mo = Math.round((i / xLabelCount) * chartMonths);
+        var xPos = x(mo);
+        var label = mo < 12 ? mo + 'mo' : (mo / 12).toFixed(mo % 12 === 0 ? 0 : 1) + 'y';
+        html += '<text x="' + xPos + '" y="' + (H - 5) + '" text-anchor="middle" class="sg-axis-label">' + label + '</text>';
+      }
+
+      // Goal target line
+      var goalY = y(goal);
+      if (goalY >= padT && goalY <= padT + cH) {
+        html += '<line x1="' + padL + '" y1="' + goalY + '" x2="' + (W - padR) + '" y2="' + goalY + '" class="sg-target-line"/>';
+        html += '<text x="' + (W - padR - 4) + '" y="' + (goalY - 6) + '" text-anchor="end" fill="#F43F5E" font-size="11" font-family="JetBrains Mono, monospace" font-weight="600">Goal: ' + fmt(goal) + '</text>';
+      }
+
+      // Build path data - savings with returns
+      var steps = Math.min(chartMonths, 200);
+      var pathPoints = [];
+      var areaPath = 'M' + x(0) + ',' + y(current);
+      var linePath = 'M' + x(0) + ',' + y(current);
+      for (var i = 0; i <= steps; i++) {
+        var mo = Math.round((i / steps) * chartMonths);
+        var bal = balanceAtMonth(current, monthly, annualRate, mo);
+        bal = Math.min(bal, maxVal);
+        linePath += ' L' + x(mo).toFixed(1) + ',' + y(bal).toFixed(1);
+        areaPath += ' L' + x(mo).toFixed(1) + ',' + y(bal).toFixed(1);
+      }
+      areaPath += ' L' + x(chartMonths).toFixed(1) + ',' + (padT + cH) + ' L' + x(0) + ',' + (padT + cH) + ' Z';
+
+      html += '<path d="' + areaPath + '" class="sg-savings-area"/>';
+      html += '<path d="' + linePath + '" class="sg-savings-line"/>';
+
+      // No-returns line
+      var noReturnPath = 'M' + x(0) + ',' + y(current);
+      for (var i = 0; i <= steps; i++) {
+        var mo = Math.round((i / steps) * chartMonths);
+        var bal = current + monthly * mo;
+        bal = Math.min(bal, maxVal);
+        noReturnPath += ' L' + x(mo).toFixed(1) + ',' + y(bal).toFixed(1);
+      }
+      html += '<path d="' + noReturnPath + '" class="sg-no-return-line"/>';
+
+      // Goal intersection dot
+      if (monthsWithReturns !== Infinity && monthsWithReturns <= chartMonths) {
+        html += '<circle cx="' + x(monthsWithReturns).toFixed(1) + '" cy="' + goalY.toFixed(1) + '" r="6" fill="#0EA5E9" stroke="white" stroke-width="2"/>';
+      }
+
+      svg.innerHTML = html;
+    }
+
+    function calculate() {
+      var goal = parseNum(goalInput.value);
+      var current = parseNum(currentInput.value);
+      var monthly = parseFloat(monthlySlider.value);
+      var annualRate = parseFloat(returnSlider.value);
+
+      if (goal <= 0) goal = 1;
+      if (current < 0) current = 0;
+      if (current > goal) current = goal;
+
+      // Months with returns
+      var monthsWith = monthsToGoal(goal, current, monthly, annualRate);
+      // Months without returns
+      var monthsWithout = monthsToGoal(goal, current, monthly, 0);
+
+      // Progress
+      var pct = Math.min((current / goal) * 100, 100);
+      document.getElementById('progressFill').style.width = Math.max(pct, 2) + '%';
+      document.getElementById('progressPct').textContent = Math.round(pct) + '%';
+      document.getElementById('progressCurrent').textContent = fmt(current);
+      document.getElementById('progressGoal').textContent = fmt(goal);
+
+      // Hero result
+      if (current >= goal) {
+        document.getElementById('resultTime').textContent = "You've reached your goal! 🎉";
+        document.getElementById('resultDate').textContent = "Congratulations — your savings already meet your target.";
+      } else if (monthsWith === Infinity) {
+        document.getElementById('resultTime').textContent = "Not reachable";
+        document.getElementById('resultDate').textContent = "Increase monthly contributions to reach your goal.";
+      } else {
+        document.getElementById('resultTime').textContent = formatDuration(monthsWith);
+        document.getElementById('resultDate').textContent = "You'll reach your goal by " + getGoalDateStr(monthsWith);
+      }
+
+      // With/without comparison
+      document.getElementById('withReturnsTime').textContent = formatShortDuration(monthsWith);
+      document.getElementById('noReturnsTime').textContent = formatShortDuration(monthsWithout);
+
+      // Interest earned
+      var totalContrib = current + monthly * monthsWith;
+      var interestEarned = monthsWith !== Infinity ? Math.max(goal - totalContrib, 0) : 0;
+      document.getElementById('withReturnsEarned').textContent = 'Interest earned: ' + fmt(interestEarned);
+      document.getElementById('noReturnsSaved').textContent = 'Pure savings only';
+
+      // Time saved
+      var diff = monthsWithout - monthsWith;
+      if (diff > 0 && diff !== Infinity && monthsWith !== Infinity) {
+        document.getElementById('timeSaved').textContent = '🚀 Returns save you ' + diff + ' month' + (diff !== 1 ? 's' : '') + '!';
+        document.getElementById('timeSaved').style.display = 'block';
+      } else if (current >= goal) {
+        document.getElementById('timeSaved').textContent = '🎉 Goal already achieved!';
+        document.getElementById('timeSaved').style.display = 'block';
+      } else {
+        document.getElementById('timeSaved').style.display = 'none';
+      }
+
+      // Result grid
+      document.getElementById('totalContributed').textContent = fmt(monthsWith !== Infinity ? totalContrib : current + monthly * Math.min(monthsWithout, 600));
+      document.getElementById('interestEarned').textContent = fmt(interestEarned);
+      document.getElementById('goalDate').textContent = getGoalDateShort(monthsWith);
+
+      // Chart
+      drawChart(goal, current, monthly, annualRate, monthsWith, monthsWithout);
+    }
+
+    // Initialize
+    calculate();
+  })();
+  </script>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How accurate is the savings goal calculator?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The calculator provides estimates based on consistent monthly contributions and a fixed annual return rate. In practice, returns vary month to month, especially with market-based investments. For savings accounts with fixed APYs, the projections are quite accurate. For investment-based goals, treat the results as a reasonable estimate rather than a guarantee."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What return rate should I use for a high-yield savings account?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "As of 2024-2025, many high-yield savings accounts offer between 4% and 5% APY. These rates can change over time as the Federal Reserve adjusts interest rates. Use the current rate offered by your bank for the most accurate projection."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I invest my savings or keep them in a bank account?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It depends on your time horizon. For goals less than 2-3 years away, a high-yield savings account or CD is safest. For goals 5+ years away, investing in a diversified portfolio may yield higher returns but comes with short-term volatility."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does this calculator account for inflation?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This calculator uses nominal returns (before inflation). If you want to account for inflation, subtract the expected inflation rate (typically 2-3%) from your return rate. For example, if you expect 7% returns and 3% inflation, use 4% as your real return rate."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I change my monthly contribution amount over time?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This calculator assumes a fixed monthly contribution for simplicity. In real life, you can absolutely increase contributions as your income grows. Revisit this calculator periodically to update your numbers and track your progress."
+        }
+      }
+    ]
+  }
+  </script>
+</body>
+</html>

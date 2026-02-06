@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Investment Return Calculator — Free Online Calculator | PocketWise</title>
+  <meta name="description" content="Calculate your investment growth with our free calculator. See nominal and inflation-adjusted returns, growth curves, and year-by-year projections.">
+  <link rel="canonical" href="https://pocketwise.io/investment-return-calculator/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 340px;
+      margin: 24px 0;
+    }
+    .chart-svg {
+      width: 100%;
+      height: 100%;
+    }
+    .chart-tooltip {
+      position: absolute;
+      background: var(--lw-navy);
+      color: white;
+      padding: 10px 14px;
+      border-radius: var(--lw-radius-sm);
+      font-size: 13px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      z-index: 10;
+      white-space: nowrap;
+      box-shadow: var(--lw-shadow-lg);
+    }
+    .chart-tooltip.visible { opacity: 1; }
+    .chart-tooltip .tt-year { font-weight: 700; margin-bottom: 4px; }
+    .chart-tooltip .tt-row { display: flex; align-items: center; gap: 6px; margin-top: 3px; }
+    .chart-tooltip .tt-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .chart-tooltip .tt-val { font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+    .chart-legend {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .chart-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--lw-text-secondary);
+    }
+    .chart-legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+    .chart-legend-dot.nominal { background: var(--lw-sky); }
+    .chart-legend-dot.real { background: var(--lw-emerald); }
+    .chart-legend-dot.contrib { background: var(--lw-slate-300); }
+    .chart-legend-line {
+      width: 16px;
+      height: 3px;
+      border-radius: 2px;
+    }
+    .inflation-toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      margin-bottom: 20px;
+    }
+    .inflation-toggle-wrap label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--lw-slate-700);
+      cursor: pointer;
+      user-select: none;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: var(--lw-slate-300);
+      border-radius: 24px;
+      cursor: pointer;
+      transition: all var(--lw-transition);
+    }
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: all var(--lw-transition);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+    .toggle-switch input:checked + .toggle-slider {
+      background: var(--lw-emerald);
+    }
+    .toggle-switch input:checked + .toggle-slider::before {
+      transform: translateX(20px);
+    }
+    .inflation-hint {
+      font-size: 12px;
+      color: var(--lw-text-muted);
+      margin-left: auto;
+    }
+    .comparison-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-radius: var(--lw-radius-lg);
+      overflow: hidden;
+      margin-bottom: 24px;
+      border: 1px solid var(--lw-border-light);
+    }
+    .comparison-side {
+      padding: 28px 24px;
+      text-align: center;
+    }
+    .comparison-side.nominal-side {
+      background: linear-gradient(135deg, #0c4a6e 0%, #0e7490 100%);
+      color: white;
+    }
+    .comparison-side.real-side {
+      background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
+      color: white;
+    }
+    .comparison-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 600;
+      opacity: 0.7;
+      margin-bottom: 8px;
+    }
+    .comparison-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+    .comparison-note {
+      font-size: 13px;
+      opacity: 0.6;
+      margin-top: 6px;
+    }
+    .year-table-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px;
+      background: var(--lw-slate-50);
+      border: 1px solid var(--lw-border);
+      border-radius: var(--lw-radius);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--lw-slate-600);
+      cursor: pointer;
+      transition: all var(--lw-transition);
+      margin-top: 16px;
+    }
+    .year-table-toggle:hover {
+      background: var(--lw-sky-50);
+      color: var(--lw-sky-dark);
+      border-color: var(--lw-sky);
+    }
+    .year-table-toggle .arrow {
+      transition: transform 0.3s ease;
+      font-size: 12px;
+    }
+    .year-table-toggle.open .arrow {
+      transform: rotate(180deg);
+    }
+    .year-table-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease;
+    }
+    .year-table-content.open {
+      max-height: 4000px;
+    }
+    .result-dual {
+      text-align: center;
+      padding: 32px;
+      background: linear-gradient(135deg, var(--lw-navy) 0%, var(--lw-slate-800) 100%);
+      border-radius: var(--lw-radius-lg);
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .result-dual::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(14, 165, 233, 0.15) 0%, transparent 60%);
+    }
+    .result-dual * { position: relative; }
+    .result-dual-row {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .result-primary-label {
+      font-size: 13px;
+      color: var(--lw-slate-400);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .result-primary-number {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 52px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -2px;
+      line-height: 1.1;
+    }
+    .result-inflation-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--lw-emerald-light);
+      padding: 6px 14px;
+      border-radius: var(--lw-radius-full);
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 12px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .result-inflation-badge .tag {
+      font-size: 11px;
+      font-family: 'Inter', sans-serif;
+      opacity: 0.8;
+      font-weight: 500;
+    }
+    @media (max-width: 768px) {
+      .chart-container { height: 270px; }
+      .comparison-card { grid-template-columns: 1fr; }
+      .comparison-value { font-size: 26px; }
+      .result-primary-number { font-size: 40px; }
+    }
+    @media (max-width: 480px) {
+      .chart-container { height: 220px; }
+      .result-primary-number { font-size: 34px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">L</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/mortgage-calculator/">Mortgage</a></li>
+        <li><a href="/auto-loan-calculator/">Auto</a></li>
+        <li><a href="/compound-interest-calculator/">Investing</a></li>
+        <li><a href="/debt-payoff-calculator/">Debt</a></li>
+        <li><a href="/">All Tools</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu">
+      <a href="/">All Tools</a>
+      <a href="/mortgage-calculator/">Mortgage Calculator</a>
+      <a href="/auto-loan-calculator/">Auto Loan Calculator</a>
+      <a href="/personal-loan-calculator/">Personal Loan Calculator</a>
+      <a href="/compound-interest-calculator/">Compound Interest Calculator</a>
+      <a href="/debt-payoff-calculator/">Debt Payoff Calculator</a>
+      <a href="/credit-card-payoff-calculator/">Credit Card Payoff</a>
+      <a href="/home-affordability-calculator/">Home Affordability</a>
+      <a href="/refinance-calculator/">Refinance Calculator</a>
+      <a href="/loan-comparison-tool/">Loan Comparison</a>
+      <a href="/amortization-schedule/">Amortization Schedule</a>
+      <a href="/debt-to-income-calculator/">Debt-to-Income</a>
+      <a href="/apr-calculator/">APR Calculator</a>
+      <a href="/savings-goal-calculator/">Savings Goal Calculator</a>
+      <a href="/investment-return-calculator/">Investment Returns</a>
+      <a href="/emergency-fund-calculator/">Emergency Fund</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- HERO -->
+    <div class="lw-hero">
+      <span class="lw-badge green">Investing Tools</span>
+      <h1>Investment Return <span class="accent">Calculator</span></h1>
+      <p class="subtitle">Project your investment growth over time — with optional inflation adjustment to see what your money will really be worth.</p>
+    </div>
+
+    <!-- TOOL INTERFACE -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">💹</div>
+        <div>
+          <div class="lw-card-title">Investment Parameters</div>
+          <div class="lw-card-subtitle">Adjust your inputs — results update instantly</div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Initial Investment</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="initialInvestment" class="lw-input" value="10000" min="0" max="10000000" step="500">
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">Monthly Additions</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="monthlyAdditions" class="lw-input" value="300" min="0" max="50000" step="50">
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-range-group">
+        <div class="lw-range-header">
+          <label class="lw-label" style="margin-bottom:0">Annual Return Rate</label>
+          <span class="lw-range-value" id="rateDisplay">8.0%</span>
+        </div>
+        <input type="range" id="annualRate" class="lw-range" min="0" max="25" step="0.1" value="8">
+      </div>
+
+      <div class="lw-range-group">
+        <div class="lw-range-header">
+          <label class="lw-label" style="margin-bottom:0">Investment Period</label>
+          <span class="lw-range-value" id="yearsDisplay">25 years</span>
+        </div>
+        <input type="range" id="investmentPeriod" class="lw-range" min="1" max="50" step="1" value="25">
+      </div>
+
+      <div class="inflation-toggle-wrap">
+        <div class="toggle-switch">
+          <input type="checkbox" id="inflationToggle" checked>
+          <span class="toggle-slider" onclick="document.getElementById('inflationToggle').click()"></span>
+        </div>
+        <label for="inflationToggle">Adjust for inflation</label>
+        <span class="inflation-hint" id="inflationHint">at 3.0%/yr</span>
+      </div>
+
+      <div id="inflationRangeWrap" class="lw-range-group">
+        <div class="lw-range-header">
+          <label class="lw-label" style="margin-bottom:0">Expected Inflation Rate</label>
+          <span class="lw-range-value" id="inflationDisplay">3.0%</span>
+        </div>
+        <input type="range" id="inflationRate" class="lw-range" min="0" max="10" step="0.1" value="3">
+      </div>
+    </div>
+
+    <!-- RESULTS: Hero -->
+    <div class="result-dual" id="resultHero">
+      <div class="result-primary-label">Future Value (Nominal)</div>
+      <div class="result-primary-number lw-animate-number" id="futureValueNominal">$0</div>
+      <div class="result-inflation-badge" id="realValueBadge">
+        <span class="tag">In today's dollars:</span>
+        <span id="futureValueReal">$0</span>
+      </div>
+    </div>
+
+    <!-- Nominal vs Real comparison -->
+    <div class="comparison-card" id="comparisonCard">
+      <div class="comparison-side nominal-side">
+        <div class="comparison-label">Nominal Value</div>
+        <div class="comparison-value" id="compNominal">$0</div>
+        <div class="comparison-note">Before inflation</div>
+      </div>
+      <div class="comparison-side real-side">
+        <div class="comparison-label">Real Value (Today's $)</div>
+        <div class="comparison-value" id="compReal">$0</div>
+        <div class="comparison-note">After inflation</div>
+      </div>
+    </div>
+
+    <!-- Result grid -->
+    <div class="lw-result-grid">
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Total Contributed</div>
+        <div class="lw-result-item-value sky" id="totalContrib">$0</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Total Earnings</div>
+        <div class="lw-result-item-value green" id="totalEarnings">$0</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Avg Annual Earnings</div>
+        <div class="lw-result-item-value" id="avgAnnualEarnings">$0</div>
+      </div>
+    </div>
+
+    <!-- CHART -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">📊</div>
+        <div>
+          <div class="lw-card-title">Growth Projection</div>
+          <div class="lw-card-subtitle">Nominal growth with inflation-adjusted overlay</div>
+        </div>
+      </div>
+      <div class="chart-container" id="chartContainer">
+        <svg class="chart-svg" id="chartSvg" preserveAspectRatio="none"></svg>
+        <div class="chart-tooltip" id="chartTooltip"></div>
+      </div>
+      <div class="chart-legend">
+        <div class="chart-legend-item"><div class="chart-legend-dot nominal"></div> Nominal Value</div>
+        <div class="chart-legend-item"><div class="chart-legend-dot real"></div> Real Value (Inflation-Adjusted)</div>
+        <div class="chart-legend-item"><div class="chart-legend-dot contrib"></div> Total Contributions</div>
+      </div>
+    </div>
+
+    <!-- Year-by-Year Table -->
+    <div class="lw-card">
+      <button class="year-table-toggle" id="tableToggle">
+        <span>View Year-by-Year Breakdown</span>
+        <span class="arrow">▼</span>
+      </button>
+      <div class="year-table-content" id="tableContent">
+        <div class="lw-table-wrap lw-mt-16">
+          <table class="lw-table">
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th>Contributions</th>
+                <th>Nominal Value</th>
+                <th>Real Value</th>
+                <th>Earnings</th>
+              </tr>
+            </thead>
+            <tbody id="yearTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <div class="lw-content">
+      <h2>How to Calculate Investment Returns: A Complete Guide</h2>
+      <p>Understanding how your investments grow over time is one of the most important skills in personal finance. Whether you're saving for retirement, a child's education, or financial independence, knowing how to project future investment values — and understanding the difference between nominal and real returns — gives you the clarity to make confident decisions about your money.</p>
+
+      <p>Our investment return calculator models the growth of a portfolio with regular monthly contributions, compounded monthly. It shows you both the <strong>nominal value</strong> (the raw dollar amount you'd see in your account) and the <strong>real value</strong> (what that money is actually worth in today's purchasing power after accounting for inflation). This distinction is critical for long-term planning, because a million dollars 30 years from now won't buy what a million dollars buys today.</p>
+
+      <h2>Nominal Returns vs. Real Returns: Why It Matters</h2>
+      <p>Nominal returns are the headline numbers you see on investment statements and market news. If the S&P 500 returns 10% in a given year, that's a nominal figure. <strong>Real returns</strong> subtract the inflation rate to show what you actually gained in purchasing power. If the market returned 10% but inflation was 3%, your real return was approximately 7%.</p>
+
+      <p>This difference compounds dramatically over long periods. At an 8% nominal return over 25 years, $10,000 grows to about $68,485. But at a 3% inflation rate, that $68,485 is only worth about $32,700 in today's dollars. You've still more than tripled your purchasing power — which is excellent — but it's important to set realistic expectations. The inflation toggle on our calculator lets you visualize this gap so there are no surprises.</p>
+
+      <h3>What Return Rate Should You Use?</h3>
+      <p>The right rate depends on your portfolio. U.S. large-cap stocks have historically returned about 10% nominally, while bonds have returned 5-6%. A balanced 60/40 portfolio averages roughly 7-8%. For conservative planning, many advisors suggest using 6-7% for stock-heavy portfolios and 4-5% for balanced ones. If you want to be extra cautious, use the inflation-adjusted return directly (subtract your expected inflation from the nominal rate) and disable the inflation adjustment in the calculator.</p>
+
+      <h3>The Impact of Monthly Contributions</h3>
+      <p>Regular monthly additions are where most of the magic happens for working investors. Your initial lump sum matters, but consistent contributions through dollar-cost averaging smooth out volatility and ensure you're always buying — sometimes at highs, sometimes at bargain prices. Even modest monthly additions of $300-500 can produce dramatic results over 20-30 years. The key is starting early and staying consistent, even during market downturns when it feels uncomfortable.</p>
+
+      <h2>Tips for Maximizing Long-Term Investment Growth</h2>
+      <p>Beyond simply investing more or earning a higher return, there are structural decisions that significantly impact your final number. Use <strong>tax-advantaged accounts</strong> (401k, IRA, Roth) to keep your compounding engine running without the drag of annual taxes. Minimize fees — a 1% annual expense ratio might seem small, but over 30 years it can reduce your final balance by 25% or more compared to a 0.1% index fund. <strong>Rebalance annually</strong> to maintain your target allocation, and consider increasing your contributions by 1-2% each year as your income grows.</p>
+
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            What is the difference between nominal and real investment returns?
+          </button>
+          <div class="lw-faq-a">
+            <p>Nominal returns are the raw percentage your investment grows, without any adjustments. Real returns subtract the inflation rate to show what your gains are actually worth in terms of purchasing power. For example, if your portfolio earned 8% but inflation was 3%, your real return was approximately 5%. Over decades, this distinction makes a massive difference in how much your future wealth can actually buy.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            How accurate are investment return projections?
+          </button>
+          <div class="lw-faq-a">
+            <p>Investment calculators assume a steady, constant rate of return, which never happens in practice. Real markets fluctuate, sometimes dramatically. These projections are best used for ballpark planning and goal-setting, not as precise predictions. The actual sequence of returns matters — poor early returns followed by strong later returns produce different outcomes than the reverse, even with the same average return.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            What is a reasonable inflation rate to assume?
+          </button>
+          <div class="lw-faq-a">
+            <p>The long-term historical average for U.S. inflation is approximately 3% per year. The Federal Reserve targets 2% inflation, and recent years have seen rates between 2-7%. For long-term projections (20+ years), using 2.5-3% is a reasonable middle ground. If you're being conservative, use 3.5-4% to account for potential inflationary periods.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            Should I invest a lump sum or dollar-cost average?
+          </button>
+          <div class="lw-faq-a">
+            <p>Statistically, lump-sum investing outperforms dollar-cost averaging about two-thirds of the time, because markets tend to go up. However, dollar-cost averaging reduces the risk of investing everything right before a downturn, and it's psychologically easier for most people. For most working individuals, the point is moot — you invest as you earn, which is effectively dollar-cost averaging through regular contributions.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            How do taxes affect my investment returns?
+          </button>
+          <div class="lw-faq-a">
+            <p>Taxes can significantly reduce your effective return. In taxable accounts, you owe taxes on dividends annually and on capital gains when you sell. This can reduce your effective compounding rate by 1-2% or more. Tax-advantaged accounts (Traditional 401k/IRA defer taxes; Roth accounts eliminate them on growth) allow your investments to compound at the full rate, which produces substantially higher long-term results.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED TOOLS -->
+    <div class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/compound-interest-calculator/" class="lw-related-link"><span class="dot"></span> Compound Interest Calculator</a>
+        <a href="/savings-goal-calculator/" class="lw-related-link"><span class="dot"></span> Savings Goal Calculator</a>
+        <a href="/emergency-fund-calculator/" class="lw-related-link"><span class="dot"></span> Emergency Fund Calculator</a>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <p class="lw-disclaimer">
+      <em>This calculator is for educational purposes only. Results are estimates based on constant rates of return, which do not reflect actual market conditions. Past performance does not guarantee future results. Consult a qualified financial advisor for personalized guidance.</em>
+    </p>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="lw-footer">
+    <p>© 2026 PocketWise. Free financial calculators for everyone.</p>
+  </footer>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // Utility functions
+    function fmt(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:0, maximumFractionDigits:0}).format(n); }
+    function fmtFull(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:2, maximumFractionDigits:2}).format(n); }
+    function fmtNum(n) { return new Intl.NumberFormat('en-US').format(Math.round(n)); }
+    function fmtPct(n) { return n.toFixed(1) + '%'; }
+
+    // Elements
+    const initialEl = document.getElementById('initialInvestment');
+    const monthlyEl = document.getElementById('monthlyAdditions');
+    const rateEl = document.getElementById('annualRate');
+    const rateDisplay = document.getElementById('rateDisplay');
+    const yearsEl = document.getElementById('investmentPeriod');
+    const yearsDisplay = document.getElementById('yearsDisplay');
+    const inflationToggle = document.getElementById('inflationToggle');
+    const inflationRateEl = document.getElementById('inflationRate');
+    const inflationDisplay = document.getElementById('inflationDisplay');
+    const inflationRangeWrap = document.getElementById('inflationRangeWrap');
+    const inflationHint = document.getElementById('inflationHint');
+
+    const futureValueNominalEl = document.getElementById('futureValueNominal');
+    const futureValueRealEl = document.getElementById('futureValueReal');
+    const realValueBadge = document.getElementById('realValueBadge');
+    const compNominalEl = document.getElementById('compNominal');
+    const compRealEl = document.getElementById('compReal');
+    const comparisonCard = document.getElementById('comparisonCard');
+    const totalContribEl = document.getElementById('totalContrib');
+    const totalEarningsEl = document.getElementById('totalEarnings');
+    const avgAnnualEarningsEl = document.getElementById('avgAnnualEarnings');
+
+    const chartSvg = document.getElementById('chartSvg');
+    const chartContainer = document.getElementById('chartContainer');
+    const chartTooltip = document.getElementById('chartTooltip');
+    const yearTableBody = document.getElementById('yearTableBody');
+    const tableToggle = document.getElementById('tableToggle');
+    const tableContent = document.getElementById('tableContent');
+
+    let yearData = [];
+
+    // Inflation toggle
+    inflationToggle.addEventListener('change', function() {
+      inflationRangeWrap.style.display = this.checked ? 'block' : 'none';
+      inflationHint.style.display = this.checked ? 'inline' : 'none';
+      comparisonCard.style.display = this.checked ? 'grid' : 'none';
+      realValueBadge.style.display = this.checked ? 'inline-flex' : 'none';
+      calculate();
+    });
+
+    // Table toggle
+    tableToggle.addEventListener('click', function() {
+      tableToggle.classList.toggle('open');
+      tableContent.classList.toggle('open');
+    });
+
+    // Range display updates
+    rateEl.addEventListener('input', function() {
+      rateDisplay.textContent = fmtPct(parseFloat(this.value));
+      calculate();
+    });
+    yearsEl.addEventListener('input', function() {
+      yearsDisplay.textContent = this.value + ' year' + (this.value == 1 ? '' : 's');
+      calculate();
+    });
+    inflationRateEl.addEventListener('input', function() {
+      inflationDisplay.textContent = fmtPct(parseFloat(this.value));
+      inflationHint.textContent = 'at ' + fmtPct(parseFloat(this.value)) + '/yr';
+      calculate();
+    });
+
+    // Inputs
+    [initialEl, monthlyEl].forEach(el => el.addEventListener('input', calculate));
+
+    function calculate() {
+      const P = parseFloat(initialEl.value) || 0;
+      const monthly = parseFloat(monthlyEl.value) || 0;
+      const r = (parseFloat(rateEl.value) || 0) / 100;
+      const t = parseInt(yearsEl.value) || 1;
+      const showInflation = inflationToggle.checked;
+      const inflRate = showInflation ? (parseFloat(inflationRateEl.value) || 0) / 100 : 0;
+
+      yearData = [];
+
+      let balanceNominal = P;
+      let totalContributions = P;
+      const monthlyRate = r / 12;
+
+      for (let year = 1; year <= t; year++) {
+        for (let month = 1; month <= 12; month++) {
+          balanceNominal += monthly;
+          totalContributions += monthly;
+          balanceNominal *= (1 + monthlyRate);
+        }
+
+        const inflationFactor = Math.pow(1 + inflRate, year);
+        const balanceReal = balanceNominal / inflationFactor;
+
+        yearData.push({
+          year: year,
+          contributions: totalContributions,
+          nominal: balanceNominal,
+          real: balanceReal,
+          earnings: balanceNominal - totalContributions
+        });
+      }
+
+      const nominalFV = balanceNominal;
+      const realFV = nominalFV / Math.pow(1 + inflRate, t);
+      const totalContrib = totalContributions;
+      const totalEarnings = nominalFV - totalContrib;
+      const avgAnnual = t > 0 ? totalEarnings / t : 0;
+
+      // Update display
+      futureValueNominalEl.textContent = fmt(nominalFV);
+      futureValueRealEl.textContent = fmt(realFV);
+      compNominalEl.textContent = fmt(nominalFV);
+      compRealEl.textContent = fmt(realFV);
+      totalContribEl.textContent = fmt(totalContrib);
+      totalEarningsEl.textContent = fmt(totalEarnings);
+      avgAnnualEarningsEl.textContent = fmt(avgAnnual);
+
+      drawChart();
+      buildTable();
+    }
+
+    function drawChart() {
+      if (yearData.length === 0) return;
+
+      const container = chartContainer;
+      const rect = container.getBoundingClientRect();
+      const W = rect.width;
+      const H = rect.height;
+      const padL = 72, padR = 20, padT = 20, padB = 40;
+      const chartW = W - padL - padR;
+      const chartH = H - padT - padB;
+
+      const maxVal = yearData[yearData.length - 1].nominal;
+      const maxY = maxVal * 1.1 || 100;
+
+      function x(i) { return padL + (i / (yearData.length - 1 || 1)) * chartW; }
+      function y(val) { return padT + chartH - (val / maxY) * chartH; }
+
+      let svg = '';
+
+      // Grid lines
+      const gridLines = 5;
+      for (let i = 0; i <= gridLines; i++) {
+        const val = (maxY / gridLines) * i;
+        const yPos = y(val);
+        svg += '<line x1="' + padL + '" y1="' + yPos + '" x2="' + (W - padR) + '" y2="' + yPos + '" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="4,4"/>';
+        svg += '<text x="' + (padL - 10) + '" y="' + (yPos + 4) + '" text-anchor="end" fill="#94A3B8" font-size="11" font-family="JetBrains Mono, monospace">' + formatAxis(val) + '</text>';
+      }
+
+      // X-axis labels
+      const labelInterval = yearData.length <= 10 ? 1 : yearData.length <= 25 ? 5 : 10;
+      for (let i = 0; i < yearData.length; i++) {
+        if (i % labelInterval === 0 || i === yearData.length - 1) {
+          svg += '<text x="' + x(i) + '" y="' + (H - 8) + '" text-anchor="middle" fill="#94A3B8" font-size="11" font-family="Inter, sans-serif">Yr ' + yearData[i].year + '</text>';
+        }
+      }
+
+      // Gradient defs
+      svg += '<defs>';
+      svg += '<linearGradient id="nomGrad" x1="0" y1="0" x2="0" y2="1">';
+      svg += '<stop offset="0%" stop-color="#0EA5E9" stop-opacity="0.3"/>';
+      svg += '<stop offset="100%" stop-color="#0EA5E9" stop-opacity="0.03"/>';
+      svg += '</linearGradient>';
+      svg += '<linearGradient id="realGrad" x1="0" y1="0" x2="0" y2="1">';
+      svg += '<stop offset="0%" stop-color="#10B981" stop-opacity="0.25"/>';
+      svg += '<stop offset="100%" stop-color="#10B981" stop-opacity="0.03"/>';
+      svg += '</linearGradient>';
+      svg += '</defs>';
+
+      // Area: nominal
+      let nomArea = 'M ' + x(0) + ' ' + y(yearData[0].nominal);
+      for (let i = 1; i < yearData.length; i++) nomArea += ' L ' + x(i) + ' ' + y(yearData[i].nominal);
+      nomArea += ' L ' + x(yearData.length - 1) + ' ' + y(0) + ' L ' + x(0) + ' ' + y(0) + ' Z';
+      svg += '<path d="' + nomArea + '" fill="url(#nomGrad)"/>';
+
+      // Area: real (if inflation shown)
+      const showInflation = inflationToggle.checked;
+      if (showInflation) {
+        let realArea = 'M ' + x(0) + ' ' + y(yearData[0].real);
+        for (let i = 1; i < yearData.length; i++) realArea += ' L ' + x(i) + ' ' + y(yearData[i].real);
+        realArea += ' L ' + x(yearData.length - 1) + ' ' + y(0) + ' L ' + x(0) + ' ' + y(0) + ' Z';
+        svg += '<path d="' + realArea + '" fill="url(#realGrad)"/>';
+      }
+
+      // Contributions area (gray)
+      let contribArea = 'M ' + x(0) + ' ' + y(yearData[0].contributions);
+      for (let i = 1; i < yearData.length; i++) contribArea += ' L ' + x(i) + ' ' + y(yearData[i].contributions);
+      contribArea += ' L ' + x(yearData.length - 1) + ' ' + y(0) + ' L ' + x(0) + ' ' + y(0) + ' Z';
+      svg += '<path d="' + contribArea + '" fill="#CBD5E1" fill-opacity="0.25"/>';
+
+      // Lines
+      let nomLine = 'M ' + x(0) + ' ' + y(yearData[0].nominal);
+      let contribLine = 'M ' + x(0) + ' ' + y(yearData[0].contributions);
+      for (let i = 1; i < yearData.length; i++) {
+        nomLine += ' L ' + x(i) + ' ' + y(yearData[i].nominal);
+        contribLine += ' L ' + x(i) + ' ' + y(yearData[i].contributions);
+      }
+      svg += '<path d="' + nomLine + '" fill="none" stroke="#0EA5E9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+      svg += '<path d="' + contribLine + '" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="6,4" stroke-linecap="round"/>';
+
+      if (showInflation) {
+        let realLine = 'M ' + x(0) + ' ' + y(yearData[0].real);
+        for (let i = 1; i < yearData.length; i++) realLine += ' L ' + x(i) + ' ' + y(yearData[i].real);
+        svg += '<path d="' + realLine + '" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+      }
+
+      // Hover zones
+      const barW = chartW / (yearData.length || 1);
+      for (let i = 0; i < yearData.length; i++) {
+        svg += '<rect x="' + (x(i) - barW / 2) + '" y="' + padT + '" width="' + barW + '" height="' + chartH + '" fill="transparent" data-idx="' + i + '" class="hover-zone"/>';
+      }
+
+      // Hover elements
+      svg += '<line id="hoverLine" x1="0" y1="' + padT + '" x2="0" y2="' + (padT + chartH) + '" stroke="#64748B" stroke-width="1" stroke-dasharray="3,3" opacity="0"/>';
+      svg += '<circle id="dotNom" r="5" fill="#0EA5E9" stroke="white" stroke-width="2" opacity="0"/>';
+      svg += '<circle id="dotReal" r="5" fill="#10B981" stroke="white" stroke-width="2" opacity="0"/>';
+      svg += '<circle id="dotContrib" r="4" fill="#94A3B8" stroke="white" stroke-width="2" opacity="0"/>';
+
+      chartSvg.innerHTML = svg;
+      chartSvg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+
+      // Hover interactions
+      const hoverZones = chartSvg.querySelectorAll('.hover-zone');
+      const hoverLine = document.getElementById('hoverLine');
+      const dotNom = document.getElementById('dotNom');
+      const dotReal = document.getElementById('dotReal');
+      const dotContrib = document.getElementById('dotContrib');
+
+      hoverZones.forEach(zone => {
+        zone.addEventListener('mouseenter', function() {
+          const idx = parseInt(this.dataset.idx);
+          const d = yearData[idx];
+          const xPos = x(idx);
+
+          hoverLine.setAttribute('x1', xPos);
+          hoverLine.setAttribute('x2', xPos);
+          hoverLine.setAttribute('opacity', '1');
+
+          dotNom.setAttribute('cx', xPos);
+          dotNom.setAttribute('cy', y(d.nominal));
+          dotNom.setAttribute('opacity', '1');
+
+          dotContrib.setAttribute('cx', xPos);
+          dotContrib.setAttribute('cy', y(d.contributions));
+          dotContrib.setAttribute('opacity', '1');
+
+          if (showInflation) {
+            dotReal.setAttribute('cx', xPos);
+            dotReal.setAttribute('cy', y(d.real));
+            dotReal.setAttribute('opacity', '1');
+          }
+
+          let html = '<div class="tt-year">Year ' + d.year + '</div>' +
+            '<div class="tt-row"><div class="tt-dot" style="background:#0EA5E9"></div> Nominal: <span class="tt-val">' + fmt(d.nominal) + '</span></div>';
+          if (showInflation) {
+            html += '<div class="tt-row"><div class="tt-dot" style="background:#10B981"></div> Real: <span class="tt-val">' + fmt(d.real) + '</span></div>';
+          }
+          html += '<div class="tt-row"><div class="tt-dot" style="background:#94A3B8"></div> Contributed: <span class="tt-val">' + fmt(d.contributions) + '</span></div>' +
+            '<div class="tt-row"><div class="tt-dot" style="background:#34D399"></div> Earnings: <span class="tt-val">' + fmt(d.earnings) + '</span></div>';
+
+          chartTooltip.innerHTML = html;
+          chartTooltip.classList.add('visible');
+
+          const containerRect = container.getBoundingClientRect();
+          let left = xPos + 15;
+          if (left + 220 > containerRect.width) left = xPos - 235;
+          chartTooltip.style.left = left + 'px';
+          chartTooltip.style.top = (y(d.nominal) - 10) + 'px';
+        });
+
+        zone.addEventListener('mouseleave', function() {
+          hoverLine.setAttribute('opacity', '0');
+          dotNom.setAttribute('opacity', '0');
+          dotReal.setAttribute('opacity', '0');
+          dotContrib.setAttribute('opacity', '0');
+          chartTooltip.classList.remove('visible');
+        });
+      });
+    }
+
+    function formatAxis(val) {
+      if (val >= 1000000) return '$' + (val / 1000000).toFixed(1) + 'M';
+      if (val >= 1000) return '$' + (val / 1000).toFixed(0) + 'K';
+      return '$' + val.toFixed(0);
+    }
+
+    function buildTable() {
+      const showInflation = inflationToggle.checked;
+      let html = '';
+      for (let i = 0; i < yearData.length; i++) {
+        const d = yearData[i];
+        html += '<tr>' +
+          '<td class="num">' + d.year + '</td>' +
+          '<td class="num">' + fmt(d.contributions) + '</td>' +
+          '<td class="num" style="font-weight:600">' + fmt(d.nominal) + '</td>' +
+          '<td class="num" style="color:var(--lw-emerald)">' + (showInflation ? fmt(d.real) : '—') + '</td>' +
+          '<td class="num" style="color:var(--lw-sky)">' + fmt(d.earnings) + '</td>' +
+          '</tr>';
+      }
+      yearTableBody.innerHTML = html;
+    }
+
+    // Resize handler
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(drawChart, 150);
+    });
+
+    // Initial calculation
+    calculate();
+  })();
+  </script>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the difference between nominal and real investment returns?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Nominal returns are the raw percentage your investment grows, without any adjustments. Real returns subtract the inflation rate to show what your gains are actually worth in terms of purchasing power. For example, if your portfolio earned 8% but inflation was 3%, your real return was approximately 5%."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How accurate are investment return projections?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Investment calculators assume a steady, constant rate of return, which never happens in practice. Real markets fluctuate, sometimes dramatically. These projections are best used for ballpark planning and goal-setting, not as precise predictions."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a reasonable inflation rate to assume?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The long-term historical average for U.S. inflation is approximately 3% per year. The Federal Reserve targets 2% inflation. For long-term projections (20+ years), using 2.5-3% is a reasonable middle ground."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I invest a lump sum or dollar-cost average?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Statistically, lump-sum investing outperforms dollar-cost averaging about two-thirds of the time, because markets tend to go up. However, dollar-cost averaging reduces the risk of investing everything right before a downturn and is psychologically easier for most people."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do taxes affect my investment returns?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Taxes can significantly reduce your effective return. In taxable accounts, you owe taxes on dividends annually and on capital gains when you sell. Tax-advantaged accounts (401k, IRA, Roth) allow your investments to compound at the full rate, producing substantially higher long-term results."
+        }
+      }
+    ]
+  }
+  </script>
+</body>
+</html>

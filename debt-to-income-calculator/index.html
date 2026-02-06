@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debt-to-Income (DTI) Calculator — Free Online Calculator | PocketWise</title>
+  <meta name="description" content="Calculate your debt-to-income ratio instantly. See front-end and back-end DTI, understand what lenders look for, and get tips to improve your ratio.">
+  <link rel="canonical" href="https://pocketwise.io/debt-to-income-calculator/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* Gauge */
+    .dti-gauge-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 28px 0 20px;
+    }
+    .dti-gauge-svg {
+      width: 280px;
+      height: 160px;
+    }
+    .gauge-zone {
+      fill: none;
+      stroke-width: 20;
+      stroke-linecap: round;
+    }
+    .gauge-needle-group {
+      transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-origin: 140px 140px;
+    }
+    .gauge-needle {
+      fill: var(--lw-navy);
+    }
+    .gauge-center-dot {
+      fill: var(--lw-navy);
+    }
+    .gauge-label-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 9px;
+      font-weight: 600;
+      fill: var(--lw-text-muted);
+    }
+    .gauge-value-text {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      fill: var(--lw-navy);
+    }
+    .gauge-value-suffix {
+      font-size: 20px;
+      font-weight: 600;
+      fill: var(--lw-slate-500);
+    }
+    .gauge-category-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Lender labels */
+    .lender-labels {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 20px 0 28px;
+    }
+    .lender-label {
+      text-align: center;
+      padding: 10px 6px;
+      border-radius: var(--lw-radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      transition: all var(--lw-transition);
+      opacity: 0.5;
+    }
+    .lender-label.active {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+    .lender-label.excellent {
+      background: #ECFDF5;
+      color: #059669;
+      border: 1px solid rgba(5, 150, 105, 0.2);
+    }
+    .lender-label.good {
+      background: #F0FDF4;
+      color: #16A34A;
+      border: 1px solid rgba(22, 163, 74, 0.2);
+    }
+    .lender-label.fair {
+      background: #FFFBEB;
+      color: #D97706;
+      border: 1px solid rgba(217, 119, 6, 0.2);
+    }
+    .lender-label.poor {
+      background: #FFF1F2;
+      color: #E11D48;
+      border: 1px solid rgba(225, 29, 72, 0.2);
+    }
+    .lender-label-pct {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      display: block;
+      margin-top: 3px;
+      opacity: 0.8;
+    }
+
+    /* DTI result cards */
+    .dti-result-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .dti-card {
+      background: var(--lw-card);
+      border-radius: var(--lw-radius-lg);
+      padding: 24px;
+      text-align: center;
+      border: 2px solid var(--lw-border-light);
+      transition: all var(--lw-transition);
+    }
+    .dti-card.primary {
+      border-color: var(--lw-sky);
+      background: var(--lw-sky-50);
+    }
+    .dti-card-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 600;
+      color: var(--lw-text-muted);
+      margin-bottom: 8px;
+    }
+    .dti-card-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 38px;
+      font-weight: 800;
+      color: var(--lw-navy);
+      line-height: 1.1;
+    }
+    .dti-card-value .pct {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--lw-slate-500);
+    }
+    .dti-card-sub {
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+      margin-top: 6px;
+    }
+    .dti-card-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: var(--lw-radius-full);
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 8px;
+      letter-spacing: 0.3px;
+    }
+    .dti-card-badge.excellent { background: #D1FAE5; color: #065F46; }
+    .dti-card-badge.good { background: #DCFCE7; color: #166534; }
+    .dti-card-badge.fair { background: #FEF3C7; color: #92400E; }
+    .dti-card-badge.poor { background: #FEE2E2; color: #991B1B; }
+    .dti-card-badge.very-poor { background: #FECDD3; color: #881337; }
+
+    /* Donut chart */
+    .donut-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .donut-svg {
+      width: 200px;
+      height: 200px;
+      transform: rotate(-90deg);
+    }
+    .donut-segment {
+      fill: none;
+      stroke-width: 36;
+      transition: stroke-dasharray 0.8s ease, stroke-dashoffset 0.8s ease;
+    }
+    .donut-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .donut-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .donut-legend-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .donut-legend-text {
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+    }
+    .donut-legend-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: var(--lw-navy);
+      font-size: 14px;
+      margin-left: auto;
+      padding-left: 16px;
+    }
+
+    /* Tips */
+    .tips-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .tip-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 14px;
+      background: var(--lw-slate-50);
+      border-radius: var(--lw-radius);
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+      line-height: 1.5;
+    }
+    .tip-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    @media (max-width: 768px) {
+      .dti-result-cards { grid-template-columns: 1fr; }
+      .dti-gauge-svg { width: 240px; height: 140px; }
+      .lender-labels { grid-template-columns: repeat(2, 1fr); }
+      .donut-container { flex-direction: column; gap: 20px; }
+      .tips-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">L</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/mortgage-calculator/">Mortgage</a></li>
+        <li><a href="/auto-loan-calculator/">Auto</a></li>
+        <li><a href="/compound-interest-calculator/">Investing</a></li>
+        <li><a href="/debt-payoff-calculator/">Debt</a></li>
+        <li><a href="/">All Tools</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu">
+      <a href="/">All Tools</a>
+      <a href="/mortgage-calculator/">Mortgage Calculator</a>
+      <a href="/auto-loan-calculator/">Auto Loan Calculator</a>
+      <a href="/personal-loan-calculator/">Personal Loan Calculator</a>
+      <a href="/compound-interest-calculator/">Compound Interest Calculator</a>
+      <a href="/debt-payoff-calculator/">Debt Payoff Calculator</a>
+      <a href="/credit-card-payoff-calculator/">Credit Card Payoff</a>
+      <a href="/home-affordability-calculator/">Home Affordability</a>
+      <a href="/refinance-calculator/">Refinance Calculator</a>
+      <a href="/loan-comparison-tool/">Loan Comparison</a>
+      <a href="/amortization-schedule/">Amortization Schedule</a>
+      <a href="/debt-to-income-calculator/">Debt-to-Income</a>
+      <a href="/apr-calculator/">APR Calculator</a>
+      <a href="/savings-goal-calculator/">Savings Goal Calculator</a>
+      <a href="/investment-return-calculator/">Investment Returns</a>
+      <a href="/emergency-fund-calculator/">Emergency Fund</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- HERO -->
+    <div class="lw-hero">
+      <span class="lw-badge amber">Financial Health</span>
+      <h1>Debt-to-Income <span class="accent">Ratio</span> Calculator</h1>
+      <p class="subtitle">Find out your DTI ratio — the key number lenders use to evaluate your borrowing capacity. See where you stand and how to improve it.</p>
+    </div>
+
+    <!-- TOOL INTERFACE -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">💰</div>
+        <div>
+          <div class="lw-card-title">Your Monthly Income</div>
+          <div class="lw-card-subtitle">Enter your gross (pre-tax) monthly income</div>
+        </div>
+      </div>
+      <div class="lw-form-group">
+        <label class="lw-label">Monthly Gross Income <span class="lw-label-hint">(before taxes)</span></label>
+        <div class="lw-input-prefix">
+          <span class="prefix">$</span>
+          <input type="number" id="income" class="lw-input" value="6000" min="500" max="100000" step="100">
+        </div>
+      </div>
+    </div>
+
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon rose">📋</div>
+        <div>
+          <div class="lw-card-title">Your Monthly Debts</div>
+          <div class="lw-card-subtitle">Enter minimum required monthly payments for each</div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">🏠 Rent / Mortgage</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="housing" class="lw-input debt-input" value="1400" min="0" max="50000" step="50" data-category="housing">
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">🚗 Car Payment</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="car" class="lw-input debt-input" value="350" min="0" max="10000" step="25" data-category="debt">
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">🎓 Student Loans</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="student" class="lw-input debt-input" value="250" min="0" max="10000" step="25" data-category="debt">
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">💳 Credit Card Minimums</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="credit-cards" class="lw-input debt-input" value="150" min="0" max="10000" step="25" data-category="debt">
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">📄 Other Debts <span class="lw-label-hint">(personal loans, alimony, etc.)</span></label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="other" class="lw-input debt-input" value="0" min="0" max="10000" step="25" data-category="debt">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTS: DTI Cards -->
+    <div class="dti-result-cards">
+      <div class="dti-card" id="frontend-card">
+        <div class="dti-card-label">Front-End DTI</div>
+        <div class="dti-card-value"><span id="frontend-value">23.3</span><span class="pct">%</span></div>
+        <div class="dti-card-sub">Housing costs only</div>
+        <div class="dti-card-badge excellent" id="frontend-badge">Excellent</div>
+      </div>
+      <div class="dti-card primary" id="backend-card">
+        <div class="dti-card-label">Back-End DTI</div>
+        <div class="dti-card-value"><span id="backend-value">35.8</span><span class="pct">%</span></div>
+        <div class="dti-card-sub">All debts included</div>
+        <div class="dti-card-badge good" id="backend-badge">Good</div>
+      </div>
+    </div>
+
+    <!-- GAUGE -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon amber">📏</div>
+        <div>
+          <div class="lw-card-title">Your DTI at a Glance</div>
+          <div class="lw-card-subtitle">Back-end DTI — what most lenders evaluate</div>
+        </div>
+      </div>
+
+      <div class="dti-gauge-container">
+        <svg class="dti-gauge-svg" viewBox="0 0 280 160" id="gauge-svg">
+          <!-- Gauge arc zones -->
+          <!-- Excellent: 0-28% → 180° to 230.4° -->
+          <path class="gauge-zone" stroke="#34D399" d="M 28 140 A 112 112 0 0 1 59.5 52.3" />
+          <!-- Good: 28-36% → 230.4° to 244.8° -->
+          <path class="gauge-zone" stroke="#A7F3D0" d="M 59.5 52.3 A 112 112 0 0 1 84.5 35.2" />
+          <!-- Fair: 36-43% → 244.8° to 257.4° -->
+          <path class="gauge-zone" stroke="#FCD34D" d="M 84.5 35.2 A 112 112 0 0 1 113.8 29" />
+          <!-- Poor: 43-50% → 257.4° to 270° -->
+          <path class="gauge-zone" stroke="#FBBF24" d="M 113.8 29 A 112 112 0 0 1 140 28" />
+          <!-- Very Poor: 50%+ → 270° to 360° -->
+          <path class="gauge-zone" stroke="#FB7185" d="M 140 28 A 112 112 0 0 1 252 140" />
+
+          <!-- Labels on arc -->
+          <text class="gauge-label-text" x="18" y="152" text-anchor="start">0%</text>
+          <text class="gauge-label-text" x="51" y="50" text-anchor="start">28%</text>
+          <text class="gauge-label-text" x="104" y="22" text-anchor="middle">43%</text>
+          <text class="gauge-label-text" x="262" y="152" text-anchor="end">60%+</text>
+
+          <!-- Needle -->
+          <g class="gauge-needle-group" id="gauge-needle">
+            <polygon class="gauge-needle" points="140,48 136,140 144,140" />
+            <circle class="gauge-center-dot" cx="140" cy="140" r="8" />
+          </g>
+
+          <!-- Center value -->
+          <text class="gauge-value-text" x="140" y="125" text-anchor="middle" id="gauge-pct">35.8</text>
+          <text class="gauge-value-suffix" x="178" y="125" text-anchor="start">%</text>
+          <text class="gauge-category-text" x="140" y="148" text-anchor="middle" id="gauge-category" fill="#16A34A">Good</text>
+        </svg>
+      </div>
+
+      <!-- Lender perspective labels -->
+      <div class="lender-labels" id="lender-labels">
+        <div class="lender-label excellent" data-range="excellent">
+          <div>Excellent</div>
+          <span class="lender-label-pct">&lt; 28%</span>
+        </div>
+        <div class="lender-label good active" data-range="good">
+          <div>Good</div>
+          <span class="lender-label-pct">28–36%</span>
+        </div>
+        <div class="lender-label fair" data-range="fair">
+          <div>Moderate</div>
+          <span class="lender-label-pct">36–43%</span>
+        </div>
+        <div class="lender-label poor" data-range="poor">
+          <div>High Risk</div>
+          <span class="lender-label-pct">&gt; 43%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT GRID -->
+    <div class="lw-result-grid">
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Total Monthly Debts</div>
+        <div class="lw-result-item-value rose lw-mono" id="total-debts">$2,150</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Remaining Income</div>
+        <div class="lw-result-item-value green lw-mono" id="remaining-income">$3,850</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Max New Debt @36%</div>
+        <div class="lw-result-item-value sky lw-mono" id="max-new-debt">$10</div>
+      </div>
+    </div>
+
+    <!-- INCOME ALLOCATION DONUT -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon violet">🍩</div>
+        <div>
+          <div class="lw-card-title">Income Allocation</div>
+          <div class="lw-card-subtitle">How your monthly gross income is divided</div>
+        </div>
+      </div>
+      <div class="donut-container">
+        <svg class="donut-svg" viewBox="0 0 200 200" id="donut-svg">
+          <circle cx="100" cy="100" r="82" fill="none" stroke="var(--lw-slate-100)" stroke-width="36" />
+          <circle class="donut-segment" id="seg-housing" cx="100" cy="100" r="82" stroke="#0EA5E9" stroke-dasharray="0 515.22" stroke-dashoffset="0" />
+          <circle class="donut-segment" id="seg-debts" cx="100" cy="100" r="82" stroke="#F43F5E" stroke-dasharray="0 515.22" stroke-dashoffset="0" />
+          <circle class="donut-segment" id="seg-remaining" cx="100" cy="100" r="82" stroke="#10B981" stroke-dasharray="0 515.22" stroke-dashoffset="0" />
+        </svg>
+        <div class="donut-legend" id="donut-legend">
+          <div class="donut-legend-item">
+            <div class="donut-legend-dot" style="background:#0EA5E9"></div>
+            <span class="donut-legend-text">Housing</span>
+            <span class="donut-legend-value" id="legend-housing">$1,400 (23%)</span>
+          </div>
+          <div class="donut-legend-item">
+            <div class="donut-legend-dot" style="background:#F43F5E"></div>
+            <span class="donut-legend-text">Other Debts</span>
+            <span class="donut-legend-value" id="legend-debts">$750 (13%)</span>
+          </div>
+          <div class="donut-legend-item">
+            <div class="donut-legend-dot" style="background:#10B981"></div>
+            <span class="donut-legend-text">Remaining</span>
+            <span class="donut-legend-value" id="legend-remaining">$3,850 (64%)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIPS -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">💡</div>
+        <div>
+          <div class="lw-card-title" id="tips-title">Tips to Improve Your DTI</div>
+          <div class="lw-card-subtitle">Practical steps to strengthen your financial profile</div>
+        </div>
+      </div>
+      <div class="tips-grid" id="tips-grid">
+        <div class="tip-item"><span class="tip-icon">💳</span> Pay down high-interest credit card balances first to eliminate those minimum payments.</div>
+        <div class="tip-item"><span class="tip-icon">📈</span> Increase income through raises, side work, or freelancing to lower your ratio.</div>
+        <div class="tip-item"><span class="tip-icon">🔄</span> Refinance loans for lower payments or consolidate debts at a lower rate.</div>
+        <div class="tip-item"><span class="tip-icon">🚫</span> Avoid taking on new debt before applying for a mortgage or major loan.</div>
+      </div>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <div class="lw-content">
+      <h2>Understanding Your Debt-to-Income Ratio</h2>
+      <p>Your debt-to-income ratio (DTI) is one of the most important numbers in your financial life — especially when you're applying for a mortgage, auto loan, or any other major credit product. DTI measures the percentage of your gross monthly income that goes toward paying debts. It tells lenders how much of your income is already committed and whether you can comfortably handle additional payments.</p>
+
+      <p>Lenders use DTI as a key qualifier because, unlike credit scores, it reflects your current financial obligations in relation to your earning power. Two people with identical credit scores may have vastly different DTI ratios, and the person with the lower ratio is generally considered a safer borrower.</p>
+
+      <h3>Front-End vs. Back-End DTI: What's the Difference?</h3>
+      <p>There are two types of DTI ratios, and lenders evaluate both:</p>
+      <ul>
+        <li><strong>Front-end DTI</strong> (also called the housing ratio) measures only your housing-related costs — mortgage or rent, property taxes, homeowner's insurance, and HOA fees — as a percentage of your gross monthly income. Most conventional lenders prefer this to be below 28%.</li>
+        <li><strong>Back-end DTI</strong> (also called the total DTI) includes all recurring monthly debt obligations: housing costs plus car payments, student loans, credit card minimums, personal loans, alimony, and child support. This is the ratio most lenders focus on, and they generally prefer it to be below 36% for conventional loans, though FHA loans may allow up to 43% or even 50% with compensating factors.</li>
+      </ul>
+
+      <h3>What Counts as "Debt" in DTI?</h3>
+      <p>When calculating DTI, lenders include minimum required monthly payments on all recurring obligations that appear on your credit report. This includes mortgage or rent payments, auto loans, student loans, credit card minimum payments, personal loans, alimony, and child support. It does <strong>not</strong> typically include utilities, groceries, insurance premiums (other than mortgage-related), phone bills, or subscriptions. The key distinction is contractual debt obligations versus living expenses.</p>
+
+      <h3>DTI Ranges and What They Mean</h3>
+      <p>Understanding where your DTI falls helps you gauge your borrowing power:</p>
+      <ul>
+        <li><strong>Below 28%:</strong> Excellent. You're in great shape for virtually any loan product. Lenders see you as a low-risk borrower with plenty of financial breathing room.</li>
+        <li><strong>28% to 36%:</strong> Good. Most conventional lenders are comfortable in this range. You qualify for competitive rates and favorable terms.</li>
+        <li><strong>36% to 43%:</strong> Fair. You may still qualify for many loan products, including FHA-backed mortgages, but you might face higher rates or additional requirements. This range signals that a significant portion of your income is spoken for.</li>
+        <li><strong>43% to 50%:</strong> High. Qualifying for new credit becomes more difficult. You're above the typical maximum for qualified mortgages (QM), though some lenders offer non-QM products in this range.</li>
+        <li><strong>Above 50%:</strong> Very high. More than half your income goes to debt. Lenders consider this a significant risk. Focus on debt reduction before applying for new credit.</li>
+      </ul>
+
+      <h3>How to Lower Your DTI Ratio</h3>
+      <p>Improving your DTI comes down to two levers: reduce your debts or increase your income. On the debt side, focus on paying off or paying down existing balances — especially high-interest credit cards that may have relatively low balances but persistent minimum payments. Consolidating multiple debts into a single lower-payment loan can also improve your ratio. On the income side, a raise, second job, freelance work, or rental income all count toward the denominator and immediately improve your ratio.</p>
+
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">What is a good debt-to-income ratio?</button>
+          <div class="lw-faq-a">
+            <p>A DTI below 36% is generally considered good by most lenders. Below 28% is excellent. For mortgage qualification, the Consumer Financial Protection Bureau (CFPB) sets the qualified mortgage (QM) threshold at 43%. However, the lower your DTI, the better your chances of approval and the more competitive your interest rate.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Does rent count in DTI calculations?</button>
+          <div class="lw-faq-a">
+            <p>It depends on the context. When applying for a mortgage, your current rent is typically not counted because it will be replaced by the new mortgage payment. However, if you're applying for an auto loan or personal loan and you're renting, the lender may include your rent payment in the DTI calculation to assess your overall debt burden.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">What debts are included in DTI?</button>
+          <div class="lw-faq-a">
+            <p>DTI includes minimum required monthly payments on: mortgage or rent, auto loans, student loans, credit card minimums, personal loans, alimony, child support, and any other recurring debt obligations. It does NOT include utilities, groceries, health insurance, cell phone bills, or subscription services.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Can I get a mortgage with a high DTI?</button>
+          <div class="lw-faq-a">
+            <p>It's possible but more difficult. FHA loans allow DTIs up to 43% (sometimes 50% with strong compensating factors like high credit scores or large cash reserves). VA loans have no official DTI cap but typically use 41% as a guideline. Conventional loans usually require below 43-45%. Some non-QM lenders may accept higher DTIs with larger down payments and excellent credit.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">How quickly can I improve my DTI ratio?</button>
+          <div class="lw-faq-a">
+            <p>Your DTI updates as soon as your monthly obligations change. Paying off a credit card, car loan, or other debt immediately improves your ratio. Increasing income (through a raise, new job, or side income) also helps. Some people see meaningful improvement in 30-90 days by aggressively paying down small debts. For a mortgage application, lenders use your current debts at the time of underwriting.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED TOOLS -->
+    <div class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/home-affordability-calculator/" class="lw-related-link"><span class="dot"></span> Home Affordability Calculator</a>
+        <a href="/mortgage-calculator/" class="lw-related-link"><span class="dot"></span> Mortgage Calculator</a>
+        <a href="/personal-loan-calculator/" class="lw-related-link"><span class="dot"></span> Personal Loan Calculator</a>
+        <a href="/credit-card-payoff-calculator/" class="lw-related-link"><span class="dot"></span> Credit Card Payoff Calculator</a>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <p class="lw-disclaimer">
+      <em>This calculator is for educational purposes only. Results are estimates and should not be considered financial advice. Actual lender requirements may vary. Consult a qualified financial advisor or mortgage professional for personalized guidance.</em>
+    </p>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="lw-footer">
+    <p>© 2026 PocketWise. Free financial calculators for everyone.</p>
+  </footer>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // Utilities
+    function fmt(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:0, maximumFractionDigits:0}).format(n); }
+
+    // DOM
+    var incomeEl = document.getElementById('income');
+    var housingEl = document.getElementById('housing');
+    var carEl = document.getElementById('car');
+    var studentEl = document.getElementById('student');
+    var ccEl = document.getElementById('credit-cards');
+    var otherEl = document.getElementById('other');
+
+    // Listen to all inputs
+    [incomeEl, housingEl, carEl, studentEl, ccEl, otherEl].forEach(function(el) {
+      el.addEventListener('input', calculate);
+    });
+
+    function getCategory(dti) {
+      if (dti < 28) return { label: 'Excellent', cls: 'excellent', color: '#059669' };
+      if (dti < 36) return { label: 'Good', cls: 'good', color: '#16A34A' };
+      if (dti < 43) return { label: 'Moderate', cls: 'fair', color: '#D97706' };
+      if (dti < 50) return { label: 'High Risk', cls: 'poor', color: '#E11D48' };
+      return { label: 'Very High', cls: 'very-poor', color: '#BE123C' };
+    }
+
+    function getFrontCategory(dti) {
+      if (dti < 20) return { label: 'Excellent', cls: 'excellent', color: '#059669' };
+      if (dti < 28) return { label: 'Good', cls: 'good', color: '#16A34A' };
+      if (dti < 33) return { label: 'Moderate', cls: 'fair', color: '#D97706' };
+      return { label: 'High', cls: 'poor', color: '#E11D48' };
+    }
+
+    function updateGauge(dti) {
+      // Gauge arc from 180° (0%) to 360° (60%+)
+      // Map dti% to angle: 0% → 180°, 60% → 360°
+      var clampedDti = Math.min(Math.max(dti, 0), 60);
+      var angle = (clampedDti / 60) * 180 - 90; // -90 (0%) to 90 (60%)
+
+      var needle = document.getElementById('gauge-needle');
+      needle.style.transform = 'rotate(' + angle + 'deg)';
+
+      var cat = getCategory(dti);
+      document.getElementById('gauge-pct').textContent = dti.toFixed(1);
+      var catText = document.getElementById('gauge-category');
+      catText.textContent = cat.label;
+      catText.setAttribute('fill', cat.color);
+
+      // Update lender labels
+      var labels = document.querySelectorAll('.lender-label');
+      var activeRange = 'poor';
+      if (dti < 28) activeRange = 'excellent';
+      else if (dti < 36) activeRange = 'good';
+      else if (dti < 43) activeRange = 'fair';
+
+      labels.forEach(function(l) {
+        l.classList.toggle('active', l.dataset.range === activeRange);
+      });
+    }
+
+    function updateDonut(housing, otherDebts, remaining, income) {
+      var circumference = 2 * Math.PI * 82; // ~515.22
+      var housingPct = income > 0 ? housing / income : 0;
+      var debtsPct = income > 0 ? otherDebts / income : 0;
+      var remainPct = income > 0 ? Math.max(remaining, 0) / income : 0;
+
+      // Normalize
+      var total = housingPct + debtsPct + remainPct;
+      if (total === 0) total = 1;
+
+      var h = (housingPct / total) * circumference;
+      var d = (debtsPct / total) * circumference;
+      var r = (remainPct / total) * circumference;
+
+      var segH = document.getElementById('seg-housing');
+      var segD = document.getElementById('seg-debts');
+      var segR = document.getElementById('seg-remaining');
+
+      segH.setAttribute('stroke-dasharray', h + ' ' + (circumference - h));
+      segH.setAttribute('stroke-dashoffset', '0');
+
+      segD.setAttribute('stroke-dasharray', d + ' ' + (circumference - d));
+      segD.setAttribute('stroke-dashoffset', -h + '');
+
+      segR.setAttribute('stroke-dasharray', r + ' ' + (circumference - r));
+      segR.setAttribute('stroke-dashoffset', -(h + d) + '');
+
+      // Legend
+      var housingPctDisplay = income > 0 ? Math.round(housing / income * 100) : 0;
+      var debtsPctDisplay = income > 0 ? Math.round(otherDebts / income * 100) : 0;
+      var remainPctDisplay = income > 0 ? Math.round(Math.max(remaining, 0) / income * 100) : 0;
+
+      document.getElementById('legend-housing').textContent = fmt(housing) + ' (' + housingPctDisplay + '%)';
+      document.getElementById('legend-debts').textContent = fmt(otherDebts) + ' (' + debtsPctDisplay + '%)';
+      document.getElementById('legend-remaining').textContent = fmt(Math.max(remaining, 0)) + ' (' + remainPctDisplay + '%)';
+    }
+
+    function calculate() {
+      var income = parseFloat(incomeEl.value) || 0;
+      var housing = parseFloat(housingEl.value) || 0;
+      var car = parseFloat(carEl.value) || 0;
+      var student = parseFloat(studentEl.value) || 0;
+      var cc = parseFloat(ccEl.value) || 0;
+      var other = parseFloat(otherEl.value) || 0;
+
+      var otherDebts = car + student + cc + other;
+      var totalDebts = housing + otherDebts;
+      var remaining = income - totalDebts;
+
+      // DTI calculations
+      var frontendDti = income > 0 ? (housing / income * 100) : 0;
+      var backendDti = income > 0 ? (totalDebts / income * 100) : 0;
+
+      // Front-end card
+      var frontCat = getFrontCategory(frontendDti);
+      document.getElementById('frontend-value').textContent = frontendDti.toFixed(1);
+      var frontBadge = document.getElementById('frontend-badge');
+      frontBadge.textContent = frontCat.label;
+      frontBadge.className = 'dti-card-badge ' + frontCat.cls;
+
+      // Back-end card
+      var backCat = getCategory(backendDti);
+      document.getElementById('backend-value').textContent = backendDti.toFixed(1);
+      var backBadge = document.getElementById('backend-badge');
+      backBadge.textContent = backCat.label;
+      backBadge.className = 'dti-card-badge ' + backCat.cls;
+
+      // Highlight which card is primary
+      document.getElementById('frontend-card').classList.remove('primary');
+      document.getElementById('backend-card').classList.add('primary');
+
+      // Gauge
+      updateGauge(backendDti);
+
+      // Result grid
+      document.getElementById('total-debts').textContent = fmt(totalDebts);
+      document.getElementById('remaining-income').textContent = fmt(Math.max(remaining, 0));
+
+      // Max new debt at 36% DTI
+      var maxAt36 = income > 0 ? Math.max((0.36 * income) - totalDebts, 0) : 0;
+      document.getElementById('max-new-debt').textContent = fmt(maxAt36);
+
+      // Donut
+      updateDonut(housing, otherDebts, remaining, income);
+
+      // Update tips title based on category
+      var tipsTitle = document.getElementById('tips-title');
+      if (backendDti < 28) {
+        tipsTitle.textContent = '🎉 Great Job — Keep It Up!';
+      } else if (backendDti < 36) {
+        tipsTitle.textContent = '💡 Tips to Strengthen Your DTI';
+      } else {
+        tipsTitle.textContent = '⚡ Tips to Improve Your DTI';
+      }
+    }
+
+    // Initial
+    calculate();
+  })();
+  </script>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a good debt-to-income ratio?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A DTI below 36% is generally considered good by most lenders. Below 28% is excellent. For mortgage qualification, the Consumer Financial Protection Bureau (CFPB) sets the qualified mortgage (QM) threshold at 43%. However, the lower your DTI, the better your chances of approval and the more competitive your interest rate."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does rent count in DTI calculations?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It depends on the context. When applying for a mortgage, your current rent is typically not counted because it will be replaced by the new mortgage payment. However, if you're applying for an auto loan or personal loan and you're renting, the lender may include your rent payment in the DTI calculation to assess your overall debt burden."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What debts are included in DTI?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "DTI includes minimum required monthly payments on: mortgage or rent, auto loans, student loans, credit card minimums, personal loans, alimony, child support, and any other recurring debt obligations. It does NOT include utilities, groceries, health insurance, cell phone bills, or subscription services."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I get a mortgage with a high DTI?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It's possible but more difficult. FHA loans allow DTIs up to 43% (sometimes 50% with strong compensating factors like high credit scores or large cash reserves). VA loans have no official DTI cap but typically use 41% as a guideline. Conventional loans usually require below 43-45%. Some non-QM lenders may accept higher DTIs with larger down payments and excellent credit."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How quickly can I improve my DTI ratio?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Your DTI updates as soon as your monthly obligations change. Paying off a credit card, car loan, or other debt immediately improves your ratio. Increasing income (through a raise, new job, or side income) also helps. Some people see meaningful improvement in 30-90 days by aggressively paying down small debts. For a mortgage application, lenders use your current debts at the time of underwriting."
+        }
+      }
+    ]
+  }
+  </script>
+</body>
+</html>

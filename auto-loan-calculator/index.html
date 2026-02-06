@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto Loan Calculator — Free Car Payment Calculator | PocketWise</title>
+  <meta name="description" content="Calculate your monthly car payment instantly. Factor in trade-in value, sales tax, down payment, and compare different loan terms side by side.">
+  <link rel="canonical" href="https://pocketwise.io/auto-loan-calculator/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .term-toggle { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .term-btn {
+      padding: 10px 18px;
+      border: 2px solid var(--lw-slate-200);
+      border-radius: var(--lw-radius-sm);
+      background: var(--lw-card);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--lw-slate-600);
+      cursor: pointer;
+      transition: all var(--lw-transition);
+      min-width: 60px;
+      text-align: center;
+    }
+    .term-btn:hover { border-color: var(--lw-sky); color: var(--lw-sky-dark); }
+    .term-btn.active {
+      border-color: var(--lw-sky);
+      background: var(--lw-sky-50);
+      color: var(--lw-sky-dark);
+      box-shadow: 0 0 0 3px rgba(14,165,233,0.1);
+    }
+    .whatif-card {
+      background: var(--lw-card);
+      border-radius: var(--lw-radius-lg);
+      padding: 28px 32px;
+      box-shadow: var(--lw-shadow);
+      border: 1px solid var(--lw-border-light);
+      margin-bottom: 24px;
+    }
+    .whatif-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--lw-navy);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .whatif-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 120px 120px;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--lw-border-light);
+      transition: background 0.2s;
+    }
+    .whatif-row:last-child { border-bottom: none; }
+    .whatif-row:hover { background: var(--lw-slate-50); margin: 0 -12px; padding-left: 12px; padding-right: 12px; border-radius: var(--lw-radius-sm); }
+    .whatif-row.highlight { background: var(--lw-sky-50); margin: 0 -12px; padding-left: 12px; padding-right: 12px; border-radius: var(--lw-radius-sm); }
+    .whatif-term { font-weight: 700; color: var(--lw-navy); font-size: 15px; }
+    .whatif-bar-track {
+      height: 22px;
+      background: var(--lw-slate-100);
+      border-radius: var(--lw-radius-full);
+      overflow: hidden;
+    }
+    .whatif-bar-inner {
+      height: 100%;
+      border-radius: var(--lw-radius-full);
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      background: linear-gradient(90deg, var(--lw-sky), var(--lw-teal));
+    }
+    .whatif-bar-inner.interest { background: linear-gradient(90deg, var(--lw-amber), var(--lw-amber-light)); }
+    .whatif-payment {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--lw-navy);
+      text-align: right;
+    }
+    .whatif-interest {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--lw-slate-500);
+      text-align: right;
+    }
+    .whatif-header {
+      display: grid;
+      grid-template-columns: 80px 1fr 120px 120px;
+      gap: 12px;
+      padding-bottom: 10px;
+      margin-bottom: 4px;
+      border-bottom: 2px solid var(--lw-border);
+    }
+    .whatif-header span {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--lw-slate-400);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .whatif-header span:nth-child(3),
+    .whatif-header span:nth-child(4) { text-align: right; }
+    .cost-breakdown { margin-top: 8px; }
+    .cost-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--lw-border-light);
+    }
+    .cost-row:last-child { border-bottom: none; }
+    .cost-label {
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cost-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .cost-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--lw-navy);
+    }
+    .stacked-bar-container { margin: 24px 0; }
+    .stacked-bar {
+      display: flex;
+      height: 40px;
+      border-radius: var(--lw-radius-full);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .stacked-bar-segment {
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 2px;
+    }
+    .stacked-bar-segment span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: white;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .stacked-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .stacked-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--lw-text-secondary);
+    }
+    .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 768px) {
+      .input-row { grid-template-columns: 1fr; }
+      .whatif-row, .whatif-header { grid-template-columns: 60px 1fr 100px 100px; gap: 8px; }
+      .whatif-payment { font-size: 13px; }
+    }
+    @media (max-width: 480px) {
+      .whatif-row, .whatif-header { grid-template-columns: 55px 1fr 85px; }
+      .whatif-interest, .whatif-header span:nth-child(4) { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">L</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/mortgage-calculator/">Mortgage</a></li>
+        <li><a href="/auto-loan-calculator/" class="active">Auto</a></li>
+        <li><a href="/compound-interest-calculator/">Investing</a></li>
+        <li><a href="/debt-payoff-calculator/">Debt</a></li>
+        <li><a href="/">All Tools</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu">
+      <a href="/">All Tools</a>
+      <a href="/mortgage-calculator/">Mortgage Calculator</a>
+      <a href="/auto-loan-calculator/">Auto Loan Calculator</a>
+      <a href="/personal-loan-calculator/">Personal Loan Calculator</a>
+      <a href="/compound-interest-calculator/">Compound Interest Calculator</a>
+      <a href="/debt-payoff-calculator/">Debt Payoff Calculator</a>
+      <a href="/credit-card-payoff-calculator/">Credit Card Payoff</a>
+      <a href="/home-affordability-calculator/">Home Affordability</a>
+      <a href="/refinance-calculator/">Refinance Calculator</a>
+      <a href="/loan-comparison-tool/">Loan Comparison</a>
+      <a href="/amortization-schedule/">Amortization Schedule</a>
+      <a href="/debt-to-income-calculator/">Debt-to-Income</a>
+      <a href="/apr-calculator/">APR Calculator</a>
+      <a href="/savings-goal-calculator/">Savings Goal Calculator</a>
+      <a href="/investment-return-calculator/">Investment Returns</a>
+      <a href="/emergency-fund-calculator/">Emergency Fund</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- HERO -->
+    <div class="lw-hero">
+      <span class="lw-badge">🚗 Auto Financing</span>
+      <h1>Auto Loan <span class="accent">Calculator</span></h1>
+      <p class="subtitle">Calculate your monthly car payment with trade-in value, sales tax, and compare different loan terms side by side.</p>
+    </div>
+
+    <!-- TOOL INTERFACE -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">🚙</div>
+        <div>
+          <div class="lw-card-title">Loan Details</div>
+          <div class="lw-card-subtitle">Adjust values to see your payment update instantly</div>
+        </div>
+      </div>
+
+      <div class="lw-range-group">
+        <div class="lw-range-header">
+          <label class="lw-label" for="price">Vehicle Price</label>
+          <span class="lw-range-value" id="priceDisplay">$35,000</span>
+        </div>
+        <input type="range" class="lw-range" id="price" min="5000" max="150000" step="500" value="35000">
+      </div>
+
+      <div class="input-row">
+        <div class="lw-form-group">
+          <label class="lw-label" for="down">Down Payment</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" class="lw-input" id="down" value="5000" min="0" max="150000" step="500">
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label" for="trade">Trade-in Value</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" class="lw-input" id="trade" value="0" min="0" max="100000" step="500">
+          </div>
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="lw-form-group">
+          <label class="lw-label" for="rate">Interest Rate (APR)</label>
+          <div class="lw-input-suffix">
+            <input type="number" class="lw-input" id="rate" value="5.9" min="0" max="25" step="0.1">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label" for="tax">Sales Tax Rate</label>
+          <div class="lw-input-suffix">
+            <input type="number" class="lw-input" id="tax" value="7.0" min="0" max="15" step="0.25">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-form-group">
+        <label class="lw-label">Loan Term</label>
+        <div class="term-toggle" id="termToggle">
+          <button class="term-btn" data-months="24">24 mo</button>
+          <button class="term-btn" data-months="36">36 mo</button>
+          <button class="term-btn" data-months="48">48 mo</button>
+          <button class="term-btn active" data-months="60">60 mo</button>
+          <button class="term-btn" data-months="72">72 mo</button>
+          <button class="term-btn" data-months="84">84 mo</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="lw-result-hero" id="resultHero">
+      <div class="lw-result-label">Estimated Monthly Payment</div>
+      <div class="lw-result-number lw-animate-number">
+        <span class="currency">$</span><span id="monthlyPayment">0</span><span class="period">/mo</span>
+      </div>
+      <div class="lw-result-sub" id="resultSub">60-month term at 5.9% APR</div>
+    </div>
+
+    <div class="lw-result-grid">
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Amount Financed</div>
+        <div class="lw-result-item-value sky" id="amountFinanced">$0</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Total Interest</div>
+        <div class="lw-result-item-value rose" id="totalInterest">$0</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Total Cost</div>
+        <div class="lw-result-item-value" id="totalCost">$0</div>
+      </div>
+    </div>
+
+    <!-- COST BREAKDOWN BAR -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">📊</div>
+        <div>
+          <div class="lw-card-title">Cost Breakdown</div>
+          <div class="lw-card-subtitle">Where your money goes</div>
+        </div>
+      </div>
+
+      <div class="stacked-bar-container">
+        <div class="stacked-bar" id="stackedBar">
+          <div class="stacked-bar-segment" id="barPrincipal" style="width:60%;background:var(--lw-sky)"><span></span></div>
+          <div class="stacked-bar-segment" id="barInterest" style="width:20%;background:var(--lw-rose)"><span></span></div>
+          <div class="stacked-bar-segment" id="barTax" style="width:20%;background:var(--lw-amber)"><span></span></div>
+        </div>
+        <div class="stacked-legend">
+          <div class="stacked-legend-item"><div class="cost-dot" style="background:var(--lw-sky)"></div> Principal</div>
+          <div class="stacked-legend-item"><div class="cost-dot" style="background:var(--lw-rose)"></div> Interest</div>
+          <div class="stacked-legend-item"><div class="cost-dot" style="background:var(--lw-amber)"></div> Sales Tax</div>
+        </div>
+      </div>
+
+      <div class="cost-breakdown" id="costBreakdown">
+        <div class="cost-row">
+          <span class="cost-label"><span class="cost-dot" style="background:var(--lw-sky)"></span> Vehicle Price (net)</span>
+          <span class="cost-value" id="costPrincipal">$0</span>
+        </div>
+        <div class="cost-row">
+          <span class="cost-label"><span class="cost-dot" style="background:var(--lw-amber)"></span> Sales Tax</span>
+          <span class="cost-value" id="costTax">$0</span>
+        </div>
+        <div class="cost-row">
+          <span class="cost-label"><span class="cost-dot" style="background:var(--lw-rose)"></span> Interest Charges</span>
+          <span class="cost-value" id="costInterest">$0</span>
+        </div>
+        <div class="cost-row" style="border-top:2px solid var(--lw-border);padding-top:14px;margin-top:4px">
+          <span class="cost-label" style="font-weight:700;color:var(--lw-navy)">Total Out-of-Pocket</span>
+          <span class="cost-value" style="font-size:16px" id="costTotal">$0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHAT-IF TABLE -->
+    <div class="whatif-card">
+      <div class="whatif-title">🔄 What If? — Compare Loan Terms</div>
+      <div class="whatif-header">
+        <span>Term</span>
+        <span>Payment vs Interest</span>
+        <span>Monthly</span>
+        <span>Total Interest</span>
+      </div>
+      <div id="whatifBody"></div>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <div class="lw-content">
+      <h2>How to Use the Auto Loan Calculator</h2>
+      <p>Buying a car is one of the largest financial decisions most people make, second only to purchasing a home. Our auto loan calculator helps you understand exactly what your monthly payment will be before you ever set foot in a dealership. Simply enter the vehicle price, your down payment, any trade-in value, the interest rate offered, and the sales tax rate in your state. The calculator instantly computes your monthly payment along with a full cost breakdown.</p>
+
+      <p>One of the most powerful features is the <strong>"What If" comparison table</strong>, which shows your payment across every common loan term from 24 to 84 months. This lets you see the trade-off between a lower monthly payment (longer term) and less total interest paid (shorter term). Many buyers focus solely on the monthly number, but the total interest difference between a 36-month and 72-month loan can easily exceed several thousand dollars.</p>
+
+      <h2>Understanding Auto Loan Terms</h2>
+      <p>Auto loans typically range from 24 to 84 months. Shorter terms like 24 or 36 months mean higher monthly payments but substantially lower total interest costs. Longer terms of 72 or 84 months reduce the monthly burden but come with risks — you may end up "underwater" on the loan, meaning you owe more than the car is worth. This is especially problematic because vehicles depreciate rapidly, losing roughly 20% of their value in the first year alone.</p>
+
+      <h3>The Role of Down Payments and Trade-Ins</h3>
+      <p>A larger down payment reduces the amount you need to finance, which lowers both your monthly payment and total interest charges. Financial experts generally recommend putting down at least 20% of the vehicle's purchase price. If you have an existing vehicle, its trade-in value functions similarly to a down payment — it reduces the principal balance of your new loan. Keep in mind that you can often negotiate trade-in values, and getting quotes from multiple dealerships or services like CarMax can help you maximize this amount.</p>
+
+      <h3>How Sales Tax Affects Your Loan</h3>
+      <p>Sales tax is frequently overlooked when budgeting for a vehicle purchase. In most states, sales tax is calculated on the purchase price minus any trade-in value, and this tax amount is typically rolled into the loan. For a $35,000 vehicle with a 7% sales tax rate, that adds $2,450 to your financed amount — increasing both your monthly payment and total interest. Some states like Oregon, Montana, New Hampshire, and Delaware have no sales tax on vehicles, which can represent significant savings.</p>
+
+      <h2>Tips for Getting the Best Auto Loan Rate</h2>
+      <p>Your interest rate is determined primarily by your credit score, the loan term, and whether you're buying new or used. To secure the best rate, check your credit score before shopping, get pre-approved through your bank or credit union (which often offer rates 1-2% lower than dealer financing), and keep your loan term at 60 months or less. New car rates are typically lower than used car rates because the vehicle serves as more valuable collateral. Shopping multiple lenders won't hurt your credit score if done within a 14-day window, as credit bureaus treat multiple auto loan inquiries as a single hard pull.</p>
+
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">What is the average auto loan interest rate?</button>
+          <div class="lw-faq-a">
+            <p>As of 2025, average new car loan rates range from about 5% to 7% for borrowers with good credit (700+). Used car rates are typically 1-2% higher. Borrowers with excellent credit (750+) may qualify for rates as low as 3-4%, while those with poor credit could face rates of 10-20% or more. Manufacturer promotional rates of 0% or 1.9% are sometimes available on select new models.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Should I choose a longer loan term for a lower payment?</button>
+          <div class="lw-faq-a">
+            <p>While a longer term reduces your monthly payment, it significantly increases the total interest you pay. For example, on a $30,000 loan at 6%, a 36-month term costs about $2,850 in interest, while a 72-month term costs roughly $5,800 — more than double. Longer terms also increase the risk of being "upside down" on the loan. Choose the shortest term you can comfortably afford.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">How much should I put down on a car?</button>
+          <div class="lw-faq-a">
+            <p>Financial experts recommend at least 20% down on a new car and 10% on a used car. A larger down payment means a smaller loan, lower monthly payments, less interest, and reduces the risk of negative equity. However, don't drain your emergency fund — balance your down payment against maintaining 3-6 months of living expenses in savings.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Is dealer financing or bank/credit union financing better?</button>
+          <div class="lw-faq-a">
+            <p>Credit unions and banks often offer lower interest rates than dealership financing. However, dealers sometimes provide promotional rates (like 0% APR) on specific models that can't be beaten. The best strategy is to get pre-approved at your bank or credit union first, then let the dealer try to beat that rate. This gives you negotiating leverage and ensures you have a competitive baseline.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Does trading in my car reduce sales tax?</button>
+          <div class="lw-faq-a">
+            <p>In most states, yes. Sales tax is calculated on the difference between the new car's price and your trade-in value. So if you buy a $35,000 car and trade in your old car for $10,000, you only pay sales tax on $25,000. However, this varies by state — some states don't offer this trade-in tax credit, so check your local laws.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED TOOLS -->
+    <div class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/personal-loan-calculator/" class="lw-related-link"><span class="dot"></span> Personal Loan Calculator</a>
+        <a href="/loan-comparison-tool/" class="lw-related-link"><span class="dot"></span> Loan Comparison Tool</a>
+        <a href="/apr-calculator/" class="lw-related-link"><span class="dot"></span> APR Calculator</a>
+        <a href="/debt-to-income-calculator/" class="lw-related-link"><span class="dot"></span> Debt-to-Income Calculator</a>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <p class="lw-disclaimer">
+      <em>This calculator is for educational purposes only. Results are estimates and should not be considered financial advice. Actual payments may vary based on lender terms, fees, and your creditworthiness. Consult a qualified financial advisor for personalized guidance.</em>
+    </p>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="lw-footer">
+    <p>© 2026 PocketWise. Free financial calculators for everyone.</p>
+  </footer>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // --- Utilities ---
+    function fmt(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:0, maximumFractionDigits:0}).format(n); }
+    function fmtFull(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:2, maximumFractionDigits:2}).format(n); }
+    function fmtNum(n) { return new Intl.NumberFormat('en-US').format(Math.round(n)); }
+    function fmtPct(n) { return n.toFixed(1) + '%'; }
+    function pmt(rate, nper, pv) {
+      if (rate === 0) return pv / nper;
+      return pv * (rate * Math.pow(1 + rate, nper)) / (Math.pow(1 + rate, nper) - 1);
+    }
+
+    // --- State ---
+    let selectedTerm = 60;
+
+    // --- DOM Refs ---
+    const priceEl = document.getElementById('price');
+    const priceDisplay = document.getElementById('priceDisplay');
+    const downEl = document.getElementById('down');
+    const tradeEl = document.getElementById('trade');
+    const rateEl = document.getElementById('rate');
+    const taxEl = document.getElementById('tax');
+    const termBtns = document.querySelectorAll('.term-btn');
+
+    // --- Term Toggle ---
+    termBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        termBtns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        selectedTerm = parseInt(this.dataset.months);
+        calculate();
+      });
+    });
+
+    // --- Price slider display ---
+    priceEl.addEventListener('input', function() {
+      priceDisplay.textContent = fmt(Number(this.value));
+      calculate();
+    });
+
+    // --- Listen to all inputs ---
+    [downEl, tradeEl, rateEl, taxEl].forEach(el => {
+      el.addEventListener('input', calculate);
+    });
+
+    // --- Animated number ---
+    let animFrame;
+    function animateValue(el, target) {
+      const current = parseInt(el.textContent.replace(/[^0-9.-]/g, '')) || 0;
+      const diff = target - current;
+      if (Math.abs(diff) < 2) { el.textContent = fmtNum(target); return; }
+      const step = Math.ceil(diff / 8);
+      el.textContent = fmtNum(current + step);
+      animFrame = requestAnimationFrame(() => animateValue(el, target));
+    }
+
+    // --- Main Calculation ---
+    function calculate() {
+      const price = Number(priceEl.value) || 0;
+      const down = Number(downEl.value) || 0;
+      const trade = Number(tradeEl.value) || 0;
+      const rate = (Number(rateEl.value) || 0) / 100;
+      const taxRate = (Number(taxEl.value) || 0) / 100;
+      const months = selectedTerm;
+
+      // Net amount before tax
+      const netPrice = Math.max(price - down - trade, 0);
+      // Sales tax on (price - trade) — most states allow trade-in deduction
+      const taxableAmount = Math.max(price - trade, 0);
+      const salesTax = taxableAmount * taxRate;
+      // Amount financed
+      const amountFinanced = netPrice + salesTax;
+
+      const monthlyRate = rate / 12;
+      const monthly = amountFinanced > 0 ? pmt(monthlyRate, months, amountFinanced) : 0;
+      const totalPaid = monthly * months;
+      const totalInterest = totalPaid - amountFinanced;
+
+      // Update results
+      cancelAnimationFrame(animFrame);
+      animateValue(document.getElementById('monthlyPayment'), Math.round(monthly));
+      document.getElementById('resultSub').textContent =
+        months + '-month term at ' + fmtPct(rate * 100) + ' APR';
+      document.getElementById('amountFinanced').textContent = fmt(amountFinanced);
+      document.getElementById('totalInterest').textContent = fmt(totalInterest);
+      document.getElementById('totalCost').textContent = fmt(totalPaid + down + trade);
+
+      // Cost breakdown
+      document.getElementById('costPrincipal').textContent = fmt(netPrice);
+      document.getElementById('costTax').textContent = fmt(salesTax);
+      document.getElementById('costInterest').textContent = fmt(totalInterest);
+      document.getElementById('costTotal').textContent = fmt(totalPaid + down + trade);
+
+      // Stacked bar
+      const totalForBar = netPrice + salesTax + totalInterest;
+      if (totalForBar > 0) {
+        const pPct = (netPrice / totalForBar * 100);
+        const iPct = (totalInterest / totalForBar * 100);
+        const tPct = (salesTax / totalForBar * 100);
+        document.getElementById('barPrincipal').style.width = pPct + '%';
+        document.getElementById('barPrincipal').querySelector('span').textContent = pPct > 12 ? fmt(netPrice) : '';
+        document.getElementById('barInterest').style.width = iPct + '%';
+        document.getElementById('barInterest').querySelector('span').textContent = iPct > 12 ? fmt(totalInterest) : '';
+        document.getElementById('barTax').style.width = tPct + '%';
+        document.getElementById('barTax').querySelector('span').textContent = tPct > 12 ? fmt(salesTax) : '';
+      }
+
+      // What-if table
+      buildWhatIf(amountFinanced, monthlyRate, rate, months);
+    }
+
+    function buildWhatIf(principal, monthlyRate, annualRate, activeTerm) {
+      const terms = [24, 36, 48, 60, 72, 84];
+      const body = document.getElementById('whatifBody');
+      body.innerHTML = '';
+
+      // Find max payment for bar scaling
+      let maxPayment = 0;
+      const data = terms.map(t => {
+        const mr = annualRate / 12;
+        const pay = principal > 0 ? pmt(mr, t, principal) : 0;
+        const totalInt = (pay * t) - principal;
+        if (pay > maxPayment) maxPayment = pay;
+        return { term: t, payment: pay, interest: totalInt };
+      });
+
+      let maxInterest = Math.max(...data.map(d => d.interest), 1);
+
+      data.forEach(d => {
+        const row = document.createElement('div');
+        row.className = 'whatif-row' + (d.term === activeTerm ? ' highlight' : '');
+        const payPct = maxPayment > 0 ? (d.payment / maxPayment * 100) : 0;
+        row.innerHTML = `
+          <span class="whatif-term">${d.term} mo</span>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div class="whatif-bar-track">
+              <div class="whatif-bar-inner" style="width:${payPct}%"></div>
+            </div>
+          </div>
+          <span class="whatif-payment">${fmtFull(d.payment)}</span>
+          <span class="whatif-interest">${fmt(d.interest)}</span>
+        `;
+        body.appendChild(row);
+      });
+    }
+
+    // Initial calc
+    calculate();
+  })();
+  </script>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the average auto loan interest rate?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "As of 2025, average new car loan rates range from about 5% to 7% for borrowers with good credit (700+). Used car rates are typically 1-2% higher. Borrowers with excellent credit (750+) may qualify for rates as low as 3-4%, while those with poor credit could face rates of 10-20% or more."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I choose a longer loan term for a lower payment?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "While a longer term reduces your monthly payment, it significantly increases the total interest you pay. For example, on a $30,000 loan at 6%, a 36-month term costs about $2,850 in interest, while a 72-month term costs roughly $5,800. Choose the shortest term you can comfortably afford."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much should I put down on a car?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Financial experts recommend at least 20% down on a new car and 10% on a used car. A larger down payment means a smaller loan, lower monthly payments, less interest, and reduces the risk of negative equity."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is dealer financing or bank/credit union financing better?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Credit unions and banks often offer lower interest rates than dealership financing. However, dealers sometimes provide promotional rates (like 0% APR) on specific models. The best strategy is to get pre-approved at your bank or credit union first, then let the dealer try to beat that rate."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does trading in my car reduce sales tax?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In most states, yes. Sales tax is calculated on the difference between the new car's price and your trade-in value. However, this varies by state — some states don't offer this trade-in tax credit, so check your local laws."
+        }
+      }
+    ]
+  }
+  </script>
+</body>
+</html>

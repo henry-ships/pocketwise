@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PocketWise — Free Financial Calculators & Loan Tools</title>
+  <meta name="description" content="15 free financial calculators: mortgage, auto loan, compound interest, debt payoff, credit card, home affordability, and more. No sign-ups. Instant results.">
+  <link rel="canonical" href="https://pocketwise.io/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .lw-home-hero {
+      text-align: center;
+      padding: 64px 24px 56px;
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #0F172A 100%);
+      border-radius: 24px;
+      margin-bottom: 56px;
+      position: relative;
+      overflow: hidden;
+    }
+    .lw-home-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 30% 20%, rgba(14, 165, 233, 0.12) 0%, transparent 50%),
+                  radial-gradient(ellipse at 70% 80%, rgba(20, 184, 166, 0.08) 0%, transparent 40%);
+    }
+    .lw-home-hero * { position: relative; }
+    .lw-home-hero h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 52px;
+      font-weight: 800;
+      color: white;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 16px;
+    }
+    .lw-home-hero h1 .accent {
+      background: linear-gradient(135deg, #0EA5E9, #14B8A6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .lw-home-hero .subtitle {
+      font-size: 19px;
+      color: #94A3B8;
+      max-width: 540px;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+    .lw-home-stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+    }
+    .lw-home-stat-num {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      color: #0EA5E9;
+    }
+    .lw-home-stat-label {
+      font-size: 13px;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+    .lw-category {
+      margin-bottom: 48px;
+    }
+    .lw-category-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .lw-category-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .lw-category-icon.blue { background: #E0F2FE; }
+    .lw-category-icon.rose { background: #FFF1F2; }
+    .lw-category-icon.green { background: #ECFDF5; }
+    .lw-category-icon.violet { background: #F3F0FF; }
+    .lw-category-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #0F172A;
+    }
+    .lw-tool-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .lw-tool-card {
+      background: white;
+      border-radius: 14px;
+      padding: 28px;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(0,0,0,0.03);
+      border: 1px solid #F1F5F9;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .lw-tool-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 36px rgba(15, 23, 42, 0.1);
+      border-color: rgba(14, 165, 233, 0.2);
+    }
+    .lw-tool-card::after {
+      content: '→';
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      color: #CBD5E1;
+      font-size: 18px;
+      transition: all 0.3s ease;
+    }
+    .lw-tool-card:hover::after {
+      color: #0EA5E9;
+      transform: translateX(3px);
+    }
+    .lw-tool-emoji {
+      font-size: 28px;
+      margin-bottom: 14px;
+    }
+    .lw-tool-card h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: #0F172A;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .lw-tool-card p {
+      font-size: 14px;
+      color: #64748B;
+      line-height: 1.6;
+      flex: 1;
+    }
+    .lw-tool-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 50px;
+      margin-top: 14px;
+      align-self: flex-start;
+    }
+    .lw-tool-tag.popular {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+    .lw-tool-tag.new {
+      background: #E0F2FE;
+      color: #0369A1;
+    }
+    .lw-tool-tag.advanced {
+      background: #F3F0FF;
+      color: #6D28D9;
+    }
+
+    .lw-home-seo {
+      max-width: 760px;
+      margin: 56px auto 0;
+      padding-top: 48px;
+      border-top: 1px solid #E2E8F0;
+    }
+    .lw-home-seo h2 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: #0F172A;
+      margin-top: 40px;
+      margin-bottom: 14px;
+      letter-spacing: -0.5px;
+    }
+    .lw-home-seo h2:first-child { margin-top: 0; }
+    .lw-home-seo p {
+      color: #475569;
+      font-size: 16px;
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+    .lw-home-seo ul {
+      margin-bottom: 16px;
+      padding-left: 24px;
+    }
+    .lw-home-seo li {
+      color: #475569;
+      font-size: 16px;
+      line-height: 1.7;
+      margin-bottom: 8px;
+    }
+    .lw-home-seo strong { color: #0F172A; }
+
+    @media (max-width: 768px) {
+      .lw-home-hero { padding: 44px 20px 40px; }
+      .lw-home-hero h1 { font-size: 34px; }
+      .lw-home-hero .subtitle { font-size: 16px; }
+      .lw-home-stats { gap: 28px; }
+      .lw-home-stat-num { font-size: 28px; }
+      .lw-tool-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+      .lw-tool-card { padding: 22px; }
+    }
+    @media (max-width: 480px) {
+      .lw-home-hero h1 { font-size: 28px; }
+      .lw-home-stats { flex-direction: column; gap: 16px; }
+      .lw-tool-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">L</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/mortgage-calculator/">Mortgage</a></li>
+        <li><a href="/auto-loan-calculator/">Auto</a></li>
+        <li><a href="/compound-interest-calculator/">Investing</a></li>
+        <li><a href="/debt-payoff-calculator/">Debt</a></li>
+        <li><a href="/" class="active">All Tools</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu">
+      <a href="/">All Tools</a>
+      <a href="/mortgage-calculator/">Mortgage Calculator</a>
+      <a href="/auto-loan-calculator/">Auto Loan Calculator</a>
+      <a href="/personal-loan-calculator/">Personal Loan Calculator</a>
+      <a href="/compound-interest-calculator/">Compound Interest</a>
+      <a href="/debt-payoff-calculator/">Debt Payoff Calculator</a>
+      <a href="/credit-card-payoff-calculator/">Credit Card Payoff</a>
+      <a href="/home-affordability-calculator/">Home Affordability</a>
+      <a href="/refinance-calculator/">Refinance Calculator</a>
+      <a href="/loan-comparison-tool/">Loan Comparison</a>
+      <a href="/amortization-schedule/">Amortization Schedule</a>
+      <a href="/debt-to-income-calculator/">Debt-to-Income</a>
+      <a href="/apr-calculator/">APR Calculator</a>
+      <a href="/savings-goal-calculator/">Savings Goal</a>
+      <a href="/investment-return-calculator/">Investment Returns</a>
+      <a href="/emergency-fund-calculator/">Emergency Fund</a>
+    </div>
+  </nav>
+
+  <main class="lw-main wide">
+    <!-- HERO -->
+    <div class="lw-home-hero">
+      <h1>Financial Calculators<br>That <span class="accent">Actually Help</span></h1>
+      <p class="subtitle">15 free tools to make smarter money decisions. No sign-ups, no ads, no BS — just accurate math and clean design.</p>
+      <div class="lw-home-stats">
+        <div style="text-align:center">
+          <div class="lw-home-stat-num">15</div>
+          <div class="lw-home-stat-label">Free Tools</div>
+        </div>
+        <div style="text-align:center">
+          <div class="lw-home-stat-num">0</div>
+          <div class="lw-home-stat-label">Sign-ups</div>
+        </div>
+        <div style="text-align:center">
+          <div class="lw-home-stat-num">∞</div>
+          <div class="lw-home-stat-label">Uses</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOME & MORTGAGE -->
+    <div class="lw-category">
+      <div class="lw-category-header">
+        <div class="lw-category-icon blue">🏠</div>
+        <h2 class="lw-category-title">Home & Mortgage</h2>
+      </div>
+      <div class="lw-tool-grid">
+        <a href="/mortgage-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🏦</div>
+          <h3>Mortgage Calculator</h3>
+          <p>Calculate your monthly payment with taxes, insurance, and PMI. See full cost breakdown.</p>
+          <span class="lw-tool-tag popular">Most Popular</span>
+        </a>
+        <a href="/home-affordability-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🏡</div>
+          <h3>Home Affordability</h3>
+          <p>Find out how much house you can afford based on your income, debts, and down payment.</p>
+        </a>
+        <a href="/refinance-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🔄</div>
+          <h3>Refinance Calculator</h3>
+          <p>Should you refinance? See your monthly savings, break-even point, and total savings.</p>
+        </a>
+        <a href="/amortization-schedule/" class="lw-tool-card">
+          <div class="lw-tool-emoji">📊</div>
+          <h3>Amortization Schedule</h3>
+          <p>Generate a full payment schedule. See how extra payments save you years and thousands.</p>
+        </a>
+      </div>
+    </div>
+
+    <!-- LOANS -->
+    <div class="lw-category">
+      <div class="lw-category-header">
+        <div class="lw-category-icon green">💰</div>
+        <h2 class="lw-category-title">Loans</h2>
+      </div>
+      <div class="lw-tool-grid">
+        <a href="/auto-loan-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🚗</div>
+          <h3>Auto Loan Calculator</h3>
+          <p>Calculate car payments with trade-in, down payment, and sales tax factored in.</p>
+          <span class="lw-tool-tag popular">Most Popular</span>
+        </a>
+        <a href="/personal-loan-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">💵</div>
+          <h3>Personal Loan Calculator</h3>
+          <p>See your monthly payment, true APR with fees, and total cost of borrowing.</p>
+        </a>
+        <a href="/loan-comparison-tool/" class="lw-tool-card">
+          <div class="lw-tool-emoji">⚖️</div>
+          <h3>Loan Comparison Tool</h3>
+          <p>Compare two loan offers side by side. See which one actually costs less.</p>
+        </a>
+        <a href="/apr-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">📐</div>
+          <h3>APR Calculator</h3>
+          <p>Find the true annual percentage rate after fees. Know what you're really paying.</p>
+          <span class="lw-tool-tag advanced">Advanced</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- DEBT -->
+    <div class="lw-category">
+      <div class="lw-category-header">
+        <div class="lw-category-icon rose">🎯</div>
+        <h2 class="lw-category-title">Debt Freedom</h2>
+      </div>
+      <div class="lw-tool-grid">
+        <a href="/debt-payoff-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">❄️</div>
+          <h3>Debt Payoff Calculator</h3>
+          <p>Snowball vs. Avalanche — see which strategy gets you debt-free faster and cheaper.</p>
+          <span class="lw-tool-tag popular">Most Popular</span>
+        </a>
+        <a href="/credit-card-payoff-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">💳</div>
+          <h3>Credit Card Payoff</h3>
+          <p>See how long to pay off your balance — and the scary cost of minimum payments.</p>
+        </a>
+        <a href="/debt-to-income-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">📋</div>
+          <h3>Debt-to-Income Ratio</h3>
+          <p>Calculate your DTI and see how lenders view your financial health.</p>
+        </a>
+      </div>
+    </div>
+
+    <!-- WEALTH BUILDING -->
+    <div class="lw-category">
+      <div class="lw-category-header">
+        <div class="lw-category-icon violet">📈</div>
+        <h2 class="lw-category-title">Wealth Building</h2>
+      </div>
+      <div class="lw-tool-grid">
+        <a href="/compound-interest-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🧮</div>
+          <h3>Compound Interest</h3>
+          <p>Watch your money grow over time. See contributions vs. earnings with visual charts.</p>
+          <span class="lw-tool-tag popular">Most Popular</span>
+        </a>
+        <a href="/investment-return-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">💹</div>
+          <h3>Investment Returns</h3>
+          <p>Project future investment value with inflation adjustment. See real vs. nominal returns.</p>
+        </a>
+        <a href="/savings-goal-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🎯</div>
+          <h3>Savings Goal</h3>
+          <p>How long until you reach your goal? Track progress and see the power of consistent saving.</p>
+        </a>
+        <a href="/emergency-fund-calculator/" class="lw-tool-card">
+          <div class="lw-tool-emoji">🛡️</div>
+          <h3>Emergency Fund</h3>
+          <p>How much do you really need? Itemize expenses and build your safety net.</p>
+        </a>
+      </div>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <div class="lw-home-seo">
+      <h2>Why PocketWise?</h2>
+      <p>We built PocketWise because most financial calculator sites are stuck in 2005 — cluttered with ads, confusing to use, and impossible on mobile. We wanted something better: tools that are <strong>fast, beautiful, and actually useful</strong>.</p>
+      <p>Every calculator on this site runs entirely in your browser. No data is sent to any server. No account required. No email harvesting. Just honest math with a clean interface.</p>
+
+      <h2>What You Can Do Here</h2>
+      <p>Whether you're buying your first home, paying off debt, or building wealth for the future, we have a tool for that:</p>
+      <ul>
+        <li><strong>Plan a home purchase</strong> — Calculate mortgage payments, check what you can afford, compare refinance options, and generate full amortization schedules</li>
+        <li><strong>Compare loan options</strong> — See the true cost of auto loans, personal loans, and credit cards. Understand APR vs. interest rate.</li>
+        <li><strong>Crush your debt</strong> — Compare snowball vs. avalanche strategies, see the real cost of minimum credit card payments, and track your debt-to-income ratio</li>
+        <li><strong>Grow your money</strong> — Project compound interest growth, model investment returns with inflation, set savings goals, and calculate your emergency fund target</li>
+      </ul>
+
+      <h2>Built Different</h2>
+      <p>Every calculator uses <strong>real financial formulas</strong> — the same math your bank uses. Our mortgage calculator includes PITI and PMI. Our APR calculator uses Newton's method for true rate calculation. Our debt payoff tool simulates month-by-month payment schedules.</p>
+      <p>The design is intentional too. Numbers are formatted with JetBrains Mono for readability. Charts update in real-time as you move sliders. Results are color-coded so good news is green and warnings are amber. Everything works on your phone.</p>
+      <p>We're not financial advisors. These tools are for education and planning. For personalized advice, always consult a qualified financial professional.</p>
+    </div>
+
+    <p class="lw-disclaimer">
+      <em>PocketWise calculators are for educational purposes only. Results are estimates based on the information you provide and should not be considered financial advice. Consult a qualified financial advisor for personalized guidance.</em>
+    </p>
+  </main>
+
+  <footer class="lw-footer">
+    <p>© 2026 PocketWise. Free financial calculators for everyone.</p>
+  </footer>
+
+  <!-- Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "PocketWise",
+    "description": "15 free financial calculators for mortgages, loans, debt payoff, compound interest, and more.",
+    "url": "https://pocketwise.io/"
+  }
+  </script>
+</body>
+</html>

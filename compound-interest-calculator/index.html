@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compound Interest Calculator — Free Online Calculator | PocketWise</title>
+  <meta name="description" content="Calculate compound interest on your investments with our free calculator. See how your money grows over time with monthly contributions and compounding.">
+  <link rel="canonical" href="https://pocketwise.io/compound-interest-calculator/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 320px;
+      margin: 24px 0;
+    }
+    .chart-svg {
+      width: 100%;
+      height: 100%;
+    }
+    .chart-tooltip {
+      position: absolute;
+      background: var(--lw-navy);
+      color: white;
+      padding: 10px 14px;
+      border-radius: var(--lw-radius-sm);
+      font-size: 13px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      z-index: 10;
+      white-space: nowrap;
+      box-shadow: var(--lw-shadow-lg);
+    }
+    .chart-tooltip.visible { opacity: 1; }
+    .chart-tooltip .tt-year { font-weight: 700; margin-bottom: 4px; }
+    .chart-tooltip .tt-row { display: flex; align-items: center; gap: 6px; margin-top: 3px; }
+    .chart-tooltip .tt-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .chart-tooltip .tt-val { font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+    .chart-legend {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 12px;
+    }
+    .chart-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--lw-text-secondary);
+    }
+    .chart-legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+    .chart-legend-dot.contrib { background: var(--lw-sky); }
+    .chart-legend-dot.earnings { background: var(--lw-emerald); }
+    .year-table-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px;
+      background: var(--lw-slate-50);
+      border: 1px solid var(--lw-border);
+      border-radius: var(--lw-radius);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--lw-slate-600);
+      cursor: pointer;
+      transition: all var(--lw-transition);
+      margin-top: 16px;
+    }
+    .year-table-toggle:hover {
+      background: var(--lw-sky-50);
+      color: var(--lw-sky-dark);
+      border-color: var(--lw-sky);
+    }
+    .year-table-toggle .arrow {
+      transition: transform 0.3s ease;
+      font-size: 12px;
+    }
+    .year-table-toggle.open .arrow {
+      transform: rotate(180deg);
+    }
+    .year-table-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease;
+    }
+    .year-table-content.open {
+      max-height: 3000px;
+    }
+    .growth-multiple {
+      font-size: 14px;
+      color: var(--lw-emerald);
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    .lw-result-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 768px) {
+      .lw-result-grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .chart-container { height: 260px; }
+    }
+    @media (max-width: 480px) {
+      .chart-container { height: 220px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">L</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/mortgage-calculator/">Mortgage</a></li>
+        <li><a href="/auto-loan-calculator/">Auto</a></li>
+        <li><a href="/compound-interest-calculator/" class="active">Investing</a></li>
+        <li><a href="/debt-payoff-calculator/">Debt</a></li>
+        <li><a href="/">All Tools</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu">
+      <a href="/">All Tools</a>
+      <a href="/mortgage-calculator/">Mortgage Calculator</a>
+      <a href="/auto-loan-calculator/">Auto Loan Calculator</a>
+      <a href="/personal-loan-calculator/">Personal Loan Calculator</a>
+      <a href="/compound-interest-calculator/">Compound Interest Calculator</a>
+      <a href="/debt-payoff-calculator/">Debt Payoff Calculator</a>
+      <a href="/credit-card-payoff-calculator/">Credit Card Payoff</a>
+      <a href="/home-affordability-calculator/">Home Affordability</a>
+      <a href="/refinance-calculator/">Refinance Calculator</a>
+      <a href="/loan-comparison-tool/">Loan Comparison</a>
+      <a href="/amortization-schedule/">Amortization Schedule</a>
+      <a href="/debt-to-income-calculator/">Debt-to-Income</a>
+      <a href="/apr-calculator/">APR Calculator</a>
+      <a href="/savings-goal-calculator/">Savings Goal Calculator</a>
+      <a href="/investment-return-calculator/">Investment Returns</a>
+      <a href="/emergency-fund-calculator/">Emergency Fund</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- HERO -->
+    <div class="lw-hero">
+      <span class="lw-badge green">Investing Tools</span>
+      <h1>Compound Interest <span class="accent">Calculator</span></h1>
+      <p class="subtitle">See how your money grows over time with the power of compound interest and regular contributions.</p>
+    </div>
+
+    <!-- TOOL INTERFACE -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">📈</div>
+        <div>
+          <div class="lw-card-title">Investment Details</div>
+          <div class="lw-card-subtitle">Adjust inputs to see real-time results</div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-form-group">
+          <label class="lw-label">Initial Investment</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="initialInvestment" class="lw-input" value="10000" min="0" max="1000000" step="100">
+          </div>
+        </div>
+        <div class="lw-form-group">
+          <label class="lw-label">Monthly Contribution</label>
+          <div class="lw-input-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="monthlyContribution" class="lw-input" value="500" min="0" max="10000" step="50">
+          </div>
+        </div>
+      </div>
+
+      <div class="lw-range-group">
+        <div class="lw-range-header">
+          <label class="lw-label" style="margin-bottom:0">Annual Return Rate</label>
+          <span class="lw-range-value" id="rateDisplay">8.0%</span>
+        </div>
+        <input type="range" id="annualRate" class="lw-range" min="0" max="30" step="0.1" value="8">
+      </div>
+
+      <div class="lw-range-group">
+        <div class="lw-range-header">
+          <label class="lw-label" style="margin-bottom:0">Time Period</label>
+          <span class="lw-range-value" id="yearsDisplay">20 years</span>
+        </div>
+        <input type="range" id="timePeriod" class="lw-range" min="1" max="50" step="1" value="20">
+      </div>
+
+      <div class="lw-form-group">
+        <label class="lw-label">Compound Frequency</label>
+        <div class="lw-toggle-group" id="frequencyToggle">
+          <button class="lw-toggle-btn active" data-freq="12">Monthly</button>
+          <button class="lw-toggle-btn" data-freq="4">Quarterly</button>
+          <button class="lw-toggle-btn" data-freq="1">Annually</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="lw-result-hero" id="resultHero">
+      <div class="lw-result-label">Future Value</div>
+      <div class="lw-result-number lw-animate-number" id="futureValue">$0</div>
+      <div class="lw-result-sub" id="resultSub">after 20 years at 8.0% annual return</div>
+    </div>
+
+    <div class="lw-result-grid-4" id="resultGrid">
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Total Contributions</div>
+        <div class="lw-result-item-value sky" id="totalContrib">$0</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Interest Earned</div>
+        <div class="lw-result-item-value green" id="totalInterest">$0</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Growth Multiple</div>
+        <div class="lw-result-item-value" id="growthMultiple">0x</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Interest % of Total</div>
+        <div class="lw-result-item-value green" id="interestPct">0%</div>
+      </div>
+    </div>
+
+    <!-- CHART -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">📊</div>
+        <div>
+          <div class="lw-card-title">Growth Over Time</div>
+          <div class="lw-card-subtitle">Contributions vs. compound earnings</div>
+        </div>
+      </div>
+      <div class="chart-container" id="chartContainer">
+        <svg class="chart-svg" id="chartSvg" preserveAspectRatio="none"></svg>
+        <div class="chart-tooltip" id="chartTooltip"></div>
+      </div>
+      <div class="chart-legend">
+        <div class="chart-legend-item"><div class="chart-legend-dot contrib"></div> Contributions</div>
+        <div class="chart-legend-item"><div class="chart-legend-dot earnings"></div> Compound Earnings</div>
+      </div>
+    </div>
+
+    <!-- YEAR-BY-YEAR TABLE -->
+    <div class="lw-card">
+      <button class="year-table-toggle" id="tableToggle">
+        <span>View Year-by-Year Breakdown</span>
+        <span class="arrow">▼</span>
+      </button>
+      <div class="year-table-content" id="tableContent">
+        <div class="lw-table-wrap lw-mt-16">
+          <table class="lw-table">
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th>Contributions</th>
+                <th>Interest Earned</th>
+                <th>Total Balance</th>
+              </tr>
+            </thead>
+            <tbody id="yearTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <div class="lw-content">
+      <h2>Understanding Compound Interest: The Eighth Wonder of the World</h2>
+      <p>Compound interest is often called the most powerful force in finance — and for good reason. Unlike simple interest, which is calculated only on the original principal, compound interest earns returns on both your initial investment <strong>and</strong> on the interest that has already accumulated. This snowball effect can turn modest, consistent contributions into substantial wealth over time.</p>
+
+      <p>Albert Einstein is widely (though perhaps apochryphally) credited with calling compound interest the "eighth wonder of the world," adding that "he who understands it, earns it; he who doesn't, pays it." Whether or not Einstein actually said this, the mathematical reality is undeniable: the longer your money compounds, the more dramatically it grows. A dollar invested at age 25 is worth far more at retirement than a dollar invested at age 45 — not just twice as much, but potentially four to eight times more, depending on the rate of return.</p>
+
+      <h2>How the Compound Interest Formula Works</h2>
+      <p>The basic compound interest formula is <strong>A = P(1 + r/n)^(nt)</strong>, where <strong>A</strong> is the future value, <strong>P</strong> is the principal (initial investment), <strong>r</strong> is the annual interest rate (as a decimal), <strong>n</strong> is the number of compounding periods per year, and <strong>t</strong> is the number of years. When regular contributions are added, the calculation becomes a series that sums each contribution's compounded growth individually.</p>
+
+      <p>Our calculator handles this complexity for you, accounting for your initial deposit, recurring monthly contributions, your chosen compound frequency, and the time horizon. The stacked area chart above illustrates the most important insight: as time passes, the <strong>green area</strong> (compound earnings) grows faster and faster relative to the <strong>blue area</strong> (your actual contributions). This is the visual signature of exponential growth.</p>
+
+      <h3>Compound Frequency: Does It Matter?</h3>
+      <p>Compounding more frequently — monthly versus annually, for instance — does produce a slightly higher return. Monthly compounding at 8% per year yields an effective annual rate of about 8.30%, compared to a flat 8% with annual compounding. However, the difference is relatively small compared to the impact of the rate itself or the length of time invested. In practice, most investment accounts compound daily or monthly, and you won't usually get to choose the frequency.</p>
+
+      <h3>The Rule of 72</h3>
+      <p>A handy shortcut for estimating compound growth is the <strong>Rule of 72</strong>: divide 72 by your annual return rate to estimate how many years it takes to double your money. At 8%, your money doubles roughly every 9 years. At 10%, every 7.2 years. This simple mental math can help you set realistic expectations for long-term growth without touching a calculator.</p>
+
+      <h2>Strategies for Maximizing Compound Growth</h2>
+      <p>The three levers you can pull to increase your compound interest earnings are <strong>rate of return</strong>, <strong>time horizon</strong>, and <strong>contribution amount</strong>. Of these, time is the most powerful because growth is exponential. Starting five years earlier with smaller contributions often beats starting later with larger deposits. Automate your contributions so they happen every paycheck, and increase them each year as your income grows — even small annual increases compound dramatically over decades.</p>
+
+      <p>Consider tax-advantaged accounts like 401(k)s, IRAs, or Roth accounts, which allow your investments to compound without the drag of annual taxation. In a taxable account, capital gains taxes reduce the effective compounding rate, sometimes significantly. Choosing the right account structure is often as important as choosing the right investments.</p>
+
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            What is compound interest and how does it differ from simple interest?
+          </button>
+          <div class="lw-faq-a">
+            <p>Simple interest is calculated only on the original principal — if you invest $1,000 at 5%, you earn $50 every year, regardless of how much has accumulated. Compound interest, by contrast, calculates returns on the total balance including previously earned interest. So in year two, you earn 5% on $1,050 ($52.50), and the gap widens each subsequent year. Over long periods, compounding produces dramatically higher returns.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            How much should I invest monthly to reach $1 million?
+          </button>
+          <div class="lw-faq-a">
+            <p>It depends on your return rate and time horizon. At an 8% annual return, investing roughly $435 per month for 30 years will get you to approximately $1 million. Starting 10 years earlier (40 years), you'd only need about $175/month. Starting 10 years later (20 years), you'd need roughly $1,700/month. The earlier you start, the less you need to contribute — that's the power of compounding.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            Is 8% a realistic annual return rate?
+          </button>
+          <div class="lw-faq-a">
+            <p>Historically, the S&P 500 has returned approximately 10% per year on average (before inflation) since its inception. After adjusting for inflation, the real return is closer to 7%. An 8% nominal return is a commonly used benchmark for a diversified stock portfolio, though actual returns will vary year to year. Conservative estimates might use 6-7%, while aggressive growth projections might use 10-12%.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            Does compound frequency significantly affect my returns?
+          </button>
+          <div class="lw-faq-a">
+            <p>The difference between monthly and annual compounding is typically modest — about 0.3% in effective annual yield at an 8% rate. The real drivers of compound growth are the rate of return, time invested, and contribution amount. That said, more frequent compounding does produce marginally higher returns, and most investment accounts compound daily or monthly by default.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">
+            How does inflation affect compound interest calculations?
+          </button>
+          <div class="lw-faq-a">
+            <p>Inflation reduces the purchasing power of future dollars. If your investments earn 8% and inflation runs at 3%, your real return is approximately 5%. Our Investment Return Calculator includes an inflation adjustment toggle to show you what your future balance will actually be worth in today's dollars. For long-term planning, always consider real (inflation-adjusted) returns alongside nominal returns.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED TOOLS -->
+    <div class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/investment-return-calculator/" class="lw-related-link"><span class="dot"></span> Investment Return Calculator</a>
+        <a href="/savings-goal-calculator/" class="lw-related-link"><span class="dot"></span> Savings Goal Calculator</a>
+        <a href="/emergency-fund-calculator/" class="lw-related-link"><span class="dot"></span> Emergency Fund Calculator</a>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <p class="lw-disclaimer">
+      <em>This calculator is for educational purposes only. Results are estimates and should not be considered financial advice. Actual investment returns vary and may include losses. Consult a qualified financial advisor for personalized guidance.</em>
+    </p>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="lw-footer">
+    <p>© 2026 PocketWise. Free financial calculators for everyone.</p>
+  </footer>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // Utility functions
+    function fmt(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:0, maximumFractionDigits:0}).format(n); }
+    function fmtFull(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:2, maximumFractionDigits:2}).format(n); }
+    function fmtNum(n) { return new Intl.NumberFormat('en-US').format(Math.round(n)); }
+    function fmtPct(n) { return n.toFixed(1) + '%'; }
+
+    // Elements
+    const initialEl = document.getElementById('initialInvestment');
+    const monthlyEl = document.getElementById('monthlyContribution');
+    const rateEl = document.getElementById('annualRate');
+    const rateDisplay = document.getElementById('rateDisplay');
+    const yearsEl = document.getElementById('timePeriod');
+    const yearsDisplay = document.getElementById('yearsDisplay');
+    const freqToggle = document.getElementById('frequencyToggle');
+    const futureValueEl = document.getElementById('futureValue');
+    const totalContribEl = document.getElementById('totalContrib');
+    const totalInterestEl = document.getElementById('totalInterest');
+    const growthMultipleEl = document.getElementById('growthMultiple');
+    const interestPctEl = document.getElementById('interestPct');
+    const resultSubEl = document.getElementById('resultSub');
+    const chartSvg = document.getElementById('chartSvg');
+    const chartContainer = document.getElementById('chartContainer');
+    const chartTooltip = document.getElementById('chartTooltip');
+    const yearTableBody = document.getElementById('yearTableBody');
+    const tableToggle = document.getElementById('tableToggle');
+    const tableContent = document.getElementById('tableContent');
+
+    let compoundFreq = 12;
+    let yearData = [];
+
+    // Toggle buttons
+    freqToggle.addEventListener('click', function(e) {
+      const btn = e.target.closest('.lw-toggle-btn');
+      if (!btn) return;
+      freqToggle.querySelectorAll('.lw-toggle-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      compoundFreq = parseInt(btn.dataset.freq);
+      calculate();
+    });
+
+    // Table toggle
+    tableToggle.addEventListener('click', function() {
+      tableToggle.classList.toggle('open');
+      tableContent.classList.toggle('open');
+    });
+
+    // Range display updates
+    rateEl.addEventListener('input', function() {
+      rateDisplay.textContent = fmtPct(parseFloat(this.value));
+      calculate();
+    });
+    yearsEl.addEventListener('input', function() {
+      yearsDisplay.textContent = this.value + ' year' + (this.value == 1 ? '' : 's');
+      calculate();
+    });
+
+    // Inputs
+    [initialEl, monthlyEl].forEach(el => el.addEventListener('input', calculate));
+
+    function calculate() {
+      const P = parseFloat(initialEl.value) || 0;
+      const monthly = parseFloat(monthlyEl.value) || 0;
+      const r = (parseFloat(rateEl.value) || 0) / 100;
+      const t = parseInt(yearsEl.value) || 1;
+      const n = compoundFreq;
+
+      yearData = [];
+
+      // Calculate year-by-year
+      let balance = P;
+      let totalContributions = P;
+      const ratePerPeriod = r / n;
+
+      for (let year = 1; year <= t; year++) {
+        // Each year has 12 months of contributions and n compounding periods
+        // We simulate month by month for accuracy
+        for (let month = 1; month <= 12; month++) {
+          balance += monthly;
+          totalContributions += monthly;
+
+          // Apply compound interest for this month
+          // Monthly compounding: compound each month
+          // Quarterly: compound every 3 months
+          // Annually: compound at end of year
+          if (n === 12) {
+            balance *= (1 + r / 12);
+          } else if (n === 4) {
+            if (month % 3 === 0) {
+              balance *= (1 + r / 4);
+            }
+          } else if (n === 1) {
+            if (month === 12) {
+              balance *= (1 + r);
+            }
+          }
+        }
+
+        yearData.push({
+          year: year,
+          contributions: totalContributions,
+          balance: balance,
+          earnings: balance - totalContributions
+        });
+      }
+
+      const futureValue = balance;
+      const totalContrib = totalContributions;
+      const interest = futureValue - totalContrib;
+      const multiple = totalContrib > 0 ? (futureValue / totalContrib) : 0;
+      const intPct = futureValue > 0 ? (interest / futureValue) * 100 : 0;
+
+      // Update display
+      futureValueEl.textContent = fmt(futureValue);
+      totalContribEl.textContent = fmt(totalContrib);
+      totalInterestEl.textContent = fmt(interest);
+      growthMultipleEl.textContent = multiple.toFixed(2) + 'x';
+      interestPctEl.textContent = fmtPct(intPct);
+      resultSubEl.textContent = 'after ' + t + ' year' + (t === 1 ? '' : 's') + ' at ' + fmtPct(r * 100) + ' annual return';
+
+      drawChart();
+      buildTable();
+    }
+
+    function drawChart() {
+      if (yearData.length === 0) return;
+
+      const container = chartContainer;
+      const rect = container.getBoundingClientRect();
+      const W = rect.width;
+      const H = rect.height;
+      const padL = 70, padR = 20, padT = 20, padB = 40;
+      const chartW = W - padL - padR;
+      const chartH = H - padT - padB;
+
+      const maxVal = yearData[yearData.length - 1].balance;
+      const maxY = maxVal * 1.1 || 100;
+
+      function x(i) { return padL + (i / (yearData.length - 1 || 1)) * chartW; }
+      function y(val) { return padT + chartH - (val / maxY) * chartH; }
+
+      // Build SVG
+      let svg = '';
+
+      // Grid lines
+      const gridLines = 5;
+      for (let i = 0; i <= gridLines; i++) {
+        const val = (maxY / gridLines) * i;
+        const yPos = y(val);
+        svg += '<line x1="' + padL + '" y1="' + yPos + '" x2="' + (W - padR) + '" y2="' + yPos + '" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="4,4"/>';
+        svg += '<text x="' + (padL - 10) + '" y="' + (yPos + 4) + '" text-anchor="end" fill="#94A3B8" font-size="11" font-family="JetBrains Mono, monospace">' + formatAxis(val) + '</text>';
+      }
+
+      // X-axis labels
+      const labelInterval = yearData.length <= 10 ? 1 : yearData.length <= 20 ? 2 : 5;
+      for (let i = 0; i < yearData.length; i++) {
+        if (i % labelInterval === 0 || i === yearData.length - 1) {
+          svg += '<text x="' + x(i) + '" y="' + (H - 8) + '" text-anchor="middle" fill="#94A3B8" font-size="11" font-family="Inter, sans-serif">Yr ' + yearData[i].year + '</text>';
+        }
+      }
+
+      // Area: total balance (earnings on top)
+      let balancePath = 'M ' + x(0) + ' ' + y(yearData[0].balance);
+      for (let i = 1; i < yearData.length; i++) {
+        balancePath += ' L ' + x(i) + ' ' + y(yearData[i].balance);
+      }
+      balancePath += ' L ' + x(yearData.length - 1) + ' ' + y(0) + ' L ' + x(0) + ' ' + y(0) + ' Z';
+
+      // Area: contributions
+      let contribPath = 'M ' + x(0) + ' ' + y(yearData[0].contributions);
+      for (let i = 1; i < yearData.length; i++) {
+        contribPath += ' L ' + x(i) + ' ' + y(yearData[i].contributions);
+      }
+      contribPath += ' L ' + x(yearData.length - 1) + ' ' + y(0) + ' L ' + x(0) + ' ' + y(0) + ' Z';
+
+      // Gradient defs
+      svg += '<defs>';
+      svg += '<linearGradient id="earnGrad" x1="0" y1="0" x2="0" y2="1">';
+      svg += '<stop offset="0%" stop-color="#10B981" stop-opacity="0.4"/>';
+      svg += '<stop offset="100%" stop-color="#10B981" stop-opacity="0.05"/>';
+      svg += '</linearGradient>';
+      svg += '<linearGradient id="contribGrad" x1="0" y1="0" x2="0" y2="1">';
+      svg += '<stop offset="0%" stop-color="#0EA5E9" stop-opacity="0.5"/>';
+      svg += '<stop offset="100%" stop-color="#0EA5E9" stop-opacity="0.1"/>';
+      svg += '</linearGradient>';
+      svg += '</defs>';
+
+      // Draw areas
+      svg += '<path d="' + balancePath + '" fill="url(#earnGrad)"/>';
+      svg += '<path d="' + contribPath + '" fill="url(#contribGrad)"/>';
+
+      // Lines
+      let balanceLine = 'M ' + x(0) + ' ' + y(yearData[0].balance);
+      let contribLine = 'M ' + x(0) + ' ' + y(yearData[0].contributions);
+      for (let i = 1; i < yearData.length; i++) {
+        balanceLine += ' L ' + x(i) + ' ' + y(yearData[i].balance);
+        contribLine += ' L ' + x(i) + ' ' + y(yearData[i].contributions);
+      }
+      svg += '<path d="' + balanceLine + '" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+      svg += '<path d="' + contribLine + '" fill="none" stroke="#0EA5E9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+
+      // Hover zones (invisible rectangles for each data point)
+      const barW = chartW / (yearData.length || 1);
+      for (let i = 0; i < yearData.length; i++) {
+        svg += '<rect x="' + (x(i) - barW / 2) + '" y="' + padT + '" width="' + barW + '" height="' + chartH + '" fill="transparent" data-idx="' + i + '" class="hover-zone"/>';
+      }
+
+      // Vertical hover line placeholder
+      svg += '<line id="hoverLine" x1="0" y1="' + padT + '" x2="0" y2="' + (padT + chartH) + '" stroke="#64748B" stroke-width="1" stroke-dasharray="3,3" opacity="0"/>';
+
+      // Hover dots
+      svg += '<circle id="dotBalance" r="5" fill="#10B981" stroke="white" stroke-width="2" opacity="0"/>';
+      svg += '<circle id="dotContrib" r="5" fill="#0EA5E9" stroke="white" stroke-width="2" opacity="0"/>';
+
+      chartSvg.innerHTML = svg;
+      chartSvg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+
+      // Hover interactions
+      const hoverZones = chartSvg.querySelectorAll('.hover-zone');
+      const hoverLine = document.getElementById('hoverLine');
+      const dotBalance = document.getElementById('dotBalance');
+      const dotContrib = document.getElementById('dotContrib');
+
+      hoverZones.forEach(zone => {
+        zone.addEventListener('mouseenter', function(e) {
+          const idx = parseInt(this.dataset.idx);
+          const d = yearData[idx];
+          const xPos = x(idx);
+
+          hoverLine.setAttribute('x1', xPos);
+          hoverLine.setAttribute('x2', xPos);
+          hoverLine.setAttribute('opacity', '1');
+
+          dotBalance.setAttribute('cx', xPos);
+          dotBalance.setAttribute('cy', y(d.balance));
+          dotBalance.setAttribute('opacity', '1');
+
+          dotContrib.setAttribute('cx', xPos);
+          dotContrib.setAttribute('cy', y(d.contributions));
+          dotContrib.setAttribute('opacity', '1');
+
+          chartTooltip.innerHTML = '<div class="tt-year">Year ' + d.year + '</div>' +
+            '<div class="tt-row"><div class="tt-dot" style="background:#10B981"></div> Total: <span class="tt-val">' + fmt(d.balance) + '</span></div>' +
+            '<div class="tt-row"><div class="tt-dot" style="background:#0EA5E9"></div> Contributed: <span class="tt-val">' + fmt(d.contributions) + '</span></div>' +
+            '<div class="tt-row"><div class="tt-dot" style="background:#34D399"></div> Earnings: <span class="tt-val">' + fmt(d.earnings) + '</span></div>';
+          chartTooltip.classList.add('visible');
+
+          // Position tooltip
+          const containerRect = container.getBoundingClientRect();
+          let left = xPos + 15;
+          if (left + 200 > containerRect.width) left = xPos - 215;
+          chartTooltip.style.left = left + 'px';
+          chartTooltip.style.top = (y(d.balance) - 10) + 'px';
+        });
+
+        zone.addEventListener('mouseleave', function() {
+          hoverLine.setAttribute('opacity', '0');
+          dotBalance.setAttribute('opacity', '0');
+          dotContrib.setAttribute('opacity', '0');
+          chartTooltip.classList.remove('visible');
+        });
+      });
+    }
+
+    function formatAxis(val) {
+      if (val >= 1000000) return '$' + (val / 1000000).toFixed(1) + 'M';
+      if (val >= 1000) return '$' + (val / 1000).toFixed(0) + 'K';
+      return '$' + val.toFixed(0);
+    }
+
+    function buildTable() {
+      let html = '';
+      for (let i = 0; i < yearData.length; i++) {
+        const d = yearData[i];
+        html += '<tr>' +
+          '<td class="num">' + d.year + '</td>' +
+          '<td class="num">' + fmt(d.contributions) + '</td>' +
+          '<td class="num" style="color:var(--lw-emerald)">' + fmt(d.earnings) + '</td>' +
+          '<td class="num" style="font-weight:600">' + fmt(d.balance) + '</td>' +
+          '</tr>';
+      }
+      yearTableBody.innerHTML = html;
+    }
+
+    // Recalculate on window resize for chart
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(drawChart, 150);
+    });
+
+    // Initial calculation
+    calculate();
+  })();
+  </script>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is compound interest and how does it differ from simple interest?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Simple interest is calculated only on the original principal — if you invest $1,000 at 5%, you earn $50 every year. Compound interest calculates returns on the total balance including previously earned interest, so each year you earn more than the last. Over long periods, compounding produces dramatically higher returns."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much should I invest monthly to reach $1 million?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "At an 8% annual return, investing roughly $435 per month for 30 years will get you to approximately $1 million. Starting 10 years earlier (40 years), you'd only need about $175/month. The earlier you start, the less you need to contribute."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is 8% a realistic annual return rate?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Historically, the S&P 500 has returned approximately 10% per year on average before inflation. After adjusting for inflation, the real return is closer to 7%. An 8% nominal return is a commonly used benchmark for a diversified stock portfolio."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does compound frequency significantly affect my returns?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The difference between monthly and annual compounding is typically modest — about 0.3% in effective annual yield at an 8% rate. The real drivers of compound growth are the rate of return, time invested, and contribution amount."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does inflation affect compound interest calculations?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Inflation reduces the purchasing power of future dollars. If your investments earn 8% and inflation runs at 3%, your real return is approximately 5%. For long-term planning, always consider real (inflation-adjusted) returns alongside nominal returns."
+        }
+      }
+    ]
+  }
+  </script>
+</body>
+</html>

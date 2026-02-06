@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Refinance Calculator — Free Online Calculator | PocketWise</title>
+  <meta name="description" content="Should you refinance your mortgage? Calculate monthly savings, break-even point, and total savings with our free refinance calculator.">
+  <link rel="canonical" href="https://pocketwise.io/refinance-calculator/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .comparison-card {
+      background: var(--lw-card);
+      border-radius: var(--lw-radius-lg);
+      padding: 28px;
+      border: 2px solid var(--lw-border-light);
+      transition: border-color var(--lw-transition);
+    }
+    .comparison-card.current {
+      border-color: var(--lw-slate-300);
+    }
+    .comparison-card.new {
+      border-color: var(--lw-emerald);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.08);
+    }
+    .comparison-card-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .comparison-card.current .comparison-card-label { color: var(--lw-slate-500); }
+    .comparison-card.new .comparison-card-label { color: var(--lw-emerald-dark); }
+    .comparison-card-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--lw-navy);
+      margin-bottom: 20px;
+    }
+    .comparison-stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--lw-border-light);
+    }
+    .comparison-stat:last-child { border-bottom: none; }
+    .comparison-stat-label {
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+      font-weight: 500;
+    }
+    .comparison-stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--lw-navy);
+    }
+    .savings-highlight {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--lw-emerald);
+    }
+    .loss-highlight {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--lw-rose);
+    }
+
+    /* Timeline Visual */
+    .timeline-wrap {
+      position: relative;
+      padding: 32px 0 16px;
+    }
+    .timeline-track {
+      width: 100%;
+      height: 8px;
+      background: var(--lw-slate-100);
+      border-radius: 4px;
+      position: relative;
+      overflow: visible;
+    }
+    .timeline-loss {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--lw-rose-light), var(--lw-rose));
+      border-radius: 4px 0 0 4px;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .timeline-gain {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--lw-emerald), var(--lw-emerald-light));
+      border-radius: 0 4px 4px 0;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1), left 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .timeline-marker {
+      position: absolute;
+      top: -8px;
+      width: 4px;
+      height: 24px;
+      background: var(--lw-navy);
+      border-radius: 2px;
+      transition: left 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 5;
+    }
+    .timeline-marker-label {
+      position: absolute;
+      top: -36px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--lw-navy);
+      background: var(--lw-card);
+      padding: 3px 10px;
+      border-radius: var(--lw-radius-full);
+      border: 1px solid var(--lw-border);
+      box-shadow: var(--lw-shadow-sm);
+    }
+    .timeline-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+    }
+    .timeline-label {
+      font-size: 12px;
+      color: var(--lw-text-muted);
+      font-weight: 500;
+    }
+    .timeline-legend {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 16px;
+    }
+    .timeline-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+      font-weight: 500;
+    }
+    .timeline-legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* Verdict Box */
+    .verdict-box {
+      text-align: center;
+      padding: 32px;
+      border-radius: var(--lw-radius-lg);
+      margin-bottom: 24px;
+      border: 2px solid;
+    }
+    .verdict-box.positive {
+      background: var(--lw-emerald-50);
+      border-color: rgba(16, 185, 129, 0.25);
+    }
+    .verdict-box.negative {
+      background: var(--lw-rose-50);
+      border-color: rgba(244, 63, 94, 0.2);
+    }
+    .verdict-box.neutral {
+      background: var(--lw-amber-50);
+      border-color: rgba(245, 158, 11, 0.2);
+    }
+    .verdict-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+    .verdict-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .verdict-box.positive .verdict-title { color: var(--lw-emerald-dark); }
+    .verdict-box.negative .verdict-title { color: var(--lw-rose-dark); }
+    .verdict-box.neutral .verdict-title { color: #B45309; }
+    .verdict-text {
+      font-size: 15px;
+      color: var(--lw-text-secondary);
+      line-height: 1.6;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* Cumulative chart */
+    .cumulative-chart {
+      position: relative;
+      height: 200px;
+      margin: 20px 0;
+      border-left: 2px solid var(--lw-slate-200);
+      border-bottom: 2px solid var(--lw-slate-200);
+    }
+    .cumulative-chart svg {
+      width: 100%;
+      height: 100%;
+    }
+    .chart-labels-y {
+      position: absolute;
+      left: -4px;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transform: translateX(-100%);
+      padding-right: 8px;
+    }
+    .chart-label-y {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--lw-text-muted);
+      white-space: nowrap;
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .section-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--lw-border);
+      margin: 24px 0;
+    }
+    @media (max-width: 768px) {
+      .comparison-grid { grid-template-columns: 1fr; }
+      .input-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">L</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/mortgage-calculator/">Mortgage</a></li>
+        <li><a href="/auto-loan-calculator/">Auto</a></li>
+        <li><a href="/compound-interest-calculator/">Investing</a></li>
+        <li><a href="/debt-payoff-calculator/">Debt</a></li>
+        <li><a href="/">All Tools</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu">
+      <a href="/">All Tools</a>
+      <a href="/mortgage-calculator/">Mortgage Calculator</a>
+      <a href="/auto-loan-calculator/">Auto Loan Calculator</a>
+      <a href="/personal-loan-calculator/">Personal Loan Calculator</a>
+      <a href="/compound-interest-calculator/">Compound Interest Calculator</a>
+      <a href="/debt-payoff-calculator/">Debt Payoff Calculator</a>
+      <a href="/credit-card-payoff-calculator/">Credit Card Payoff</a>
+      <a href="/home-affordability-calculator/">Home Affordability</a>
+      <a href="/refinance-calculator/">Refinance Calculator</a>
+      <a href="/loan-comparison-tool/">Loan Comparison</a>
+      <a href="/amortization-schedule/">Amortization Schedule</a>
+      <a href="/debt-to-income-calculator/">Debt-to-Income</a>
+      <a href="/apr-calculator/">APR Calculator</a>
+      <a href="/savings-goal-calculator/">Savings Goal Calculator</a>
+      <a href="/investment-return-calculator/">Investment Returns</a>
+      <a href="/emergency-fund-calculator/">Emergency Fund</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- HERO -->
+    <div class="lw-hero">
+      <span class="lw-badge">Refinancing</span>
+      <h1>Should You <span class="accent">Refinance</span>?</h1>
+      <p class="subtitle">Compare your current mortgage to a new loan. See your monthly savings, break-even point, and whether refinancing is worth it for you.</p>
+    </div>
+
+    <!-- TOOL INTERFACE -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon rose">🏦</div>
+        <div>
+          <div class="lw-card-title">Current Loan</div>
+          <div class="lw-card-subtitle">Your existing mortgage details</div>
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="curBalance">Remaining Balance</label>
+            <span class="lw-range-value" id="curBalanceDisplay">$280,000</span>
+          </div>
+          <input type="range" class="lw-range" id="curBalance" min="25000" max="1500000" step="5000" value="280000">
+        </div>
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="curRate">Current Interest Rate</label>
+            <span class="lw-range-value" id="curRateDisplay">7.0%</span>
+          </div>
+          <input type="range" class="lw-range" id="curRate" min="1" max="12" step="0.125" value="7">
+        </div>
+      </div>
+
+      <div class="lw-range-group">
+        <div class="lw-range-header">
+          <label class="lw-label" for="curRemaining">Remaining Term</label>
+          <span class="lw-range-value" id="curRemainingDisplay">300 months (25 yrs)</span>
+        </div>
+        <input type="range" class="lw-range" id="curRemaining" min="12" max="360" step="12" value="300">
+      </div>
+
+      <div class="section-divider"></div>
+
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">✨</div>
+        <div>
+          <div class="lw-card-title">New Loan</div>
+          <div class="lw-card-subtitle">The refinance terms you're considering</div>
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="newRate">New Interest Rate</label>
+            <span class="lw-range-value" id="newRateDisplay">5.75%</span>
+          </div>
+          <input type="range" class="lw-range" id="newRate" min="1" max="12" step="0.125" value="5.75">
+        </div>
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="newTerm">New Loan Term</label>
+            <span class="lw-range-value" id="newTermDisplay">360 months (30 yrs)</span>
+          </div>
+          <input type="range" class="lw-range" id="newTerm" min="60" max="360" step="12" value="360">
+        </div>
+      </div>
+
+      <div class="lw-range-group">
+        <div class="lw-range-header">
+          <label class="lw-label" for="closingCosts">Closing Costs</label>
+          <span class="lw-range-value" id="closingCostsDisplay">$6,000</span>
+        </div>
+        <input type="range" class="lw-range" id="closingCosts" min="0" max="25000" step="500" value="6000">
+      </div>
+    </div>
+
+    <!-- RESULT HERO: Monthly Savings -->
+    <div class="lw-result-hero" id="resultHero">
+      <div class="lw-result-label">Monthly Savings</div>
+      <div class="lw-result-number lw-animate-number" id="monthlySavings">$0</div>
+      <div class="lw-result-sub" id="resultSub">per month with the new loan</div>
+    </div>
+
+    <!-- RESULT GRID -->
+    <div class="lw-result-grid">
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Break-Even Point</div>
+        <div class="lw-result-item-value sky" id="breakEven">—</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Lifetime Savings</div>
+        <div class="lw-result-item-value green" id="lifetimeSavings">$0</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Rate Drop</div>
+        <div class="lw-result-item-value" id="rateDrop">0%</div>
+      </div>
+    </div>
+
+    <!-- VERDICT BOX -->
+    <div class="verdict-box positive" id="verdictBox">
+      <div class="verdict-icon" id="verdictIcon">✅</div>
+      <div class="verdict-title" id="verdictTitle">Worth It</div>
+      <div class="verdict-text" id="verdictText">Refinancing makes sense if you plan to stay in your home for at least X months.</div>
+    </div>
+
+    <!-- SIDE BY SIDE COMPARISON -->
+    <div class="comparison-grid">
+      <div class="comparison-card current">
+        <div class="comparison-card-label">Current Loan</div>
+        <div class="comparison-card-title">Existing Mortgage</div>
+        <div class="comparison-stat">
+          <span class="comparison-stat-label">Monthly Payment</span>
+          <span class="comparison-stat-value" id="curPayment">$0</span>
+        </div>
+        <div class="comparison-stat">
+          <span class="comparison-stat-label">Interest Rate</span>
+          <span class="comparison-stat-value" id="curRateOut">0%</span>
+        </div>
+        <div class="comparison-stat">
+          <span class="comparison-stat-label">Remaining Term</span>
+          <span class="comparison-stat-value" id="curTermOut">0 mo</span>
+        </div>
+        <div class="comparison-stat">
+          <span class="comparison-stat-label">Total Remaining Cost</span>
+          <span class="comparison-stat-value" id="curTotalCost">$0</span>
+        </div>
+        <div class="comparison-stat">
+          <span class="comparison-stat-label">Total Interest Left</span>
+          <span class="comparison-stat-value" id="curTotalInterest">$0</span>
+        </div>
+      </div>
+      <div class="comparison-card new">
+        <div class="comparison-card-label">New Loan</div>
+        <div class="comparison-card-title">Refinanced Mortgage</div>
+        <div class="comparison-stat">
+          <span class="comparison-stat-label">Monthly Payment</span>
+          <span class="comparison-stat-value" id="newPayment">$0</span>
+        </div>
+        <div class="comparison-stat">
+          <span class="comparison-stat-label">Interest Rate</span>
+          <span class="comparison-stat-value" id="newRateOut">0%</span>
+        </div>
+        <div class="comparison-stat">
+          <span class="comparison-stat-label">New Term</span>
+          <span class="comparison-stat-value" id="newTermOut">0 mo</span>
+        </div>
+        <div class="comparison-stat">
+          <span class="comparison-stat-label">Total Cost (incl. closing)</span>
+          <span class="comparison-stat-value" id="newTotalCost">$0</span>
+        </div>
+        <div class="comparison-stat">
+          <span class="comparison-stat-label">Total Interest</span>
+          <span class="comparison-stat-value" id="newTotalInterest">$0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BREAK-EVEN TIMELINE -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">📅</div>
+        <div>
+          <div class="lw-card-title">Break-Even Timeline</div>
+          <div class="lw-card-subtitle">When your savings exceed closing costs</div>
+        </div>
+      </div>
+
+      <div class="timeline-wrap">
+        <div class="timeline-track">
+          <div class="timeline-loss" id="timelineLoss" style="width: 30%;"></div>
+          <div class="timeline-gain" id="timelineGain" style="left: 30%; width: 70%;"></div>
+          <div class="timeline-marker" id="timelineMarker" style="left: 30%;">
+            <div class="timeline-marker-label" id="timelineMarkerLabel">Month 18</div>
+          </div>
+        </div>
+        <div class="timeline-labels">
+          <span class="timeline-label">Month 0</span>
+          <span class="timeline-label" id="timelineEnd">Month 60</span>
+        </div>
+        <div class="timeline-legend">
+          <div class="timeline-legend-item">
+            <div class="timeline-legend-dot" style="background: var(--lw-rose);"></div>
+            Paying back closing costs
+          </div>
+          <div class="timeline-legend-item">
+            <div class="timeline-legend-dot" style="background: var(--lw-emerald);"></div>
+            Net savings
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CUMULATIVE SAVINGS CHART -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon green">📈</div>
+        <div>
+          <div class="lw-card-title">Cumulative Savings Over Time</div>
+          <div class="lw-card-subtitle">Net savings after subtracting closing costs</div>
+        </div>
+      </div>
+      <div class="cumulative-chart" id="cumulativeChart">
+        <svg id="cumulativeSvg" viewBox="0 0 600 200" preserveAspectRatio="none"></svg>
+      </div>
+      <div class="lw-flex lw-justify-between lw-mt-16">
+        <span class="timeline-label">Year 0</span>
+        <span class="timeline-label" id="chartEndLabel">Year 5</span>
+      </div>
+    </div>
+
+    <!-- SAVINGS AT MILESTONES -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon amber">🎯</div>
+        <div>
+          <div class="lw-card-title">Net Savings at Key Milestones</div>
+          <div class="lw-card-subtitle">How much you save (or lose) by staying X years</div>
+        </div>
+      </div>
+      <div class="lw-table-wrap">
+        <table class="lw-table">
+          <thead>
+            <tr>
+              <th>Time in Home</th>
+              <th>Cumulative Savings</th>
+              <th>Net After Closing Costs</th>
+              <th>Verdict</th>
+            </tr>
+          </thead>
+          <tbody id="milestonesBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <div class="lw-content">
+      <h2>Should You Refinance Your Mortgage? A Complete Guide</h2>
+      <p>Mortgage refinancing replaces your existing home loan with a new one — ideally at a lower interest rate, a shorter term, or both. It's one of the most powerful financial moves a homeowner can make, but it's not free: closing costs typically run 2-5% of the loan amount, meaning you need to stay in the home long enough to recoup that expense through monthly savings. Our refinance calculator quantifies exactly when that break-even point occurs and how much you'll save over the life of the loan.</p>
+
+      <h3>How Refinancing Works</h3>
+      <p>When you refinance, your new lender pays off your existing mortgage and issues a brand-new loan for the remaining balance (or a different amount, in cash-out refinances). You go through a process similar to your original mortgage application: credit check, appraisal, underwriting, and closing. The key difference is that you're not buying a new home — you're restructuring the debt on one you already own. The new loan comes with its own interest rate, term, and payment schedule, which is why it's so important to compare the old and new numbers side by side.</p>
+
+      <h3>The Break-Even Point Explained</h3>
+      <p>The break-even point is the single most important number in any refinancing decision. It answers the question: <strong>"How many months will it take for my monthly savings to offset the closing costs?"</strong> The formula is straightforward: Break-Even Months = Closing Costs ÷ Monthly Savings. If your closing costs are $6,000 and you save $300/month, your break-even is 20 months. Any month beyond that is pure profit. If you plan to sell or move before reaching break-even, refinancing will cost you money instead of saving it.</p>
+
+      <h3>Rate-and-Term vs. Cash-Out Refinancing</h3>
+      <p>A <strong>rate-and-term refinance</strong> (what this calculator models) simply changes your interest rate, loan term, or both. The loan amount stays essentially the same. A <strong>cash-out refinance</strong> lets you borrow more than you owe and pocket the difference — useful for home improvements or debt consolidation, but it increases your loan balance and total interest paid. Rate-and-term refinances typically offer better rates because they carry less risk for the lender.</p>
+
+      <h3>When Refinancing Makes Sense</h3>
+      <p>Financial experts generally suggest refinancing when you can lower your rate by at least <strong>0.5% to 1%</strong>, though the real test is whether you'll stay in the home past the break-even point. Other good reasons include switching from an adjustable-rate mortgage (ARM) to a fixed rate for stability, shortening your term from 30 to 15 years to build equity faster, or eliminating PMI if your home has appreciated enough. Conversely, refinancing rarely makes sense if you're planning to move within 2-3 years, if your current loan has a prepayment penalty, or if the rate drop is minimal relative to the closing costs.</p>
+
+      <h3>Hidden Costs to Watch For</h3>
+      <p>Closing costs aren't the only factor. Resetting a 30-year clock means you'll pay interest for longer — even at a lower rate, this can actually increase your total interest paid if you've already made years of payments on your current loan. Our calculator accounts for this by comparing the total remaining cost of your current loan against the total cost of the new loan including closing costs. Additionally, watch for appraisal fees, title insurance, origination fees, and prepaid interest that can add thousands to the upfront cost. Always request a Loan Estimate from your lender so you can input the exact closing costs into this calculator.</p>
+
+      <!-- FAQ ACCORDION -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">What is a good interest rate to refinance at?</button>
+          <div class="lw-faq-a">
+            <p>A common rule of thumb is to refinance when you can reduce your rate by at least 0.75% to 1%. However, the real answer depends on your break-even timeline. Even a 0.5% rate drop can be worthwhile if your closing costs are low and you plan to stay in the home for many years. Use the calculator above to see your specific break-even point.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">How long does it take to break even on a refinance?</button>
+          <div class="lw-faq-a">
+            <p>The break-even period typically ranges from 12 to 36 months, depending on your closing costs and monthly savings. Divide your total closing costs by your monthly payment savings to get the number of months. If you plan to stay in the home longer than this, refinancing will save you money.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Can refinancing increase my total interest paid?</button>
+          <div class="lw-faq-a">
+            <p>Yes, if you refinance into a new 30-year term when you're already several years into your current mortgage, you restart the amortization clock. Even at a lower rate, paying interest for an additional 5-10 years can increase your total interest. Consider refinancing into a shorter term, or make extra payments to offset this effect.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">What are typical refinancing closing costs?</button>
+          <div class="lw-faq-a">
+            <p>Closing costs for a refinance typically range from 2% to 5% of the loan amount. On a $300,000 mortgage, that's $6,000 to $15,000. Common fees include application fees, appraisal ($300-$600), title search and insurance ($700-$900), origination fees (0.5-1% of loan), and recording fees. Some lenders offer "no-closing-cost" refinances, but they typically charge a higher interest rate to compensate.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Should I refinance to a 15-year or 30-year mortgage?</button>
+          <div class="lw-faq-a">
+            <p>A 15-year mortgage builds equity faster and costs significantly less in total interest, but comes with higher monthly payments. A 30-year refinance lowers your monthly payment the most, giving you more cash flow flexibility. The best choice depends on your financial goals: if you can comfortably afford the higher payment, a 15-year term saves the most money long-term. If cash flow is tight, the 30-year option provides more breathing room.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED TOOLS -->
+    <div class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/mortgage-calculator/" class="lw-related-link"><span class="dot"></span> Mortgage Calculator</a>
+        <a href="/amortization-schedule/" class="lw-related-link"><span class="dot"></span> Amortization Schedule</a>
+        <a href="/home-affordability-calculator/" class="lw-related-link"><span class="dot"></span> Home Affordability Calculator</a>
+        <a href="/apr-calculator/" class="lw-related-link"><span class="dot"></span> APR Calculator</a>
+        <a href="/loan-comparison-tool/" class="lw-related-link"><span class="dot"></span> Loan Comparison Tool</a>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <p class="lw-disclaimer">
+      <em>This calculator is for educational purposes only. Results are estimates and should not be considered financial advice. Actual refinancing terms depend on credit score, property value, and lender-specific criteria. Consult a qualified financial advisor or mortgage professional for personalized guidance.</em>
+    </p>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="lw-footer">
+    <p>© 2026 PocketWise. Free financial calculators for everyone.</p>
+  </footer>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // --- Utility functions ---
+    function fmt(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:0, maximumFractionDigits:0}).format(n); }
+    function fmtFull(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:2, maximumFractionDigits:2}).format(n); }
+    function fmtNum(n) { return new Intl.NumberFormat('en-US').format(Math.round(n)); }
+    function fmtPct(n) { return n.toFixed(2) + '%'; }
+    function pmt(rate, nper, pv) { if (rate === 0) return pv / nper; return pv * (rate * Math.pow(1+rate,nper)) / (Math.pow(1+rate,nper)-1); }
+
+    // --- Elements ---
+    var curBalance = document.getElementById('curBalance');
+    var curRate = document.getElementById('curRate');
+    var curRemaining = document.getElementById('curRemaining');
+    var newRate = document.getElementById('newRate');
+    var newTerm = document.getElementById('newTerm');
+    var closingCosts = document.getElementById('closingCosts');
+
+    // --- Listen to all inputs ---
+    var allInputs = [curBalance, curRate, curRemaining, newRate, newTerm, closingCosts];
+    allInputs.forEach(function(el) {
+      el.addEventListener('input', calculate);
+    });
+
+    function formatMonths(m) {
+      m = Math.round(m);
+      var y = Math.floor(m / 12);
+      var mo = m % 12;
+      if (y === 0) return m + ' months';
+      if (mo === 0) return y + (y === 1 ? ' year' : ' years');
+      return y + (y === 1 ? ' yr' : ' yrs') + ' ' + mo + ' mo';
+    }
+
+    function calculate() {
+      var balance = parseFloat(curBalance.value);
+      var cRate = parseFloat(curRate.value);
+      var cRemaining = parseInt(curRemaining.value);
+      var nRate = parseFloat(newRate.value);
+      var nTerm = parseInt(newTerm.value);
+      var costs = parseFloat(closingCosts.value);
+
+      // Update displays
+      document.getElementById('curBalanceDisplay').textContent = fmt(balance);
+      document.getElementById('curRateDisplay').textContent = fmtPct(cRate);
+      document.getElementById('curRemainingDisplay').textContent = cRemaining + ' months (' + Math.round(cRemaining/12) + ' yrs)';
+      document.getElementById('newRateDisplay').textContent = fmtPct(nRate);
+      document.getElementById('newTermDisplay').textContent = nTerm + ' months (' + Math.round(nTerm/12) + ' yrs)';
+      document.getElementById('closingCostsDisplay').textContent = fmt(costs);
+
+      // Current monthly payment
+      var cMonthlyRate = cRate / 100 / 12;
+      var curPmt = pmt(cMonthlyRate, cRemaining, balance);
+      var curTotalCost = curPmt * cRemaining;
+      var curTotalInterest = curTotalCost - balance;
+
+      // New monthly payment
+      var nMonthlyRate = nRate / 100 / 12;
+      var newPmt = pmt(nMonthlyRate, nTerm, balance);
+      var newTotalCost = newPmt * nTerm + costs;
+      var newTotalInterest = (newPmt * nTerm) - balance;
+
+      // Monthly savings
+      var monthlySaving = curPmt - newPmt;
+      var isPositiveSaving = monthlySaving > 0;
+
+      // Break-even
+      var breakEvenMonths = isPositiveSaving ? Math.ceil(costs / monthlySaving) : Infinity;
+
+      // Lifetime savings: total cost of current remaining vs new total + closing costs
+      var lifetimeSaving = curTotalCost - newTotalCost;
+
+      // --- Hero ---
+      document.getElementById('monthlySavings').textContent = (isPositiveSaving ? '' : '-') + fmt(Math.abs(Math.round(monthlySaving)));
+      if (!isPositiveSaving) {
+        document.getElementById('resultSub').textContent = 'Your new payment would be higher';
+        document.getElementById('resultHero').style.background = 'linear-gradient(135deg, #4B1724 0%, #1E293B 100%)';
+      } else {
+        document.getElementById('resultSub').textContent = 'per month with the new loan';
+        document.getElementById('resultHero').style.background = '';
+      }
+
+      // --- Result grid ---
+      var beEl = document.getElementById('breakEven');
+      if (isPositiveSaving && breakEvenMonths < 1000) {
+        beEl.textContent = formatMonths(breakEvenMonths);
+        beEl.className = 'lw-result-item-value sky';
+      } else if (!isPositiveSaving) {
+        beEl.textContent = 'Never';
+        beEl.className = 'lw-result-item-value rose';
+      } else {
+        beEl.textContent = '—';
+        beEl.className = 'lw-result-item-value';
+      }
+
+      var lsEl = document.getElementById('lifetimeSavings');
+      if (lifetimeSaving >= 0) {
+        lsEl.textContent = fmt(Math.round(lifetimeSaving));
+        lsEl.className = 'lw-result-item-value green';
+      } else {
+        lsEl.textContent = '-' + fmt(Math.abs(Math.round(lifetimeSaving)));
+        lsEl.className = 'lw-result-item-value rose';
+      }
+
+      var rateDiff = cRate - nRate;
+      var rdEl = document.getElementById('rateDrop');
+      if (rateDiff > 0) {
+        rdEl.textContent = '-' + rateDiff.toFixed(2) + '%';
+        rdEl.className = 'lw-result-item-value green';
+      } else if (rateDiff < 0) {
+        rdEl.textContent = '+' + Math.abs(rateDiff).toFixed(2) + '%';
+        rdEl.className = 'lw-result-item-value rose';
+      } else {
+        rdEl.textContent = '0%';
+        rdEl.className = 'lw-result-item-value';
+      }
+
+      // --- Comparison cards ---
+      document.getElementById('curPayment').textContent = fmtFull(curPmt);
+      document.getElementById('curRateOut').textContent = fmtPct(cRate);
+      document.getElementById('curTermOut').textContent = formatMonths(cRemaining);
+      document.getElementById('curTotalCost').textContent = fmt(Math.round(curTotalCost));
+      document.getElementById('curTotalInterest').textContent = fmt(Math.round(curTotalInterest));
+
+      document.getElementById('newPayment').textContent = fmtFull(newPmt);
+      document.getElementById('newRateOut').textContent = fmtPct(nRate);
+      document.getElementById('newTermOut').textContent = formatMonths(nTerm);
+      document.getElementById('newTotalCost').textContent = fmt(Math.round(newTotalCost));
+      document.getElementById('newTotalInterest').textContent = fmt(Math.round(newTotalInterest));
+
+      // --- Verdict ---
+      var verdictBox = document.getElementById('verdictBox');
+      var verdictIcon = document.getElementById('verdictIcon');
+      var verdictTitle = document.getElementById('verdictTitle');
+      var verdictText = document.getElementById('verdictText');
+
+      if (!isPositiveSaving) {
+        verdictBox.className = 'verdict-box negative';
+        verdictIcon.textContent = '❌';
+        verdictTitle.textContent = 'Not Worth It';
+        verdictText.textContent = 'Your new monthly payment would be higher than your current one. Refinancing at these terms doesn\'t save you money month-to-month.';
+      } else if (lifetimeSaving < 0) {
+        verdictBox.className = 'verdict-box neutral';
+        verdictIcon.textContent = '⚠️';
+        verdictTitle.textContent = 'Proceed with Caution';
+        verdictText.textContent = 'You\'ll save ' + fmt(Math.round(monthlySaving)) + '/month, but the longer term means you\'ll pay ' + fmt(Math.abs(Math.round(lifetimeSaving))) + ' more in total. You\'d break even in ' + formatMonths(breakEvenMonths) + '. Consider a shorter new term.';
+      } else if (breakEvenMonths <= 24) {
+        verdictBox.className = 'verdict-box positive';
+        verdictIcon.textContent = '✅';
+        verdictTitle.textContent = 'Strong Refinance';
+        verdictText.textContent = 'Worth it if you stay ' + formatMonths(breakEvenMonths) + ' or more. You\'ll save ' + fmt(Math.round(monthlySaving)) + '/month and ' + fmt(Math.round(lifetimeSaving)) + ' over the life of the loan. The quick break-even makes this an excellent deal.';
+      } else if (breakEvenMonths <= 48) {
+        verdictBox.className = 'verdict-box positive';
+        verdictIcon.textContent = '👍';
+        verdictTitle.textContent = 'Worth It';
+        verdictText.textContent = 'Worth it if you stay at least ' + formatMonths(breakEvenMonths) + '. You\'ll save ' + fmt(Math.round(monthlySaving)) + '/month and ' + fmt(Math.round(lifetimeSaving)) + ' total over the remaining life of the loan.';
+      } else {
+        verdictBox.className = 'verdict-box neutral';
+        verdictIcon.textContent = '🤔';
+        verdictTitle.textContent = 'Maybe Worth It';
+        verdictText.textContent = 'The break-even point is ' + formatMonths(breakEvenMonths) + ' — that\'s a long time to wait. You\'ll save ' + fmt(Math.round(monthlySaving)) + '/month, but only see real returns if you stay beyond ' + formatMonths(breakEvenMonths) + '. Consider negotiating lower closing costs.';
+      }
+
+      // --- Timeline ---
+      var timelineMonths = Math.max(breakEvenMonths * 2, nTerm, 60);
+      timelineMonths = Math.min(timelineMonths, nTerm);
+      if (!isPositiveSaving || breakEvenMonths >= 9999) timelineMonths = Math.min(nTerm, cRemaining);
+      var bePct = isPositiveSaving && breakEvenMonths < 9999 ? (breakEvenMonths / timelineMonths * 100) : 100;
+      bePct = Math.min(bePct, 95);
+
+      document.getElementById('timelineLoss').style.width = bePct + '%';
+      document.getElementById('timelineGain').style.left = bePct + '%';
+      document.getElementById('timelineGain').style.width = (100 - bePct) + '%';
+      document.getElementById('timelineGain').style.display = (isPositiveSaving && breakEvenMonths < 9999) ? 'block' : 'none';
+      document.getElementById('timelineMarker').style.left = bePct + '%';
+      document.getElementById('timelineMarker').style.display = (isPositiveSaving && breakEvenMonths < 9999) ? 'block' : 'none';
+      document.getElementById('timelineMarkerLabel').textContent = 'Month ' + breakEvenMonths;
+      document.getElementById('timelineEnd').textContent = 'Month ' + Math.round(timelineMonths);
+
+      // --- Cumulative savings chart (SVG) ---
+      drawCumulativeChart(monthlySaving, costs, nTerm, breakEvenMonths, isPositiveSaving);
+
+      // --- Milestones table ---
+      drawMilestones(monthlySaving, costs, nTerm, curPmt, newPmt, cRemaining);
+    }
+
+    function drawCumulativeChart(monthlySaving, costs, nTerm, breakEvenMonths, isPositive) {
+      var svg = document.getElementById('cumulativeSvg');
+      var W = 600, H = 200;
+      // Chart years: show enough to see the full picture
+      var chartMonths = Math.min(nTerm, 360);
+      var points = [];
+      var minVal = -costs;
+      var maxVal = -costs;
+
+      for (var m = 0; m <= chartMonths; m++) {
+        var cumSav = (monthlySaving * m) - costs;
+        points.push({ m: m, v: cumSav });
+        if (cumSav < minVal) minVal = cumSav;
+        if (cumSav > maxVal) maxVal = cumSav;
+      }
+
+      var range = maxVal - minVal;
+      if (range === 0) range = 1;
+      var padY = range * 0.1;
+      minVal -= padY;
+      maxVal += padY;
+      range = maxVal - minVal;
+
+      // Build path
+      var pathD = '';
+      var areaD = '';
+      var zeroY = H - ((0 - minVal) / range) * H;
+
+      points.forEach(function(p, i) {
+        var x = (p.m / chartMonths) * W;
+        var y = H - ((p.v - minVal) / range) * H;
+        if (i === 0) {
+          pathD += 'M' + x + ',' + y;
+          areaD += 'M' + x + ',' + zeroY + ' L' + x + ',' + y;
+        } else {
+          pathD += ' L' + x + ',' + y;
+          areaD += ' L' + x + ',' + y;
+        }
+      });
+      areaD += ' L' + W + ',' + zeroY + ' Z';
+
+      // Break-even marker
+      var beX = isPositive && breakEvenMonths < 9999 ? (breakEvenMonths / chartMonths) * W : -100;
+
+      svg.innerHTML =
+        '<defs>' +
+          '<linearGradient id="areaGrad" x1="0%" y1="0%" x2="0%" y2="100%">' +
+            '<stop offset="0%" style="stop-color:#10B981;stop-opacity:0.25"/>' +
+            '<stop offset="100%" style="stop-color:#10B981;stop-opacity:0.02"/>' +
+          '</linearGradient>' +
+        '</defs>' +
+        // Zero line
+        '<line x1="0" y1="' + zeroY + '" x2="' + W + '" y2="' + zeroY + '" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="6,4"/>' +
+        // Area fill
+        '<path d="' + areaD + '" fill="url(#areaGrad)"/>' +
+        // Line
+        '<path d="' + pathD + '" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+        // Break-even dot
+        (beX > 0 ? '<circle cx="' + beX + '" cy="' + zeroY + '" r="5" fill="#0F172A" stroke="white" stroke-width="2"/>' : '') +
+        // Break-even label
+        (beX > 0 ? '<text x="' + beX + '" y="' + (zeroY - 12) + '" text-anchor="middle" fill="#0F172A" font-size="11" font-weight="600" font-family="JetBrains Mono, monospace">Break-even</text>' : '') +
+        // Zero label
+        '<text x="4" y="' + (zeroY - 4) + '" fill="#94A3B8" font-size="10" font-family="JetBrains Mono, monospace">$0</text>';
+
+      var years = Math.round(chartMonths / 12);
+      document.getElementById('chartEndLabel').textContent = 'Year ' + years;
+    }
+
+    function drawMilestones(monthlySaving, costs, nTerm, curPmt, newPmt, curRemaining) {
+      var tbody = document.getElementById('milestonesBody');
+      var milestones = [1, 2, 3, 5, 7, 10];
+      var html = '';
+
+      milestones.forEach(function(yr) {
+        var months = yr * 12;
+        if (months > nTerm) return;
+        var cumSavings = monthlySaving * months;
+        var net = cumSavings - costs;
+        var isPositive = net >= 0;
+
+        html += '<tr>' +
+          '<td><strong>' + yr + ' year' + (yr > 1 ? 's' : '') + '</strong></td>' +
+          '<td class="num">' + fmt(Math.round(cumSavings)) + '</td>' +
+          '<td class="num" style="color:' + (isPositive ? 'var(--lw-emerald)' : 'var(--lw-rose)') + '; font-weight: 600;">' + (isPositive ? '+' : '-') + fmt(Math.abs(Math.round(net))) + '</td>' +
+          '<td>' + (isPositive ? '<span style="color:var(--lw-emerald-dark); font-weight:600;">✅ Saving</span>' : '<span style="color:var(--lw-rose-dark); font-weight:600;">❌ Losing</span>') + '</td>' +
+        '</tr>';
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    // Initial calculation
+    calculate();
+  })();
+  </script>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a good interest rate to refinance at?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A common rule of thumb is to refinance when you can reduce your rate by at least 0.75% to 1%. However, the real answer depends on your break-even timeline. Even a 0.5% rate drop can be worthwhile if your closing costs are low and you plan to stay in the home for many years."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How long does it take to break even on a refinance?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The break-even period typically ranges from 12 to 36 months, depending on your closing costs and monthly savings. Divide your total closing costs by your monthly payment savings to get the number of months."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can refinancing increase my total interest paid?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, if you refinance into a new 30-year term when you're already several years into your current mortgage, you restart the amortization clock. Even at a lower rate, paying interest for an additional 5-10 years can increase your total interest."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are typical refinancing closing costs?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Closing costs for a refinance typically range from 2% to 5% of the loan amount. On a $300,000 mortgage, that's $6,000 to $15,000. Common fees include application fees, appraisal, title search and insurance, origination fees, and recording fees."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I refinance to a 15-year or 30-year mortgage?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A 15-year mortgage builds equity faster and costs significantly less in total interest, but comes with higher monthly payments. A 30-year refinance lowers your monthly payment the most, giving you more cash flow flexibility."
+        }
+      }
+    ]
+  }
+  </script>
+</body>
+</html>

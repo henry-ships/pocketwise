@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Loan Calculator — Free Online Calculator | PocketWise</title>
+  <meta name="description" content="Calculate your personal loan payment, true APR with fees, total interest cost, and payoff date. Free instant results with visual payment timeline.">
+  <link rel="canonical" href="https://pocketwise.io/personal-loan-calculator/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .timeline-chart { margin: 20px 0; }
+    .timeline-bar-group { margin-bottom: 8px; }
+    .timeline-bar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .timeline-bar-year {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--lw-slate-600);
+      min-width: 48px;
+    }
+    .timeline-bar-amount {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--lw-text-muted);
+    }
+    .timeline-bar-track {
+      height: 24px;
+      background: var(--lw-slate-100);
+      border-radius: var(--lw-radius-full);
+      overflow: hidden;
+      display: flex;
+    }
+    .timeline-bar-principal {
+      height: 100%;
+      background: linear-gradient(90deg, var(--lw-sky), var(--lw-sky-light));
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .timeline-bar-interest {
+      height: 100%;
+      background: linear-gradient(90deg, var(--lw-rose), var(--lw-rose-light));
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .chart-legend {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--lw-text-secondary);
+    }
+    .chart-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .chart-legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .chart-legend-dot.principal { background: var(--lw-sky); }
+    .chart-legend-dot.interest { background: var(--lw-rose); }
+    .fee-callout {
+      background: var(--lw-amber-50);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      border-radius: var(--lw-radius);
+      padding: 16px 20px;
+      margin-top: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: #92400E;
+      line-height: 1.5;
+    }
+    .fee-callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .lw-result-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 768px) {
+      .lw-result-grid-4 { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .lw-result-grid-4 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION -->
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">L</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/mortgage-calculator/">Mortgage</a></li>
+        <li><a href="/auto-loan-calculator/">Auto</a></li>
+        <li><a href="/compound-interest-calculator/">Investing</a></li>
+        <li><a href="/debt-payoff-calculator/">Debt</a></li>
+        <li><a href="/">All Tools</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">☰</button>
+    </div>
+    <div class="lw-mobile-menu">
+      <a href="/">All Tools</a>
+      <a href="/mortgage-calculator/">Mortgage Calculator</a>
+      <a href="/auto-loan-calculator/">Auto Loan Calculator</a>
+      <a href="/personal-loan-calculator/">Personal Loan Calculator</a>
+      <a href="/compound-interest-calculator/">Compound Interest Calculator</a>
+      <a href="/debt-payoff-calculator/">Debt Payoff Calculator</a>
+      <a href="/credit-card-payoff-calculator/">Credit Card Payoff</a>
+      <a href="/home-affordability-calculator/">Home Affordability</a>
+      <a href="/refinance-calculator/">Refinance Calculator</a>
+      <a href="/loan-comparison-tool/">Loan Comparison</a>
+      <a href="/amortization-schedule/">Amortization Schedule</a>
+      <a href="/debt-to-income-calculator/">Debt-to-Income</a>
+      <a href="/apr-calculator/">APR Calculator</a>
+      <a href="/savings-goal-calculator/">Savings Goal Calculator</a>
+      <a href="/investment-return-calculator/">Investment Returns</a>
+      <a href="/emergency-fund-calculator/">Emergency Fund</a>
+    </div>
+  </nav>
+
+  <main class="lw-main">
+    <!-- HERO -->
+    <div class="lw-hero">
+      <span class="lw-badge">Personal Finance</span>
+      <h1>Personal Loan <span class="accent">Calculator</span></h1>
+      <p class="subtitle">See your true monthly payment, total cost with fees, and a full payment timeline — before you sign anything.</p>
+    </div>
+
+    <!-- TOOL INTERFACE -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon blue">💰</div>
+        <div>
+          <div class="lw-card-title">Loan Details</div>
+          <div class="lw-card-subtitle">Adjust values to see results instantly</div>
+        </div>
+      </div>
+
+      <div class="lw-grid-2">
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="amount">Loan Amount</label>
+            <span class="lw-range-value" id="amountDisplay">$15,000</span>
+          </div>
+          <input type="range" class="lw-range" id="amount" min="1000" max="100000" step="500" value="15000">
+        </div>
+
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="term">Loan Term</label>
+            <span class="lw-range-value" id="termDisplay">36 months</span>
+          </div>
+          <input type="range" class="lw-range" id="term" min="12" max="84" step="1" value="36">
+        </div>
+
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="rate">Interest Rate (APR)</label>
+            <span class="lw-range-value" id="rateDisplay">9.5%</span>
+          </div>
+          <input type="range" class="lw-range" id="rate" min="2" max="36" step="0.1" value="9.5">
+        </div>
+
+        <div class="lw-range-group">
+          <div class="lw-range-header">
+            <label class="lw-label" for="fee">Origination Fee</label>
+            <span class="lw-range-value" id="feeDisplay">0%</span>
+          </div>
+          <input type="range" class="lw-range" id="fee" min="0" max="8" step="0.25" value="0">
+        </div>
+      </div>
+
+      <div id="feeCallout" class="fee-callout" style="display: none;">
+        <span class="fee-callout-icon">⚠️</span>
+        <div>
+          <strong>Origination fee of <span id="feeAmount">$0</span></strong> is deducted upfront. You'll receive
+          <strong><span id="netProceeds">$0</span></strong> but repay the full
+          <strong><span id="fullLoan">$0</span></strong>. This raises your true APR to
+          <strong><span id="trueAPRCallout">0%</span></strong>.
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="lw-result-hero" id="resultHero">
+      <div class="lw-result-label">Your Monthly Payment</div>
+      <div class="lw-result-number lw-animate-number">
+        <span class="currency">$</span><span id="monthlyPayment">483</span><span class="period">/mo</span>
+      </div>
+      <div class="lw-result-sub" id="payoffDateSub">Payoff date: <strong id="payoffDate">Jan 2029</strong></div>
+    </div>
+
+    <div class="lw-result-grid-4">
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Total Interest</div>
+        <div class="lw-result-item-value rose" id="totalInterest">$2,399</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Total Cost</div>
+        <div class="lw-result-item-value" id="totalCost">$17,399</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">Payoff Date</div>
+        <div class="lw-result-item-value sky" id="payoffDateCard">Jan 2029</div>
+      </div>
+      <div class="lw-result-item">
+        <div class="lw-result-item-label">True APR</div>
+        <div class="lw-result-item-value green" id="trueAPR">9.5%</div>
+      </div>
+    </div>
+
+    <!-- PAYMENT TIMELINE CHART -->
+    <div class="lw-card">
+      <div class="lw-card-header">
+        <div class="lw-card-icon rose">📊</div>
+        <div>
+          <div class="lw-card-title">Payment Timeline</div>
+          <div class="lw-card-subtitle">Principal vs. interest breakdown by year</div>
+        </div>
+      </div>
+      <div class="timeline-chart" id="timelineChart">
+        <!-- Dynamically generated -->
+      </div>
+      <div class="chart-legend">
+        <div class="chart-legend-item"><div class="chart-legend-dot principal"></div> Principal</div>
+        <div class="chart-legend-item"><div class="chart-legend-dot interest"></div> Interest</div>
+      </div>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <div class="lw-content">
+      <h2>How to Use the Personal Loan Calculator</h2>
+      <p>Our personal loan calculator gives you a comprehensive look at the true cost of borrowing before you commit. Simply enter your desired loan amount, select a repayment term, input the interest rate you've been quoted, and — critically — include any origination fee the lender charges. The calculator instantly updates your monthly payment, total interest, payoff date, and true APR so you can compare offers with full transparency.</p>
+      <p>Most online calculators ignore origination fees, which can dramatically change the real cost of a loan. An origination fee is deducted from your loan proceeds upfront, meaning you receive less money but still repay the full amount. Our tool factors this in, showing you both the advertised rate and the true APR — the metric that actually matters when comparing lenders.</p>
+
+      <h2>Understanding Personal Loan Costs</h2>
+      <p>A personal loan is an unsecured installment loan — meaning there's no collateral (like a car or house) backing it. Because of this, personal loan interest rates tend to be higher than secured loans, typically ranging from 6% to 36% depending on your credit score, income, and the lender's criteria.</p>
+      <p>The three main factors that determine your total cost are:</p>
+      <ul>
+        <li><strong>Loan amount:</strong> The principal you borrow. Larger loans mean more interest paid over time, even at the same rate.</li>
+        <li><strong>Interest rate:</strong> Expressed as an annual percentage rate (APR). Even a 1% difference can save or cost you hundreds of dollars over the life of the loan.</li>
+        <li><strong>Loan term:</strong> A longer term means lower monthly payments but significantly more total interest. A 60-month term at 10% costs nearly double the interest of a 36-month term.</li>
+      </ul>
+
+      <h3>The Hidden Cost of Origination Fees</h3>
+      <p>Many personal loan lenders charge an origination fee — typically 1% to 8% of the loan amount — that's deducted before you receive your funds. For example, if you borrow $15,000 with a 5% origination fee, you'll only receive $14,250, but you'll make payments on the full $15,000. This effectively raises your borrowing cost above the stated APR.</p>
+      <p>Our calculator computes the true APR by solving for the internal rate of return based on the cash you actually receive versus the payments you make. This is the number you should use when comparing two lenders side by side.</p>
+
+      <h2>Tips for Getting the Best Personal Loan</h2>
+      <p>Before applying, take these steps to maximize your chances of a great rate:</p>
+      <ul>
+        <li><strong>Check your credit score</strong> — Scores above 720 typically qualify for the best rates. Many lenders offer free pre-qualification with a soft credit pull.</li>
+        <li><strong>Compare at least 3-5 lenders</strong> — Banks, credit unions, and online lenders all price differently. Use our <a href="/loan-comparison-tool/">Loan Comparison Tool</a> to evaluate side by side.</li>
+        <li><strong>Choose the shortest term you can afford</strong> — Lower terms mean less total interest, even though monthly payments are higher.</li>
+        <li><strong>Watch for fees</strong> — Origination fees, prepayment penalties, and late fees can add up. A "low rate" loan with a 6% origination fee may cost more than a slightly higher rate with no fees.</li>
+        <li><strong>Consider autopay discounts</strong> — Many lenders offer 0.25% to 0.50% rate discounts if you set up automatic payments.</li>
+      </ul>
+
+      <h3>When Does a Personal Loan Make Sense?</h3>
+      <p>Personal loans are best for debt consolidation (especially high-interest credit card debt), major purchases, medical expenses, or home improvements. If you can secure a rate significantly lower than your credit card rates, consolidating with a personal loan can save thousands. However, if you're borrowing for discretionary spending, carefully consider whether the purchase is worth the total interest cost shown by this calculator.</p>
+
+      <!-- FAQ ACCORDION -->
+      <div class="lw-faq">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">What is a personal loan origination fee?</button>
+          <div class="lw-faq-a">
+            <p>An origination fee is a one-time charge by the lender for processing your loan, typically ranging from 1% to 8% of the loan amount. It's usually deducted from your loan proceeds before disbursement, meaning you receive less money than the total loan amount. For example, a $10,000 loan with a 3% origination fee means you receive $9,700 but repay the full $10,000 plus interest.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">What's the difference between interest rate and APR?</button>
+          <div class="lw-faq-a">
+            <p>The interest rate is the annual cost of borrowing the principal balance, while APR (Annual Percentage Rate) includes the interest rate plus any fees, expressed as a yearly rate. When a lender charges an origination fee, the APR will be higher than the stated interest rate. APR gives you a more accurate picture of the total borrowing cost and is the best metric for comparing loan offers from different lenders.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">How does loan term affect my total cost?</button>
+          <div class="lw-faq-a">
+            <p>A longer loan term lowers your monthly payment but increases the total interest you pay over the life of the loan. For example, a $15,000 loan at 9% costs about $1,448 in interest over 24 months, but $3,577 over 60 months. Choose the shortest term where the monthly payment is comfortably within your budget — ideally keeping total debt payments below 36% of your gross monthly income.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">Can I pay off a personal loan early?</button>
+          <div class="lw-faq-a">
+            <p>Most modern personal loans allow early payoff without penalties, but always check your loan agreement for a prepayment penalty clause. Paying off your loan early saves you interest — the remaining payments would have included interest that you no longer owe. Some lenders even allow extra payments toward principal, which accelerates your payoff timeline and reduces total interest paid.</p>
+          </div>
+        </div>
+
+        <div class="lw-faq-item">
+          <button class="lw-faq-q" onclick="this.parentElement.classList.toggle('open')">What credit score do I need for a personal loan?</button>
+          <div class="lw-faq-a">
+            <p>Most lenders require a minimum credit score of 580-620 for personal loans, though the best rates (under 10% APR) typically require scores of 720 or higher. Some online lenders consider alternative factors like income and employment history. If your credit score is below 580, consider a credit-builder loan or secured loan as alternatives, and focus on improving your score before applying for a larger unsecured loan.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED TOOLS -->
+    <div class="lw-related">
+      <h2>Related Calculators</h2>
+      <div class="lw-related-grid">
+        <a href="/loan-comparison-tool/" class="lw-related-link"><span class="dot"></span> Loan Comparison Tool</a>
+        <a href="/auto-loan-calculator/" class="lw-related-link"><span class="dot"></span> Auto Loan Calculator</a>
+        <a href="/apr-calculator/" class="lw-related-link"><span class="dot"></span> APR Calculator</a>
+        <a href="/debt-to-income-calculator/" class="lw-related-link"><span class="dot"></span> Debt-to-Income Calculator</a>
+        <a href="/debt-payoff-calculator/" class="lw-related-link"><span class="dot"></span> Debt Payoff Calculator</a>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <p class="lw-disclaimer">
+      <em>This calculator is for educational purposes only. Results are estimates and should not be considered financial advice. Actual loan terms, rates, and fees may vary by lender. Consult a qualified financial advisor for personalized guidance.</em>
+    </p>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="lw-footer">
+    <p>&copy; 2026 PocketWise. Free financial calculators for everyone.</p>
+  </footer>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // Utility functions
+    function fmt(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:0, maximumFractionDigits:0}).format(n); }
+    function fmtFull(n) { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', minimumFractionDigits:2, maximumFractionDigits:2}).format(n); }
+    function fmtNum(n) { return new Intl.NumberFormat('en-US').format(Math.round(n)); }
+    function fmtPct(n) { return n.toFixed(1) + '%'; }
+    function pmtCalc(rate, nper, pv) {
+      if (rate === 0) return pv / nper;
+      return pv * (rate * Math.pow(1 + rate, nper)) / (Math.pow(1 + rate, nper) - 1);
+    }
+
+    // DOM refs
+    var amountSlider = document.getElementById('amount');
+    var termSlider = document.getElementById('term');
+    var rateSlider = document.getElementById('rate');
+    var feeSlider = document.getElementById('fee');
+
+    // Calculate true APR using Newton's method
+    function calcTrueAPR(netProceeds, monthlyPayment, nMonths) {
+      // Solve for monthly rate r such that: netProceeds = payment * ((1-(1+r)^-n) / r)
+      if (netProceeds <= 0 || monthlyPayment <= 0) return 0;
+      var r = 0.01; // initial guess (1% monthly)
+      for (var i = 0; i < 100; i++) {
+        var pow = Math.pow(1 + r, nMonths);
+        var pvAnnuity = (pow - 1) / (r * pow);
+        var f = netProceeds - monthlyPayment * pvAnnuity;
+        // derivative
+        var dpow = nMonths * Math.pow(1 + r, nMonths - 1);
+        var dPvAnnuity = (dpow * r * pow - (pow - 1) * (pow + r * dpow)) / Math.pow(r * pow, 2);
+        var df = -monthlyPayment * dPvAnnuity;
+        if (Math.abs(df) < 1e-12) break;
+        var rNew = r - f / df;
+        if (rNew <= 0) rNew = r / 2;
+        if (Math.abs(rNew - r) < 1e-10) break;
+        r = rNew;
+      }
+      return r * 12 * 100; // annual percentage
+    }
+
+    function calculate() {
+      var amount = parseFloat(amountSlider.value);
+      var term = parseInt(termSlider.value);
+      var rate = parseFloat(rateSlider.value);
+      var feePct = parseFloat(feeSlider.value);
+
+      // Display values
+      document.getElementById('amountDisplay').textContent = fmt(amount);
+      document.getElementById('termDisplay').textContent = term + ' months';
+      document.getElementById('rateDisplay').textContent = fmtPct(rate);
+      document.getElementById('feeDisplay').textContent = fmtPct(feePct);
+
+      var monthlyRate = rate / 100 / 12;
+      var payment = pmtCalc(monthlyRate, term, amount);
+      var totalPaid = payment * term;
+      var totalInterest = totalPaid - amount;
+
+      // Fee calculations
+      var feeAmount = amount * (feePct / 100);
+      var netProceeds = amount - feeAmount;
+      var totalCost = totalPaid; // total out of pocket
+
+      // True APR
+      var trueAPR = rate;
+      if (feePct > 0) {
+        trueAPR = calcTrueAPR(netProceeds, payment, term);
+      }
+
+      // Payoff date
+      var now = new Date();
+      var payoffDate = new Date(now.getFullYear(), now.getMonth() + term, 1);
+      var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      var payoffStr = months[payoffDate.getMonth()] + ' ' + payoffDate.getFullYear();
+
+      // Update DOM
+      document.getElementById('monthlyPayment').textContent = fmtNum(payment);
+      document.getElementById('totalInterest').textContent = fmt(totalInterest);
+      document.getElementById('totalCost').textContent = fmt(totalCost);
+      document.getElementById('payoffDate').textContent = payoffStr;
+      document.getElementById('payoffDateCard').textContent = payoffStr;
+      document.getElementById('trueAPR').textContent = fmtPct(trueAPR);
+
+      // Fee callout
+      var callout = document.getElementById('feeCallout');
+      if (feePct > 0) {
+        callout.style.display = 'flex';
+        document.getElementById('feeAmount').textContent = fmt(feeAmount);
+        document.getElementById('netProceeds').textContent = fmt(netProceeds);
+        document.getElementById('fullLoan').textContent = fmt(amount);
+        document.getElementById('trueAPRCallout').textContent = fmtPct(trueAPR);
+      } else {
+        callout.style.display = 'none';
+      }
+
+      // True APR color
+      var aprEl = document.getElementById('trueAPR');
+      aprEl.className = 'lw-result-item-value';
+      if (trueAPR > rate + 0.5) {
+        aprEl.classList.add('rose');
+      } else {
+        aprEl.classList.add('green');
+      }
+
+      // Build payment timeline chart (by year)
+      buildTimeline(amount, monthlyRate, payment, term);
+    }
+
+    function buildTimeline(principal, monthlyRate, payment, totalMonths) {
+      var chart = document.getElementById('timelineChart');
+      var balance = principal;
+      var years = Math.ceil(totalMonths / 12);
+      var yearData = [];
+
+      for (var y = 0; y < years; y++) {
+        var yearPrincipal = 0;
+        var yearInterest = 0;
+        var monthsThisYear = Math.min(12, totalMonths - y * 12);
+        for (var m = 0; m < monthsThisYear; m++) {
+          var interestPmt = balance * monthlyRate;
+          var principalPmt = payment - interestPmt;
+          if (principalPmt > balance) principalPmt = balance;
+          if (interestPmt + principalPmt > payment) interestPmt = payment - principalPmt;
+          yearPrincipal += principalPmt;
+          yearInterest += interestPmt;
+          balance -= principalPmt;
+          if (balance < 0) balance = 0;
+        }
+        yearData.push({ year: y + 1, principal: yearPrincipal, interest: yearInterest, total: yearPrincipal + yearInterest });
+      }
+
+      // Find max for scaling
+      var maxTotal = 0;
+      for (var i = 0; i < yearData.length; i++) {
+        if (yearData[i].total > maxTotal) maxTotal = yearData[i].total;
+      }
+
+      var html = '';
+      for (var i = 0; i < yearData.length; i++) {
+        var d = yearData[i];
+        var pWidth = maxTotal > 0 ? (d.principal / maxTotal * 100) : 0;
+        var iWidth = maxTotal > 0 ? (d.interest / maxTotal * 100) : 0;
+        html += '<div class="timeline-bar-group">';
+        html += '<div class="timeline-bar-header">';
+        html += '<span class="timeline-bar-year">Year ' + d.year + '</span>';
+        html += '<span class="timeline-bar-amount">' + fmt(d.principal) + ' principal · ' + fmt(d.interest) + ' interest</span>';
+        html += '</div>';
+        html += '<div class="timeline-bar-track">';
+        html += '<div class="timeline-bar-principal" style="width:' + pWidth + '%"></div>';
+        html += '<div class="timeline-bar-interest" style="width:' + iWidth + '%"></div>';
+        html += '</div>';
+        html += '</div>';
+      }
+      chart.innerHTML = html;
+    }
+
+    // Bind inputs
+    var inputs = [amountSlider, termSlider, rateSlider, feeSlider];
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].addEventListener('input', calculate);
+    }
+
+    // Initial calculation
+    calculate();
+  })();
+  </script>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a personal loan origination fee?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "An origination fee is a one-time charge by the lender for processing your loan, typically ranging from 1% to 8% of the loan amount. It's usually deducted from your loan proceeds before disbursement, meaning you receive less money than the total loan amount."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What's the difference between interest rate and APR?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The interest rate is the annual cost of borrowing the principal balance, while APR (Annual Percentage Rate) includes the interest rate plus any fees, expressed as a yearly rate. When a lender charges an origination fee, the APR will be higher than the stated interest rate."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does loan term affect my total cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A longer loan term lowers your monthly payment but increases the total interest you pay over the life of the loan. For example, a $15,000 loan at 9% costs about $1,448 in interest over 24 months, but $3,577 over 60 months."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I pay off a personal loan early?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most modern personal loans allow early payoff without penalties, but always check your loan agreement for a prepayment penalty clause. Paying off your loan early saves you interest on the remaining payments."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What credit score do I need for a personal loan?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most lenders require a minimum credit score of 580-620 for personal loans, though the best rates (under 10% APR) typically require scores of 720 or higher. Some online lenders consider alternative factors like income and employment history."
+        }
+      }
+    ]
+  }
+  </script>
+</body>
+</html>
