@@ -276,7 +276,16 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-<url>
-<loc>https://pocketwise.io/guides/emergency-fund/</loc>
-</url>
+  <url>
+    <loc>https://pocketwise.io/guides/emergency-fund/</loc>
+    <lastmod>2026-02-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pocketwise.io/guides/credit-score-improvement/</loc>
+    <lastmod>2026-02-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>
