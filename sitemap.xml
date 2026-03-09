@@ -337,6 +337,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://pocketwise.io/guides/dollar-cost-averaging/</loc>
+    <lastmod>2026-03-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://pocketwise.io/guides/when-to-claim-social-security/</loc>
     <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
