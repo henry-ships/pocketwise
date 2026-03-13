@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EP402CZ1S3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EP402CZ1S3');
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Should You Pay Off Debt or Invest? A Math-Based Framework | PocketWise</title>
+  <meta name="description" content="Should you pay off debt or invest? Use this math-based framework to make the right call for your situation—no guesswork, just numbers.">
+  <link rel="canonical" href="https://pocketwise.io/guides/should-i-pay-off-debt-or-invest/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .guide-content {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      line-height: 1.8;
+      color: #1a1a2e;
+    }
+    .guide-content h1 {
+      font-size: 2.2rem;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      color: #0F172A;
+    }
+    .guide-content h2 {
+      margin-top: 48px;
+      margin-bottom: 16px;
+      color: #16213e;
+      font-size: 1.6rem;
+    }
+    .guide-content h3 {
+      margin-top: 32px;
+      margin-bottom: 12px;
+      color: #1a1a2e;
+      font-size: 1.25rem;
+    }
+    .guide-content p {
+      margin-bottom: 16px;
+      font-size: 1.05rem;
+    }
+    .guide-content ul, .guide-content ol {
+      margin-bottom: 16px;
+      padding-left: 24px;
+    }
+    .guide-content li {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+    }
+    .guide-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      overflow-x: auto;
+      display: block;
+    }
+    .guide-content th, .guide-content td {
+      padding: 12px 16px;
+      border: 1px solid #e0e0e0;
+      text-align: left;
+    }
+    .guide-content th {
+      background: #f0f4ff;
+      font-weight: 600;
+    }
+    .guide-content tr:nth-child(even) td {
+      background: #f9f9f9;
+    }
+    .guide-content a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .guide-content a:hover {
+      text-decoration: underline;
+    }
+    .guide-breadcrumb {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 16px 24px 0;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .guide-breadcrumb a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .guide-content blockquote {
+      border-left: 4px solid #0EA5E9;
+      margin: 24px 0;
+      padding: 16px 24px;
+      background: #f0f8ff;
+      font-style: italic;
+    }
+    .guide-content .callout {
+      background: #f0f4ff;
+      border: 1px solid #d0d8f0;
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+      /* Standard Nav */
+    .lw-nav {
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid #E2E8F0;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+    }
+    .lw-nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      height: 60px;
+      gap: 32px;
+    }
+    .lw-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: #0F172A;
+      text-decoration: none;
+    }
+    .lw-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #0EA5E9, #14B8A6);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 16px;
+    }
+    .lw-nav-links {
+      display: flex;
+      list-style: none;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+    }
+    .lw-nav-links a {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #475569;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+    .lw-nav-links a:hover {
+      background: #F1F5F9;
+      color: #0F172A;
+    }
+    .lw-hamburger {
+      display: none;
+      background: none;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 18px;
+      cursor: pointer;
+      margin-left: auto;
+    }
+    .lw-mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: white;
+      border-bottom: 1px solid #E2E8F0;
+      padding: 8px 24px 16px;
+    }
+    .lw-mobile-menu.open { display: flex; }
+    .lw-mobile-menu a {
+      padding: 12px 0;
+      color: #0F172A;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    @media (max-width: 768px) {
+      .lw-nav-links { display: none; }
+      .lw-hamburger { display: block; }
+    }
+  </style>
+</head>
+<body>
+    <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">P</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">Calculators</a></li>
+        <li><a href="/guides/">Guides</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+    </div>
+  </nav>
+  <div class="lw-mobile-menu">
+    <a href="/">Calculators</a>
+    <a href="/guides/">Guides</a>
+  </div>
+
+  <div class="guide-breadcrumb">
+    <a href="/">PocketWise</a> &rsaquo; <a href="/guides/">Guides</a> &rsaquo; Should You Pay Off Debt or Invest? A Math-Based...
+  </div>
+  <article class="guide-content">
+    <h1>Should You Pay Off Debt or Invest? A Math-Based Framework</h1>
+
+<h2>The Question That Keeps People Up at Night</h2>
+
+<p>You've got $500 sitting in your checking account that you didn't expect. Maybe it's a bonus, a tax refund, or just a month where everything lined up. And now you're staring at two options: throw it at your debt or put it to work in the market.</p>
+
+<p>The internet will give you a dozen confident answers, most of them conflicting. "Always invest—time in the market beats everything." "No, debt is a guaranteed loss—kill it first." Both camps sound reasonable. Both camps are also oversimplifying.</p>
+
+<p>The real answer depends on three numbers: your interest rate, your expected return, and your psychological tolerance for carrying debt. Get those right, and the decision basically makes itself.</p>
+
+<p>This guide walks you through the math, the scenarios, and the decision framework that most financial advisors use but rarely explain clearly. By the end, you'll know exactly how to think about your specific situation—not just a generic rule of thumb.</p>
+
+<h2>The Core Framework: Guaranteed Returns vs. Expected Returns</h2>
+
+<p>Here's the foundational concept that drives every pay-off-debt-or-invest decision: <strong>paying off debt is a guaranteed return equal to the interest rate on that debt.</strong></p>
+
+<p>Think about it this way. If you have a credit card charging you 22% APR and you pay it off, you've just earned a guaranteed 22% return on that money. No market risk. No volatility. No waiting. A locked-in, certain gain.</p>
+
+<p>Investing, by contrast, offers expected returns—not guaranteed ones. The S&P 500 has averaged roughly 10% annually over the past century, but that average masks years of 30% gains and years of 40% losses. Over any given 10-year stretch, you might average 7% after inflation. You might average 4%. You probably won't average negative returns, but you can't rule it out.</p>
+
+<p>So the central question becomes: <strong>Is my debt's interest rate higher or lower than my realistic expected investment return?</strong></p>
+
+<p>That's the mathematical break-even point. Below it, investing likely wins. Above it, paying off debt wins. At the break-even, it's essentially a wash—and other factors (tax treatment, risk tolerance, emergency fund status) should tip the scale.</p>
+
+<h3>The Real-World Comparison Numbers</h3>
+
+<p>Here are the benchmark returns most financial planners use when modeling this decision:</p>
+
+<ul>
+  <li><strong>Stock market (S&P 500):</strong> ~10% nominal, ~7% inflation-adjusted, long-term average</li>
+  <li><strong>Diversified bond portfolio:</strong> ~3–5% depending on duration and credit quality</li>
+  <li><strong>High-yield savings account (2024–2025):</strong> ~4–5% (rate-dependent)</li>
+  <li><strong>Target-date retirement fund:</strong> Varies, roughly 6–8% over long horizons depending on allocation</li>
+</ul>
+
+<p>Compare those to common debt rates:</p>
+
+<ul>
+  <li><strong>Federal student loans:</strong> 5–8% (varies by year and loan type)</li>
+  <li><strong>Private student loans:</strong> 4–14%</li>
+  <li><strong>Auto loans:</strong> 5–10% (heavily credit-score dependent)</li>
+  <li><strong>Personal loans:</strong> 8–20%</li>
+  <li><strong>Credit cards:</strong> 18–29% (national average currently over 20%)</li>
+  <li><strong>Mortgage:</strong> 6–8% (current market rates)</li>
+</ul>
+
+<p>With these ranges in mind, you can already see that credit card debt is almost always a mathematical slam dunk to pay off first. The decision gets murkier with student loans and mortgages—which is exactly why those categories cause so much debate.</p>
+
+<h2>Scenarios: What the Math Actually Looks Like</h2>
+
+<p>Abstract frameworks only go so far. Let's run the numbers on a few realistic scenarios to make this concrete.</p>
+
+<h3>Scenario 1: High-Interest Credit Card Debt (22% APR)</h3>
+
+<p>Imagine you have $3,000 on a credit card at 22% APR and $3,000 available to either pay it off or invest.</p>
+
+<p><strong>If you invest:</strong> At a 10% average annual return, $3,000 grows to roughly $3,300 in one year. Net gain: $300.</p>
+
+<p><strong>If you pay off debt:</strong> You eliminate $660 in interest charges over the next year (simplified, not accounting for minimum payments). Net gain: $660.</p>
+
+<p>The debt payoff wins by more than 2x. There's really no debate here. No realistic investment return competes with guaranteed 22% savings. Pay off the credit card.</p>
+
+<h3>Scenario 2: Mid-Range Personal Loan (12% APR)</h3>
+
+<p>Same setup: $5,000 balance at 12%, $5,000 available to allocate.</p>
+
+<p><strong>If you invest:</strong> $5,000 at 10% annual return nets $500 in year one.</p>
+
+<p><strong>If you pay off debt:</strong> Eliminates $600 in interest. Net gain: $600.</p>
+
+<p>Debt payoff still wins, though by a smaller margin. If your investment return is closer to 12%—say you're in a high-performing year—it's nearly a wash. But since the investment return isn't guaranteed and the interest savings are, paying off this debt is still the mathematically conservative call.</p>
+
+<h3>Scenario 3: Federal Student Loans (6.5% APR)</h3>
+
+<p>This is where it gets genuinely complicated. $20,000 in student loans at 6.5%, $5,000 available.</p>
+
+<p><strong>If you invest:</strong> $5,000 in a diversified index fund at a 7–10% expected return likely outperforms the 6.5% interest rate over a long horizon.</p>
+
+<p><strong>If you pay off debt:</strong> Guaranteed 6.5% return. Lower than expected market returns, but guaranteed.</p>
+
+<p>Here, investing in a tax-advantaged account (like a 401k or Roth IRA) often wins—especially if your employer offers a 401k match, which is essentially an immediate 50–100% return on that contribution.</p>
+
+<h3>Scenario 4: Mortgage (7% APR)</h3>
+
+<p>Homeowners often wrestle with this one. Should extra cash go toward the mortgage or into investments?</p>
+
+<p>At 7%, you're right at the edge of where long-term investment returns historically compete. Mortgage interest may also be tax-deductible if you itemize, which effectively lowers the after-tax interest rate. A 7% mortgage with a 22% marginal tax rate and itemized deductions has an effective cost closer to 5.5%.</p>
+
+<p>At that level, long-term investing historically wins—but not by a huge margin, and the psychological value of owning your home outright is real for some people.</p>
+
+<h2>The Decision Table: Where Each Debt Type Falls</h2>
+
+<p>Here's a clean summary of how to think about the most common debt types and where they fall in the pay-off-or-invest framework:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Debt Type</th>
+      <th>Typical Rate Range</th>
+      <th>General Recommendation</th>
+      <th>Key Caveat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Credit cards</td>
+      <td>18–29%</td>
+      <td>Pay off first, always</td>
+      <td>No investment reliably beats this</td>
+    </tr>
+    <tr>
+      <td>Personal loans</td>
+      <td>8–20%</td>
+      <td>Pay off before investing (most cases)</td>
+      <td>Below 8–10%, it becomes a close call</td>
+    </tr>
+    <tr>
+      <td>Auto loans</td>
+      <td>5–10%</td>
+      <td>Split depends on rate</td>
+      <td>High rates: pay off; low rates: invest</td>
+    </tr>
+    <tr>
+      <td>Federal student loans</td>
+      <td>5–8%</td>
+      <td>Contribute to 401k match first, then reassess</td>
+      <td>Income-driven repayment and forgiveness programs change the math</td>
+    </tr>
+    <tr>
+      <td>Private student loans</td>
+      <td>4–14%</td>
+      <td>Rate-dependent; high rates favor payoff</td>
+      <td>No forgiveness options complicate long-term holding</td>
+    </tr>
+    <tr>
+      <td>Mortgage</td>
+      <td>6–8%</td>
+      <td>Invest, especially in tax-advantaged accounts</td>
+      <td>Psychological value of payoff is real; near retirement, shift toward payoff</td>
+    </tr>
+    <tr>
+      <td>0% promotional debt</td>
+      <td>0% (temporarily)</td>
+      <td>Invest everything until promo ends</td>
+      <td>Set a calendar reminder to pay before rate resets</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>The Rules That Override the Math</h2>
+
+<p>The interest rate comparison is the foundation, but it doesn't tell the whole story. A few situations change the calculation regardless of what the numbers say.</p>
+
+<h3>Rule 1: Emergency Fund Comes First</h3>
+
+<p>Before you aggressively pay down debt or invest beyond minimum payments, you need a cash buffer. The standard recommendation is 3–6 months of essential expenses in a liquid account. Without it, any unexpected expense—a car repair, a medical bill, a job gap—forces you back into high-interest debt immediately, erasing any progress you've made.</p>
+
+<p>If your emergency fund is thin, building it to at least one month of expenses before anything else is almost always the right call.</p>
+
+<h3>Rule 2: Always Capture the 401k Match</h3>
+
+<p>If your employer matches 401k contributions, capture that match before paying off any debt except perhaps extremely high-interest credit cards. A 50% match is a guaranteed 50% return on your contribution the moment it hits your account. That beats any debt interest rate on earth.</p>
+
+<p>The <a href="https://pocketwise.io/guides/financial-order-of-operations/" target="_blank" rel="noopener">financial order of operations</a> prioritizes the employer match specifically for this reason—it's one of the few genuinely free money opportunities in personal finance.</p>
+
+<h3>Rule 3: Tax-Advantaged Space Has Annual Limits</h3>
+
+<p>Roth IRA contributions max out at $7,000 per year (2024, under age 50). 401k contributions max at $23,000. Once a year passes, you can't go back and contribute retroactively. If you have low-rate debt and you're not maxing tax-advantaged accounts, you may be giving up years of tax-free or tax-deferred growth that you can never recover.</p>
+
+<p>This argues for investing in Roth IRAs even while carrying moderate-rate debt—especially when you're early in your career and your Roth contributions have the most time to compound.</p>
+
+<h3>Rule 4: Your Psychology Matters</h3>
+
+<p>Personal finance is personal. The mathematically optimal strategy is worthless if you won't follow it. Some people carry debt and genuinely don't lose sleep over it—they can invest confidently while making minimum payments on a 6% loan. Others find debt psychologically crushing and can't think clearly about anything else until it's gone.</p>
+
+<p>If debt is affecting your wellbeing, your relationships, or your ability to make good decisions in other areas of life, the psychological return from paying it off may be worth more than the marginal investment gains. That's not irrational—it's rational once you account for all the costs.</p>
+
+<h2>The Split Strategy: You Don't Have to Choose One</h2>
+
+<p>Here's something the either/or framing obscures: for many people with moderate-rate debt, the best answer is both—in the right proportions.</p>
+
+<p>A common approach for debt in the 5–8% range while having access to tax-advantaged investing:</p>
+
+<ol>
+  <li>Build a 1-month emergency cushion (minimum)</li>
+  <li>Contribute enough to your 401k to capture the full employer match</li>
+  <li>Pay off any high-interest debt (above ~8–10%)</li>
+  <li>Max your Roth IRA ($7,000/year)</li>
+  <li>Split remaining funds: some toward additional debt payoff, some toward taxable investing</li>
+</ol>
+
+<p>This isn't a compromise—it's a strategy. You're capturing guaranteed high-value returns (employer match), building long-term tax-advantaged wealth, and steadily reducing debt simultaneously.</p>
+
+<p>The exact split in step 5 depends on your rates, timeline, and comfort with risk. Someone at 7% with a stable income might go 50/50. Someone at 9% with variable income might go 80/20 toward debt.</p>
+
+<p>A useful tool for stress-testing your debt load is the <a href="https://pocketwise.io/debt-to-income-calculator/" target="_blank" rel="noopener">debt-to-income calculator</a>—it shows how your current obligations stack up against your income, which helps clarify how much breathing room you actually have.</p>
+
+<h2>When Life Stage Changes the Answer</h2>
+
+<p>Your age and financial stage significantly affect this decision. The same debt at the same interest rate warrants different responses at 28 versus 52.</p>
+
+<h3>In Your 20s and Early 30s</h3>
+
+<p>Time is your most valuable asset. A dollar invested at 25 has 40+ years to compound. At 10% annual returns, $1,000 invested at 25 becomes roughly $45,000 by age 65. That same $1,000 invested at 35 becomes about $17,000. The math heavily favors investing early, even with moderate-rate debt alongside it.</p>
+
+<p>The priority in this phase: capture the 401k match, build an emergency fund, kill truly high-interest debt, and invest whatever you can in tax-advantaged accounts—even while carrying lower-rate student loans or a car payment.</p>
+
+<h3>In Your Mid-30s to Mid-40s</h3>
+
+<p>You're likely dealing with a mortgage, possibly some remaining student loans, and trying to grow retirement savings. The framework above applies most cleanly here. This is also when lifestyle creep tends to quietly eat into the money that should be going toward either debt payoff or investment.</p>
+
+<p>Run the numbers annually as your rates and balances change. A student loan that was worth keeping when rates were 4% may look different at 7%.</p>
+
+<h3>In Your 50s and Approaching Retirement</h3>
+
+<p>The calculus shifts toward debt elimination. With less time to ride out market volatility and a retirement income that won't benefit from a steady paycheck, entering retirement debt-free is increasingly valuable. The psychological and cash-flow benefits of no mortgage payment matter more when you're living on distributions.</p>
+
+<p>Paying off the mortgage aggressively in your 50s—even if the math slightly favors investing—is a defensible and often wise choice for people within a decade of retirement.</p>
+
+<h2>A Note on "Good Debt" vs. "Bad Debt"</h2>
+
+<p>You've probably heard that some debt is good (mortgages, student loans) and some is bad (credit cards, payday loans). This framing is useful but incomplete.</p>
+
+<p>"Good debt" typically means debt used to acquire appreciating assets or to invest in future earning power, usually at relatively low interest rates. "Bad debt" typically means debt used to consume, at high rates, with no underlying asset.</p>
+
+<p>But the good/bad label doesn't override the interest rate math. A mortgage at 3% in 2021 was genuinely good debt—easy to hold while investing. A mortgage at 8% in 2024 is still "good debt" by definition, but the math is much closer to neutral. A student loan at 5% that funded a high-earning career is good debt. A $100,000 student loan at 9% for a degree that didn't materialize into income is a different conversation entirely.</p>
+
+<p>The label matters less than the rate, the balance, your income, and your specific financial picture. Tools like the <a href="https://pocketwise.io/debt-payoff-calculator/" target="_blank" rel="noopener">debt payoff calculator</a> can help you model exactly how much each debt is actually costing you on a monthly and total basis—which often changes how people feel about carrying it.</p>
+
+<p>For those with multiple debts competing for your extra dollars, the strategy of how you sequence the payoff also matters. The <a href="https://pocketwise.io/guides/debt-avalanche-vs-snowball/" target="_blank" rel="noopener">debt avalanche vs. snowball comparison</a> breaks down the two most common approaches and which one saves more money versus which one keeps more people motivated.</p>
+
+<h2>Putting It All Together: Your Decision Checklist</h2>
+
+<p>Before you allocate any extra money, run through these questions in order:</p>
+
+<ol>
+  <li><strong>Do I have at least one month of expenses in cash?</strong> If no, build it first.</li>
+  <li><strong>Am I capturing my full employer 401k match?</strong> If no, do that before anything else.</li>
+  <li><strong>Do I have any debt above 10% interest?</strong> If yes, pay it off aggressively before other investing.</li>
+  <li><strong>Have I maxed my Roth IRA this year?</strong> If no, consider doing so before paying down moderate-rate debt.</li>
+  <li><strong>What's the after-tax interest rate on my remaining debt?</strong> Compare to realistic investment returns and split accordingly.</li>
+  <li><strong>How close am I to retirement?</strong> The closer you are, the more debt elimination matters.</li>
+</ol>
+
+<p>This isn't a perfect algorithm—personal finance never is. But it's a structured way to move through the decision without getting paralyzed by competing advice.</p>
+
+<p>The most important thing is to make a deliberate choice rather than letting inertia decide for you. Doing nothing—neither paying down debt nor investing—is almost always the worst outcome. Pick a direction based on the math, stick with it for a defined period, then revisit as your situation changes.</p>
+
+<p>According to research published by <a href="https://www.nber.org/papers/w17878" target="_blank" rel="noopener noreferrer">the National Bureau of Economic Research</a>, households that actively manage the sequencing of debt repayment and savings accumulate significantly more net worth over time than those who approach it passively—regardless of income level. The strategy matters.</p>
+
+<p>Your situation is specific. Your interest rates, income stability, tax bracket, employer benefits, and risk tolerance combine into a picture that no single rule of thumb can fully capture. But with the framework above, you have everything you need to run the numbers yourself and make a confident, defensible decision.</p>
+
+<hr>
+
+<h2>You Might Also Enjoy</h2>
+
+<ul>
+  <li><a href="https://pocketwise.io/guides/debt-avalanche-vs-snowball/" target="_blank" rel="noopener">Debt Avalanche vs. Snowball: Which Payoff Strategy Wins?</a> — A breakdown of the two most popular debt payoff methods, with the math on which saves more and which keeps people on track longer.</li>
+  <li><a href="https://pocketwise.io/debt-payoff-calculator/" target="_blank" rel="noopener">Debt Payoff Calculator</a> — See exactly how long it'll take to pay off any debt and how much interest you'll pay under different monthly payment scenarios.</li>
+  <li><a href="https://pocketwise.io/guides/investing-basics/" target="_blank" rel="noopener">Investing Basics: Where to Start When You're New to the Market</a> — A grounded intro to index funds, accounts, and building a portfolio you'll actually stick with.</li>
+  <li><a href="https://pocketwise.io/guides/financial-order-of-operations/" target="_blank" rel="noopener">The Financial Order of Operations</a> — A step-by-step prioritization framework for where every extra dollar should go, from emergency fund to taxable investing.</li>
+  <li><a href="https://pocketwise.io/debt-to-income-calculator/" target="_blank" rel="noopener">Debt-to-Income Calculator</a> — Find out where your DTI stands and what it means for your borrowing power and financial health.</li>
+</ul>
+
+  </article>
+</body>
+</html>

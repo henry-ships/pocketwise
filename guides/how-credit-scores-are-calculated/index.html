@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EP402CZ1S3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EP402CZ1S3');
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How Credit Scores Are Calculated: The 5 Factors Explained | PocketWise</title>
+  <meta name="description" content="Learn exactly how credit scores are calculated — the 5 FICO factors, their weights, real score impact examples, and how FICO differs from VantageScore.">
+  <link rel="canonical" href="https://pocketwise.io/guides/how-credit-scores-are-calculated/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .guide-content {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      line-height: 1.8;
+      color: #1a1a2e;
+    }
+    .guide-content h1 {
+      font-size: 2.2rem;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      color: #0F172A;
+    }
+    .guide-content h2 {
+      margin-top: 48px;
+      margin-bottom: 16px;
+      color: #16213e;
+      font-size: 1.6rem;
+    }
+    .guide-content h3 {
+      margin-top: 32px;
+      margin-bottom: 12px;
+      color: #1a1a2e;
+      font-size: 1.25rem;
+    }
+    .guide-content p {
+      margin-bottom: 16px;
+      font-size: 1.05rem;
+    }
+    .guide-content ul, .guide-content ol {
+      margin-bottom: 16px;
+      padding-left: 24px;
+    }
+    .guide-content li {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+    }
+    .guide-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      overflow-x: auto;
+      display: block;
+    }
+    .guide-content th, .guide-content td {
+      padding: 12px 16px;
+      border: 1px solid #e0e0e0;
+      text-align: left;
+    }
+    .guide-content th {
+      background: #f0f4ff;
+      font-weight: 600;
+    }
+    .guide-content tr:nth-child(even) td {
+      background: #f9f9f9;
+    }
+    .guide-content a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .guide-content a:hover {
+      text-decoration: underline;
+    }
+    .guide-breadcrumb {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 16px 24px 0;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .guide-breadcrumb a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .guide-content blockquote {
+      border-left: 4px solid #0EA5E9;
+      margin: 24px 0;
+      padding: 16px 24px;
+      background: #f0f8ff;
+      font-style: italic;
+    }
+    .guide-content .callout {
+      background: #f0f4ff;
+      border: 1px solid #d0d8f0;
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+      /* Standard Nav */
+    .lw-nav {
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid #E2E8F0;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+    }
+    .lw-nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      height: 60px;
+      gap: 32px;
+    }
+    .lw-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: #0F172A;
+      text-decoration: none;
+    }
+    .lw-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #0EA5E9, #14B8A6);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 16px;
+    }
+    .lw-nav-links {
+      display: flex;
+      list-style: none;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+    }
+    .lw-nav-links a {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #475569;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+    .lw-nav-links a:hover {
+      background: #F1F5F9;
+      color: #0F172A;
+    }
+    .lw-hamburger {
+      display: none;
+      background: none;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 18px;
+      cursor: pointer;
+      margin-left: auto;
+    }
+    .lw-mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: white;
+      border-bottom: 1px solid #E2E8F0;
+      padding: 8px 24px 16px;
+    }
+    .lw-mobile-menu.open { display: flex; }
+    .lw-mobile-menu a {
+      padding: 12px 0;
+      color: #0F172A;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    @media (max-width: 768px) {
+      .lw-nav-links { display: none; }
+      .lw-hamburger { display: block; }
+    }
+  </style>
+</head>
+<body>
+    <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">P</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">Calculators</a></li>
+        <li><a href="/guides/">Guides</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+    </div>
+  </nav>
+  <div class="lw-mobile-menu">
+    <a href="/">Calculators</a>
+    <a href="/guides/">Guides</a>
+  </div>
+
+  <div class="guide-breadcrumb">
+    <a href="/">PocketWise</a> &rsaquo; <a href="/guides/">Guides</a> &rsaquo; How Credit Scores Are Calculated
+  </div>
+  <article class="guide-content">
+    <h1>How Credit Scores Are Calculated: The 5 Factors Explained</h1>
+
+<h2>Why Your Credit Score Is More Predictable Than You Think</h2>
+
+<p>Most people treat their credit score like the weather — something that happens to them, unpredictable and largely out of their control. That's a costly misconception. Your credit score is actually a mathematical formula with published inputs. Once you understand what goes into it, you can manage it deliberately rather than hoping for the best.</p>
+
+<p>The score most lenders use is the FICO Score, developed by Fair Isaac Corporation. It ranges from 300 to 850. Lenders use it to decide whether to approve you for a mortgage, credit card, auto loan, or personal loan — and at what interest rate. A difference of 60 points on a 30-year mortgage can cost you tens of thousands of dollars in extra interest over the life of the loan.</p>
+
+<p>So yes, this matters. Let's break down exactly how credit scores are calculated, factor by factor.</p>
+
+<h2>The 5 FICO Factors: A Complete Breakdown</h2>
+
+<p>FICO calculates your score using five categories of information pulled from your credit reports at Equifax, Experian, and TransUnion. Each category carries a different weight. Here's the full picture:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>FICO Factor</th>
+      <th>Weight</th>
+      <th>What It Measures</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Payment History</td>
+      <td>35%</td>
+      <td>Whether you pay on time</td>
+    </tr>
+    <tr>
+      <td>Amounts Owed (Credit Utilization)</td>
+      <td>30%</td>
+      <td>How much of your available credit you're using</td>
+    </tr>
+    <tr>
+      <td>Length of Credit History</td>
+      <td>15%</td>
+      <td>How long your accounts have been open</td>
+    </tr>
+    <tr>
+      <td>Credit Mix</td>
+      <td>10%</td>
+      <td>Variety of credit account types</td>
+    </tr>
+    <tr>
+      <td>New Credit</td>
+      <td>10%</td>
+      <td>Recent applications and new accounts</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>These percentages are averages across the general population. FICO adjusts the weighting slightly for individuals based on their unique credit profiles — someone with a very thin credit file, for example, won't have the same factor weighting as someone with 20 years of credit history. But the framework above is accurate enough to guide your decisions.</p>
+
+<h3>Factor 1: Payment History (35%)</h3>
+
+<p>This is the single biggest factor in your FICO score, and for good reason. Lenders want to know, above all else: does this person pay what they owe, when they owe it?</p>
+
+<p>Payment history looks at whether you've paid on time across all your credit accounts — credit cards, mortgages, auto loans, student loans, personal loans, and even some utility accounts. A single missed payment can drop your score by 60 to 110 points, depending on how high your score was to begin with. The higher your score, the more a late payment hurts you, because lenders have more to revise downward.</p>
+
+<p><strong>Real example:</strong> Suppose you have a 750 FICO score — solidly in "very good" territory. You miss a credit card payment by 30 days. That one slip could push your score down to somewhere between 640 and 690, potentially knocking you out of the best mortgage rates. A borrower who started at 680 and missed the same payment might only drop to 620–650.</p>
+
+<p>What FICO looks at within payment history:</p>
+<ul>
+  <li>Whether you've been late at all</li>
+  <li>How late — 30 days, 60 days, 90+ days</li>
+  <li>How recently the late payment occurred (older negatives hurt less)</li>
+  <li>How many accounts show late payments</li>
+  <li>Whether you have any collections, charge-offs, bankruptcies, or foreclosures</li>
+</ul>
+
+<p>The good news: on-time payments build your score steadily and reliably. Set up autopay for at least the minimum payment on every account. You never want a 30-day late to land on your report because you forgot. That's entirely preventable damage.</p>
+
+<h3>Factor 2: Amounts Owed / Credit Utilization (30%)</h3>
+
+<p>Credit utilization is the ratio of your current credit card balances to your total credit limits. It's calculated both overall (all cards combined) and per card. This is the second most important factor and also the fastest one to move.</p>
+
+<p>FICO doesn't publish exact thresholds, but the credit community has studied this extensively. Scores generally peak when utilization is below 10% on each card and in total. Above 30% starts to show noticeable drag. Above 50% and you're likely losing a meaningful chunk of score.</p>
+
+<p><strong>Real example:</strong> You have two credit cards. Card A has a $5,000 limit and a $4,500 balance — that's 90% utilization on that card. Card B has a $10,000 limit and a $0 balance. Your overall utilization is $4,500 / $15,000 = 30%. Even though your total utilization looks "okay," Card A's individual utilization at 90% is pulling your score down hard.</p>
+
+<p>The fix? Either pay down Card A or ask for a credit limit increase (assuming you won't immediately charge it back up). Both lower your utilization ratio.</p>
+
+<p>One nuance worth knowing: credit utilization is calculated from the balance reported by your card issuer to the credit bureaus. For most cards, that's the statement balance — not your real-time balance. So even if you pay in full every month, if you run up a large balance mid-cycle, it may get reported at peak utilization before your payment posts. Paying your balance down before the statement closes can help your reported utilization look better.</p>
+
+<p>Unlike late payments, utilization has no memory. Pay down a balance today, and your score can recover within a single reporting cycle — usually 30 to 45 days.</p>
+
+<h3>Factor 3: Length of Credit History (15%)</h3>
+
+<p>This factor rewards you for having a long, established credit track record. FICO looks at:</p>
+<ul>
+  <li>The age of your oldest account</li>
+  <li>The age of your newest account</li>
+  <li>The average age of all your accounts</li>
+  <li>How long specific account types have been open</li>
+  <li>How long since you've used certain accounts</li>
+</ul>
+
+<p>This is the factor that penalizes young adults the most, simply because they haven't had time to build a long history. If you're 22 years old and just opened your first credit card a year ago, your average account age is one year. There's no shortcut around this — time is the only remedy.</p>
+
+<p><strong>Real example:</strong> You're considering closing an old credit card with no annual fee that you rarely use. That card is 12 years old and happens to be your oldest account. Closing it could significantly lower your average account age and erase your oldest account, potentially costing you 20 to 40 points depending on your profile. In most cases, it's better to keep old cards open, even with a zero balance.</p>
+
+<p>One common mistake: people close cards right after paying them off, thinking it cleans up their credit. Often, it does the opposite. Closed accounts in good standing stay on your report for up to 10 years, but as they eventually fall off, the benefit disappears. Keeping them open maintains that history indefinitely.</p>
+
+<h3>Factor 4: Credit Mix (10%)</h3>
+
+<p>Lenders like to see that you can responsibly manage different types of credit. FICO rewards you for having a healthy mix of:</p>
+<ul>
+  <li><strong>Revolving credit:</strong> Credit cards, home equity lines of credit (HELOCs)</li>
+  <li><strong>Installment loans:</strong> Mortgages, auto loans, student loans, personal loans</li>
+  <li><strong>Open accounts:</strong> Charge cards that must be paid in full monthly</li>
+</ul>
+
+<p>At only 10%, this isn't a factor worth chasing aggressively. You shouldn't take out a car loan you don't need just to diversify your credit mix. But if you've only ever had credit cards and you're wondering why your score is plateauing, adding an installment loan — like a small personal loan — might nudge your score upward.</p>
+
+<p><strong>Real example:</strong> You've had three credit cards for eight years, always paid on time, and keep utilization low. Your score is a solid 730. You take out a modest personal loan to consolidate some credit card debt. Your mix improves, and once the new account ages a bit, you might see a 10-15 point bump. Not transformational, but meaningful when you're working toward that next tier.</p>
+
+<h3>Factor 5: New Credit (10%)</h3>
+
+<p>Every time you apply for new credit — a card, a loan, a line of credit — the lender runs a hard inquiry on your credit report. Hard inquiries stay on your report for two years and can temporarily lower your score by 5 to 10 points. FICO also looks at how many new accounts you've recently opened.</p>
+
+<p>The concern from FICO's perspective: when someone suddenly applies for multiple credit lines in a short period, it can signal financial stress. It's not catastrophic, but it's a flag.</p>
+
+<p><strong>Real example:</strong> You're shopping for a new car and visit four dealerships, each of which runs your credit. Under FICO's rate-shopping window, multiple auto loan inquiries within a 45-day period are typically treated as a single inquiry. The same rule applies to mortgage shopping. This protects consumers who are comparison shopping from being penalized for doing the right thing financially.</p>
+
+<p>Credit card applications don't get the same rate-shopping treatment — each application is its own inquiry. So if you're applying for several new cards in a month, each one dings you separately.</p>
+
+<p>If you want to know whether an inquiry will be hard or soft before you apply, check out our guide on <a href="https://pocketwise.io/guides/hard-inquiry-vs-soft-inquiry/">hard inquiries vs. soft inquiries</a> — it's a distinction that matters more than most people realize.</p>
+
+<h2>FICO Score vs. VantageScore: What's the Difference?</h2>
+
+<p>FICO isn't the only credit scoring model out there. VantageScore — developed jointly by the three major credit bureaus — is also widely used, particularly for consumer-facing credit monitoring apps and some lenders. Both use the 300-850 range, but they calculate scores differently.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Feature</th>
+      <th>FICO Score</th>
+      <th>VantageScore 4.0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Score Range</td>
+      <td>300–850</td>
+      <td>300–850</td>
+    </tr>
+    <tr>
+      <td>Minimum Credit History Required</td>
+      <td>6 months, 1 account</td>
+      <td>As little as 1 month</td>
+    </tr>
+    <tr>
+      <td>Most Important Factor</td>
+      <td>Payment History (35%)</td>
+      <td>Payment History (~41%)</td>
+    </tr>
+    <tr>
+      <td>Trended Data</td>
+      <td>Limited</td>
+      <td>Yes — looks at balance trajectory over time</td>
+    </tr>
+    <tr>
+      <td>Rate Shopping Window</td>
+      <td>45 days</td>
+      <td>14 days</td>
+    </tr>
+    <tr>
+      <td>Medical Debt Treatment</td>
+      <td>Includes in collections</td>
+      <td>Less penalizing for medical debt</td>
+    </tr>
+    <tr>
+      <td>Used by Mortgage Lenders</td>
+      <td>Required by Fannie Mae/Freddie Mac</td>
+      <td>Rarely used for mortgages</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>One important practical note: if you're using a free credit monitoring service like Credit Karma, Credit Sesame, or your bank's credit score feature, you're likely looking at a VantageScore. That's a legitimate, useful score — but it may not match what a mortgage lender pulls. Don't be caught off guard if your "free" score looks different from what your lender sees.</p>
+
+<p>For mortgage applications in particular, lenders are currently required to use specific FICO score versions — FICO Score 2 (Experian), FICO Score 4 (TransUnion), and FICO Score 5 (Equifax) — and they use the middle of the three scores. These older FICO versions can behave somewhat differently from the FICO Score 8 that most other lenders use. The <a href="https://www.myfico.com/credit-education" target="_blank" rel="noopener noreferrer">myFICO credit education center</a> has a thorough breakdown of the different score versions if you want to go deeper.</p>
+
+<h2>Score Ranges: What Each Tier Actually Means</h2>
+
+<p>Here's how FICO categorizes scores and what each tier means in practical terms when you're applying for credit:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>FICO Score Range</th>
+      <th>Category</th>
+      <th>What to Expect</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>800–850</td>
+      <td>Exceptional</td>
+      <td>Best available rates; automatic approvals; premium card access</td>
+    </tr>
+    <tr>
+      <td>740–799</td>
+      <td>Very Good</td>
+      <td>Near-best rates; strong approval odds on nearly anything</td>
+    </tr>
+    <tr>
+      <td>670–739</td>
+      <td>Good</td>
+      <td>Approved for most products; rates slightly above the best tier</td>
+    </tr>
+    <tr>
+      <td>580–669</td>
+      <td>Fair</td>
+      <td>Higher rates; some denials; may need secured products</td>
+    </tr>
+    <tr>
+      <td>300–579</td>
+      <td>Poor</td>
+      <td>Limited options; high-cost credit; secured cards, credit-builder loans</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>To put the rate difference in real dollars: on a $350,000 30-year mortgage, a borrower in the 760–850 range might lock in at 6.5%, while a borrower at 620–639 might see 8.1% or higher. That's a difference of roughly $400 per month and over $140,000 in total interest paid over the life of the loan. This is why improving your credit score before a major purchase is one of the highest-return financial moves available to most people.</p>
+
+<h2>How to Actually Move Your Score — Practically</h2>
+
+<p>Understanding the formula is useful. Using it to improve your financial life is the point. Here's what works, ranked roughly by impact and speed:</p>
+
+<h3>Pay on Time, Every Time</h3>
+<p>Set up autopay for at least the minimum on every account. If you can't pay the full balance, never miss the minimum. One 30-day late payment can haunt you for seven years — though the impact fades significantly after two years.</p>
+
+<h3>Get Your Utilization Below 30% (Then Below 10%)</h3>
+<p>If you have high balances, pay them down aggressively before you need to apply for something. Remember: utilization has no long-term memory. A dramatic paydown can dramatically improve your score within one billing cycle.</p>
+
+<p>If you can't pay down the balance, consider requesting a credit limit increase on your existing cards. This increases your total available credit without changing your balance, which lowers your utilization ratio. Most issuers will grant this if you've had the card for a year or more and have a good payment history — and often without a hard inquiry.</p>
+
+<h3>Don't Close Old Accounts</h3>
+<p>Unless a card has an annual fee you can't justify, keep your old accounts open. The length of credit history factor rewards longevity, and the open credit line also supports your utilization ratio.</p>
+
+<h3>Be Selective About New Applications</h3>
+<p>Only apply for new credit when you need it. If you're planning a mortgage in the next six months, don't open any new accounts — the hard inquiries and new account age will both work against you.</p>
+
+<h3>Fix Errors on Your Credit Report</h3>
+<p>This one is underrated. A 2021 Consumer Financial Protection Bureau study found that credit report errors are surprisingly common. Get your free reports at AnnualCreditReport.com (the only federally authorized site), review them carefully, and dispute any errors directly with the bureau reporting the incorrect information. A single erroneous collection account, once removed, can restore 50 to 100+ points.</p>
+
+<p>If you want a structured plan for moving your score up by 50 to 100 points, our deep-dive on <a href="https://pocketwise.io/guides/credit-score-improvement/">credit score improvement strategies</a> walks through a step-by-step approach with timelines.</p>
+
+<h2>How Credit Scores Interact With Your Broader Financial Picture</h2>
+
+<p>Your credit score doesn't exist in a vacuum. It's one instrument in a larger financial dashboard.</p>
+
+<p>The behaviors that build a strong credit score — paying bills on time, keeping debt low, avoiding unnecessary borrowing — are the same behaviors that build wealth. A high credit score isn't a goal in itself; it's a byproduct of managing your money well.</p>
+
+<p>That said, there are moments when actively optimizing your score is worth your attention: before applying for a mortgage, refinancing debt, or negotiating a lease. Outside of those windows, set up your autopay, keep utilization low, and let the score take care of itself while you focus on the bigger picture — growing income, building savings, and investing.</p>
+
+<p>If you're building your financial foundation and wondering where credit management fits into the larger plan, our <a href="https://pocketwise.io/guides/budgeting-methods/">guide to budgeting methods</a> is a good place to see how the pieces connect. And if you're thinking about putting savings to work, our <a href="https://pocketwise.io/guides/investing-basics/">investing basics guide</a> is a practical starting point — even small amounts, invested consistently, compound meaningfully over time. Run the numbers yourself with our <a href="https://pocketwise.io/compound-interest-calculator/">compound interest calculator</a> to see how growth stacks up.</p>
+
+<p>Building good credit and building wealth are parallel tracks. The fundamentals — discipline, consistency, avoiding expensive mistakes — are the same on both.</p>
+
+<hr>
+
+<h2>You Might Also Enjoy</h2>
+
+<ul>
+  <li><a href="https://pocketwise.io/guides/credit-score-improvement/">Credit Score Improvement: A Step-by-Step Strategy Guide</a> — A detailed plan for moving your score up 50 to 100+ points, with realistic timelines.</li>
+  <li><a href="https://pocketwise.io/guides/hard-inquiry-vs-soft-inquiry/">Hard Inquiry vs. Soft Inquiry: What's Actually the Difference?</a> — Not all credit checks are created equal. Know which ones affect your score before you apply.</li>
+  <li><a href="https://pocketwise.io/guides/budgeting-methods/">Budgeting Methods Compared</a> — Zero-based, 50/30/20, envelope — find the system that fits how you actually think about money.</li>
+  <li><a href="https://pocketwise.io/guides/investing-basics/">Investing Basics: How to Get Started Without Overthinking It</a> — Where to put your money once your credit is solid and you have savings to grow.</li>
+  <li><a href="https://pocketwise.io/compound-interest-calculator/">Compound Interest Calculator</a> — See how your money grows over time with different rates and contribution amounts.</li>
+</ul>
+
+  </article>
+</body>
+</html>

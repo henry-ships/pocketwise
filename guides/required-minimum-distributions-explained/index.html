@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EP402CZ1S3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EP402CZ1S3');
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Required Minimum Distributions (RMDs): Rules, Ages, and Calculations | PocketWise</title>
+  <meta name="description" content="Required minimum distributions explained: ages, IRS rules, calculation steps, penalty details, and strategies to manage your RMDs without overpaying taxes.">
+  <link rel="canonical" href="https://pocketwise.io/guides/required-minimum-distributions-explained/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .guide-content {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      line-height: 1.8;
+      color: #1a1a2e;
+    }
+    .guide-content h1 {
+      font-size: 2.2rem;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      color: #0F172A;
+    }
+    .guide-content h2 {
+      margin-top: 48px;
+      margin-bottom: 16px;
+      color: #16213e;
+      font-size: 1.6rem;
+    }
+    .guide-content h3 {
+      margin-top: 32px;
+      margin-bottom: 12px;
+      color: #1a1a2e;
+      font-size: 1.25rem;
+    }
+    .guide-content p {
+      margin-bottom: 16px;
+      font-size: 1.05rem;
+    }
+    .guide-content ul, .guide-content ol {
+      margin-bottom: 16px;
+      padding-left: 24px;
+    }
+    .guide-content li {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+    }
+    .guide-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      overflow-x: auto;
+      display: block;
+    }
+    .guide-content th, .guide-content td {
+      padding: 12px 16px;
+      border: 1px solid #e0e0e0;
+      text-align: left;
+    }
+    .guide-content th {
+      background: #f0f4ff;
+      font-weight: 600;
+    }
+    .guide-content tr:nth-child(even) td {
+      background: #f9f9f9;
+    }
+    .guide-content a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .guide-content a:hover {
+      text-decoration: underline;
+    }
+    .guide-breadcrumb {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 16px 24px 0;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .guide-breadcrumb a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .guide-content blockquote {
+      border-left: 4px solid #0EA5E9;
+      margin: 24px 0;
+      padding: 16px 24px;
+      background: #f0f8ff;
+      font-style: italic;
+    }
+    .guide-content .callout {
+      background: #f0f4ff;
+      border: 1px solid #d0d8f0;
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+      /* Standard Nav */
+    .lw-nav {
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid #E2E8F0;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+    }
+    .lw-nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      height: 60px;
+      gap: 32px;
+    }
+    .lw-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: #0F172A;
+      text-decoration: none;
+    }
+    .lw-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #0EA5E9, #14B8A6);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 16px;
+    }
+    .lw-nav-links {
+      display: flex;
+      list-style: none;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+    }
+    .lw-nav-links a {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #475569;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+    .lw-nav-links a:hover {
+      background: #F1F5F9;
+      color: #0F172A;
+    }
+    .lw-hamburger {
+      display: none;
+      background: none;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 18px;
+      cursor: pointer;
+      margin-left: auto;
+    }
+    .lw-mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: white;
+      border-bottom: 1px solid #E2E8F0;
+      padding: 8px 24px 16px;
+    }
+    .lw-mobile-menu.open { display: flex; }
+    .lw-mobile-menu a {
+      padding: 12px 0;
+      color: #0F172A;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    @media (max-width: 768px) {
+      .lw-nav-links { display: none; }
+      .lw-hamburger { display: block; }
+    }
+  </style>
+</head>
+<body>
+    <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">P</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">Calculators</a></li>
+        <li><a href="/guides/">Guides</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+    </div>
+  </nav>
+  <div class="lw-mobile-menu">
+    <a href="/">Calculators</a>
+    <a href="/guides/">Guides</a>
+  </div>
+
+  <div class="guide-breadcrumb">
+    <a href="/">PocketWise</a> &rsaquo; <a href="/guides/">Guides</a> &rsaquo; Required Minimum Distributions (RMDs)
+  </div>
+  <article class="guide-content">
+    <h1>Required Minimum Distributions (RMDs): Rules, Ages, and Calculations</h1>
+
+<h2>What Are Required Minimum Distributions and Why Does the IRS Care?</h2>
+
+<p>Here's the deal with your traditional IRA or 401(k): every dollar sitting in there has never been taxed. You contributed pre-tax money, it grew tax-deferred, and the IRS has been patient — but not indefinitely. Required minimum distributions (RMDs) are the government's way of saying, "Time to settle up."</p>
+
+<p>Starting at a certain age, the IRS requires you to withdraw a minimum amount from most tax-deferred retirement accounts each year. That withdrawal gets added to your taxable income, and you finally pay the taxes you deferred decades ago. Miss the deadline or withdraw too little, and the penalty is steep. But understand the rules, and you can manage RMDs in a way that minimizes their tax bite and fits your retirement income plan.</p>
+
+<p>This guide covers everything you need: the current rules under the SECURE 2.0 Act, step-by-step calculation examples, the penalty structure, and practical strategies to handle RMDs without leaving money on the table.</p>
+
+<h2>RMD Rules and Ages: What Changed With SECURE 2.0</h2>
+
+<p>The rules around RMDs have shifted more than once in recent years, and it's worth knowing exactly where things stand today.</p>
+
+<h3>The Starting Age Has Moved — Twice</h3>
+
+<p>For most of retirement planning history, RMDs kicked in at age 70½. The original SECURE Act (2019) pushed that to 72. Then the SECURE 2.0 Act, signed into law in December 2022, pushed it again:</p>
+
+<ul>
+  <li><strong>If you were born before 1951:</strong> Your RMD age was 70½ or 72, depending on when you turned those ages.</li>
+  <li><strong>If you were born in 1951–1959:</strong> Your RMD starting age is 73.</li>
+  <li><strong>If you were born in 1960 or later:</strong> Your RMD starting age is 75.</li>
+</ul>
+
+<p>That's a meaningful shift. If you're 63 today and were born in 1962, you've got more than a decade before you're required to touch your retirement accounts. That's extra runway for tax planning, Roth conversions, and growth.</p>
+
+<h3>Which Accounts Require RMDs?</h3>
+
+<p>Not all retirement accounts work the same way. Here's a quick breakdown:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Account Type</th>
+      <th>RMD Required?</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Traditional IRA</td>
+      <td>Yes</td>
+      <td>Subject to annual RMDs at your starting age</td>
+    </tr>
+    <tr>
+      <td>401(k), 403(b), 457(b)</td>
+      <td>Yes</td>
+      <td>RMDs required unless still working for the plan sponsor</td>
+    </tr>
+    <tr>
+      <td>SEP IRA</td>
+      <td>Yes</td>
+      <td>Treated like a traditional IRA for RMD purposes</td>
+    </tr>
+    <tr>
+      <td>SIMPLE IRA</td>
+      <td>Yes</td>
+      <td>Same rules as traditional IRA</td>
+    </tr>
+    <tr>
+      <td>Roth IRA</td>
+      <td>No</td>
+      <td>No RMDs during the account owner's lifetime</td>
+    </tr>
+    <tr>
+      <td>Roth 401(k)</td>
+      <td>No (after 2024)</td>
+      <td>SECURE 2.0 eliminated Roth 401(k) RMDs starting in 2024</td>
+    </tr>
+    <tr>
+      <td>Inherited IRA (non-spouse)</td>
+      <td>Yes</td>
+      <td>Different rules apply; generally must deplete within 10 years</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The Roth IRA exception is one of the big reasons financial planners love Roth conversions — you keep the money growing tax-free and never face a mandatory withdrawal during your lifetime.</p>
+
+<h3>The First-Year Grace Period</h3>
+
+<p>In the year you hit your RMD starting age, you get a one-time option to delay that first withdrawal until April 1 of the following year. So if your starting age is 73 and you turn 73 in 2025, you can wait until April 1, 2026 to take your first RMD.</p>
+
+<p>Sounds tempting — but there's a catch. If you delay, you'll have to take <em>two</em> RMDs in that second year: one for age 73 (by April 1) and one for age 74 (by December 31). Two RMDs in one year means more taxable income, potentially pushing you into a higher bracket or triggering higher Medicare premiums. Most people are better off taking that first RMD in the calendar year they turn 73, not delaying it.</p>
+
+<h2>How to Calculate Your RMD: A Step-by-Step Walkthrough</h2>
+
+<p>The calculation itself isn't complicated, but it does require two pieces of information: your account balance and your life expectancy factor from the IRS Uniform Lifetime Table.</p>
+
+<h3>The Formula</h3>
+
+<p>RMD = Prior Year-End Account Balance ÷ IRS Life Expectancy Factor</p>
+
+<p>You use the account balance as of December 31 of the <em>previous</em> year. If you're taking your 2025 RMD, you use your December 31, 2024 balance.</p>
+
+<h3>IRS Uniform Lifetime Table (Excerpt)</h3>
+
+<p>The IRS publishes this table in Publication 590-B. Here are the factors for ages most relevant to RMD planning:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Age</th>
+      <th>Life Expectancy Factor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>73</td>
+      <td>26.5</td>
+    </tr>
+    <tr>
+      <td>74</td>
+      <td>25.5</td>
+    </tr>
+    <tr>
+      <td>75</td>
+      <td>24.6</td>
+    </tr>
+    <tr>
+      <td>76</td>
+      <td>23.7</td>
+    </tr>
+    <tr>
+      <td>77</td>
+      <td>22.9</td>
+    </tr>
+    <tr>
+      <td>78</td>
+      <td>22.0</td>
+    </tr>
+    <tr>
+      <td>79</td>
+      <td>21.1</td>
+    </tr>
+    <tr>
+      <td>80</td>
+      <td>20.2</td>
+    </tr>
+    <tr>
+      <td>82</td>
+      <td>18.5</td>
+    </tr>
+    <tr>
+      <td>85</td>
+      <td>16.0</td>
+    </tr>
+    <tr>
+      <td>90</td>
+      <td>12.2</td>
+    </tr>
+    <tr>
+      <td>95</td>
+      <td>8.9</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The full table is available directly on the <a href="https://www.irs.gov/publications/p590b" target="_blank" rel="noopener">IRS website in Publication 590-B</a>. The factors decrease each year, meaning a larger percentage of your account gets distributed as you age.</p>
+
+<h3>Example 1: A Straightforward RMD Calculation</h3>
+
+<p><strong>Scenario:</strong> Margaret is 74 years old. Her traditional IRA balance on December 31 of the prior year was $480,000. She has no spouse more than 10 years younger, so she uses the Uniform Lifetime Table.</p>
+
+<p>Life expectancy factor at 74: <strong>25.5</strong></p>
+
+<p>RMD = $480,000 ÷ 25.5 = <strong>$18,824</strong></p>
+
+<p>Margaret must withdraw at least $18,824 from her IRA by December 31. She can take more if she wants — there's no ceiling — but that's her floor. Every dollar she withdraws gets reported as ordinary income on her tax return.</p>
+
+<h3>Example 2: Multiple IRAs</h3>
+
+<p><strong>Scenario:</strong> David is 77 and has three traditional IRAs. Their prior year-end balances are $200,000, $150,000, and $95,000, totaling $445,000.</p>
+
+<p>Life expectancy factor at 77: <strong>22.9</strong></p>
+
+<p>Total RMD = $445,000 ÷ 22.9 = <strong>$19,432</strong></p>
+
+<p>Here's the flexibility: David calculates the combined RMD from all his IRAs, but he can satisfy that total by withdrawing from any one (or all) of them. He might pull the full $19,432 from the largest IRA, or split it across accounts — whatever makes sense for his situation. He cannot, however, use an IRA distribution to satisfy a 401(k) RMD. Workplace plan RMDs must come from the plan itself.</p>
+
+<h3>Example 3: When Your Spouse Is More Than 10 Years Younger</h3>
+
+<p>If your sole IRA beneficiary is a spouse who is more than 10 years younger than you, the IRS allows you to use a different table — the Joint Life and Last Survivor Expectancy Table — which produces a larger life expectancy factor and therefore a smaller RMD. This is one of the few instances where naming your spouse as primary beneficiary directly reduces your mandatory withdrawal amount.</p>
+
+<h3>What About Market Drops?</h3>
+
+<p>RMDs are calculated on the prior year-end balance, not the current value. If markets fall sharply in the early months of the year, you could end up withdrawing a larger percentage of your account than intended. There's no adjustment mechanism for this — the calculation is locked to December 31. Some people hold a portion of their RMD money in cash or short-term bonds specifically so they're not forced to sell equities in a down market to meet the requirement.</p>
+
+<h2>The RMD Penalty: What Happens If You Miss the Deadline</h2>
+
+<p>Missing an RMD or taking less than you should have used to come with one of the harshest penalties in the tax code: a 50% excise tax on the amount you failed to withdraw. If your RMD was $20,000 and you forgot to take it, you owed a $10,000 penalty on top of whatever income tax would have been due.</p>
+
+<p>SECURE 2.0 reduced that penalty to 25%, effective 2023. And if you catch and correct the shortfall within a two-year correction window (the "correction window" as defined by the IRS), the penalty drops further to just 10%.</p>
+
+<h3>Penalty Examples</h3>
+
+<p><strong>Example A — Missed RMD, not corrected:</strong></p>
+<p>Susan forgot to take her $15,000 RMD. She doesn't catch the error. Penalty: 25% × $15,000 = <strong>$3,750</strong>, plus income tax on the $15,000 she eventually does withdraw.</p>
+
+<p><strong>Example B — Missed RMD, corrected within the window:</strong></p>
+<p>Robert realizes in early 2026 that he missed $12,000 of his 2025 RMD. He takes the distribution promptly and files IRS Form 5329 with a correction. Penalty: 10% × $12,000 = <strong>$1,200</strong>. Still painful, but far better than 25%.</p>
+
+<p><strong>Example C — IRS waiver:</strong></p>
+<p>The IRS has historically been willing to waive the RMD penalty entirely for first-time mistakes, especially when the taxpayer corrects the shortfall quickly and can demonstrate reasonable cause. You request a waiver by filing Form 5329 with a written explanation. It's not guaranteed, but it's absolutely worth trying if you catch the error and fix it fast.</p>
+
+<h3>The December 31 Deadline</h3>
+
+<p>With the exception of the first-year option to delay until April 1, all RMDs must be completed by December 31 of each calendar year. This is not a postmarked-by deadline — the distribution must actually clear your account. Don't wait until December 29 and hope the wire hits in time. Give yourself at least a week of buffer.</p>
+
+<h2>Smart Strategies for Managing Your RMDs</h2>
+
+<p>Knowing the rules is one thing. Using them to your advantage is another. Here are the strategies worth understanding before your first RMD comes due — and while you still have time to act.</p>
+
+<h3>Roth Conversions Before RMD Age</h3>
+
+<p>Every dollar you move from a traditional IRA to a Roth IRA before you hit your RMD starting age is a dollar that will never generate a mandatory withdrawal. You'll pay income tax on the conversion amount in the year you convert, but after that, the money grows tax-free and you're never forced to touch it. If you have years between retirement and your RMD start date, this window is one of the most valuable in retirement tax planning. The math gets especially interesting when you factor in Social Security timing and Medicare premium thresholds.</p>
+
+<h3>Qualified Charitable Distributions (QCDs)</h3>
+
+<p>If you're 70½ or older and charitably inclined, a Qualified Charitable Distribution lets you send money directly from your IRA to a qualified nonprofit — up to $105,000 per year in 2024 (indexed for inflation). The distribution counts toward your RMD but never appears in your adjusted gross income. That means lower income for tax bracket purposes, lower Medicare IRMAA surcharges, and potentially lower taxation of Social Security benefits. For retirees who give to charity anyway, this is one of the cleanest tax moves available.</p>
+
+<h3>Taking RMDs Early in the Year vs. Late</h3>
+
+<p>Most people take their RMD in December. There's no rule that says you have to wait. Taking it early in the year gets the tax liability out of the way, gives you more certainty for tax planning, and avoids the year-end scramble. Some retirees set up monthly automatic distributions equal to one-twelfth of their estimated RMD — this smooths income throughout the year and can make cash flow easier to manage.</p>
+
+<h3>Withholding for Taxes</h3>
+
+<p>RMDs are ordinary income. If you don't have taxes withheld at distribution time, you may owe estimated taxes during the year — and a penalty if you underpay. Most IRA custodians let you choose a withholding percentage when you set up your distribution. Having 20–25% withheld is common, though the right number depends on your total income picture. Alternatively, you can use your December RMD to cover your full year's estimated tax liability, since a December 31 withholding is treated by the IRS as if it was paid evenly throughout the year.</p>
+
+<h3>Still Working? The "Still Working" Exception</h3>
+
+<p>If you're still employed and contributing to your current employer's 401(k), you can generally delay RMDs from <em>that specific plan</em> until you retire — regardless of your age. This exception does not apply to IRAs or to old 401(k)s at former employers. If you have a traditional IRA or a 401(k) from a previous job, those are still subject to RMDs at the normal starting age.</p>
+
+<h3>Aggregating Multiple Accounts Strategically</h3>
+
+<p>As mentioned in the calculation section, you can satisfy your total IRA RMD from any combination of your IRAs. This gives you flexibility to pull from whichever account is most advantageous — the one with the worst-performing assets you'd rather rebalance out of, or the one holding funds you'd like to reduce for estate planning purposes. Use this flexibility intentionally rather than just defaulting to the largest account.</p>
+
+<h3>Reinvesting RMDs You Don't Need</h3>
+
+<p>Some retirees don't actually need the income from their RMDs — they have pensions, Social Security, and other cash flow. If that's your situation, you can take the RMD, pay the tax, and immediately reinvest the after-tax amount in a taxable brokerage account. It's not as tax-advantaged as a retirement account, but it still grows, and assets in a taxable account benefit from stepped-up basis for your heirs — which is a meaningful estate planning advantage.</p>
+
+<h2>Inherited IRAs: A Different Set of Rules</h2>
+
+<p>When you inherit an IRA, the RMD rules that apply to you are different from the ones described above. The SECURE Act 2019 eliminated the "stretch IRA" strategy for most non-spouse beneficiaries, replacing it with a 10-year rule: in most cases, the entire inherited IRA must be depleted within 10 years of the original owner's death.</p>
+
+<p>Spouse beneficiaries have more options, including the ability to roll the inherited IRA into their own IRA and defer distributions to their own RMD starting age. Non-spouse beneficiaries (adult children, for example) generally must empty the account within 10 years, though the IRS has provided some relief and clarification on whether annual distributions are required within that 10-year window or whether a lump sum at year 10 is sufficient.</p>
+
+<p>Inherited IRA rules are genuinely complex, and the regulations continue to evolve. If you've recently inherited a retirement account, it's worth sitting down with a tax advisor before you make any decisions — the difference between a smart distribution strategy and a careless one can add up to tens of thousands of dollars over a decade.</p>
+
+<h2>Common RMD Mistakes to Avoid</h2>
+
+<p>After years of watching people navigate retirement finances, a handful of mistakes come up again and again:</p>
+
+<ul>
+  <li><strong>Using the wrong table:</strong> Most people use the Uniform Lifetime Table, but if your sole beneficiary is a spouse more than 10 years younger, you should use the Joint Life table — it produces a lower RMD. Using the wrong table means either withdrawing too much (and paying more tax than necessary) or too little (and triggering a penalty).</li>
+  <li><strong>Forgetting to calculate each account separately:</strong> Even though you can satisfy IRA RMDs from any IRA, you still need to calculate the RMD for each account individually first, then add them up. Calculating only the total balance without breaking it down by account can introduce errors.</li>
+  <li><strong>Thinking a Roth 401(k) still requires RMDs:</strong> Before 2024, Roth 401(k)s did require RMDs during the account owner's lifetime. SECURE 2.0 eliminated that. If you're still routing around this by rolling over your Roth 401(k) to a Roth IRA to avoid RMDs, that workaround is no longer necessary — though the rollover may still make sense for other reasons.</li>
+  <li><strong>Waiting too long to plan:</strong> The best time to think about RMDs is 5–10 years before they start — when you still have time to do Roth conversions, optimize account balances, and set up your income strategy. Most people only start thinking about this when the first RMD deadline is six months away.</li>
+  <li><strong>Ignoring the Medicare connection:</strong> Higher income in retirement means higher Medicare Part B and Part D premiums (IRMAA surcharges). Large RMDs can push you over the income thresholds that trigger these surcharges, sometimes costing thousands of dollars per year. This is another reason to manage your taxable income proactively in the years before RMDs begin.</li>
+</ul>
+
+<h2>Putting It All Together</h2>
+
+<p>Required minimum distributions aren't a punishment — they're the natural conclusion of a decades-long tax deferral. You got the benefit of investing pre-tax dollars and watching them compound without an annual tax drag. RMDs are simply when the deferred bill comes due.</p>
+
+<p>The people who navigate RMDs best are the ones who plan for them long in advance. They understand their starting age, model out their likely account balances, run scenarios on Roth conversions, set up charitable giving through QCDs, and coordinate their RMD income with Social Security timing and Medicare costs. None of this requires a financial advisor (though one can certainly help) — it requires understanding the rules and doing the math.</p>
+
+<p>Start with your numbers. Know your balance. Know your age. Calculate what your RMD would be today if you had to take one. Then ask: what would I want to do differently? That question is where good retirement income planning begins.</p>
+
+<hr>
+
+<h2>You Might Also Enjoy</h2>
+
+<ul>
+  <li><a href="https://pocketwise.io/guides/when-to-claim-social-security/">When to Claim Social Security: A Guide to Timing Your Benefits</a> — Coordinating Social Security with RMDs can meaningfully reduce your total lifetime tax bill. Here's how to think about the timing.</li>
+  <li><a href="https://pocketwise.io/pretax-vs-roth/">Pre-Tax vs. Roth: Which Account Should You Be Funding?</a> — The accounts you contribute to today determine what your RMDs look like decades from now. This guide breaks down the tradeoffs.</li>
+  <li><a href="https://pocketwise.io/guides/401k-contribution-guide/">401(k) Contribution Guide: Maximizing Your Workplace Retirement Account</a> — Understanding how much you're putting into tax-deferred accounts now shapes your RMD burden later.</li>
+  <li><a href="https://pocketwise.io/guides/investing-basics/">Investing Basics: How to Think About Risk, Return, and Your Timeline</a> — A grounding primer on building the investment portfolio that your RMDs will eventually draw from.</li>
+  <li><a href="https://pocketwise.io/compound-interest-calculator/">Compound Interest Calculator</a> — Run the numbers on how your retirement account grows between now and your RMD start date.</li>
+</ul>
+
+  </article>
+</body>
+</html>

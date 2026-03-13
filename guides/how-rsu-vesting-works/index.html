@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EP402CZ1S3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EP402CZ1S3');
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How RSU Vesting Works: Taxes, Timing, and What to Do When They Vest | PocketWise</title>
+  <meta name="description" content="Learn how RSU vesting works, how they're taxed at vesting and sale, whether to sell or hold, and how to avoid dangerous concentration risk.">
+  <link rel="canonical" href="https://pocketwise.io/guides/how-rsu-vesting-works/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .guide-content {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      line-height: 1.8;
+      color: #1a1a2e;
+    }
+    .guide-content h1 {
+      font-size: 2.2rem;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      color: #0F172A;
+    }
+    .guide-content h2 {
+      margin-top: 48px;
+      margin-bottom: 16px;
+      color: #16213e;
+      font-size: 1.6rem;
+    }
+    .guide-content h3 {
+      margin-top: 32px;
+      margin-bottom: 12px;
+      color: #1a1a2e;
+      font-size: 1.25rem;
+    }
+    .guide-content p {
+      margin-bottom: 16px;
+      font-size: 1.05rem;
+    }
+    .guide-content ul, .guide-content ol {
+      margin-bottom: 16px;
+      padding-left: 24px;
+    }
+    .guide-content li {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+    }
+    .guide-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      overflow-x: auto;
+      display: block;
+    }
+    .guide-content th, .guide-content td {
+      padding: 12px 16px;
+      border: 1px solid #e0e0e0;
+      text-align: left;
+    }
+    .guide-content th {
+      background: #f0f4ff;
+      font-weight: 600;
+    }
+    .guide-content tr:nth-child(even) td {
+      background: #f9f9f9;
+    }
+    .guide-content a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .guide-content a:hover {
+      text-decoration: underline;
+    }
+    .guide-breadcrumb {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 16px 24px 0;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .guide-breadcrumb a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .guide-content blockquote {
+      border-left: 4px solid #0EA5E9;
+      margin: 24px 0;
+      padding: 16px 24px;
+      background: #f0f8ff;
+      font-style: italic;
+    }
+    .guide-content .callout {
+      background: #f0f4ff;
+      border: 1px solid #d0d8f0;
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+      /* Standard Nav */
+    .lw-nav {
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid #E2E8F0;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+    }
+    .lw-nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      height: 60px;
+      gap: 32px;
+    }
+    .lw-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: #0F172A;
+      text-decoration: none;
+    }
+    .lw-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #0EA5E9, #14B8A6);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 16px;
+    }
+    .lw-nav-links {
+      display: flex;
+      list-style: none;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+    }
+    .lw-nav-links a {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #475569;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+    .lw-nav-links a:hover {
+      background: #F1F5F9;
+      color: #0F172A;
+    }
+    .lw-hamburger {
+      display: none;
+      background: none;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 18px;
+      cursor: pointer;
+      margin-left: auto;
+    }
+    .lw-mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: white;
+      border-bottom: 1px solid #E2E8F0;
+      padding: 8px 24px 16px;
+    }
+    .lw-mobile-menu.open { display: flex; }
+    .lw-mobile-menu a {
+      padding: 12px 0;
+      color: #0F172A;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    @media (max-width: 768px) {
+      .lw-nav-links { display: none; }
+      .lw-hamburger { display: block; }
+    }
+  </style>
+</head>
+<body>
+    <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">P</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">Calculators</a></li>
+        <li><a href="/guides/">Guides</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+    </div>
+  </nav>
+  <div class="lw-mobile-menu">
+    <a href="/">Calculators</a>
+    <a href="/guides/">Guides</a>
+  </div>
+
+  <div class="guide-breadcrumb">
+    <a href="/">PocketWise</a> &rsaquo; <a href="/guides/">Guides</a> &rsaquo; How RSU Vesting Works
+  </div>
+  <article class="guide-content">
+    <h1>How RSU Vesting Works: Taxes, Timing, and What to Do When They Vest</h1>
+
+<h2>What RSUs Actually Are (And Why the Vesting Part Matters So Much)</h2>
+
+<p>If you've landed a job at a tech company, a pre-IPO startup, or really any publicly traded employer in the last decade, there's a decent chance RSUs are sitting in your total compensation package. They show up in offer letters looking like free money. And in a sense, they are — but they come with a tax bill that can genuinely blindside people who haven't dealt with them before.</p>
+
+<p>RSU stands for Restricted Stock Unit. The "restricted" part is key: you don't actually own the shares the moment you're granted them. You own a <em>promise</em> of shares, subject to a vesting schedule. Once the restrictions lift and the shares vest, they become real stock sitting in your brokerage account — and that's when things get interesting from a tax and financial planning standpoint.</p>
+
+<p>Understanding how RSU vesting works isn't just about knowing a definition. It affects how much cash you'll owe the IRS, when you'll owe it, and whether you should sell immediately or hold on. Get this wrong, and you could end up with a tax bill you can't pay, a portfolio dangerously concentrated in one stock, or both.</p>
+
+<p>Let's walk through all of it.</p>
+
+<h2>How RSU Vesting Schedules Work</h2>
+
+<p>When a company grants you RSUs, they're not handing you shares on day one. The shares are released to you incrementally over a vesting period, usually tied to continued employment. Think of vesting as the company's way of saying: stay with us, and we'll deliver on this promise over time.</p>
+
+<h3>The Standard 4-Year Cliff-and-Graded Schedule</h3>
+
+<p>The most common vesting structure in the tech industry is a four-year schedule with a one-year cliff. Here's what that looks like in practice:</p>
+
+<ul>
+  <li>You receive no shares until you've been employed for one full year (the cliff)</li>
+  <li>At the one-year mark, 25% of your total grant vests all at once</li>
+  <li>The remaining 75% vests monthly or quarterly over the following three years</li>
+</ul>
+
+<p>So if you were granted 4,000 RSUs, you'd receive 1,000 shares after year one, then roughly 83 shares per month (or 250 per quarter) for the next 36 months — assuming monthly or quarterly vesting after the cliff.</p>
+
+<p>The one-year cliff exists to protect the company from employees who collect a big chunk of equity and leave immediately. It's also why job offers at early-stage companies can feel like golden handcuffs: walking away before that first anniversary means leaving all of your unvested equity on the table.</p>
+
+<h3>Other Vesting Structures You Might Encounter</h3>
+
+<p>Not all companies follow the standard 4-year cliff model. Here are a few variations worth knowing:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Vesting Type</th>
+      <th>How It Works</th>
+      <th>Common At</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>4-year with 1-year cliff</td>
+      <td>25% after year 1, rest monthly/quarterly over 3 years</td>
+      <td>Most public tech companies</td>
+    </tr>
+    <tr>
+      <td>Monthly vesting (no cliff)</td>
+      <td>Shares vest each month from day one</td>
+      <td>Some startups, executive grants</td>
+    </tr>
+    <tr>
+      <td>Annual vesting</td>
+      <td>Equal chunks vest each year over 3–5 years</td>
+      <td>Older companies, non-tech sectors</td>
+    </tr>
+    <tr>
+      <td>Back-weighted vesting</td>
+      <td>Smaller amounts early, larger amounts later (e.g., 10/20/30/40)</td>
+      <td>Retention-focused grants</td>
+    </tr>
+    <tr>
+      <td>Performance-based (PRSUs)</td>
+      <td>Vesting tied to hitting revenue, stock price, or other targets</td>
+      <td>Executive compensation, some tech companies</td>
+    </tr>
+    <tr>
+      <td>Double-trigger vesting</td>
+      <td>Requires both a time condition AND an event (e.g., acquisition)</td>
+      <td>Pre-IPO companies</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Performance RSUs (sometimes called PRSUs or PSUs) deserve a special mention. With these, you don't just need to wait out the time — the company also needs to hit certain metrics. If they miss the targets, you might receive fewer shares than expected, or none at all. This makes financial planning trickier since you can't fully count on the grant.</p>
+
+<h3>The Vesting Event: What Actually Happens</h3>
+
+<p>On the day shares vest, a few things happen simultaneously. The shares are delivered to your brokerage account. Your employer records the value of those shares as compensation on your W-2. And taxes are withheld — typically by your company automatically selling a portion of the vesting shares to cover the withholding, a process called "sell to cover."</p>
+
+<p>That last piece trips a lot of people up. You might see 100 shares vest, but only 68 land in your account because the company sold 32 to cover taxes. Those 32 shares weren't lost — they were converted to cash to pay the IRS on your behalf. But if your effective tax rate ends up higher than the default withholding rate, you could still owe more at tax time.</p>
+
+<h2>How RSUs Are Taxed: At Vesting and When You Sell</h2>
+
+<p>RSU taxation has two distinct stages, and confusing them is one of the most expensive mistakes you can make. The good news is the rules are actually straightforward once you see the full picture.</p>
+
+<h3>Stage 1: Tax at Vesting (Ordinary Income)</h3>
+
+<p>When RSUs vest, the fair market value of the shares on that date is treated as ordinary income — the same as if your employer handed you a cash bonus. It flows through your W-2, gets added to your gross income for the year, and is taxed at your marginal federal income tax rate plus applicable state taxes and payroll taxes (Social Security and Medicare, up to their respective limits).</p>
+
+<p>Example: You have 100 shares vest on a day when your employer's stock is trading at $50 per share. You've received $5,000 of ordinary income. If you're in the 32% federal tax bracket with a 5% state income tax, you're looking at roughly $1,850 in taxes on that vesting event alone.</p>
+
+<p>Your cost basis for those shares — the number the IRS uses to calculate future gains — is set at the fair market value on the vesting date. This is important for Stage 2.</p>
+
+<h3>Stage 2: Capital Gains Tax When You Sell</h3>
+
+<p>After the shares vest and land in your account, any additional gain or loss from that point forward is a capital gain or loss — not ordinary income. The type of capital gain depends on how long you hold the shares after vesting:</p>
+
+<ul>
+  <li><strong>Short-term capital gains:</strong> If you sell within one year of vesting, gains are taxed at ordinary income rates (same as your salary)</li>
+  <li><strong>Long-term capital gains:</strong> If you hold for more than one year after vesting, gains are taxed at preferential rates — 0%, 15%, or 20% depending on your income</li>
+</ul>
+
+<p>Using the same example: those 100 shares vested at $50 each (your cost basis is $50/share). If you sell six months later at $60, you have a $10/share short-term capital gain — taxed at ordinary income rates. If you hold for 13 months and sell at $70, you have a $20/share long-term capital gain — taxed at the more favorable rate.</p>
+
+<p>It's worth noting that the IRS's guidance on RSU taxation is clear: the vesting date is the taxable event for ordinary income purposes, regardless of whether you sell the shares or hold them. You can read the relevant IRS rules on equity compensation in <a href="https://www.irs.gov/publications/p525" target="_blank" rel="noopener">IRS Publication 525</a>.</p>
+
+<h3>The Supplemental Withholding Problem</h3>
+
+<p>Here's where a lot of people get caught off guard. When your company withholds taxes at vesting through the "sell to cover" method, they almost always use the IRS's flat supplemental withholding rate — currently 22% for amounts under $1 million. But if you're earning $200,000+ in total compensation, your marginal federal rate is 32% or higher.</p>
+
+<p>That gap — between what was withheld and what you actually owe — becomes a tax bill in April. The higher your income and the more valuable your vesting events, the bigger that gap can be. Some people find themselves owing $10,000 to $30,000 or more at tax time purely from RSU underwithholding.</p>
+
+<p>The fix is to either adjust your W-4 to have extra federal tax withheld from your regular paychecks throughout the year, or make estimated quarterly tax payments. If you have significant RSU income, working with a CPA at least once to model your annual tax exposure is genuinely worth the cost.</p>
+
+<h2>Should You Sell RSUs When They Vest or Hold the Stock?</h2>
+
+<p>This is the question everyone wants answered, and the honest answer is: it depends. But there's a default position that most financial planners land on, and it's probably not what you expect.</p>
+
+<h3>The Case for Selling Immediately at Vesting</h3>
+
+<p>The most common advice from financial planners — and the default position of most personal finance frameworks — is to sell RSUs as soon as they vest. Here's the logic:</p>
+
+<p>When RSUs vest, they're essentially a cash bonus that your employer has already pre-invested in their own stock on your behalf. Would you take a $10,000 cash bonus and immediately put all of it into your employer's stock? For most people, the answer is no. That's a lot of concentrated exposure to a single company — the same company that also writes your paycheck, funds your benefits, and represents your biggest career risk.</p>
+
+<p>Selling at vesting and reinvesting the proceeds in a diversified portfolio doesn't mean you're pessimistic about your company. It means you're managing risk intelligently. The tax difference between selling at vesting (no additional capital gain) versus holding and selling later (potential long-term capital gains rates) might sound compelling, but the math only works out in your favor if the stock actually goes up significantly — and you're already taking that risk through your employment.</p>
+
+<h3>When Holding Might Make Sense</h3>
+
+<p>There are legitimate reasons to hold RSU shares after vesting:</p>
+
+<ul>
+  <li><strong>Strong conviction in the company's long-term trajectory</strong> — but be honest with yourself about whether this is conviction or familiarity bias</li>
+  <li><strong>Approaching long-term capital gains treatment</strong> — if you can hold for just a few more months to cross the one-year mark, the tax savings may be worth the additional risk</li>
+  <li><strong>Inside knowledge of pending positive events</strong> — though trading on material non-public information is illegal, so be very careful here; your company's trading windows and blackout periods exist for a reason</li>
+  <li><strong>Already well-diversified portfolio</strong> — if your RSUs represent a small slice of your total net worth, the concentration risk is lower</li>
+</ul>
+
+<p>The general rule of thumb: if your employer stock represents more than 10–15% of your total investable assets, you're probably overexposed. At 20–25%, most financial planners would flag it as a meaningful risk. Above that, you're taking on the kind of single-stock concentration that has destroyed wealth for people who worked at companies that looked bulletproof.</p>
+
+<h3>A Practical Decision Framework</h3>
+
+<p>When RSUs vest, ask yourself these questions in order:</p>
+
+<ol>
+  <li>Do I need this cash for short-term goals — emergency fund, paying down debt, a house down payment?</li>
+  <li>What percentage of my total portfolio would this represent if I held it?</li>
+  <li>Am I currently in a company blackout window that prevents selling?</li>
+  <li>Am I within a few months of the one-year holding period for long-term capital gains?</li>
+  <li>Would I buy this much of this stock with a cash bonus today?</li>
+</ol>
+
+<p>If the answer to #5 is no, that's your answer. Sell, diversify, and invest the proceeds according to your actual financial plan. You can always maintain a small position in your employer's stock as a personal bet — just do it intentionally, with a defined limit, rather than by default.</p>
+
+<h2>Concentration Risk: The Hidden Danger in a Growing RSU Portfolio</h2>
+
+<p>Concentration risk is the exposure that builds up when too much of your financial life is tied to a single outcome — and for tech workers, that single outcome is usually their employer's stock price.</p>
+
+<p>Here's what makes it particularly dangerous: it doesn't feel risky when things are going well. If you joined a company in 2018 and watched your RSU grants multiply in value through 2021, it was easy to convince yourself that holding made sense. Then 2022 arrived, and many of those same stocks dropped 60–80% from their highs. People who had let their RSU portfolios grow unchecked suddenly found that years of deferred compensation had evaporated — and they still had to pay taxes on the shares that vested at the highs.</p>
+
+<p>The cruel irony of RSU concentration is that the tax tail can wag the financial dog. Some people refuse to sell shares that have appreciated significantly because of the capital gains tax they'd owe. But paying a 20% capital gains tax on a stock that then falls 50% is a much worse outcome than having paid the tax and moved on. Taxes are a symptom of gains — they're not a reason to avoid locking those gains in.</p>
+
+<h3>Strategies for Managing RSU Concentration</h3>
+
+<p><strong>Automatic selling at vesting.</strong> Most major brokerages allow you to set up automatic sell instructions for RSU vestings. Set it and forget it — the shares vest, you sell, the proceeds go somewhere useful.</p>
+
+<p><strong>Systematic reduction over time.</strong> If you've already accumulated a concentrated position, consider selling a fixed percentage each year — say, 25–33% — to gradually reduce your exposure without triggering a massive tax event in a single year. This also smooths out the stock price risk.</p>
+
+<p><strong>Tax-loss harvesting from other positions.</strong> If you have losses elsewhere in your portfolio, you can use them to offset capital gains from selling RSU shares. Work with a financial advisor or use your brokerage's tax optimization tools to coordinate this.</p>
+
+<p><strong>Charitable giving.</strong> If you're philanthropically inclined and have a long-term holding with significant embedded gains, donating appreciated shares directly to a donor-advised fund or charity can eliminate the capital gains entirely while giving you a tax deduction. This isn't a fit for everyone, but for people with high-conviction long-term holdings, it's worth knowing about.</p>
+
+<p><strong>Know your total exposure.</strong> Add it up: your RSU grants (vested and unvested), any company stock in your 401(k), any employee stock purchase plan (ESPP) shares, and any stock options. If the combined total exceeds 15–20% of your net worth, you have a plan to make.</p>
+
+<h2>Leaving a Job With Unvested RSUs: What Happens</h2>
+
+<p>When you leave a company — whether you quit, get laid off, or retire — unvested RSUs are almost always forfeited. Unlike stock options, which sometimes have a post-termination exercise period, unvested RSUs simply disappear. This is the core mechanic of the "golden handcuff" dynamic that companies explicitly design into multi-year grants.</p>
+
+<p>Before leaving a job, it's worth doing a careful vesting calendar review:</p>
+
+<ul>
+  <li>When is your next vesting date? If it's two weeks away and you're planning to resign, it might be worth waiting.</li>
+  <li>How large is the unvested grant that you'd be leaving behind? Compare that to the value of the new opportunity.</li>
+  <li>Does your new employer offer an RSU refresh grant that covers your unvested amount? Some do — this is called a "buyout" or "make-whole" grant and is worth negotiating explicitly.</li>
+</ul>
+
+<p>In layoff situations, some companies accelerate vesting as part of the severance package — particularly for senior employees or in competitive talent markets. This is negotiable in some cases, though it's far from standard.</p>
+
+<p>One thing to check: your company's equity plan documents should specify exactly what happens to unvested grants under different termination scenarios, including termination without cause, resignation, retirement, disability, and death. These terms vary significantly by company and by grant type.</p>
+
+<h2>Putting It All Together: A Simple RSU Action Plan</h2>
+
+<p>If you've made it this far, here's a condensed version of everything above — the decisions you'll actually need to make when RSUs land in your life:</p>
+
+<p><strong>1. Understand your vesting schedule.</strong> Get the full grant agreement from your equity platform (Carta, Shareworks, E*TRADE, etc.) and know exactly when shares vest and how many. Set calendar reminders for vesting dates so you're never surprised.</p>
+
+<p><strong>2. Model your tax exposure.</strong> Estimate the tax hit from upcoming vestings — especially if they're large. If your company withholds at 22% and your marginal rate is higher, plan for the gap with either additional W-4 withholding or quarterly estimated payments.</p>
+
+<p><strong>3. Have a default selling policy.</strong> Decide in advance whether you'll sell at vesting or hold, and under what conditions you'd deviate. Having a pre-committed policy removes the emotional decision-making that causes most RSU mistakes.</p>
+
+<p><strong>4. Track your concentration.</strong> Periodically check what percentage of your total investable assets is in employer stock. If it's climbing past 15%, that's your trigger to start reducing.</p>
+
+<p><strong>5. Integrate RSUs into your broader financial plan.</strong> RSU proceeds can fund a lot of goals — maxing retirement accounts, building an emergency fund, paying down debt, investing toward a down payment. Think about where vested shares fit into your <a href="https://pocketwise.io/guides/financial-order-of-operations/">financial order of operations</a> before deciding what to do with them.</p>
+
+<p>RSUs can be genuinely life-changing compensation — but only if you manage them with a plan. The people who come out ahead are almost never the ones who got the biggest grants. They're the ones who understood how it worked, paid their taxes correctly, and diversified before the stock stopped going up.</p>
+
+<hr>
+
+<h2>You Might Also Enjoy</h2>
+
+<ul>
+  <li><a href="https://pocketwise.io/guides/financial-order-of-operations/">Financial Order of Operations: Where to Put Your Money First</a> — figure out how RSU proceeds fit into the bigger picture of your financial life</li>
+  <li><a href="https://pocketwise.io/compound-interest-calculator/">Compound Interest Calculator</a> — see what reinvesting your vested shares could look like over time</li>
+  <li><a href="https://pocketwise.io/investment-return-calculator/">Investment Return Calculator</a> — model the difference between holding concentrated stock and investing in a diversified portfolio</li>
+  <li><a href="https://pocketwise.io/budget-to-goal/">Budget to Goal</a> — put your RSU cash to work toward a specific financial target</li>
+  <li><a href="https://pocketwise.io/side-income-tax/">Side Income Tax Guide</a> — if freelance work is supplementing your equity comp, here's how to handle those taxes too</li>
+</ul>
+
+  </article>
+</body>
+</html>

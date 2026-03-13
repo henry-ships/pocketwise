@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EP402CZ1S3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EP402CZ1S3');
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What Is Tax-Loss Harvesting? How to Turn Losses Into Tax Savings | PocketWise</title>
+  <meta name="description" content="Tax-loss harvesting turns investment losses into real tax savings. Learn how it works, the wash sale rule, and concrete dollar examples you can use.">
+  <link rel="canonical" href="https://pocketwise.io/guides/what-is-tax-loss-harvesting/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .guide-content {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      line-height: 1.8;
+      color: #1a1a2e;
+    }
+    .guide-content h1 {
+      font-size: 2.2rem;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      color: #0F172A;
+    }
+    .guide-content h2 {
+      margin-top: 48px;
+      margin-bottom: 16px;
+      color: #16213e;
+      font-size: 1.6rem;
+    }
+    .guide-content h3 {
+      margin-top: 32px;
+      margin-bottom: 12px;
+      color: #1a1a2e;
+      font-size: 1.25rem;
+    }
+    .guide-content p {
+      margin-bottom: 16px;
+      font-size: 1.05rem;
+    }
+    .guide-content ul, .guide-content ol {
+      margin-bottom: 16px;
+      padding-left: 24px;
+    }
+    .guide-content li {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+    }
+    .guide-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      overflow-x: auto;
+      display: block;
+    }
+    .guide-content th, .guide-content td {
+      padding: 12px 16px;
+      border: 1px solid #e0e0e0;
+      text-align: left;
+    }
+    .guide-content th {
+      background: #f0f4ff;
+      font-weight: 600;
+    }
+    .guide-content tr:nth-child(even) td {
+      background: #f9f9f9;
+    }
+    .guide-content a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .guide-content a:hover {
+      text-decoration: underline;
+    }
+    .guide-breadcrumb {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 16px 24px 0;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .guide-breadcrumb a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .guide-content blockquote {
+      border-left: 4px solid #0EA5E9;
+      margin: 24px 0;
+      padding: 16px 24px;
+      background: #f0f8ff;
+      font-style: italic;
+    }
+    .guide-content .callout {
+      background: #f0f4ff;
+      border: 1px solid #d0d8f0;
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+      /* Standard Nav */
+    .lw-nav {
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid #E2E8F0;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+    }
+    .lw-nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      height: 60px;
+      gap: 32px;
+    }
+    .lw-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: #0F172A;
+      text-decoration: none;
+    }
+    .lw-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #0EA5E9, #14B8A6);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 16px;
+    }
+    .lw-nav-links {
+      display: flex;
+      list-style: none;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+    }
+    .lw-nav-links a {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #475569;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+    .lw-nav-links a:hover {
+      background: #F1F5F9;
+      color: #0F172A;
+    }
+    .lw-hamburger {
+      display: none;
+      background: none;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 18px;
+      cursor: pointer;
+      margin-left: auto;
+    }
+    .lw-mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: white;
+      border-bottom: 1px solid #E2E8F0;
+      padding: 8px 24px 16px;
+    }
+    .lw-mobile-menu.open { display: flex; }
+    .lw-mobile-menu a {
+      padding: 12px 0;
+      color: #0F172A;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    @media (max-width: 768px) {
+      .lw-nav-links { display: none; }
+      .lw-hamburger { display: block; }
+    }
+  </style>
+</head>
+<body>
+    <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">P</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">Calculators</a></li>
+        <li><a href="/guides/">Guides</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+    </div>
+  </nav>
+  <div class="lw-mobile-menu">
+    <a href="/">Calculators</a>
+    <a href="/guides/">Guides</a>
+  </div>
+
+  <div class="guide-breadcrumb">
+    <a href="/">PocketWise</a> &rsaquo; <a href="/guides/">Guides</a> &rsaquo; What Is Tax-Loss Harvesting? How to Turn Losses...
+  </div>
+  <article class="guide-content">
+    <h1>What Is Tax-Loss Harvesting? How to Turn Losses Into Tax Savings</h1>
+
+<h2>What Is Tax-Loss Harvesting — and Why Should You Care?</h2>
+
+<p>Here's a truth most people don't fully absorb until they've been investing for a few years: losses aren't always bad. Yes, watching a position drop in value stings. But the tax code gives you a way to convert that paper pain into an actual, bankable benefit — one that shows up on your tax return as real money saved.</p>
+
+<p>That mechanism is called <strong>tax-loss harvesting</strong>. And if you hold investments in a taxable brokerage account, it's one of the most legitimate, IRS-approved ways to lower your tax bill without changing your investment strategy in any meaningful way.</p>
+
+<p>This guide is going to walk you through exactly what tax-loss harvesting is, how it works step by step, the rules you absolutely need to know (the wash sale rule being the big one), and concrete dollar examples so you can see whether this is worth your attention.</p>
+
+<p>Short answer: for most investors with taxable accounts, it is.</p>
+
+<h2>The Core Idea: Using Losses to Offset Gains (and Income)</h2>
+
+<p>When you sell an investment for more than you paid for it, you have a <strong>capital gain</strong>. The IRS wants a share of that. Depending on how long you held the asset, you'll owe either short-term capital gains tax (taxed at ordinary income rates, which can run as high as 37%) or long-term capital gains tax (taxed at 0%, 15%, or 20%, depending on your income).</p>
+
+<p>When you sell an investment for <em>less</em> than you paid for it, you have a <strong>capital loss</strong>. The IRS lets you use that loss to offset your gains — dollar for dollar. If you have more losses than gains in a given year, you can apply up to $3,000 of the excess losses against ordinary income (salary, freelance income, etc.). Any losses beyond that carry forward to future tax years indefinitely.</p>
+
+<p>Tax-loss harvesting is the deliberate, strategic practice of <strong>selling positions that are currently at a loss</strong> to capture that tax benefit — and then immediately reinvesting the proceeds in a similar (but not identical) investment so you stay fully invested in the market.</p>
+
+<p>You're not abandoning your investment strategy. You're not betting against a position. You're simply swapping one investment for a comparable one, crystallizing a tax deduction in the process, and moving on. The portfolio looks nearly the same. The tax bill looks meaningfully different.</p>
+
+<h3>Short-Term vs. Long-Term: Why It Matters</h3>
+
+<p>Capital losses are categorized the same way gains are — short-term (held less than one year) or long-term (held more than one year). Short-term losses first offset short-term gains; long-term losses first offset long-term gains. After that, any excess losses cross over to offset the other category.</p>
+
+<p>Why does this matter? Because short-term gains are taxed at your ordinary income rate, which is almost always higher than the long-term rate. A short-term loss that offsets a short-term gain saves you more in taxes than a long-term loss offsetting a long-term gain at the same dollar amount. It's worth being aware of as you think about timing your harvesting decisions.</p>
+
+<h2>How Tax-Loss Harvesting Actually Works: A Step-by-Step Walkthrough</h2>
+
+<p>The mechanics are more straightforward than the name suggests. Here's how to think through each step.</p>
+
+<p><strong>Step 1: Identify positions in your taxable account that are currently at a loss.</strong></p>
+<p>Log into your brokerage and look at your unrealized gains and losses. You're hunting for positions where your current market value is below your cost basis. (Cost basis = what you paid, including any reinvested dividends.) Most brokerages show this clearly in the "positions" view.</p>
+
+<p>A few things worth noting: this only applies to <strong>taxable accounts</strong> — your 401(k) and IRA don't generate taxable capital gains or losses, so harvesting doesn't apply there. Also, you're looking at <em>unrealized</em> losses. Until you sell, nothing is locked in.</p>
+
+<p><strong>Step 2: Decide which losses are worth harvesting.</strong></p>
+<p>Not every small loss is worth acting on. Transaction costs aside (most brokerages are now commission-free), you want to weigh the tax benefit against the risk of being out of the market — even briefly — in a position that might rebound. Generally, losses in the range of several hundred dollars or more start to feel meaningful. The math gets more compelling the higher your tax bracket.</p>
+
+<p>Also consider whether the loss is short-term or long-term, as discussed above, since the tax value differs.</p>
+
+<p><strong>Step 3: Sell the losing position.</strong></p>
+<p>Execute the sale. This locks in the capital loss on that tax year's return. Keep the trade confirmation or note the date and proceeds — your brokerage will report this to the IRS on a Form 1099-B, but you'll want your own records to confirm the cost basis is correct.</p>
+
+<p><strong>Step 4: Immediately reinvest in a similar (but not substantially identical) investment.</strong></p>
+<p>Here's where the wash sale rule comes into play — we'll cover it in depth in the next section. The short version: you cannot buy back the same security within 30 days before or after the sale and still claim the loss. So you'll replace it with something that tracks the same general market exposure but is considered a different security.</p>
+
+<p>For example: if you sell shares of the Vanguard Total Stock Market ETF (VTI) at a loss, you might immediately buy the Schwab U.S. Broad Market ETF (SCHB) or the iShares Core S&amp;P Total U.S. Stock Market ETF (ITOT). These track slightly different indexes but provide nearly identical economic exposure. You're still fully invested in U.S. equities. You've just changed the ticker.</p>
+
+<p><strong>Step 5: After 30 days, optionally swap back.</strong></p>
+<p>After the wash sale window closes (31 days), you can sell the replacement fund and repurchase your original holding if you prefer it. Many investors just keep the replacement fund permanently — especially if it has similar expenses and performance characteristics.</p>
+
+<p><strong>Step 6: Apply the harvested losses when you file your taxes.</strong></p>
+<p>Report capital gains and losses on Schedule D of your federal tax return. Your brokerage's 1099-B will provide the raw data; tax software like TurboTax or a CPA will handle the netting. The savings show up as reduced taxable income — which means either a lower tax bill or a larger refund.</p>
+
+<h2>The Wash Sale Rule: The One Rule You Cannot Ignore</h2>
+
+<p>The IRS isn't naive. They anticipated that investors would try to sell losing positions just to grab the deduction, then buy right back in. To close that loophole, they created the <strong>wash sale rule</strong>.</p>
+
+<p>Under <a href="https://www.irs.gov/publications/p550" target="_blank" rel="noopener noreferrer">IRS Publication 550</a>, a wash sale occurs when you sell a security at a loss and, within the <strong>61-day window</strong> centered on the sale date (30 days before the sale, the day of the sale, and 30 days after), you buy a "substantially identical" security. If you trigger a wash sale, the loss is <strong>disallowed</strong> — you don't get the deduction. The disallowed loss isn't gone forever; it gets added to the cost basis of the replacement shares, deferring the benefit. But you lose the current-year deduction, which is the whole point of the exercise.</p>
+
+<p>"Substantially identical" is a term the IRS has never fully defined through bright-line rules, which creates some grey area. What we do know:</p>
+
+<ul>
+  <li><strong>Clearly a wash sale:</strong> Selling VTI and buying VTI back within 30 days. Selling a stock and buying call options on the same stock. Selling shares in your taxable account and buying the same fund in your IRA within the window.</li>
+  <li><strong>Generally not a wash sale:</strong> Selling VTI (tracks the CRSP US Total Market Index) and buying SCHB (tracks the Dow Jones U.S. Broad Stock Market Index). Different index, different fund company — the IRS has generally treated these as not substantially identical. Selling a U.S. large-cap fund and buying an S&amp;P 500 fund is a judgment call that many tax professionals consider safe, but it's worth consulting your own CPA for higher-stakes situations.</li>
+  <li><strong>Important caveat:</strong> The wash sale rule applies across <em>all your accounts</em> — taxable, IRA, spouse's accounts. If you sell at a loss in your taxable account and your spouse's IRA buys the same fund within the window, you've triggered a wash sale. Coordination matters in households with multiple accounts.</li>
+</ul>
+
+<p>The practical takeaway: maintain a short list of "replacement pairs" for your core holdings — securities that provide similar market exposure but are clearly different funds. Most index investors can do this easily. Stock-pickers have a harder time, since individual stocks don't have obvious substitutes.</p>
+
+<h2>The Real Numbers: How Much Can Tax-Loss Harvesting Actually Save You?</h2>
+
+<p>Abstract tax concepts become much clearer with concrete examples. Here are a few scenarios that illustrate the range of impact.</p>
+
+<h3>Scenario 1: The Simple Offset</h3>
+
+<p>It's December. You realize you have $8,000 in long-term capital gains from selling appreciated shares earlier in the year. You also hold a position currently worth $5,000 that you bought for $8,000 — a $3,000 unrealized loss. You're in the 22% ordinary income bracket and the 15% long-term capital gains bracket.</p>
+
+<p>If you <strong>don't harvest</strong> the loss, you owe 15% on $8,000 in gains: <strong>$1,200 in capital gains tax</strong>.</p>
+
+<p>If you <strong>do harvest</strong> the loss, you now have $8,000 in gains offset by $3,000 in losses = $5,000 in net taxable gains. You owe 15% on $5,000: <strong>$750 in capital gains tax</strong>.</p>
+
+<p><strong>Tax savings: $450.</strong> You immediately reinvest the $5,000 proceeds into a similar fund, so your portfolio exposure is unchanged. You're $450 richer on April 15.</p>
+
+<h3>Scenario 2: Gains Fully Offset + Ordinary Income Deduction</h3>
+
+<p>You have $2,000 in short-term capital gains (taxed at your 24% ordinary rate) and $7,000 in harvestable losses across a few positions. You harvest all $7,000 in losses.</p>
+
+<p>The $7,000 in losses offsets the $2,000 in short-term gains, leaving $5,000 in "excess" losses. You can apply $3,000 of that against your ordinary income. The remaining $2,000 carries forward to next year.</p>
+
+<ul>
+  <li>Tax saved on short-term gains: $2,000 × 24% = <strong>$480</strong></li>
+  <li>Tax saved on ordinary income: $3,000 × 24% = <strong>$720</strong></li>
+  <li>Total savings this year: <strong>$1,200</strong></li>
+  <li>Plus $2,000 in losses available to offset next year's gains.</li>
+</ul>
+
+<h3>Scenario 3: High-Income Investor, Market Downturn Year</h3>
+
+<p>A volatile year. A high-income investor (37% ordinary rate, 20% long-term gains rate) has $30,000 in harvestable long-term losses and $15,000 in long-term gains.</p>
+
+<p>Losses fully offset the gains: $30,000 − $15,000 = $15,000 in excess losses. Applying $3,000 against ordinary income: 3,000 × 37% = $1,110 saved. Remaining $12,000 carries forward.</p>
+
+<p>Tax savings in year one: <strong>$3,000 (on gains) + $1,110 (on income) = $4,110</strong>. The $12,000 carryforward is a future benefit waiting to be deployed.</p>
+
+<h3>Quick Reference: Tax Rate Impact on Loss Value</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Filing Status / Income Range</th>
+      <th>Ordinary Income Rate</th>
+      <th>Long-Term Gains Rate</th>
+      <th>Value of $1,000 Short-Term Loss</th>
+      <th>Value of $1,000 Long-Term Loss</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Single, ~$47K–$100K</td>
+      <td>22%</td>
+      <td>15%</td>
+      <td>$220</td>
+      <td>$150</td>
+    </tr>
+    <tr>
+      <td>Single, ~$100K–$191K</td>
+      <td>24%</td>
+      <td>15%</td>
+      <td>$240</td>
+      <td>$150</td>
+    </tr>
+    <tr>
+      <td>Single, ~$191K–$243K</td>
+      <td>32%</td>
+      <td>15%</td>
+      <td>$320</td>
+      <td>$150</td>
+    </tr>
+    <tr>
+      <td>Single, ~$243K–$609K</td>
+      <td>35%</td>
+      <td>20%</td>
+      <td>$350</td>
+      <td>$200</td>
+    </tr>
+    <tr>
+      <td>Single, $609K+</td>
+      <td>37%</td>
+      <td>20%</td>
+      <td>$370</td>
+      <td>$200</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><em>Note: Rates shown are approximate for 2025. State income taxes can add 3–13% on top. High earners may also owe the 3.8% Net Investment Income Tax (NIIT) on gains.</em></p>
+
+<p>The table makes one thing clear: the higher your tax bracket, the more valuable harvesting becomes. An investor in the 37% bracket gets nearly twice the benefit from a short-term loss compared to someone in the 22% bracket.</p>
+
+<h2>What Tax-Loss Harvesting Is Not (Common Misconceptions)</h2>
+
+<p>A few things worth clearing up, because this strategy gets misunderstood in ways that lead people to either ignore it or misapply it.</p>
+
+<p><strong>It's not "timing the market."</strong> A common objection is that selling at a loss and reinvesting feels like it involves a market call. It doesn't — the whole point is to stay invested through an equivalent replacement security. You're not betting on a recovery or a further decline. You're making a tax move, not a market move.</p>
+
+<p><strong>It doesn't make sense in tax-advantaged accounts.</strong> There are no capital gains taxes in a 401(k) or IRA, so there are no gains to offset. Harvesting only applies in taxable brokerage accounts.</p>
+
+<p><strong>It doesn't make sense if you're in the 0% capital gains bracket.</strong> If your taxable income is low enough that you qualify for the 0% long-term capital gains rate (under roughly $47,025 for single filers in 2025), harvesting long-term losses against long-term gains produces zero benefit. You'd want to focus on short-term losses offsetting ordinary income instead, or simply skip the strategy until your income increases.</p>
+
+<p><strong>It doesn't eliminate taxes — it defers and reduces them.</strong> When you sell the replacement security in the future at a gain, that gain is larger than it would have been (because your cost basis is lower, since you bought the replacement at a lower price). You'll owe taxes then. The net benefit is the time value of money: you keep more cash working in the market now, and you pay a smaller total bill over time if you hold appreciated shares until death or donate them to charity (when the step-up in basis eliminates the embedded gain).</p>
+
+<h2>When to Harvest: Opportunistic vs. Systematic</h2>
+
+<p>There are two broad approaches, and neither is wrong.</p>
+
+<p><strong>Opportunistic harvesting</strong> means you keep an eye on your taxable account and act when a meaningful loss opportunity appears — typically during market corrections, sector downturns, or after a volatile earnings event for an individual stock. Year-end is the traditional hunting season, since you know your full year's gains picture by November or December. Many investors do a single annual review in November to identify and act on the largest available losses before December 31.</p>
+
+<p><strong>Systematic harvesting</strong> means you (or your automated investment platform) continuously scans for harvesting opportunities throughout the year, acting whenever losses cross a threshold. This is what robo-advisors like Betterment and Wealthfront advertise as "daily tax-loss harvesting." The argument is that markets fluctuate constantly, and waiting for year-end means missing intra-year opportunities. The counter-argument is that transaction friction, complexity, and the risk of triggering wash sales increase with frequency. For most individual investors managing their own accounts, a quarterly or annual review captures most of the available benefit with far less hassle.</p>
+
+<h2>Practical Considerations Before You Start</h2>
+
+<p>A few logistics worth thinking through before your first harvest:</p>
+
+<p><strong>Confirm your cost basis method.</strong> The default for most brokerages is "average cost" for mutual funds and FIFO (first in, first out) for ETFs and stocks. Switching to "specific identification" lets you choose which lots to sell — valuable when a fund has been purchased over time at different prices. You might have lots purchased at $100, $80, and $60, and only want to sell the $100 lots that are now at $75. Ask your brokerage about changing your cost basis accounting method before you trade.</p>
+
+<p><strong>Track your replacement fund's 30-day window.</strong> Note the date you bought your replacement security in a spreadsheet or calendar reminder. After 31 days, you can swap back to your original fund if you want — or just keep the replacement.</p>
+
+<p><strong>Consider state taxes.</strong> Some states don't allow capital loss deductions or treat them differently than federal. California, for example, follows federal rules, but a handful of states don't. Worth a quick check if you live somewhere with high state income taxes.</p>
+
+<p><strong>Work with a CPA for complex situations.</strong> If you have a large portfolio, concentrated positions, RSUs, or significant gains from selling real estate or a business, the interaction effects between different types of income and losses get complicated quickly. The concepts here apply, but the optimization layer benefits from professional guidance.</p>
+
+<h2>You Might Also Enjoy</h2>
+
+<ul>
+  <li><a href="https://pocketwise.io/guides/financial-order-of-operations/">The Financial Order of Operations: Where to Put Your Money First</a> — Understand the priority stack for savings and investment accounts before diving deeper into taxable investing.</li>
+  <li><a href="https://pocketwise.io/asset-location/">Asset Location Strategy: Which Investments Belong in Which Accounts</a> — Tax-loss harvesting is one piece of the tax-efficiency puzzle. Asset location is the other major lever, and they work together.</li>
+  <li><a href="https://pocketwise.io/guides/index-funds-vs-mutual-funds/">Index Funds vs. Mutual Funds: What's Actually Different?</a> — When picking your replacement securities for harvesting, understanding the structural differences between fund types helps you choose wisely.</li>
+  <li><a href="https://pocketwise.io/guides/dollar-cost-averaging/">Dollar-Cost Averaging: Does It Actually Work?</a> — Regular investing creates multiple tax lots over time, which gives you more flexibility when harvesting.</li>
+  <li><a href="https://pocketwise.io/lump-sum-vs-dca/">Lump Sum vs. Dollar-Cost Averaging: The Data-Driven Answer</a> — If you're deciding how to deploy cash into a taxable account, understanding the tradeoffs here shapes how many harvesting opportunities you'll have going forward.</li>
+</ul>
+
+  </article>
+</body>
+</html>

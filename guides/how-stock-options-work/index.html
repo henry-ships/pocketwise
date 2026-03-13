@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EP402CZ1S3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EP402CZ1S3');
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How Stock Options Work: ISOs, NSOs, and What to Do With Them | PocketWise</title>
+  <meta name="description" content="Learn how stock options work as an employee — ISOs vs NSOs, vesting schedules, exercise strategies, and tax implications explained in plain English.">
+  <link rel="canonical" href="https://pocketwise.io/guides/how-stock-options-work/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .guide-content {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      line-height: 1.8;
+      color: #1a1a2e;
+    }
+    .guide-content h1 {
+      font-size: 2.2rem;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      color: #0F172A;
+    }
+    .guide-content h2 {
+      margin-top: 48px;
+      margin-bottom: 16px;
+      color: #16213e;
+      font-size: 1.6rem;
+    }
+    .guide-content h3 {
+      margin-top: 32px;
+      margin-bottom: 12px;
+      color: #1a1a2e;
+      font-size: 1.25rem;
+    }
+    .guide-content p {
+      margin-bottom: 16px;
+      font-size: 1.05rem;
+    }
+    .guide-content ul, .guide-content ol {
+      margin-bottom: 16px;
+      padding-left: 24px;
+    }
+    .guide-content li {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+    }
+    .guide-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      overflow-x: auto;
+      display: block;
+    }
+    .guide-content th, .guide-content td {
+      padding: 12px 16px;
+      border: 1px solid #e0e0e0;
+      text-align: left;
+    }
+    .guide-content th {
+      background: #f0f4ff;
+      font-weight: 600;
+    }
+    .guide-content tr:nth-child(even) td {
+      background: #f9f9f9;
+    }
+    .guide-content a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .guide-content a:hover {
+      text-decoration: underline;
+    }
+    .guide-breadcrumb {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 16px 24px 0;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .guide-breadcrumb a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .guide-content blockquote {
+      border-left: 4px solid #0EA5E9;
+      margin: 24px 0;
+      padding: 16px 24px;
+      background: #f0f8ff;
+      font-style: italic;
+    }
+    .guide-content .callout {
+      background: #f0f4ff;
+      border: 1px solid #d0d8f0;
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+      /* Standard Nav */
+    .lw-nav {
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid #E2E8F0;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+    }
+    .lw-nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      height: 60px;
+      gap: 32px;
+    }
+    .lw-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: #0F172A;
+      text-decoration: none;
+    }
+    .lw-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #0EA5E9, #14B8A6);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 16px;
+    }
+    .lw-nav-links {
+      display: flex;
+      list-style: none;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+    }
+    .lw-nav-links a {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #475569;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+    .lw-nav-links a:hover {
+      background: #F1F5F9;
+      color: #0F172A;
+    }
+    .lw-hamburger {
+      display: none;
+      background: none;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 18px;
+      cursor: pointer;
+      margin-left: auto;
+    }
+    .lw-mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: white;
+      border-bottom: 1px solid #E2E8F0;
+      padding: 8px 24px 16px;
+    }
+    .lw-mobile-menu.open { display: flex; }
+    .lw-mobile-menu a {
+      padding: 12px 0;
+      color: #0F172A;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    @media (max-width: 768px) {
+      .lw-nav-links { display: none; }
+      .lw-hamburger { display: block; }
+    }
+  </style>
+</head>
+<body>
+    <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">P</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">Calculators</a></li>
+        <li><a href="/guides/">Guides</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+    </div>
+  </nav>
+  <div class="lw-mobile-menu">
+    <a href="/">Calculators</a>
+    <a href="/guides/">Guides</a>
+  </div>
+
+  <div class="guide-breadcrumb">
+    <a href="/">PocketWise</a> &rsaquo; <a href="/guides/">Guides</a> &rsaquo; How Stock Options Work
+  </div>
+  <article class="guide-content">
+    <h1>How Stock Options Work: ISOs, NSOs, and What to Do With Them</h1>
+
+<h2>You Got Stock Options. Now What?</h2>
+
+<p>Congratulations — your offer letter includes stock options. Maybe you've already accepted the job, maybe you're still weighing it, but either way you're staring at a line that says something like "10,000 options at a strike price of $2.50" and wondering what that actually means for your life.</p>
+
+<p>Here's the honest truth: most employees don't understand their stock options well enough to make smart decisions about them. That's not a knock on you — equity compensation is genuinely complicated, and companies aren't always great at explaining it. The result is that people either ignore their options entirely or panic-exercise at the wrong time, both of which can cost real money.</p>
+
+<p>This guide will walk you through how stock options work as an employee — the mechanics, the tax implications, the strategies, and the questions you should be asking before you do anything. No jargon walls. No glossing over the hard parts.</p>
+
+<h2>The Basics: What a Stock Option Actually Is</h2>
+
+<p>A stock option gives you the right — but not the obligation — to buy shares of your company's stock at a specific price, called the <strong>strike price</strong> (also called the exercise price or grant price). That price is locked in on the day your options are granted, regardless of what happens to the stock afterward.</p>
+
+<p>The idea is straightforward: if your company grows and the stock becomes worth more than your strike price, you can buy shares at the lower locked-in price and either hold them or sell for a profit. If the stock never rises above your strike price, your options are "underwater" and exercising them would make no financial sense.</p>
+
+<p>Here's a simple example. Say you receive options to buy 5,000 shares at a strike price of $3.00. Three years later, the stock is worth $10.00 per share. You exercise your options, paying $3.00 per share ($15,000 total), and you now hold shares worth $50,000. Your paper gain is $35,000 — before taxes, which we'll get to.</p>
+
+<p>There are two types of stock options you'll encounter as an employee: <strong>Incentive Stock Options (ISOs)</strong> and <strong>Non-Qualified Stock Options (NSOs)</strong>. They work similarly on the surface but differ dramatically in how the IRS treats them.</p>
+
+<h2>ISOs vs. NSOs: The Difference That Matters Most at Tax Time</h2>
+
+<p>This is probably the most important thing to understand about your stock options, and it's often the least explained. The type of options you hold determines when you owe taxes, how much you owe, and to whom.</p>
+
+<h3>Incentive Stock Options (ISOs)</h3>
+
+<p>ISOs are only available to employees — not contractors, not board members. They come with favorable tax treatment as a reward for long-term holding:</p>
+
+<ul>
+  <li><strong>No ordinary income tax at exercise.</strong> When you exercise ISOs, you don't owe regular income tax on the spread (the difference between strike price and fair market value).</li>
+  <li><strong>Potential for long-term capital gains treatment.</strong> If you hold your shares for at least two years from the grant date and one year from the exercise date, your profits are taxed at long-term capital gains rates — typically 0%, 15%, or 20%, depending on your income.</li>
+  <li><strong>AMT risk.</strong> The catch: the spread at exercise is an AMT (Alternative Minimum Tax) preference item. If you exercise a lot of ISOs in a single year, you could trigger AMT even if you don't sell any shares. This surprised a lot of employees during the dot-com crash when they exercised early, triggered AMT liability, and then watched the stock crater before they could sell.</li>
+</ul>
+
+<h3>Non-Qualified Stock Options (NSOs)</h3>
+
+<p>NSOs can be granted to employees, contractors, directors, and advisors. They're called "non-qualified" because they don't qualify for the special ISO tax treatment:</p>
+
+<ul>
+  <li><strong>Ordinary income tax at exercise.</strong> When you exercise NSOs, the spread between your strike price and the stock's fair market value is treated as ordinary income — taxed at your regular income tax rate, which could be as high as 37% federally, plus state taxes.</li>
+  <li><strong>Payroll taxes apply.</strong> NSO gains at exercise are subject to Social Security and Medicare taxes (FICA), just like your salary.</li>
+  <li><strong>Capital gains on appreciation after exercise.</strong> Once you exercise and own the shares, any future appreciation is taxed as capital gains — short-term if you sell within a year, long-term if you hold longer.</li>
+</ul>
+
+<h3>Side-by-Side Comparison</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Feature</th>
+      <th>ISOs</th>
+      <th>NSOs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Who can receive them</td>
+      <td>Employees only</td>
+      <td>Employees, contractors, advisors</td>
+    </tr>
+    <tr>
+      <td>Tax at exercise</td>
+      <td>No ordinary income tax (AMT may apply)</td>
+      <td>Ordinary income tax on the spread</td>
+    </tr>
+    <tr>
+      <td>FICA taxes at exercise</td>
+      <td>No</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>Best-case tax rate on gains</td>
+      <td>Long-term capital gains (0–20%)</td>
+      <td>Ordinary income rates (up to 37%)</td>
+    </tr>
+    <tr>
+      <td>Annual ISO limit</td>
+      <td>$100,000 per year (by vesting)</td>
+      <td>No limit</td>
+    </tr>
+    <tr>
+      <td>Holding requirements for favorable treatment</td>
+      <td>2 years from grant, 1 year from exercise</td>
+      <td>1 year from exercise for long-term gains</td>
+    </tr>
+    <tr>
+      <td>AMT exposure</td>
+      <td>Yes</td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>One nuance worth knowing: the $100,000 ISO limit means that if more than $100,000 worth of options (valued at grant) vest in a single year, the excess automatically converts to NSOs. This catches people off guard when companies try to grant large ISO packages.</p>
+
+<h2>Vesting Schedules: When Your Options Actually Become Yours</h2>
+
+<p>Getting a grant of 10,000 options doesn't mean you can exercise all 10,000 tomorrow. Options vest over time — typically to encourage you to stick around. Until an option vests, you can't exercise it.</p>
+
+<h3>Standard Four-Year Vesting with a One-Year Cliff</h3>
+
+<p>The most common structure in tech and startup land is a <strong>four-year vesting schedule with a one-year cliff</strong>. Here's how it works:</p>
+
+<ul>
+  <li>You receive 10,000 options at your start date.</li>
+  <li>For the first 12 months (the cliff), nothing vests. If you leave before hitting the cliff, you walk away with zero options.</li>
+  <li>On your one-year anniversary, 25% vests all at once — that's 2,500 options.</li>
+  <li>After that, the remaining 7,500 options vest monthly over the next 36 months (about 208 options per month).</li>
+</ul>
+
+<p>At the end of four years, you're fully vested. Some companies use quarterly vesting after the cliff, and some use different ratios entirely. Always check your option agreement for the specifics.</p>
+
+<h3>Acceleration Clauses</h3>
+
+<p>Some option agreements include acceleration provisions — typically triggered by an acquisition or termination without cause. There are two types:</p>
+
+<ul>
+  <li><strong>Single trigger acceleration:</strong> All unvested options vest immediately upon an acquisition, regardless of what happens to your job. This is more employee-friendly.</li>
+  <li><strong>Double trigger acceleration:</strong> Unvested options only accelerate if there's both an acquisition AND you're terminated (or your role changes significantly) within a set period, usually 12–18 months. This is more common.</li>
+</ul>
+
+<p>If you're joining a company that's already in late-stage funding or on an acquisition trajectory, ask specifically about acceleration. It can mean the difference between a meaningful payout and nothing.</p>
+
+<h3>Post-Termination Exercise Windows</h3>
+
+<p>When you leave a company — whether you quit, get laid off, or are fired — you typically have a limited window to exercise vested options before they expire. The standard window is <strong>90 days</strong>. After that, your options are gone.</p>
+
+<p>Ninety days sounds like a lot until you realize you need to come up with cash to exercise (strike price × shares), potentially face a large tax bill, and make a decision about whether the shares are worth anything — all while navigating a job transition. Some employee-friendly companies have extended their post-termination exercise windows to five or even ten years. This is worth asking about before you accept an offer.</p>
+
+<h2>Exercise Strategies: How to Think About When to Pull the Trigger</h2>
+
+<p>Exercising stock options is not a one-size-fits-all decision. The right move depends on the company's stage, your financial situation, the type of options you have, and your risk tolerance. Here are the main approaches.</p>
+
+<h3>Early Exercise (Section 83(b) Election)</h3>
+
+<p>At private companies, some employees choose to exercise options very early — sometimes right after receiving them — and file what's called an <strong>83(b) election</strong> with the IRS within 30 days of exercise.</p>
+
+<p>The logic: if you exercise when the stock's fair market value equals your strike price, there's no spread to tax. You've paid for shares at their current value. Any future appreciation is then taxed as capital gains rather than ordinary income. If you hold for over a year, it qualifies for long-term rates.</p>
+
+<p>The risk: if the company fails or the stock tanks, you've spent real cash on shares that are now worthless — and the IRS won't refund the taxes you pre-paid. Early exercise makes the most sense when the company is very early stage (low 409A valuation), the strike price is very low, you have genuine conviction in the company's trajectory, and you can afford to lose the cash.</p>
+
+<p>Important: if you miss the 30-day window to file an 83(b) election after exercising unvested options, you can't file retroactively. This is a hard deadline.</p>
+
+<h3>Exercise and Hold</h3>
+
+<p>For ISOs especially, exercising and holding for the required periods to qualify for long-term capital gains treatment can be the most tax-efficient strategy — if the company's future is bright. The risk is concentration: you're holding illiquid stock in a single company while owing taxes that may have been triggered at exercise.</p>
+
+<h3>Exercise and Sell (Cashless Exercise)</h3>
+
+<p>When a company is public or has a liquidity event, many employees choose to exercise and immediately sell. This is sometimes called a "same-day sale" or cashless exercise. For NSOs, this is typically the simplest approach — you exercise, your company withholds taxes, and you pocket the net proceeds. For ISOs, a same-day sale is a "disqualifying disposition," meaning you lose the preferential long-term capital gains treatment and the gain is taxed as ordinary income.</p>
+
+<h3>Spread Your Exercises Across Tax Years</h3>
+
+<p>If you have a large number of options, exercising them in chunks across different tax years can prevent bracket creep and reduce your AMT exposure. This is particularly useful for ISOs, where careful planning around the AMT threshold can save significant money. A financial advisor or CPA who specializes in equity compensation can model this out for you.</p>
+
+<h2>Tax Implications: Real Numbers, Real Scenarios</h2>
+
+<p>Let's make this concrete with two scenarios — one ISO, one NSO — so you can see how the tax math actually works.</p>
+
+<h3>Scenario 1: NSO Exercise</h3>
+
+<p>You have 5,000 NSOs with a strike price of $2.00. The stock is now worth $12.00 per share. You exercise all 5,000 options.</p>
+
+<ul>
+  <li>You pay: $2.00 × 5,000 = <strong>$10,000</strong></li>
+  <li>Fair market value at exercise: $12.00 × 5,000 = $60,000</li>
+  <li>Spread (ordinary income): $60,000 − $10,000 = <strong>$50,000</strong></li>
+  <li>At a 32% marginal rate + 7.65% FICA = roughly <strong>$19,825 in taxes</strong> due at exercise</li>
+  <li>After-tax value: $60,000 − $10,000 − $19,825 = <strong>$30,175 net</strong></li>
+</ul>
+
+<p>If you then sell the shares a year later at $18.00:</p>
+<ul>
+  <li>Additional gain: ($18.00 − $12.00) × 5,000 = $30,000 — taxed at long-term capital gains rates (say 15%) = $4,500 more in taxes</li>
+</ul>
+
+<h3>Scenario 2: ISO with Qualifying Disposition</h3>
+
+<p>Same setup — 5,000 options, $2.00 strike, stock now at $12.00. But these are ISOs, you exercise and hold, and you wait the required two-year/one-year holding periods before selling at $18.00.</p>
+
+<ul>
+  <li>You pay: $2.00 × 5,000 = <strong>$10,000</strong></li>
+  <li>No ordinary income tax at exercise (but check your AMT — the $50,000 spread is an AMT preference item)</li>
+  <li>You sell at $18.00: proceeds = $90,000</li>
+  <li>Total gain: $90,000 − $10,000 = $80,000 — all taxed at long-term capital gains rates</li>
+  <li>At 15% LTCG rate: <strong>$12,000 in taxes</strong></li>
+</ul>
+
+<p>That's potentially $7,825+ less in taxes compared to the NSO scenario, just by holding the right kind of options for the right amount of time. The actual difference depends heavily on your income, state taxes, and AMT situation — but the direction is clear.</p>
+
+<p>For authoritative details on how the IRS treats stock options, see <a href="https://www.irs.gov/taxtopics/tc427" target="_blank" rel="noopener noreferrer">IRS Topic No. 427: Stock Options</a>, which covers both ISOs and NSOs and outlines the reporting requirements for each.</p>
+
+<h2>Questions to Ask Before You Accept an Offer — or Exercise</h2>
+
+<p>Don't wait until you're about to exercise to start asking questions. Here's what to find out upfront:</p>
+
+<ul>
+  <li><strong>What's the current 409A valuation (fair market value)?</strong> This determines whether exercising now would create a large taxable spread.</li>
+  <li><strong>What percentage of the company do my options represent?</strong> Absolute share numbers are meaningless without knowing total shares outstanding (fully diluted).</li>
+  <li><strong>What's the liquidation preference stack?</strong> If the company sells for less than the total preferred stock invested, common shareholders (including option holders) may get little or nothing.</li>
+  <li><strong>What is the post-termination exercise window?</strong> 90 days is standard; anything longer is a perk worth noting.</li>
+  <li><strong>Are my options ISOs or NSOs?</strong> This shapes your entire tax strategy.</li>
+  <li><strong>Is early exercise allowed?</strong> Can you exercise unvested options and file an 83(b)?</li>
+  <li><strong>Are there any acceleration provisions?</strong> Single trigger or double trigger?</li>
+</ul>
+
+<h2>A Few Things People Get Wrong</h2>
+
+<p><strong>Treating options as guaranteed money.</strong> Options are a lottery ticket with better odds — but they're still a lottery ticket. Private company options have a high failure rate. Build your financial plan around your salary; treat options as upside.</p>
+
+<p><strong>Not exercising before leaving.</strong> The 90-day clock is real. If you've built up meaningful vested options and you're planning to leave, build exercise into your departure timeline. Cash out of an emergency fund if you have to — or run the math on whether it's worth it.</p>
+
+<p><strong>Forgetting about state taxes.</strong> California, New York, and other high-tax states will take their share too. The federal calculation is only part of the story.</p>
+
+<p><strong>Ignoring the AMT entirely.</strong> If you're exercising a large block of ISOs in a single year, model your AMT liability before you pull the trigger. There's no "oops, I didn't know" with the IRS.</p>
+
+<p><strong>Concentrating too much in company stock.</strong> Once you exercise and hold, you're making a concentrated bet on a single company. Diversification isn't just for 401(k)s. If your company is public, consider a strategy for gradually liquidating and reinvesting in a diversified portfolio over time.</p>
+
+<h2>When to Bring in a Professional</h2>
+
+<p>Stock options are one of those areas where professional advice often pays for itself. A CPA or financial planner who specializes in equity compensation can model AMT exposure, help you time exercises across tax years, advise on early exercise decisions, and ensure you're not missing deadlines like the 83(b) window.</p>
+
+<p>This isn't the place to penny-pinch. If you have meaningful options — anything over $50,000 in potential value — a few hours with the right advisor is almost certainly worth the cost. Look for a fee-only fiduciary advisor who doesn't earn commissions from product sales.</p>
+
+<p>In the meantime, understanding your own equity package is the essential first step. Read your option agreement. Know your strike price, your vesting schedule, and your option type. Ask your HR or legal team the questions above. That knowledge alone puts you ahead of most people in your position.</p>
+
+<p>If you want to run some numbers on potential returns — including how different exercise and hold scenarios might play out — our <a href="https://pocketwise.io/investment-return-calculator/">investment return calculator</a> can help you model it. And if you're still getting your overall financial house in order, the <a href="https://pocketwise.io/guides/financial-order-of-operations/">financial order of operations guide</a> gives you a framework for prioritizing everything from emergency funds to equity decisions.</p>
+
+<hr>
+
+<h2>You Might Also Enjoy</h2>
+
+<ul>
+  <li><a href="https://pocketwise.io/guides/investing-basics/">Investing Basics: Where to Start When You Don't Know Where to Start</a> — A plain-language primer on building a portfolio, asset allocation, and the principles that actually move the needle.</li>
+  <li><a href="https://pocketwise.io/guides/financial-order-of-operations/">The Financial Order of Operations</a> — How to prioritize your money moves so you're not optimizing the wrong thing at the wrong time.</li>
+  <li><a href="https://pocketwise.io/investment-return-calculator/">Investment Return Calculator</a> — Model how your money grows over time. Useful for thinking through hold-vs-sell decisions on company stock.</li>
+  <li><a href="https://pocketwise.io/guides/how-to-negotiate-salary-raise/">How to Negotiate a Salary or Raise</a> — Because your base pay is the foundation everything else is built on — including the cash you'd need to exercise options.</li>
+  <li><a href="https://pocketwise.io/side-income-tax/">Side Income and Taxes: What You Need to Know</a> — If you sell company stock or exercise options, understanding how supplemental income is taxed helps you plan smarter.</li>
+</ul>
+
+  </article>
+</body>
+</html>

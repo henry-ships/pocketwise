@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EP402CZ1S3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EP402CZ1S3');
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Rebalance Your Portfolio (and When You Should) | PocketWise</title>
+  <meta name="description" content="Learn how to rebalance your portfolio with confidence—when to do it, which method fits your goals, and how to minimize taxes while staying on track.">
+  <link rel="canonical" href="https://pocketwise.io/guides/how-to-rebalance-your-portfolio/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .guide-content {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      line-height: 1.8;
+      color: #1a1a2e;
+    }
+    .guide-content h1 {
+      font-size: 2.2rem;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      color: #0F172A;
+    }
+    .guide-content h2 {
+      margin-top: 48px;
+      margin-bottom: 16px;
+      color: #16213e;
+      font-size: 1.6rem;
+    }
+    .guide-content h3 {
+      margin-top: 32px;
+      margin-bottom: 12px;
+      color: #1a1a2e;
+      font-size: 1.25rem;
+    }
+    .guide-content p {
+      margin-bottom: 16px;
+      font-size: 1.05rem;
+    }
+    .guide-content ul, .guide-content ol {
+      margin-bottom: 16px;
+      padding-left: 24px;
+    }
+    .guide-content li {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+    }
+    .guide-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      overflow-x: auto;
+      display: block;
+    }
+    .guide-content th, .guide-content td {
+      padding: 12px 16px;
+      border: 1px solid #e0e0e0;
+      text-align: left;
+    }
+    .guide-content th {
+      background: #f0f4ff;
+      font-weight: 600;
+    }
+    .guide-content tr:nth-child(even) td {
+      background: #f9f9f9;
+    }
+    .guide-content a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .guide-content a:hover {
+      text-decoration: underline;
+    }
+    .guide-breadcrumb {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 16px 24px 0;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .guide-breadcrumb a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .guide-content blockquote {
+      border-left: 4px solid #0EA5E9;
+      margin: 24px 0;
+      padding: 16px 24px;
+      background: #f0f8ff;
+      font-style: italic;
+    }
+    .guide-content .callout {
+      background: #f0f4ff;
+      border: 1px solid #d0d8f0;
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+      /* Standard Nav */
+    .lw-nav {
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid #E2E8F0;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+    }
+    .lw-nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      height: 60px;
+      gap: 32px;
+    }
+    .lw-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: #0F172A;
+      text-decoration: none;
+    }
+    .lw-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #0EA5E9, #14B8A6);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 16px;
+    }
+    .lw-nav-links {
+      display: flex;
+      list-style: none;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+    }
+    .lw-nav-links a {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #475569;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+    .lw-nav-links a:hover {
+      background: #F1F5F9;
+      color: #0F172A;
+    }
+    .lw-hamburger {
+      display: none;
+      background: none;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 18px;
+      cursor: pointer;
+      margin-left: auto;
+    }
+    .lw-mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: white;
+      border-bottom: 1px solid #E2E8F0;
+      padding: 8px 24px 16px;
+    }
+    .lw-mobile-menu.open { display: flex; }
+    .lw-mobile-menu a {
+      padding: 12px 0;
+      color: #0F172A;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    @media (max-width: 768px) {
+      .lw-nav-links { display: none; }
+      .lw-hamburger { display: block; }
+    }
+  </style>
+</head>
+<body>
+    <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">P</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">Calculators</a></li>
+        <li><a href="/guides/">Guides</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+    </div>
+  </nav>
+  <div class="lw-mobile-menu">
+    <a href="/">Calculators</a>
+    <a href="/guides/">Guides</a>
+  </div>
+
+  <div class="guide-breadcrumb">
+    <a href="/">PocketWise</a> &rsaquo; <a href="/guides/">Guides</a> &rsaquo; How to Rebalance Your Portfolio (and When You S...
+  </div>
+  <article class="guide-content">
+    <h1>How to Rebalance Your Portfolio (and When You Should)</h1>
+
+<h2>Why Your Portfolio Drifts (and Why That's a Problem)</h2>
+
+<p>Imagine you built a solid investment plan in January. You put 70% in stocks and 30% in bonds, based on your goals, your timeline, and your honest assessment of how you'd sleep at night during a market downturn. Fast forward to December: stocks had a great year, and now they represent 82% of your portfolio. The bond cushion that was supposed to protect you? It's shrunk to 18%.</p>
+
+<p>You didn't make a single bad decision. Markets just moved. But without realizing it, you're now carrying substantially more risk than you signed up for. That's portfolio drift—and it's one of the most common ways investors end up in trouble, not because of what they did, but because of what they didn't do.</p>
+
+<p>Rebalancing is the antidote. It's the practice of periodically bringing your portfolio back to its intended asset allocation—selling what's grown to an outsized position, buying what's fallen behind, and restoring the balance you planned for. Done right, it keeps your risk in check, enforces a buy-low-sell-high discipline, and prevents you from accidentally becoming a more aggressive investor than you meant to be.</p>
+
+<p>This guide walks you through exactly how to rebalance your portfolio: the two main approaches, a concrete real-world example, and—critically—how to do it without handing a chunk of your gains to the IRS.</p>
+
+<h2>Calendar Rebalancing vs. Threshold Rebalancing: Which Method Is Right for You?</h2>
+
+<p>There's no single "correct" way to rebalance. The best method is the one you'll actually stick to. That said, the two most widely used approaches each have real trade-offs worth understanding before you commit to one.</p>
+
+<h3>Calendar Rebalancing</h3>
+
+<p>With calendar rebalancing, you review your allocation on a fixed schedule—once a year, twice a year, or quarterly—and bring it back to target regardless of how far it's drifted. Many financial planners recommend an annual review as a default. It's simple, predictable, and it takes the emotion out of the decision. When January rolls around, you rebalance. Done.</p>
+
+<p>The downside is that calendar rebalancing can be either too frequent or too infrequent depending on market conditions. If the market barely moved, you're making unnecessary trades and potentially triggering taxable events. If the market had a wild year, you might be sitting on a significant drift for months before your scheduled review.</p>
+
+<h3>Threshold Rebalancing</h3>
+
+<p>Threshold rebalancing triggers action based on drift rather than time. The most common rule of thumb is a 5% absolute drift—meaning if any asset class moves more than 5 percentage points away from its target, you rebalance. So if your target is 70% stocks and you drift to 75%, you act. If you drift to 64%, you act.</p>
+
+<p>This approach is more responsive to market reality. During calm periods, you may not rebalance at all. During volatile years, you might rebalance multiple times. The catch: it requires more active monitoring, and in highly volatile markets, you could be rebalancing frequently—which can increase trading costs and tax exposure.</p>
+
+<h3>A Hybrid Approach: The Best of Both</h3>
+
+<p>Many investors combine the two. They schedule an annual portfolio review, but also set a threshold—say, 5%—that triggers an earlier rebalance if markets move dramatically. This gives you structure without rigidity.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>How It Works</th>
+      <th>Best For</th>
+      <th>Main Drawback</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Calendar Rebalancing</td>
+      <td>Review and rebalance on a fixed schedule (annually, semi-annually, quarterly)</td>
+      <td>Investors who want simplicity and low maintenance</td>
+      <td>May rebalance when unnecessary; slow to respond to large drifts</td>
+    </tr>
+    <tr>
+      <td>Threshold Rebalancing</td>
+      <td>Rebalance when any asset class drifts beyond a set percentage (e.g., 5%)</td>
+      <td>Investors comfortable with active monitoring</td>
+      <td>Can trigger frequent trades in volatile markets</td>
+    </tr>
+    <tr>
+      <td>Hybrid (Calendar + Threshold)</td>
+      <td>Annual review plus a threshold trigger for large drifts</td>
+      <td>Most individual investors</td>
+      <td>Slightly more complex to track</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>If you're just getting started, calendar rebalancing once a year is a perfectly sound approach. It removes the guesswork and ensures you revisit your allocation at least annually. As you get more comfortable managing your investments, you can layer in a threshold rule.</p>
+
+<h2>Before and After: A Real Rebalancing Example</h2>
+
+<p>Abstract concepts only go so far. Let's look at a concrete example to make this tangible.</p>
+
+<h3>The Starting Point</h3>
+
+<p>Say it's January 2023 and you have a $100,000 portfolio. Your target allocation is:</p>
+
+<ul>
+  <li><strong>U.S. Stocks:</strong> 60% ($60,000)</li>
+  <li><strong>International Stocks:</strong> 20% ($20,000)</li>
+  <li><strong>Bonds:</strong> 20% ($20,000)</li>
+</ul>
+
+<p>You're a moderate investor with a 15-year time horizon. This allocation reflects your goals.</p>
+
+<h3>One Year Later: The Drift</h3>
+
+<p>Fast forward to January 2024. The S&amp;P 500 had a strong year, returning around 26%. International stocks lagged. Bonds were roughly flat. Here's what your portfolio looks like now—let's say total portfolio value has grown to $118,000:</p>
+
+<ul>
+  <li><strong>U.S. Stocks:</strong> ~$82,000 (now 69.5% of portfolio)</li>
+  <li><strong>International Stocks:</strong> ~$21,000 (17.8%)</li>
+  <li><strong>Bonds:</strong> ~$15,000 (12.7%)</li>
+</ul>
+
+<p>Your U.S. stock position has ballooned nearly 10 percentage points above target. Your bond allocation has fallen nearly 8 points below. You are meaningfully more exposed to equity risk than your original plan called for.</p>
+
+<h3>The Rebalance</h3>
+
+<p>To bring the portfolio back to your 60/20/20 target on a $118,000 base, the target dollar amounts are:</p>
+
+<ul>
+  <li><strong>U.S. Stocks target:</strong> $70,800 (sell ~$11,200)</li>
+  <li><strong>International Stocks target:</strong> $23,600 (buy ~$2,600)</li>
+  <li><strong>Bonds target:</strong> $23,600 (buy ~$8,600)</li>
+</ul>
+
+<p>You sell roughly $11,200 worth of U.S. stock funds. You use those proceeds to buy more international stocks and bonds. Your allocation is restored. Your risk profile is back to where you intended.</p>
+
+<p>Notice what just happened: you sold the thing that grew a lot and bought the things that underperformed. That feels counterintuitive—we're wired to want more of what's winning. But this is exactly the mechanical discipline that rebalancing enforces. You're selling relatively high and buying relatively low. Over a long investment horizon, this behavior adds up.</p>
+
+<h3>What Happens If You Don't Rebalance?</h3>
+
+<p>If you never rebalanced and markets corrected sharply, that overweight stock position would hurt you far more than a balanced portfolio would. The risk you absorbed quietly through drift is the same risk that shows up painfully in a downturn. Rebalancing isn't just about returns—it's about staying invested through bad markets because your portfolio still reflects what you can tolerate.</p>
+
+<h2>How to Rebalance Your Portfolio Without a Massive Tax Bill</h2>
+
+<p>Here's the honest complication: in a taxable brokerage account, selling appreciated positions to rebalance means realizing capital gains, which means taxes. A clumsy rebalance can hand a meaningful portion of your gains to the IRS. The good news is there are several smart ways to rebalance efficiently.</p>
+
+<h3>1. Rebalance in Tax-Advantaged Accounts First</h3>
+
+<p>If you have a 401(k), IRA, or Roth IRA, rebalance there first. In these accounts, you can sell and buy freely without triggering a taxable event. If your equity allocation is overweight, trim it inside your IRA before you even look at your taxable account. This single habit can save you thousands of dollars in unnecessary taxes over time.</p>
+
+<p>For a deeper dive into structuring your investments tax-efficiently, <a href="https://pocketwise.io/guides/tax-efficient-investing/" target="_blank" rel="noopener">this guide on tax-efficient investing</a> walks through which assets belong in which account types—a strategy that works hand-in-hand with smart rebalancing.</p>
+
+<h3>2. Use New Contributions to Rebalance</h3>
+
+<p>Instead of selling overweight positions, direct new money toward underweight ones. If your bonds are below target, put your next paycheck contribution entirely into bonds until the allocation is restored. No selling, no taxable gains, no transaction costs beyond what you'd normally pay.</p>
+
+<p>This approach works especially well if you're still in the accumulation phase and making regular contributions. It's slower than a hard rebalance, but it's frictionless. Pair this with a <a href="https://pocketwise.io/guides/dollar-cost-averaging/" target="_blank" rel="noopener">dollar-cost averaging strategy</a> and you have a low-stress system that keeps your allocation in check almost automatically.</p>
+
+<h3>3. Reinvest Dividends Strategically</h3>
+
+<p>If your broker allows you to control dividend reinvestment by fund, direct dividends toward underweight asset classes. Many investors leave this set to "auto-reinvest in the same fund"—but that just amplifies whatever's already overweight. A small tweak can make dividends work as a passive rebalancing tool.</p>
+
+<h3>4. Wait for Long-Term Capital Gains Treatment</h3>
+
+<p>When you do need to sell in a taxable account, timing matters. If you've held a position for just under a year, waiting until it crosses the 12-month mark can be the difference between short-term capital gains (taxed as ordinary income) and long-term capital gains (taxed at 0%, 15%, or 20% depending on your income). For large positions, this difference can be material.</p>
+
+<h3>5. Harvest Tax Losses to Offset Gains</h3>
+
+<p>Tax-loss harvesting—selling positions that are down to realize a loss that offsets gains elsewhere—can make rebalancing tax-neutral or even tax-beneficial. If you're selling an overweight position at a gain, look for any losers in the portfolio you can harvest at the same time. The IRS allows you to offset capital gains with capital losses dollar for dollar, and up to $3,000 in losses can offset ordinary income each year.</p>
+
+<p>Be aware of the wash-sale rule: you can't repurchase a "substantially identical" security within 30 days before or after the sale or the loss is disallowed. But you can immediately buy a similar (not identical) fund—say, replacing a total stock market ETF with a large-cap blend ETF—to stay invested while the clock runs.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Tax-Efficient Rebalancing Method</th>
+      <th>How It Works</th>
+      <th>Best Account Type</th>
+      <th>Tax Impact</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Rebalance in tax-advantaged accounts</td>
+      <td>Sell/buy inside 401(k) or IRA before touching taxable</td>
+      <td>401(k), IRA, Roth IRA</td>
+      <td>None — no taxable event</td>
+    </tr>
+    <tr>
+      <td>Direct new contributions to underweight assets</td>
+      <td>Funnel fresh money where you're light instead of selling where you're heavy</td>
+      <td>Any</td>
+      <td>None — no selling required</td>
+    </tr>
+    <tr>
+      <td>Redirect dividends to underweight assets</td>
+      <td>Change dividend reinvestment settings to rebalance passively</td>
+      <td>Taxable brokerage</td>
+      <td>Minimal — dividends already taxable</td>
+    </tr>
+    <tr>
+      <td>Hold for long-term capital gains</td>
+      <td>Wait 12+ months before selling appreciated positions</td>
+      <td>Taxable brokerage</td>
+      <td>Reduced — long-term rates vs. ordinary income</td>
+    </tr>
+    <tr>
+      <td>Tax-loss harvesting</td>
+      <td>Sell losing positions to offset gains from rebalancing trades</td>
+      <td>Taxable brokerage</td>
+      <td>Can offset gains entirely</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>When Should You Rebalance? Reading the Signals</h2>
+
+<p>You've picked a method. You understand the tax angles. But you still need to know what actually should trigger a rebalance—beyond "it's January" or "the market moved 5%."</p>
+
+<h3>Your Allocation Has Drifted Beyond Your Comfort Zone</h3>
+
+<p>The 5% threshold is a common rule of thumb, but the right number depends on you. If a 3% drift in either direction makes you anxious, tighten the threshold. If you're comfortable with a 10% swing before you act, that's fine too—just be honest about whether the portfolio you're holding still reflects the risk you're willing to carry.</p>
+
+<h3>Your Life Situation Has Changed</h3>
+
+<p>A new job, a new baby, a house purchase, an inheritance, a divorce—any major financial event is a reason to revisit your target allocation before you rebalance. Don't just rebalance back to an old target if that target no longer fits your life. Rebalancing is also a good forcing function to ask: <em>is this still the right allocation?</em></p>
+
+<p>If you're unsure how your current financial goals should shape your investment mix, working through the <a href="https://pocketwise.io/guides/financial-order-of-operations/" target="_blank" rel="noopener">financial order of operations</a> can help you confirm your priorities before you make any portfolio moves.</p>
+
+<h3>You're Approaching Retirement</h3>
+
+<p>As your time horizon shortens, your target allocation should typically become more conservative—more bonds, fewer stocks. Rebalancing at this stage isn't just about restoring your original mix; it's about gradually resetting to a new, lower-risk target. Many target-date funds do this automatically. If you're managing your own portfolio, build in an intentional "glide path" review every few years in your 50s and 60s.</p>
+
+<h3>After a Major Market Event</h3>
+
+<p>Sharp market drops or surges can create large, rapid drift. A 20% market correction can swing your bond allocation well above target in a matter of weeks. Rebalancing after a significant drawdown means buying equities at lower prices—exactly what you want to do, even if it feels terrifying in the moment. Having a pre-committed rebalancing rule helps you act when your instincts are telling you to run.</p>
+
+<h2>A Step-by-Step Process to Rebalance Your Portfolio</h2>
+
+<p>Theory is one thing. Here's a practical sequence you can follow at your next review.</p>
+
+<h3>Step 1: Document Your Target Allocation</h3>
+
+<p>Write it down. Seriously. "70% stocks, 20% bonds, 10% international" isn't something you should be reconstructing from memory once a year. Keep a simple spreadsheet or note with your target percentages and the rationale behind them. This is your benchmark.</p>
+
+<h3>Step 2: Pull Your Current Balances</h3>
+
+<p>Log in to every account that's part of your investment portfolio—your 401(k), your IRA, your taxable brokerage, any other accounts. Get the current dollar values for each position. Use the <a href="https://pocketwise.io/investment-return-calculator/" target="_blank" rel="noopener">investment return calculator</a> to understand how your overall portfolio has performed and what your gains look like going into the rebalance.</p>
+
+<h3>Step 3: Calculate Your Current Allocation</h3>
+
+<p>Add up the total portfolio value. Divide each asset class by the total to get its current percentage. Compare to your target. Where are you over? Where are you under?</p>
+
+<h3>Step 4: Decide Where to Act</h3>
+
+<p>Before executing any trades, identify which accounts to rebalance in. Tax-advantaged accounts first. New contributions second. Taxable brokerage last, and only after considering tax consequences.</p>
+
+<h3>Step 5: Execute the Trades</h3>
+
+<p>Sell the overweight positions down to target. Buy the underweight positions up to target. Keep it simple—you're not trying to pick winners here, you're restoring a balance. Stick to your target.</p>
+
+<h3>Step 6: Record What You Did and Why</h3>
+
+<p>Keep a brief log of each rebalance: the date, the before/after allocations, the trades made, the accounts used, and any tax considerations. This becomes invaluable when you're doing your taxes and when you review your strategy next year.</p>
+
+<h3>Step 7: Set Your Next Review Date</h3>
+
+<p>Don't leave a rebalance without putting the next one on the calendar. Whether it's 6 months or 12 months away, having a scheduled date prevents the "I'll do it eventually" trap.</p>
+
+<h2>Common Rebalancing Mistakes to Avoid</h2>
+
+<p>A few pitfalls worth naming, because they're easy to fall into:</p>
+
+<p><strong>Rebalancing too frequently.</strong> Monthly rebalancing in a taxable account is almost never worth it. Transaction costs and tax drag can eat into any benefit you'd gain from keeping a tighter allocation. Once or twice a year is plenty for most investors.</p>
+
+<p><strong>Ignoring all your accounts together.</strong> If you have a 401(k) and a taxable brokerage, you need to think about your allocation across both accounts as a whole—not each one in isolation. It's entirely possible to be in balance in each account individually while being wildly out of balance overall.</p>
+
+<p><strong>Rebalancing during panic.</strong> Market crashes tempt investors to sell equities and pile into cash or bonds right when equities are cheapest. If your rebalancing rule says to buy equities when they've fallen below target, follow it. That discipline is one of the most valuable things a clear rebalancing policy gives you—a pre-committed answer to an emotional question.</p>
+
+<p><strong>Forgetting about lump sum decisions.</strong> If you receive a bonus, inheritance, or other windfall, that's an ideal moment to rebalance as you invest. Rather than applying the money proportionally, direct it toward your underweight asset classes. Before you decide how to deploy a lump sum, it's worth reading up on the <a href="https://pocketwise.io/lump-sum-vs-dca/" target="_blank" rel="noopener">lump sum vs. DCA tradeoffs</a>—timing matters more here than in regular investing.</p>
+
+<p><strong>Treating rebalancing as a performance strategy.</strong> Rebalancing is a risk management tool, not an alpha generator. Studies on whether rebalancing improves returns are mixed—but its value in keeping your risk profile where you intended it is clear. Don't abandon your rebalancing practice because the underperforming asset class you just bought into continues to underperform. Stick to the plan.</p>
+
+<h2>The Bigger Picture: Rebalancing as Part of Your Financial System</h2>
+
+<p>Rebalancing doesn't exist in a vacuum. It's one piece of a broader financial system that includes how you save, how you invest new money, how you manage taxes, and how your goals evolve over time.</p>
+
+<p>The investors who do this well aren't necessarily the ones with the most sophisticated strategies. They're the ones who built a plan that fits their actual life—their income, their risk tolerance, their timeline—and then followed a simple, repeatable process to maintain it. Rebalancing once a year, directing new contributions toward underweight assets, staying inside tax-advantaged accounts as much as possible. That's it. That's the whole game.</p>
+
+<p>Markets will drift your portfolio away from your intentions. That's not a failure—it's just what markets do. Rebalancing is how you stay honest with yourself about the risk you're carrying and keep your money working in the direction you actually want it to go. Done consistently, it's one of the most powerful habits a long-term investor can build.</p>
+
+<p>For anyone looking at this as part of building a broader investment plan, the <a href="https://vanguard.com/us/insights/saving-investing/rebalancing/overview" target="_blank" rel="noopener noreferrer">Vanguard research on portfolio rebalancing</a> is worth reading—they've done extensive analysis on how different rebalancing frequencies and thresholds affect real-world outcomes across multiple market cycles.</p>
+
+<hr>
+
+<h2>You Might Also Enjoy</h2>
+
+<ul>
+  <li><a href="https://pocketwise.io/guides/tax-efficient-investing/">Tax-Efficient Investing: How to Keep More of What You Earn</a> — Learn which asset types belong in which accounts and how to structure your portfolio to minimize your lifetime tax burden.</li>
+  <li><a href="https://pocketwise.io/guides/financial-order-of-operations/">The Financial Order of Operations</a> — A step-by-step framework for prioritizing where your money goes, from emergency fund to taxable investing and beyond.</li>
+  <li><a href="https://pocketwise.io/guides/dollar-cost-averaging/">Dollar-Cost Averaging Explained</a> — How investing a fixed amount on a regular schedule can reduce emotional decision-making and smooth out your entry price over time.</li>
+  <li><a href="https://pocketwise.io/investment-return-calculator/">Investment Return Calculator</a> — Run the numbers on your own portfolio growth and see how different allocation scenarios play out over your investment horizon.</li>
+  <li><a href="https://pocketwise.io/lump-sum-vs-dca/">Lump Sum vs. DCA: Which Should You Choose?</a> — When you have a windfall to invest, timing your entry matters. Here's how to think through the decision with real data behind it.</li>
+</ul>
+
+  </article>
+</body>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EP402CZ1S3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EP402CZ1S3');
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How Social Security Benefits Are Calculated: The Formula Explained | PocketWise</title>
+  <meta name="description" content="Learn exactly how Social Security benefits are calculated — AIME, PIA, bend points, and how your earnings history determines your monthly check.">
+  <link rel="canonical" href="https://pocketwise.io/guides/how-social-security-benefits-are-calculated/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .guide-content {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      line-height: 1.8;
+      color: #1a1a2e;
+    }
+    .guide-content h1 {
+      font-size: 2.2rem;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      color: #0F172A;
+    }
+    .guide-content h2 {
+      margin-top: 48px;
+      margin-bottom: 16px;
+      color: #16213e;
+      font-size: 1.6rem;
+    }
+    .guide-content h3 {
+      margin-top: 32px;
+      margin-bottom: 12px;
+      color: #1a1a2e;
+      font-size: 1.25rem;
+    }
+    .guide-content p {
+      margin-bottom: 16px;
+      font-size: 1.05rem;
+    }
+    .guide-content ul, .guide-content ol {
+      margin-bottom: 16px;
+      padding-left: 24px;
+    }
+    .guide-content li {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+    }
+    .guide-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      overflow-x: auto;
+      display: block;
+    }
+    .guide-content th, .guide-content td {
+      padding: 12px 16px;
+      border: 1px solid #e0e0e0;
+      text-align: left;
+    }
+    .guide-content th {
+      background: #f0f4ff;
+      font-weight: 600;
+    }
+    .guide-content tr:nth-child(even) td {
+      background: #f9f9f9;
+    }
+    .guide-content a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .guide-content a:hover {
+      text-decoration: underline;
+    }
+    .guide-breadcrumb {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 16px 24px 0;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .guide-breadcrumb a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .guide-content blockquote {
+      border-left: 4px solid #0EA5E9;
+      margin: 24px 0;
+      padding: 16px 24px;
+      background: #f0f8ff;
+      font-style: italic;
+    }
+    .guide-content .callout {
+      background: #f0f4ff;
+      border: 1px solid #d0d8f0;
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+      /* Standard Nav */
+    .lw-nav {
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid #E2E8F0;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+    }
+    .lw-nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      height: 60px;
+      gap: 32px;
+    }
+    .lw-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: #0F172A;
+      text-decoration: none;
+    }
+    .lw-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #0EA5E9, #14B8A6);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 16px;
+    }
+    .lw-nav-links {
+      display: flex;
+      list-style: none;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+    }
+    .lw-nav-links a {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #475569;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+    .lw-nav-links a:hover {
+      background: #F1F5F9;
+      color: #0F172A;
+    }
+    .lw-hamburger {
+      display: none;
+      background: none;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 18px;
+      cursor: pointer;
+      margin-left: auto;
+    }
+    .lw-mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: white;
+      border-bottom: 1px solid #E2E8F0;
+      padding: 8px 24px 16px;
+    }
+    .lw-mobile-menu.open { display: flex; }
+    .lw-mobile-menu a {
+      padding: 12px 0;
+      color: #0F172A;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    @media (max-width: 768px) {
+      .lw-nav-links { display: none; }
+      .lw-hamburger { display: block; }
+    }
+  </style>
+</head>
+<body>
+    <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">P</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">Calculators</a></li>
+        <li><a href="/guides/">Guides</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+    </div>
+  </nav>
+  <div class="lw-mobile-menu">
+    <a href="/">Calculators</a>
+    <a href="/guides/">Guides</a>
+  </div>
+
+  <div class="guide-breadcrumb">
+    <a href="/">PocketWise</a> &rsaquo; <a href="/guides/">Guides</a> &rsaquo; How Social Security Benefits Are Calculated
+  </div>
+  <article class="guide-content">
+    <h1>How Social Security Benefits Are Calculated: The Formula Explained</h1>
+
+<h2>Why Understanding the Formula Actually Matters</h2>
+
+<p>Most people know Social Security exists. Most people know they pay into it every paycheck. But when you ask how the monthly benefit number is actually determined — the specific dollar figure that may cover a third or more of your retirement income — the answer gets fuzzy fast.</p>
+
+<p>That fuzziness is expensive. The difference between a well-timed, well-informed claiming decision and a poorly timed one can easily run to $100,000 or more over the course of a retirement. And you can't make a well-informed decision without understanding the math behind the benefit.</p>
+
+<p>The good news: the Social Security formula, while it looks intimidating on paper, follows a logical structure. Once you see how the pieces fit together, you'll be in a much better position to plan around them. Let's walk through it step by step.</p>
+
+<h2>Your Earnings History: The Raw Material of Your Benefit</h2>
+
+<p>Social Security doesn't average your entire work history. It looks at your 35 highest-earning years. If you've worked fewer than 35 years, the missing years count as zeros — and those zeros pull down your average significantly.</p>
+
+<p>This is one of the most consequential and underappreciated facts about how Social Security benefits are calculated. A worker with 30 years of strong earnings and 5 zero years will receive a meaningfully smaller benefit than someone with the same total lifetime income spread across 35 years. The system rewards consistency.</p>
+
+<p>Before your earnings are averaged, each year's wages get adjusted for wage inflation. This process is called indexing, and it puts your earnings from different decades on a comparable footing. Your wages from 1995 aren't compared directly to your wages from 2020 — they're first adjusted upward to reflect how much wages have grown since then. The Social Security Administration (<a href="https://www.ssa.gov/oact/cola/Benefits.html" target="_blank" rel="noopener">SSA.gov</a>) publishes the national average wage index used for these calculations each year.</p>
+
+<p>The indexing year is the year you turn 60. Earnings from years before you turn 60 are indexed upward. Earnings from age 60 and later are counted at their nominal value.</p>
+
+<p>Once all 35 highest indexed years are identified, they're added together and divided by 420 (the number of months in 35 years). The result is your <strong>Average Indexed Monthly Earnings</strong>, or AIME.</p>
+
+<h3>A Quick AIME Example</h3>
+
+<p>Say your 35 highest indexed annual earnings sum to $2,100,000. Divide by 420 months and you get an AIME of $5,000 per month. That single number feeds directly into the next stage of the formula.</p>
+
+<p>It's worth checking your Social Security earnings record periodically to catch any errors. Mistakes do happen — an employer reports under the wrong Social Security number, a freelance gig goes unreported, a name change doesn't get updated. You can review your full record at SSA.gov. Errors caught and corrected before you claim can boost your benefit permanently.</p>
+
+<h2>The PIA Formula: Bend Points and Why They Exist</h2>
+
+<p>Once you have your AIME, the next step is converting it into your <strong>Primary Insurance Amount</strong>, or PIA. The PIA is the monthly benefit you'd receive if you claimed Social Security at exactly your full retirement age. It's the foundation from which all adjustments — for early claiming, delayed claiming, spousal benefits, and survivor benefits — are calculated.</p>
+
+<p>The PIA formula uses a tiered structure built around two thresholds called <strong>bend points</strong>. Each tier applies a different replacement rate to slices of your AIME.</p>
+
+<p>For 2025, the formula works as follows:</p>
+
+<ul>
+  <li><strong>90%</strong> of the first $1,226 of your AIME</li>
+  <li><strong>32%</strong> of your AIME between $1,226 and $7,391</li>
+  <li><strong>15%</strong> of your AIME above $7,391</li>
+</ul>
+
+<p>These thresholds — $1,226 and $7,391 — are the bend points. They adjust slightly each year in line with national wage growth, so the numbers you'll see when you actually claim may differ if you're reading this a few years from now.</p>
+
+<h3>The Bend Points in Action: A Side-by-Side Comparison</h3>
+
+<p>The table below shows how the PIA formula applies to three workers with different income levels:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Worker Profile</th>
+      <th>Monthly AIME</th>
+      <th>PIA Calculation</th>
+      <th>Estimated PIA</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Lower earner</td>
+      <td>$1,800</td>
+      <td>90% × $1,226 = $1,103<br>32% × $574 = $184</td>
+      <td>~$1,287/mo</td>
+    </tr>
+    <tr>
+      <td>Middle earner</td>
+      <td>$5,000</td>
+      <td>90% × $1,226 = $1,103<br>32% × $3,774 = $1,208</td>
+      <td>~$2,311/mo</td>
+    </tr>
+    <tr>
+      <td>Higher earner</td>
+      <td>$9,500</td>
+      <td>90% × $1,226 = $1,103<br>32% × $6,165 = $1,973<br>15% × $2,109 = $316</td>
+      <td>~$3,392/mo</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Notice what the structure does: it heavily favors lower-income earners as a percentage of their wages. The lower earner in the example above has an AIME that's roughly 36% of the higher earner's — but their PIA is about 38% as large. Social Security is deliberately progressive. It's designed to replace a higher share of income for workers who earned less, because those workers are less likely to have other retirement assets to fall back on.</p>
+
+<p>For high earners, the third tier — that 15% rate applied above the second bend point — means each additional dollar of earnings above a certain level produces only modest additional benefit. This is part of why high earners often see relatively lower "returns" from Social Security as a percentage of their lifetime contributions.</p>
+
+<h3>Why the Bend Points Matter for Your Planning</h3>
+
+<p>Understanding bend points helps you make smarter decisions about part-time work, early retirement, and spousal earning strategies. If your AIME currently sits below the first bend point, adding a year of income has an outsized effect — the first 90 cents of every PIA dollar generated is coming from those early dollars. If you're solidly above the second bend point, adding another year of high earnings still helps, but the marginal gain per dollar is smaller.</p>
+
+<p>Working even a few additional years to replace zero years (or low-earning early-career years) in your 35-year average can have a meaningful impact on your PIA, and therefore your lifetime benefit.</p>
+
+<h2>Claiming Age: The Multiplier That Changes Everything</h2>
+
+<p>Your PIA is what you get at full retirement age (FRA). But Social Security lets you claim as early as 62 or as late as 70, and that timing decision applies a permanent multiplier to your PIA — up or down — for the rest of your life.</p>
+
+<p>Full retirement age depends on when you were born:</p>
+
+<ul>
+  <li>Born 1943–1954: FRA is 66</li>
+  <li>Born 1955–1959: FRA increases by 2 months per year (66 and 2 months for 1955, up to 66 and 10 months for 1959)</li>
+  <li>Born 1960 or later: FRA is 67</li>
+</ul>
+
+<p>Claim before your FRA and your benefit is permanently reduced. Claim after and it grows through delayed retirement credits.</p>
+
+<p>For someone with an FRA of 67:</p>
+<ul>
+  <li>Claiming at 62 reduces the benefit by up to 30%</li>
+  <li>Claiming at 70 increases the benefit by 24% (8% per year from FRA to 70)</li>
+</ul>
+
+<p>That's a spread of more than 50 percentage points between the earliest and latest claiming options — on the same underlying PIA. If your PIA is $2,000 per month, you're looking at a range from roughly $1,400 at 62 to $2,480 at 70.</p>
+
+<p>The break-even math matters here, but it's not the whole story. Tax treatment, spousal benefit implications, health, and whether you're still earning income all factor in. For a more complete look at how to think through the timing decision, <a href="https://pocketwise.io/guides/when-to-claim-social-security/">our guide on when to claim Social Security</a> walks through the key scenarios in detail.</p>
+
+<h2>Spousal and Survivor Benefits: Benefits Beyond Your Own Record</h2>
+
+<p>Social Security isn't just about individual earnings records. The spousal and survivor benefit rules can significantly change the planning calculus for married couples, divorced individuals, and widows or widowers.</p>
+
+<h3>Spousal Benefits</h3>
+
+<p>If you're married, you may be eligible for a spousal benefit worth up to 50% of your spouse's PIA — regardless of your own earnings record. This is particularly valuable in households where one spouse worked significantly less, worked part-time, or stepped away from the workforce entirely for caregiving.</p>
+
+<p>A few key rules to know:</p>
+
+<ul>
+  <li>You can only claim a spousal benefit if your spouse has already filed for their own benefit.</li>
+  <li>The spousal benefit is capped at 50% of your spouse's PIA (not their actual benefit — the PIA, which is the FRA benefit amount).</li>
+  <li>If your own earned benefit exceeds the spousal benefit, you'll receive your own benefit. Social Security always pays the higher of the two.</li>
+  <li>Claiming a spousal benefit before your own FRA reduces it. The maximum 50% is only available if you wait until your FRA.</li>
+  <li>Unlike your own benefit, spousal benefits do not grow after FRA. There's no reason to delay a spousal claim beyond your own full retirement age.</li>
+</ul>
+
+<p>Divorced spouses can also claim on an ex-spouse's record if the marriage lasted at least 10 years and you haven't remarried. This doesn't affect the ex-spouse's benefit in any way — it's a separate entitlement.</p>
+
+<h3>Survivor Benefits</h3>
+
+<p>When a spouse dies, the surviving spouse generally steps into the higher of the two benefit amounts. This is one of the strongest arguments for the higher-earning spouse to delay claiming as long as possible — even to age 70 if health and finances allow.</p>
+
+<p>Here's why: if the higher earner claims early and then dies first, the surviving spouse is locked into a lower benefit for potentially decades. If the higher earner delays to 70 and dies first, the surviving spouse inherits that larger benefit — the one boosted by delayed retirement credits.</p>
+
+<p>Survivor benefits can begin as early as age 60 (50 if disabled), though claiming early reduces the survivor benefit amount. Surviving spouses who are caring for a child under age 16 may be eligible for additional benefits regardless of age.</p>
+
+<p>The coordination between spousal and survivor benefits is one of the most complex areas of Social Security planning — and one of the most impactful for married couples. The right claiming sequence for a couple often looks quite different from the optimal strategy for each spouse individually.</p>
+
+<h2>Other Factors That Affect Your Actual Benefit</h2>
+
+<h3>Cost-of-Living Adjustments (COLAs)</h3>
+
+<p>Once you're receiving benefits, your payment amount doesn't stay frozen. Social Security applies annual cost-of-living adjustments, tied to the Consumer Price Index for Urban Wage Earners and Clerical Workers (CPI-W). In years with significant inflation, COLAs can be substantial. This inflation protection is one of Social Security's most valuable features — it's a form of longevity insurance that most private annuities either don't offer or charge a premium for.</p>
+
+<h3>The Earnings Test</h3>
+
+<p>If you claim Social Security before your FRA while still working, your benefit may be temporarily reduced through the earnings test. In 2025, if you're under FRA for the full year, $1 is withheld for every $2 you earn above $22,320. In the year you reach FRA, the threshold rises and the withholding rate drops to $1 for every $3 earned above a higher limit.</p>
+
+<p>The key word is "temporarily." Withheld amounts don't disappear — your benefit is recalculated upward at FRA to credit those withheld months. Still, the earnings test is another reason to think carefully about the timing of your claim if you're still working in your early 60s.</p>
+
+<h3>Taxes on Benefits</h3>
+
+<p>Depending on your combined income (adjusted gross income plus tax-exempt interest plus half of Social Security benefits), up to 85% of your Social Security benefit may be subject to federal income tax. This is a planning factor that often surprises retirees who assumed their Social Security income would be tax-free.</p>
+
+<p>Strategic Roth conversions during the years before you claim Social Security — when income may be temporarily lower — can reduce the portion of benefits subject to taxation. A topic worth exploring alongside a broader retirement income strategy. Our <a href="https://pocketwise.io/guides/roth-ira-vs-traditional-ira/">Roth IRA vs. Traditional IRA guide</a> covers the conversion calculus in more detail.</p>
+
+<h3>Windfall Elimination Provision and Government Pension Offset</h3>
+
+<p>If you worked in a job covered by a pension but not by Social Security — certain government, state, and local positions — you may be subject to the Windfall Elimination Provision (WEP) or Government Pension Offset (GPO). These rules can significantly reduce your Social Security benefit or spousal benefit. If you've worked in the public sector at any point in your career, it's worth understanding whether these provisions apply to you before building your retirement plan around a full Social Security benefit.</p>
+
+<h2>Putting It Together: A Planning Checklist</h2>
+
+<p>Understanding how Social Security benefits are calculated is useful. Translating that understanding into action is what actually moves the needle. Here's a practical starting point:</p>
+
+<ol>
+  <li><strong>Create your SSA.gov account.</strong> Review your earnings history. Look for gaps, missing years, or errors. Correcting mistakes before you claim is far easier than correcting them after.</li>
+  <li><strong>Count your working years.</strong> If you have fewer than 35 years of earnings, consider the value of working additional years to replace zeros with real income. Even modest income can improve your AIME if it's replacing a zero.</li>
+  <li><strong>Know your FRA.</strong> Your full retirement age determines the baseline from which early and delayed credits are applied.</li>
+  <li><strong>Model different claiming ages.</strong> Use SSA's official calculators or a financial planning tool to estimate your lifetime benefit under different scenarios. The right age isn't the same for everyone.</li>
+  <li><strong>If married, plan as a household.</strong> The spousal and survivor benefit rules mean a couple's optimal claiming strategy is rarely just two individual strategies added together.</li>
+  <li><strong>Account for taxes and Medicare.</strong> High income in retirement can affect both — and Social Security claiming age interacts with both in ways worth planning around.</li>
+</ol>
+
+<p>Social Security is one of the few sources of guaranteed, inflation-adjusted, lifelong income most Americans will have access to. It deserves as much planning attention as your 401(k) or IRA — often more, because the claiming decisions are largely irreversible once made.</p>
+
+<p>If you haven't already thought through how Social Security fits into your broader retirement income picture, pairing it with a solid <a href="https://pocketwise.io/guides/retirement-planning-101/">retirement planning framework</a> is a solid place to start. And if you're still in the accumulation phase, maximizing contributions to tax-advantaged accounts gives you more flexibility when the time comes to decide how much you need from Social Security and when.</p>
+
+<hr>
+
+<h2>You Might Also Enjoy</h2>
+
+<ul>
+  <li><a href="https://pocketwise.io/guides/when-to-claim-social-security/">When to Claim Social Security: The Full Breakdown</a> — how to model the break-even point and build the right claiming strategy for your situation</li>
+  <li><a href="https://pocketwise.io/guides/retirement-planning-101/">Retirement Planning 101</a> — the foundational framework for building a retirement income plan that holds up</li>
+  <li><a href="https://pocketwise.io/guides/roth-ira-vs-traditional-ira/">Roth IRA vs. Traditional IRA</a> — which account type makes more sense at your tax bracket, and how Roth conversions fit into a Social Security strategy</li>
+  <li><a href="https://pocketwise.io/guides/401k-contribution-guide/">401(k) Contribution Guide</a> — how much to contribute, when to go beyond the match, and how to coordinate with other retirement savings</li>
+  <li><a href="https://pocketwise.io/401k-match-optimizer/">401(k) Match Optimizer</a> — a tool to help you make sure you're not leaving free money on the table in your employer plan</li>
+</ul>
+
+  </article>
+</body>
+</html>
