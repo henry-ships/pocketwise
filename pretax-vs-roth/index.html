@@ -380,18 +380,16 @@
         PocketWise
       </a>
       <ul class="lw-nav-links">
-        <li><a href="/">Home</a></li>
-        <li><a href="/pretax-vs-roth/" class="active">Pre-Tax vs Roth</a></li>
+        <li><a href="/">Calculators</a></li>
+        <li><a href="/guides/">Guides</a></li>
       </ul>
-      <button class="lw-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
-    </div>
-    <div class="lw-mobile-menu" id="mobileMenu">
-      <a href="/">Home</a>
-      <a href="/pretax-vs-roth/">Pre-Tax vs Roth Calculator</a>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">&#9776;</button>
     </div>
   </nav>
-
-  <main class="lw-main">
+  <div class="lw-mobile-menu">
+    <a href="/">Calculators</a>
+    <a href="/guides/">Guides</a>
+  </div><main class="lw-main">
     <!-- Hero -->
     <section class="lw-hero">
       <span class="lw-badge">RETIREMENT PLANNING</span>

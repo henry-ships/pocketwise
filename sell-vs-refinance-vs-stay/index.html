@@ -481,22 +481,20 @@
   <nav class="lw-nav">
     <div class="lw-nav-inner">
       <a href="/" class="lw-logo">
-        <span class="lw-logo-icon">P</span>
+        <div class="lw-logo-icon">P</div>
         PocketWise
       </a>
-      <button class="lw-hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('open')">☰</button>
       <ul class="lw-nav-links">
-        <li><a href="/">Home</a></li>
-        <li><a href="/sell-vs-refinance-vs-stay/" class="active">Sell vs Refinance</a></li>
+        <li><a href="/">Calculators</a></li>
+        <li><a href="/guides/">Guides</a></li>
       </ul>
-    </div>
-    <div id="mobileMenu" class="lw-mobile-menu">
-      <a href="/">Home</a>
-      <a href="/sell-vs-refinance-vs-stay/">Sell vs Refinance</a>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">&#9776;</button>
     </div>
   </nav>
-
-  <main class="lw-main wide">
+  <div class="lw-mobile-menu">
+    <a href="/">Calculators</a>
+    <a href="/guides/">Guides</a>
+  </div><main class="lw-main wide">
     <!-- Hero -->
     <section class="lw-hero">
       <span class="lw-badge">Decision Calculator</span>

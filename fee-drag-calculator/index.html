@@ -413,20 +413,16 @@
         PocketWise
       </a>
       <ul class="lw-nav-links">
-        <li><a href="/">All Tools</a></li>
-        <li><a href="/compound-interest-calculator/">Compound Interest</a></li>
-        <li><a href="/investment-growth-calculator/">Investment Growth</a></li>
+        <li><a href="/">Calculators</a></li>
+        <li><a href="/guides/">Guides</a></li>
       </ul>
-      <button class="lw-hamburger" onclick="toggleMenu()" aria-label="Menu">☰</button>
-    </div>
-    <div class="lw-mobile-menu" id="mobileMenu">
-      <a href="/">All Tools</a>
-      <a href="/compound-interest-calculator/">Compound Interest</a>
-      <a href="/investment-growth-calculator/">Investment Growth</a>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">&#9776;</button>
     </div>
   </nav>
-
-  <main class="lw-main wide">
+  <div class="lw-mobile-menu">
+    <a href="/">Calculators</a>
+    <a href="/guides/">Guides</a>
+  </div><main class="lw-main wide">
     <!-- Hero -->
     <section class="lw-hero">
       <span class="lw-badge rose">Investment Fees</span>

@@ -422,23 +422,17 @@
         <div class="lw-logo-icon">P</div>
         PocketWise
       </a>
-      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')">☰</button>
       <ul class="lw-nav-links">
-        <li><a href="/">Home</a></li>
-        <li><a href="/mortgage-calculator/">Mortgage</a></li>
-        <li><a href="/debt-payoff-calculator/">Debt Payoff</a></li>
-        <li><a href="/savings-goal-calculator/">Savings</a></li>
+        <li><a href="/">Calculators</a></li>
+        <li><a href="/guides/">Guides</a></li>
       </ul>
-    </div>
-    <div class="lw-mobile-menu">
-      <a href="/">Home</a>
-      <a href="/mortgage-calculator/">Mortgage Calculator</a>
-      <a href="/debt-payoff-calculator/">Debt Payoff</a>
-      <a href="/savings-goal-calculator/">Savings Goal</a>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">&#9776;</button>
     </div>
   </nav>
-
-  <main class="lw-main">
+  <div class="lw-mobile-menu">
+    <a href="/">Calculators</a>
+    <a href="/guides/">Guides</a>
+  </div><main class="lw-main">
     <!-- Hero Section -->
     <section class="lw-hero">
       <span class="lw-badge green">RETIREMENT</span>
