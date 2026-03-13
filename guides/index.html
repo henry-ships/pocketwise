@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EP402CZ1S3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EP402CZ1S3');
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Guides — Free Personal Finance Articles | PocketWise</title>
+  <meta name="description" content="68 free personal finance guides covering investing, retirement, debt, taxes, insurance, real estate, budgeting, and more. Plain-English advice you can actually use.">
+  <link rel="canonical" href="https://pocketwise.io/guides/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .guides-hero {
+      text-align: center;
+      padding: 56px 24px 48px;
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #0F172A 100%);
+      border-radius: 24px;
+      margin-bottom: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .guides-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 30% 20%, rgba(14, 165, 233, 0.12) 0%, transparent 50%),
+                  radial-gradient(ellipse at 70% 80%, rgba(20, 184, 166, 0.08) 0%, transparent 40%);
+    }
+    .guides-hero * { position: relative; }
+    .guides-hero h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 44px;
+      font-weight: 800;
+      color: white;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 16px;
+    }
+    .guides-hero h1 .accent {
+      background: linear-gradient(135deg, #0EA5E9, #14B8A6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .guides-hero .subtitle {
+      font-size: 18px;
+      color: #94A3B8;
+      max-width: 600px;
+      margin: 0 auto 28px;
+      line-height: 1.7;
+    }
+    .guides-hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+    }
+    .guides-hero-stat-num {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      color: #0EA5E9;
+    }
+    .guides-hero-stat-label {
+      font-size: 13px;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+    .guides-nav-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 48px;
+      padding: 0 16px;
+    }
+    .guides-nav-bar a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: white;
+      border: 1px solid var(--lw-border);
+      border-radius: 9999px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--lw-text-secondary);
+      transition: all 0.25s;
+      text-decoration: none;
+    }
+    .guides-nav-bar a:hover {
+      border-color: var(--lw-sky);
+      color: var(--lw-sky);
+      background: var(--lw-sky-50);
+    }
+    .guide-category {
+      margin-bottom: 56px;
+    }
+    .guide-category-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .guide-category-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .guide-category-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #0F172A;
+    }
+    .guide-category-count {
+      font-size: 14px;
+      color: #64748B;
+      margin-left: auto;
+    }
+    .guide-category-desc {
+      color: var(--lw-text-secondary);
+      font-size: 15px;
+      margin-bottom: 20px;
+      padding-left: 52px;
+    }
+    .guide-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .guide-card {
+      display: block;
+      padding: 20px 24px;
+      background: white;
+      border: 1px solid var(--lw-border);
+      border-radius: 12px;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+    .guide-card:hover {
+      border-color: var(--lw-sky);
+      box-shadow: 0 4px 20px rgba(14, 165, 233, 0.08);
+      transform: translateY(-1px);
+    }
+    .guide-card h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--lw-text);
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+    .guide-card .guide-desc {
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+      line-height: 1.5;
+    }
+    .related-tools {
+      margin-top: 16px;
+      padding: 16px 20px;
+      background: var(--lw-sky-50);
+      border-radius: 10px;
+      border: 1px solid #E0F2FE;
+    }
+    .related-tools-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--lw-sky-dark);
+      margin-bottom: 8px;
+    }
+    .related-tools a {
+      display: inline-block;
+      padding: 4px 12px;
+      margin: 3px 4px 3px 0;
+      background: white;
+      border: 1px solid #BAE6FD;
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--lw-sky-dark);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .related-tools a:hover {
+      background: var(--lw-sky);
+      color: white;
+      border-color: var(--lw-sky);
+    }
+    .guides-cta {
+      text-align: center;
+      padding: 48px 24px;
+      background: linear-gradient(135deg, #F0F9FF, #ECFDF5);
+      border-radius: 20px;
+      margin-top: 48px;
+    }
+    .guides-cta h2 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .guides-cta p {
+      color: var(--lw-text-secondary);
+      margin-bottom: 20px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .guides-cta a {
+      display: inline-block;
+      padding: 12px 32px;
+      background: linear-gradient(135deg, #0EA5E9, #14B8A6);
+      color: white;
+      font-weight: 600;
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+    .guides-cta a:hover { transform: scale(1.03); color: white; }
+    @media (max-width: 640px) {
+      .guides-hero h1 { font-size: 32px; }
+      .guides-hero-stats { gap: 24px; }
+      .guides-hero-stat-num { font-size: 24px; }
+      .guide-category-desc { padding-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">P</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">Calculators</a></li>
+        <li><a href="/guides/" style="color: var(--lw-sky); font-weight: 600;">Guides</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">☰</button>
+    </div>
+  </nav>
+  <div class="lw-mobile-menu">
+    <a href="/">Calculators</a>
+    <a href="/guides/">Guides</a>
+  </div>
+
+  <main class="lw-main wide">
+
+    <!-- HERO -->
+    <div class="guides-hero">
+      <h1>Free <span class="accent">Financial Guides</span></h1>
+      <p class="subtitle">68 plain-English guides on investing, taxes, debt, insurance, real estate, and more. No jargon, no sign-ups — just honest advice.</p>
+      <div class="guides-hero-stats">
+        <div style="text-align:center">
+          <div class="guides-hero-stat-num">68</div>
+          <div class="guides-hero-stat-label">Guides</div>
+        </div>
+        <div style="text-align:center">
+          <div class="guides-hero-stat-num">45</div>
+          <div class="guides-hero-stat-label">Calculators</div>
+        </div>
+        <div style="text-align:center">
+          <div class="guides-hero-stat-num">0</div>
+          <div class="guides-hero-stat-label">Paywalls</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JUMP NAV -->
+    <div class="guides-nav-bar">
+      <a href="#investing">📈 Investing</a>
+      <a href="#retirement">🏦 Retirement</a>
+      <a href="#taxes">📋 Taxes</a>
+      <a href="#debt">💳 Debt</a>
+      <a href="#credit">📊 Credit</a>
+      <a href="#savings">🏧 Savings</a>
+      <a href="#budgeting">💵 Budgeting</a>
+      <a href="#insurance">🛡️ Insurance</a>
+      <a href="#real-estate">🏠 Real Estate</a>
+      <a href="#life-events">👨‍👩‍👧 Life Events</a>
+    </div>
+
+    <!-- ===== INVESTING ===== -->
+    <div class="guide-category" id="investing">
+      <div class="guide-category-header">
+        <div class="guide-category-icon" style="background: #ECFDF5;">📈</div>
+        <h2 class="guide-category-title">Investing</h2>
+        <span class="guide-category-count">7 guides</span>
+      </div>
+      <p class="guide-category-desc">From your first dollar invested to advanced strategies — everything you need to grow your money.</p>
+      <div class="guide-list">
+        <a href="/guides/investing-basics/" class="guide-card">
+          <h3>How to Start Investing in 2026: A Beginner's Step-by-Step Guide</h3>
+          <p class="guide-desc">Account types, asset allocation, fees, and the exact steps to put your first dollar to work.</p>
+        </a>
+        <a href="/guides/index-funds-vs-mutual-funds/" class="guide-card">
+          <h3>Index Funds vs. Mutual Funds: What Beginners Need to Know</h3>
+          <p class="guide-desc">Fee comparisons, return differences, and which fund type actually wins over 30 years.</p>
+        </a>
+        <a href="/guides/what-are-etfs/" class="guide-card">
+          <h3>What Are ETFs? A Plain-English Guide to Exchange-Traded Funds</h3>
+          <p class="guide-desc">How ETFs work, popular examples like SPY and VTI, and how they compare to mutual funds and stocks.</p>
+        </a>
+        <a href="/guides/what-is-a-brokerage-account/" class="guide-card">
+          <h3>What Is a Brokerage Account and How Does It Work?</h3>
+          <p class="guide-desc">Taxable vs. retirement accounts, choosing a broker, and what you can actually invest in.</p>
+        </a>
+        <a href="/guides/how-dividends-work/" class="guide-card">
+          <h3>How Dividends Work: When You Get Paid and How Much</h3>
+          <p class="guide-desc">Dividend yields, ex-dividend dates, reinvestment math, and building a dividend portfolio.</p>
+        </a>
+        <a href="/guides/bonds-vs-stocks-retirement/" class="guide-card">
+          <h3>Bonds vs. Stocks for Retirement: Finding the Right Mix</h3>
+          <p class="guide-desc">Asset allocation by age, sequence-of-returns risk, and suggested splits by decade.</p>
+        </a>
+        <a href="/guides/dollar-cost-averaging/" class="guide-card">
+          <h3>Dollar-Cost Averaging: The Beginner's Guide to Consistent Investing</h3>
+          <p class="guide-desc">Why investing a fixed amount on a schedule beats trying to time the market.</p>
+        </a>
+      </div>
+      <div class="related-tools">
+        <div class="related-tools-label">🔧 Related Calculators</div>
+        <a href="/investment-return-calculator/">Investment Return</a>
+        <a href="/compound-interest-calculator/">Compound Interest</a>
+        <a href="/fee-drag-calculator/">Fee Drag</a>
+        <a href="/lump-sum-vs-dca/">Lump Sum vs. DCA</a>
+        <a href="/asset-location/">Asset Location</a>
+        <a href="/inflation-adjusted-calculator/">Inflation Adjusted</a>
+      </div>
+    </div>
+
+    <!-- ===== RETIREMENT ===== -->
+    <div class="guide-category" id="retirement">
+      <div class="guide-category-header">
+        <div class="guide-category-icon" style="background: #F3F0FF;">🏦</div>
+        <h2 class="guide-category-title">Retirement</h2>
+        <span class="guide-category-count">9 guides</span>
+      </div>
+      <p class="guide-category-desc">401(k)s, IRAs, Social Security, and how to figure out if you're on track.</p>
+      <div class="guide-list">
+        <a href="/guides/retirement-planning-101/" class="guide-card">
+          <h3>Retirement Planning 101: How to Start Saving in 2026</h3>
+          <p class="guide-desc">The basics of retirement accounts, how much to save, and when to start.</p>
+        </a>
+        <a href="/guides/401k-contribution-guide/" class="guide-card">
+          <h3>How to Optimize Your 401(k) Contributions in 2026</h3>
+          <p class="guide-desc">Contribution limits, employer matching, and strategies to maximize your retirement savings.</p>
+        </a>
+        <a href="/guides/roth-ira-vs-traditional-ira/" class="guide-card">
+          <h3>Roth IRA vs. Traditional IRA: Which One Should You Choose?</h3>
+          <p class="guide-desc">Tax-now vs. tax-later math, income limits, and the decision framework that actually works.</p>
+        </a>
+        <a href="/guides/traditional-ira-income-limits/" class="guide-card">
+          <h3>Traditional IRA Income Limits and Deduction Rules Explained</h3>
+          <p class="guide-desc">Who qualifies for deductible contributions and what to do if you earn too much.</p>
+        </a>
+        <a href="/guides/how-much-to-save-for-retirement-by-30/" class="guide-card">
+          <h3>How Much Should You Have Saved for Retirement by 30?</h3>
+          <p class="guide-desc">Realistic benchmarks, catch-up strategies, and what to do if you're behind.</p>
+        </a>
+        <a href="/guides/can-you-lose-money-in-a-401k/" class="guide-card">
+          <h3>Can You Lose Money in a 401(k)? What You Need to Know</h3>
+          <p class="guide-desc">Market downturns, fees, and what happens to your retirement savings during a crash.</p>
+        </a>
+        <a href="/guides/what-happens-to-401k-when-you-quit/" class="guide-card">
+          <h3>What Happens to Your 401(k) When You Quit Your Job?</h3>
+          <p class="guide-desc">Rollover options, penalties, and the best move for your specific situation.</p>
+        </a>
+        <a href="/guides/how-to-rollover-401k-to-ira/" class="guide-card">
+          <h3>How to Roll Over a 401(k) to an IRA: Step-by-Step Guide</h3>
+          <p class="guide-desc">Direct vs. indirect rollovers, tax traps, and when a rollover makes sense.</p>
+        </a>
+        <a href="/guides/when-to-claim-social-security/" class="guide-card">
+          <h3>When to Claim Social Security: The Complete Strategy Guide</h3>
+          <p class="guide-desc">Break-even analysis, spousal benefits, and the math behind early vs. delayed claiming.</p>
+        </a>
+      </div>
+      <div class="related-tools">
+        <div class="related-tools-label">🔧 Related Calculators</div>
+        <a href="/401k-match-optimizer/">401(k) Match Optimizer</a>
+        <a href="/401k-paycheck-impact/">401(k) Paycheck Impact</a>
+        <a href="/pretax-vs-roth/">Pre-Tax vs. Roth</a>
+        <a href="/raise-calculator/">Raise Calculator</a>
+        <a href="/compound-interest-calculator/">Compound Interest</a>
+      </div>
+    </div>
+
+    <!-- ===== TAXES ===== -->
+    <div class="guide-category" id="taxes">
+      <div class="guide-category-header">
+        <div class="guide-category-icon" style="background: #FEF3C7;">📋</div>
+        <h2 class="guide-category-title">Taxes</h2>
+        <span class="guide-category-count">8 guides</span>
+      </div>
+      <p class="guide-category-desc">Tax brackets, deductions, capital gains, and strategies to keep more of what you earn.</p>
+      <div class="guide-list">
+        <a href="/guides/tax-brackets-explained/" class="guide-card">
+          <h3>Tax Brackets Explained: How They Actually Work (With Examples)</h3>
+          <p class="guide-desc">Marginal vs. effective rates, concrete calculations, and why moving up a bracket isn't bad.</p>
+        </a>
+        <a href="/guides/standard-deduction-vs-itemized/" class="guide-card">
+          <h3>Standard Deduction vs. Itemizing: Which Saves You More?</h3>
+          <p class="guide-desc">When to itemize, common deductions, and the math to figure out your best option.</p>
+        </a>
+        <a href="/guides/how-to-fill-out-w4-correctly/" class="guide-card">
+          <h3>How to Fill Out a W-4 Form Correctly</h3>
+          <p class="guide-desc">Stop overpaying or underpaying — step-by-step W-4 instructions for every situation.</p>
+        </a>
+        <a href="/guides/capital-gains-tax-home-sale/" class="guide-card">
+          <h3>Capital Gains Tax on Home Sales: How Much You'll Owe</h3>
+          <p class="guide-desc">The $250K/$500K exclusion, how to calculate your gain, and strategies to minimize taxes.</p>
+        </a>
+        <a href="/guides/how-much-can-you-gift-tax-free/" class="guide-card">
+          <h3>How Much Money Can You Gift Without Paying Taxes?</h3>
+          <p class="guide-desc">Annual exclusions, lifetime exemptions, and gift tax rules explained simply.</p>
+        </a>
+        <a href="/guides/tax-efficient-investing/" class="guide-card">
+          <h3>Tax-Efficient Investing: How to Keep More of What You Earn</h3>
+          <p class="guide-desc">Asset location, tax-loss harvesting, and which investments belong in which accounts.</p>
+        </a>
+        <a href="/guides/side-hustle-tax-guide/" class="guide-card">
+          <h3>Side Hustle Taxes: What You Owe and How to Keep More</h3>
+          <p class="guide-desc">Self-employment tax, deductions, quarterly payments, and avoiding IRS surprises.</p>
+        </a>
+        <a href="/guides/side-hustle-taxes-guide/" class="guide-card">
+          <h3>Side Hustle Taxes: What You Need to Know to Stay Out of Trouble</h3>
+          <p class="guide-desc">Tax obligations at every income level, recordkeeping, and state tax considerations.</p>
+        </a>
+      </div>
+      <div class="related-tools">
+        <div class="related-tools-label">🔧 Related Calculators</div>
+        <a href="/side-income-tax/">Side Income Tax</a>
+        <a href="/homeownership-tax-benefits/">Homeownership Tax Benefits</a>
+        <a href="/property-tax-impact/">Property Tax Impact</a>
+        <a href="/pretax-vs-roth/">Pre-Tax vs. Roth</a>
+      </div>
+    </div>
+
+    <!-- ===== DEBT ===== -->
+    <div class="guide-category" id="debt">
+      <div class="guide-category-header">
+        <div class="guide-category-icon" style="background: #FFF1F2;">💳</div>
+        <h2 class="guide-category-title">Debt & Borrowing</h2>
+        <span class="guide-category-count">6 guides</span>
+      </div>
+      <p class="guide-category-desc">Payoff strategies, negotiation tactics, and how to escape the debt cycle for good.</p>
+      <div class="guide-list">
+        <a href="/guides/debt-payoff-strategies/" class="guide-card">
+          <h3>Debt Payoff Strategies: Avalanche vs Snowball vs Consolidation</h3>
+          <p class="guide-desc">Compare the three most popular approaches and pick the one that matches your psychology.</p>
+        </a>
+        <a href="/guides/debt-avalanche-vs-snowball/" class="guide-card">
+          <h3>Debt Avalanche vs. Debt Snowball: Which Method Pays Off Debt Faster?</h3>
+          <p class="guide-desc">The math behind both methods, with concrete examples showing how much each saves.</p>
+        </a>
+        <a href="/guides/consolidation-loan-vs-balance-transfer/" class="guide-card">
+          <h3>Debt Consolidation Loan vs. Balance Transfer: Which Is Better?</h3>
+          <p class="guide-desc">Side-by-side comparison with fee calculations to pick the cheaper option.</p>
+        </a>
+        <a href="/guides/how-to-negotiate-medical-bills/" class="guide-card">
+          <h3>How to Negotiate Medical Bills (and Actually Get Them Reduced)</h3>
+          <p class="guide-desc">Scripts, timing strategies, and the billing department tricks that actually work.</p>
+        </a>
+        <a href="/guides/how-to-get-out-of-payday-loan-debt/" class="guide-card">
+          <h3>How to Get Out of Payday Loan Debt: A Realistic Escape Plan</h3>
+          <p class="guide-desc">Breaking the payday cycle — extended payment plans, alternatives, and state protections.</p>
+        </a>
+        <a href="/guides/paying-off-credit-card-early/" class="guide-card">
+          <h3>Does Paying Off Your Credit Card Early Actually Help Your Credit Score?</h3>
+          <p class="guide-desc">Statement dates, reporting cycles, and the timing trick that boosts your score fastest.</p>
+        </a>
+      </div>
+      <div class="related-tools">
+        <div class="related-tools-label">🔧 Related Calculators</div>
+        <a href="/debt-payoff-calculator/">Debt Payoff</a>
+        <a href="/debt-payoff-optimizer/">Debt Payoff Optimizer</a>
+        <a href="/balance-transfer-calculator/">Balance Transfer</a>
+        <a href="/loan-consolidation-calculator/">Loan Consolidation</a>
+        <a href="/credit-card-payoff-calculator/">Credit Card Payoff</a>
+        <a href="/debt-to-income-calculator/">Debt-to-Income</a>
+        <a href="/debt-vs-cash-cushion/">Debt vs. Cash Cushion</a>
+        <a href="/emergency-fund-vs-debt/">Emergency Fund vs. Debt</a>
+      </div>
+    </div>
+
+    <!-- ===== CREDIT ===== -->
+    <div class="guide-category" id="credit">
+      <div class="guide-category-header">
+        <div class="guide-category-icon" style="background: #E0F2FE;">📊</div>
+        <h2 class="guide-category-title">Credit Score & Reports</h2>
+        <span class="guide-category-count">6 guides</span>
+      </div>
+      <p class="guide-category-desc">Build, protect, and optimize your credit score — the number that controls your financial life.</p>
+      <div class="guide-list">
+        <a href="/guides/credit-score-improvement/" class="guide-card">
+          <h3>How to Improve Your Credit Score: The Practical 2026 Guide</h3>
+          <p class="guide-desc">The five factors that determine your score and exactly how to move each one.</p>
+        </a>
+        <a href="/guides/credit-utilization-explained/" class="guide-card">
+          <h3>How Credit Utilization Affects Your Score (and the Ideal Ratio)</h3>
+          <p class="guide-desc">Why keeping balances below 30% matters — and the even better number most people don't know.</p>
+        </a>
+        <a href="/guides/how-long-to-build-credit/" class="guide-card">
+          <h3>How Long Does It Take to Build Credit from Nothing?</h3>
+          <p class="guide-desc">A realistic timeline for building credit from scratch, with the fastest strategies.</p>
+        </a>
+        <a href="/guides/authorized-user-credit-card/" class="guide-card">
+          <h3>Adding an Authorized User to Your Credit Card: Pros, Cons, and Risks</h3>
+          <p class="guide-desc">How authorized user status affects both people's credit — and when it backfires.</p>
+        </a>
+        <a href="/guides/hard-inquiry-vs-soft-inquiry/" class="guide-card">
+          <h3>Hard Inquiry vs. Soft Inquiry: What's the Difference and Does It Matter?</h3>
+          <p class="guide-desc">Which credit checks hurt your score, how long they last, and when to stop worrying.</p>
+        </a>
+        <a href="/guides/how-to-dispute-credit-report-errors/" class="guide-card">
+          <h3>How to Dispute Errors on Your Credit Report (Step-by-Step)</h3>
+          <p class="guide-desc">Bureau contact info, sample dispute letters, and what to do when they say no.</p>
+        </a>
+      </div>
+      <div class="related-tools">
+        <div class="related-tools-label">🔧 Related Calculators</div>
+        <a href="/credit-utilization-planner/">Credit Utilization Planner</a>
+        <a href="/debt-to-income-calculator/">Debt-to-Income</a>
+        <a href="/loan-comparison-tool/">Loan Comparison</a>
+      </div>
+    </div>
+
+    <!-- ===== SAVINGS ===== -->
+    <div class="guide-category" id="savings">
+      <div class="guide-category-header">
+        <div class="guide-category-icon" style="background: #ECFDF5;">🏧</div>
+        <h2 class="guide-category-title">Savings & Emergency Funds</h2>
+        <span class="guide-category-count">5 guides</span>
+      </div>
+      <p class="guide-category-desc">Where to keep your cash, how much you really need, and savings vehicles compared.</p>
+      <div class="guide-list">
+        <a href="/guides/emergency-fund/" class="guide-card">
+          <h3>How to Build an Emergency Fund in 2026: Step-by-Step Guide</h3>
+          <p class="guide-desc">Why you need one, how to start from zero, and the account types that work best.</p>
+        </a>
+        <a href="/guides/how-much-emergency-fund/" class="guide-card">
+          <h3>How Much Emergency Fund Do You Actually Need?</h3>
+          <p class="guide-desc">3 months? 6 months? 12? The real answer depends on your specific situation.</p>
+        </a>
+        <a href="/guides/where-to-keep-emergency-fund/" class="guide-card">
+          <h3>Where Should You Keep Your Emergency Fund? Best Options Ranked</h3>
+          <p class="guide-desc">HYSAs, money markets, T-bills, and CDs — ranked by accessibility and yield.</p>
+        </a>
+        <a href="/guides/high-yield-savings-vs-money-market/" class="guide-card">
+          <h3>High-Yield Savings vs. Money Market Accounts: What's the Difference?</h3>
+          <p class="guide-desc">Rates, access, insurance, and which one makes more sense for your cash.</p>
+        </a>
+        <a href="/guides/are-cds-worth-it/" class="guide-card">
+          <h3>Are CDs Worth It? When Certificates of Deposit Make Sense</h3>
+          <p class="guide-desc">CD laddering, rate locks, early withdrawal penalties, and when HYSAs win instead.</p>
+        </a>
+      </div>
+      <div class="related-tools">
+        <div class="related-tools-label">🔧 Related Calculators</div>
+        <a href="/emergency-fund-calculator/">Emergency Fund Calculator</a>
+        <a href="/savings-goal-calculator/">Savings Goal</a>
+        <a href="/emergency-fund-vs-debt/">Emergency Fund vs. Debt</a>
+        <a href="/compound-interest-calculator/">Compound Interest</a>
+      </div>
+    </div>
+
+    <!-- ===== BUDGETING ===== -->
+    <div class="guide-category" id="budgeting">
+      <div class="guide-category-header">
+        <div class="guide-category-icon" style="background: #FEF3C7;">💵</div>
+        <h2 class="guide-category-title">Budgeting & Everyday Money</h2>
+        <span class="guide-category-count">7 guides</span>
+      </div>
+      <p class="guide-category-desc">Master your cash flow — from salary negotiations to cutting subscriptions you forgot about.</p>
+      <div class="guide-list">
+        <a href="/guides/financial-order-of-operations/" class="guide-card">
+          <h3>The Financial Order of Operations: How to Prioritize Every Dollar</h3>
+          <p class="guide-desc">The step-by-step money priority list — what to fund first, second, and last.</p>
+        </a>
+        <a href="/guides/budgeting-methods/" class="guide-card">
+          <h3>Which Budgeting Method Is Right for You? 5 Systems Compared</h3>
+          <p class="guide-desc">50/30/20, zero-based, envelope, pay-yourself-first, and more — with pros and cons of each.</p>
+        </a>
+        <a href="/guides/zero-based-budgeting-guide/" class="guide-card">
+          <h3>Zero-Based Budgeting: How to Give Every Dollar a Job</h3>
+          <p class="guide-desc">Step-by-step setup with a sample budget that balances to zero.</p>
+        </a>
+        <a href="/guides/cash-envelope-system-guide/" class="guide-card">
+          <h3>Does the Cash Envelope System Still Work? A Modern Guide</h3>
+          <p class="guide-desc">Physical envelopes, digital alternatives, and the psychology behind why cash works.</p>
+        </a>
+        <a href="/guides/sinking-funds-explained/" class="guide-card">
+          <h3>Sinking Funds Explained: The Budget Trick That Stops Financial Emergencies</h3>
+          <p class="guide-desc">How to save for predictable expenses so they never feel like emergencies.</p>
+        </a>
+        <a href="/guides/how-to-negotiate-salary-raise/" class="guide-card">
+          <h3>How to Negotiate a Salary Raise (Scripts and Strategies That Work)</h3>
+          <p class="guide-desc">Actual scripts to use, timing strategies, and what to say when they push back.</p>
+        </a>
+        <a href="/guides/subscription-audit-save-money/" class="guide-card">
+          <h3>How to Do a Subscription Audit and Stop Wasting Money</h3>
+          <p class="guide-desc">Find every recurring charge, categorize them, and cut what doesn't matter.</p>
+        </a>
+      </div>
+      <div class="related-tools">
+        <div class="related-tools-label">🔧 Related Calculators</div>
+        <a href="/budget-to-goal/">Budget to Goal</a>
+        <a href="/raise-calculator/">Raise Calculator</a>
+        <a href="/savings-goal-calculator/">Savings Goal</a>
+        <a href="/side-income-tax/">Side Income Tax</a>
+      </div>
+    </div>
+
+    <!-- ===== INSURANCE ===== -->
+    <div class="guide-category" id="insurance">
+      <div class="guide-category-header">
+        <div class="guide-category-icon" style="background: #E0F2FE;">🛡️</div>
+        <h2 class="guide-category-title">Insurance</h2>
+        <span class="guide-category-count">5 guides</span>
+      </div>
+      <p class="guide-category-desc">Life, auto, umbrella, disability, and health savings — how much you actually need.</p>
+      <div class="guide-list">
+        <a href="/guides/life-insurance-how-much/" class="guide-card">
+          <h3>How Much Life Insurance Do You Actually Need? A Decision Framework</h3>
+          <p class="guide-desc">Income replacement, DIME method, and the factors that change your number.</p>
+        </a>
+        <a href="/guides/term-life-vs-whole-life-insurance/" class="guide-card">
+          <h3>Term Life vs. Whole Life Insurance: Which One Do You Actually Need?</h3>
+          <p class="guide-desc">Premium comparisons, cash value truth, and the "buy term invest the difference" math.</p>
+        </a>
+        <a href="/guides/how-much-car-insurance-do-you-need/" class="guide-card">
+          <h3>How Much Car Insurance Do You Actually Need?</h3>
+          <p class="guide-desc">Coverage by net worth, collision decisions, and recommended minimums by life stage.</p>
+        </a>
+        <a href="/guides/umbrella-insurance-worth-it/" class="guide-card">
+          <h3>Is Umbrella Insurance Worth It? Who Needs It and Why</h3>
+          <p class="guide-desc">$1M of coverage for $150–$300/year — who should get it and when.</p>
+        </a>
+        <a href="/guides/disability-insurance-guide/" class="guide-card">
+          <h3>Disability Insurance: How Much Coverage Do You Need?</h3>
+          <p class="guide-desc">Short-term vs. long-term, coverage calculations, and why it matters more than life insurance.</p>
+        </a>
+      </div>
+      <div class="related-tools">
+        <div class="related-tools-label">🔧 Related Calculators</div>
+        <a href="/emergency-fund-calculator/">Emergency Fund Calculator</a>
+        <a href="/budget-to-goal/">Budget to Goal</a>
+      </div>
+    </div>
+
+    <!-- ===== HSA / HEALTH ===== -->
+    <div class="guide-category">
+      <div class="guide-category-header">
+        <div class="guide-category-icon" style="background: #ECFDF5;">🏥</div>
+        <h2 class="guide-category-title">Health Savings</h2>
+        <span class="guide-category-count">2 guides</span>
+      </div>
+      <div class="guide-list">
+        <a href="/guides/hsa-strategy/" class="guide-card">
+          <h3>HSA Strategy: How to Use Your HSA as a Stealth Retirement Account</h3>
+          <p class="guide-desc">Triple tax advantage, investment options, and the long-term HSA growth strategy.</p>
+        </a>
+        <a href="/guides/hsa-vs-fsa-which-is-better/" class="guide-card">
+          <h3>HSA vs. FSA: Which Health Savings Option Is Better for You?</h3>
+          <p class="guide-desc">Contribution limits, rollover rules, and the 13-row comparison that makes the decision easy.</p>
+        </a>
+      </div>
+    </div>
+
+    <!-- ===== REAL ESTATE ===== -->
+    <div class="guide-category" id="real-estate">
+      <div class="guide-category-header">
+        <div class="guide-category-icon" style="background: #E0F2FE;">🏠</div>
+        <h2 class="guide-category-title">Real Estate & Homeownership</h2>
+        <span class="guide-category-count">7 guides</span>
+      </div>
+      <p class="guide-category-desc">Buying, refinancing, property taxes, and everything between getting the keys and paying it off.</p>
+      <div class="guide-list">
+        <a href="/guides/how-much-house-can-i-afford/" class="guide-card">
+          <h3>How Much House Can You Afford? A Realistic Calculator-Based Guide</h3>
+          <p class="guide-desc">Affordability tables by income, the 28/36 rule, and salary examples from $50K to $250K.</p>
+        </a>
+        <a href="/guides/closing-costs-explained/" class="guide-card">
+          <h3>Closing Costs Explained for First-Time Home Buyers</h3>
+          <p class="guide-desc">Every line item, typical ranges, and how to reduce what you owe at the table.</p>
+        </a>
+        <a href="/guides/escrow-account-explained/" class="guide-card">
+          <h3>Escrow Accounts Explained: What They Are and How They Work</h3>
+          <p class="guide-desc">Monthly payment breakdowns, escrow analysis statements, and why your payment changes.</p>
+        </a>
+        <a href="/guides/when-to-refinance-mortgage/" class="guide-card">
+          <h3>When to Refinance Your Mortgage: The Break-Even Math</h3>
+          <p class="guide-desc">Rate drop scenarios, break-even calculations, and the total interest picture.</p>
+        </a>
+        <a href="/guides/pay-off-mortgage-early/" class="guide-card">
+          <h3>Should You Pay Off Your Mortgage Early? A Decision Framework</h3>
+          <p class="guide-desc">Extra payments vs. investing, opportunity cost math, and when each strategy wins.</p>
+        </a>
+        <a href="/guides/property-tax-assessment-explained/" class="guide-card">
+          <h3>How Property Tax Assessments Work (and How to Appeal Yours)</h3>
+          <p class="guide-desc">State-by-state rates, assessment ratios, and the step-by-step appeal process.</p>
+        </a>
+        <a href="/guides/capital-gains-tax-home-sale/" class="guide-card">
+          <h3>Capital Gains Tax on Home Sales: How Much You'll Owe</h3>
+          <p class="guide-desc">The $250K/$500K exclusion and strategies to minimize your tax bill when you sell.</p>
+        </a>
+      </div>
+      <div class="related-tools">
+        <div class="related-tools-label">🔧 Related Calculators</div>
+        <a href="/home-affordability-calculator/">Home Affordability</a>
+        <a href="/mortgage-calculator/">Mortgage Calculator</a>
+        <a href="/refinance-calculator/">Refinance Calculator</a>
+        <a href="/refinance-break-even/">Refinance Break-Even</a>
+        <a href="/rent-vs-buy/">Rent vs. Buy</a>
+        <a href="/extra-mortgage-payment/">Extra Mortgage Payment</a>
+        <a href="/home-equity-projection/">Home Equity</a>
+        <a href="/property-tax-impact/">Property Tax Impact</a>
+        <a href="/pmi-removal-planner/">PMI Removal</a>
+        <a href="/recast-vs-refinance/">Recast vs. Refinance</a>
+      </div>
+    </div>
+
+    <!-- ===== LIFE EVENTS ===== -->
+    <div class="guide-category" id="life-events">
+      <div class="guide-category-header">
+        <div class="guide-category-icon" style="background: #F3F0FF;">👨‍👩‍👧</div>
+        <h2 class="guide-category-title">Life Events & Milestones</h2>
+        <span class="guide-category-count">6 guides</span>
+      </div>
+      <p class="guide-category-desc">Money moves for the big moments — getting married, having a baby, losing someone, starting out.</p>
+      <div class="guide-list">
+        <a href="/guides/money-moves-in-your-20s/" class="guide-card">
+          <h3>Money Moves to Make in Your 20s That Pay Off for Decades</h3>
+          <p class="guide-desc">Compounding math, credit building, investing early, and the moves that matter most.</p>
+        </a>
+        <a href="/guides/financial-checklist-before-marriage/" class="guide-card">
+          <h3>The Financial Checklist Every Couple Should Complete Before Marriage</h3>
+          <p class="guide-desc">24-item checklist covering disclosure, joint accounts, debt, insurance, and shared goals.</p>
+        </a>
+        <a href="/guides/financially-prepare-for-baby/" class="guide-card">
+          <h3>How to Financially Prepare for a Baby: A New Parent Money Guide</h3>
+          <p class="guide-desc">First-year cost breakdowns, insurance changes, and a month-by-month prep checklist.</p>
+        </a>
+        <a href="/guides/how-to-save-for-college/" class="guide-card">
+          <h3>How to Save for Your Kid's College: 529 Plans and Beyond</h3>
+          <p class="guide-desc">Monthly savings targets by age, 529 vs Coverdell vs UTMA vs Roth comparison.</p>
+        </a>
+        <a href="/guides/529-college-savings-plan/" class="guide-card">
+          <h3>529 College Savings Plan: How to Save for College Tax-Free</h3>
+          <p class="guide-desc">State tax deductions, investment options, and the new Roth IRA rollover rules.</p>
+        </a>
+        <a href="/guides/what-to-do-financially-when-someone-dies/" class="guide-card">
+          <h3>What to Do Financially After Someone Dies: A Step-by-Step Guide</h3>
+          <p class="guide-desc">A compassionate timeline — first 72 hours through 6 months — with key deadlines.</p>
+        </a>
+      </div>
+      <div class="related-tools">
+        <div class="related-tools-label">🔧 Related Calculators</div>
+        <a href="/savings-goal-calculator/">Savings Goal</a>
+        <a href="/compound-interest-calculator/">Compound Interest</a>
+        <a href="/budget-to-goal/">Budget to Goal</a>
+      </div>
+    </div>
+
+    <!-- ===== FOUNDATIONAL ===== -->
+    <div class="guide-category">
+      <div class="guide-category-header">
+        <div class="guide-category-icon" style="background: #CFFAFE;">🧭</div>
+        <h2 class="guide-category-title">Foundational Money Skills</h2>
+        <span class="guide-category-count">1 guide</span>
+      </div>
+      <div class="guide-list">
+        <a href="/guides/net-worth-guide/" class="guide-card">
+          <h3>How to Calculate Your Net Worth (And Use It to Build Wealth)</h3>
+          <p class="guide-desc">Assets minus liabilities — why this one number matters more than your income.</p>
+        </a>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="guides-cta">
+      <h2>Need a Number? Try Our Calculators</h2>
+      <p>45 free tools that give you decisions, not just math. Every calculator tells you what to do next.</p>
+      <a href="/">Browse All Calculators →</a>
+    </div>
+
+    <p class="lw-disclaimer">
+      <em>PocketWise guides are for educational purposes only and should not be considered financial advice. Consult a qualified professional for personalized recommendations.</em>
+    </p>
+  </main>
+
+  <footer class="lw-footer">
+    <p>© 2026 PocketWise. 68 free financial guides + 45 decision tools.</p>
+  </footer>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Free Financial Guides",
+    "description": "68 free personal finance guides covering investing, retirement, debt, taxes, insurance, real estate, budgeting, and more.",
+    "url": "https://pocketwise.io/guides/",
+    "publisher": {
+      "@type": "Organization",
+      "name": "PocketWise",
+      "url": "https://pocketwise.io"
+    }
+  }
+  </script>
+</body>
+</html>
