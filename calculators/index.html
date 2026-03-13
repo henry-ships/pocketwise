@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EP402CZ1S3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EP402CZ1S3');
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Calculators — 45 Free Tools | PocketWise</title>
+  <meta name="description" content="45 free financial calculators for mortgages, debt payoff, investing, retirement, and budgeting. No sign-ups, no paywalls — just fast, accurate answers.">
+  <link rel="canonical" href="https://pocketwise.io/calculators/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .guides-hero {
+      text-align: center;
+      padding: 56px 24px 48px;
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #0F172A 100%);
+      border-radius: 24px;
+      margin-bottom: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .guides-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 30% 20%, rgba(14, 165, 233, 0.12) 0%, transparent 50%),
+                  radial-gradient(ellipse at 70% 80%, rgba(20, 184, 166, 0.08) 0%, transparent 40%);
+    }
+    .guides-hero * { position: relative; }
+    .guides-hero h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 44px;
+      font-weight: 800;
+      color: white;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 16px;
+    }
+    .guides-hero h1 .accent {
+      background: linear-gradient(135deg, #0EA5E9, #14B8A6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .guides-hero .subtitle {
+      font-size: 18px;
+      color: #94A3B8;
+      max-width: 600px;
+      margin: 0 auto 28px;
+      line-height: 1.7;
+    }
+    .guides-hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+    }
+    .guides-hero-stat-num {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      color: #0EA5E9;
+    }
+    .guides-hero-stat-label {
+      font-size: 13px;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+    .guides-nav-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 48px;
+      padding: 0 16px;
+    }
+    .guides-nav-bar a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: white;
+      border: 1px solid var(--lw-border);
+      border-radius: 9999px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--lw-text-secondary);
+      transition: all 0.25s;
+      text-decoration: none;
+    }
+    .guides-nav-bar a:hover {
+      border-color: var(--lw-sky);
+      color: var(--lw-sky);
+      background: var(--lw-sky-50);
+    }
+    .guide-category {
+      margin-bottom: 56px;
+    }
+    .guide-category-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .guide-category-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .guide-category-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #0F172A;
+    }
+    .guide-category-count {
+      font-size: 14px;
+      color: #64748B;
+      margin-left: auto;
+    }
+    .guide-category-desc {
+      color: var(--lw-text-secondary);
+      font-size: 15px;
+      margin-bottom: 20px;
+      padding-left: 52px;
+    }
+    .guide-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .guide-card {
+      display: block;
+      padding: 20px 24px;
+      background: white;
+      border: 1px solid var(--lw-border);
+      border-radius: 12px;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+    .guide-card:hover {
+      border-color: var(--lw-sky);
+      box-shadow: 0 4px 20px rgba(14, 165, 233, 0.08);
+      transform: translateY(-1px);
+    }
+    .guide-card h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--lw-text);
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+    .guide-card .guide-desc {
+      font-size: 14px;
+      color: var(--lw-text-secondary);
+      line-height: 1.5;
+    }
+    .related-tools {
+      margin-top: 16px;
+      padding: 16px 20px;
+      background: var(--lw-sky-50);
+      border-radius: 10px;
+      border: 1px solid #E0F2FE;
+    }
+    .related-tools-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--lw-sky-dark);
+      margin-bottom: 8px;
+    }
+    .related-tools a {
+      display: inline-block;
+      padding: 4px 12px;
+      margin: 3px 4px 3px 0;
+      background: white;
+      border: 1px solid #BAE6FD;
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--lw-sky-dark);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .related-tools a:hover {
+      background: var(--lw-sky);
+      color: white;
+      border-color: var(--lw-sky);
+    }
+    .guides-cta {
+      text-align: center;
+      padding: 48px 24px;
+      background: linear-gradient(135deg, #F0F9FF, #ECFDF5);
+      border-radius: 20px;
+      margin-top: 48px;
+    }
+    .guides-cta h2 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .guides-cta p {
+      color: var(--lw-text-secondary);
+      margin-bottom: 20px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .guides-cta a {
+      display: inline-block;
+      padding: 12px 32px;
+      background: linear-gradient(135deg, #0EA5E9, #14B8A6);
+      color: white;
+      font-weight: 600;
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+    .guides-cta a:hover { transform: scale(1.03); color: white; }
+    @media (max-width: 640px) {
+      .guides-hero h1 { font-size: 32px; }
+      .guides-hero-stats { gap: 24px; }
+      .guides-hero-stat-num { font-size: 24px; }
+      .guide-category-desc { padding-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">P</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/calculators/" style="color: var(--lw-sky); font-weight: 600;">Calculators</a></li>
+        <li><a href="/guides/">Guides</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">☰</button>
+    </div>
+  </nav>
+  <div class="lw-mobile-menu">
+    <a href="/calculators/">Calculators</a>
+    <a href="/guides/">Guides</a>
+  </div>
+
+  <main class="lw-main wide">
+
+    <!-- HERO -->
+    <div class="guides-hero">
+      <h1>Free <span class="accent">Financial Calculators</span></h1>
+      <p class="subtitle">45 free tools for mortgages, debt payoff, investing, retirement, and budgeting. Instant answers — no sign-ups, no paywalls.</p>
+      <div class="guides-hero-stats">
+        <div style="text-align:center">
+          <div class="guides-hero-stat-num">45</div>
+          <div class="guides-hero-stat-label">Calculators</div>
+        </div>
+        <div style="text-align:center">
+          <div class="guides-hero-stat-num">68</div>
+          <div class="guides-hero-stat-label">Guides</div>
+        </div>
+        <div style="text-align:center">
+          <div class="guides-hero-stat-num">0</div>
+          <div class="guides-hero-stat-label">Paywalls</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JUMP NAV -->
+    <div class="guides-nav-bar">
+      <a href="#mortgage">🏠 Mortgage &amp; Real Estate (18)</a>
+      <a href="#debt">💳 Debt &amp; Loans (12)</a>
+      <a href="#investing">📈 Investing &amp; Retirement (9)</a>
+      <a href="#savings">🏦 Savings &amp; Budgeting (6)</a>
+    </div>
+
+    <!-- ===== MORTGAGE & REAL ESTATE ===== -->
+    <div class="guide-category" id="mortgage">
+      <div class="guide-category-header">
+        <div class="guide-category-icon" style="background: #FFFBEB;">🏠</div>
+        <h2 class="guide-category-title">Mortgage &amp; Real Estate</h2>
+        <span class="guide-category-count">18 calculators</span>
+      </div>
+      <p class="guide-category-desc">From your first mortgage payment to refinance break-evens and rent vs. buy decisions — every number you need.</p>
+      <div class="guide-list">
+        <a href="/mortgage-calculator/" class="guide-card">
+          <h3>Mortgage Calculator</h3>
+          <p class="guide-desc">Calculate your monthly mortgage payment including principal, interest, taxes, and insurance. See a full amortization breakdown.</p>
+        </a>
+        <a href="/home-affordability-calculator/" class="guide-card">
+          <h3>Home Affordability Calculator</h3>
+          <p class="guide-desc">Find out how much house you can realistically afford based on your income, debt, down payment, and local taxes.</p>
+        </a>
+        <a href="/refinance-calculator/" class="guide-card">
+          <h3>Refinance Calculator</h3>
+          <p class="guide-desc">See how much a refinance would save per month and whether the new rate is worth the closing costs.</p>
+        </a>
+        <a href="/mortgage-points-calculator/" class="guide-card">
+          <h3>Mortgage Points Calculator</h3>
+          <p class="guide-desc">Calculate the break-even on buying down your rate with discount points. Find out if paying points upfront makes sense.</p>
+        </a>
+        <a href="/amortization-schedule/" class="guide-card">
+          <h3>Amortization Schedule</h3>
+          <p class="guide-desc">See every payment, principal, interest, and remaining balance across the full life of your loan month by month.</p>
+        </a>
+        <a href="/extra-mortgage-payment/" class="guide-card">
+          <h3>Extra Mortgage Payment Calculator</h3>
+          <p class="guide-desc">See how much time and interest you save by making extra payments toward your principal each month or year.</p>
+        </a>
+        <a href="/extra-payment-savings/" class="guide-card">
+          <h3>Extra Payment Savings Calculator</h3>
+          <p class="guide-desc">Model different extra payment scenarios to find the payoff strategy that fits your budget and goals.</p>
+        </a>
+        <a href="/home-equity-projection/" class="guide-card">
+          <h3>Home Equity Projection</h3>
+          <p class="guide-desc">Project how your home equity grows over time through principal paydown and estimated appreciation.</p>
+        </a>
+        <a href="/hoa-affordability-impact/" class="guide-card">
+          <h3>HOA Affordability Impact Calculator</h3>
+          <p class="guide-desc">See how monthly HOA fees affect how much home you can afford and your total cost of ownership.</p>
+        </a>
+        <a href="/property-tax-impact/" class="guide-card">
+          <h3>Property Tax Impact Calculator</h3>
+          <p class="guide-desc">Understand how property taxes affect your monthly payment and total home affordability in your target area.</p>
+        </a>
+        <a href="/homeownership-tax-benefits/" class="guide-card">
+          <h3>Homeownership Tax Benefits Calculator</h3>
+          <p class="guide-desc">Estimate the annual tax savings from mortgage interest deductions, property taxes, and other homeowner tax breaks.</p>
+        </a>
+        <a href="/pmi-removal-planner/" class="guide-card">
+          <h3>PMI Removal Planner</h3>
+          <p class="guide-desc">Find out exactly when you'll reach 20% equity and can request PMI removal — and how much you'll save.</p>
+        </a>
+        <a href="/recast-vs-refinance/" class="guide-card">
+          <h3>Recast vs. Refinance Calculator</h3>
+          <p class="guide-desc">Compare the costs and savings of recasting your mortgage versus a full refinance to lower your monthly payment.</p>
+        </a>
+        <a href="/refinance-break-even/" class="guide-card">
+          <h3>Refinance Break-Even Calculator</h3>
+          <p class="guide-desc">Calculate exactly how many months it takes for refinance savings to offset your closing costs.</p>
+        </a>
+        <a href="/refinance-rate-sensitivity/" class="guide-card">
+          <h3>Refinance Rate Sensitivity Calculator</h3>
+          <p class="guide-desc">Model how different interest rates change your payment and total savings — so you know when it's worth pulling the trigger.</p>
+        </a>
+        <a href="/refinance-vs-new-loan/" class="guide-card">
+          <h3>Refinance vs. New Loan Calculator</h3>
+          <p class="guide-desc">Compare keeping your current mortgage vs. refinancing into a new loan with different terms and rates.</p>
+        </a>
+        <a href="/sell-vs-refinance-vs-stay/" class="guide-card">
+          <h3>Sell vs. Refinance vs. Stay Calculator</h3>
+          <p class="guide-desc">Run a side-by-side comparison of selling your home, refinancing, or staying put — with full cost and equity projections.</p>
+        </a>
+        <a href="/rent-vs-buy/" class="guide-card">
+          <h3>Rent vs. Buy Calculator</h3>
+          <p class="guide-desc">Compare the true long-term cost of renting versus buying, including opportunity cost, appreciation, and tax benefits.</p>
+        </a>
+      </div>
+      <div class="related-tools">
+        <div class="related-tools-label">📖 Related Guides</div>
+        <a href="/guides/first-time-home-buyer-guide/">First-Time Buyer Guide</a>
+        <a href="/guides/when-to-refinance-mortgage/">When to Refinance</a>
+        <a href="/guides/what-is-pmi-and-how-to-avoid-it/">What Is PMI?</a>
+        <a href="/guides/fixed-vs-adjustable-rate-mortgage/">Fixed vs. ARM</a>
+        <a href="/guides/what-are-mortgage-points/">Mortgage Points</a>
+      </div>
+    </div>
+
+    <!-- ===== DEBT & LOANS ===== -->
+    <div class="guide-category" id="debt">
+      <div class="guide-category-header">
+        <div class="guide-category-icon" style="background: #FFF1F2;">💳</div>
+        <h2 class="guide-category-title">Debt &amp; Loans</h2>
+        <span class="guide-category-count">12 calculators</span>
+      </div>
+      <p class="guide-category-desc">Payoff timelines, balance transfer math, loan comparisons, and the true cost of debt.</p>
+      <div class="guide-list">
+        <a href="/debt-payoff-calculator/" class="guide-card">
+          <h3>Debt Payoff Calculator</h3>
+          <p class="guide-desc">Enter your debts and see exactly when you'll be debt-free — with avalanche vs. snowball comparison.</p>
+        </a>
+        <a href="/debt-payoff-optimizer/" class="guide-card">
+          <h3>Debt Payoff Optimizer</h3>
+          <p class="guide-desc">Find the optimal payoff order for multiple debts to minimize total interest paid and time to debt freedom.</p>
+        </a>
+        <a href="/debt-vs-cash-cushion/" class="guide-card">
+          <h3>Debt vs. Cash Cushion Calculator</h3>
+          <p class="guide-desc">Decide whether to put extra cash toward debt payoff or keep it as an emergency reserve — with a break-even analysis.</p>
+        </a>
+        <a href="/loan-comparison-tool/" class="guide-card">
+          <h3>Loan Comparison Tool</h3>
+          <p class="guide-desc">Compare two or more loan offers side by side — monthly payments, total interest, and true cost over the loan life.</p>
+        </a>
+        <a href="/loan-consolidation-calculator/" class="guide-card">
+          <h3>Loan Consolidation Calculator</h3>
+          <p class="guide-desc">See whether consolidating multiple loans into one saves money or extends your payoff timeline.</p>
+        </a>
+        <a href="/personal-loan-calculator/" class="guide-card">
+          <h3>Personal Loan Calculator</h3>
+          <p class="guide-desc">Calculate monthly payments, total interest, and APR for any personal loan amount, rate, and term.</p>
+        </a>
+        <a href="/auto-loan-calculator/" class="guide-card">
+          <h3>Auto Loan Calculator</h3>
+          <p class="guide-desc">Calculate your car payment, total loan cost, and how different down payments or rates change the numbers.</p>
+        </a>
+        <a href="/balance-transfer-calculator/" class="guide-card">
+          <h3>Balance Transfer Calculator</h3>
+          <p class="guide-desc">See how much you save moving high-interest credit card debt to a 0% intro APR card — after transfer fees.</p>
+        </a>
+        <a href="/credit-card-payoff-calculator/" class="guide-card">
+          <h3>Credit Card Payoff Calculator</h3>
+          <p class="guide-desc">Find out how long it takes to pay off your credit card balance and how much interest you'll pay at different payment levels.</p>
+        </a>
+        <a href="/credit-utilization-planner/" class="guide-card">
+          <h3>Credit Utilization Planner</h3>
+          <p class="guide-desc">Calculate your current utilization ratio and see exactly how much to pay down to hit your target credit score range.</p>
+        </a>
+        <a href="/debt-to-income-calculator/" class="guide-card">
+          <h3>Debt-to-Income Calculator</h3>
+          <p class="guide-desc">Calculate your DTI ratio and see how lenders will view your application — with thresholds for different loan types.</p>
+        </a>
+        <a href="/apr-calculator/" class="guide-card">
+          <h3>APR Calculator</h3>
+          <p class="guide-desc">Convert an interest rate to APR including fees, or compare loans with different rate and fee structures.</p>
+        </a>
+      </div>
+      <div class="related-tools">
+        <div class="related-tools-label">📖 Related Guides</div>
+        <a href="/guides/debt-avalanche-vs-snowball/">Avalanche vs. Snowball</a>
+        <a href="/guides/how-to-get-out-of-credit-card-debt/">Credit Card Debt Guide</a>
+        <a href="/guides/consolidation-loan-vs-balance-transfer/">Consolidation vs. Balance Transfer</a>
+        <a href="/guides/what-is-debt-to-income-ratio/">DTI Explained</a>
+      </div>
+    </div>
+
+    <!-- ===== INVESTING & RETIREMENT ===== -->
+    <div class="guide-category" id="investing">
+      <div class="guide-category-header">
+        <div class="guide-category-icon" style="background: #ECFDF5;">📈</div>
+        <h2 class="guide-category-title">Investing &amp; Retirement</h2>
+        <span class="guide-category-count">9 calculators</span>
+      </div>
+      <p class="guide-category-desc">Compound growth, fee drag, Roth vs. pre-tax decisions, and 401(k) optimization tools.</p>
+      <div class="guide-list">
+        <a href="/compound-interest-calculator/" class="guide-card">
+          <h3>Compound Interest Calculator</h3>
+          <p class="guide-desc">See how your money grows over time with compound interest — with monthly contributions and different compounding frequencies.</p>
+        </a>
+        <a href="/investment-return-calculator/" class="guide-card">
+          <h3>Investment Return Calculator</h3>
+          <p class="guide-desc">Project the future value of your investments at different return rates, time horizons, and contribution schedules.</p>
+        </a>
+        <a href="/inflation-adjusted-calculator/" class="guide-card">
+          <h3>Inflation-Adjusted Return Calculator</h3>
+          <p class="guide-desc">Calculate your real return after inflation to see what your investment growth is actually worth in today's dollars.</p>
+        </a>
+        <a href="/fee-drag-calculator/" class="guide-card">
+          <h3>Fee Drag Calculator</h3>
+          <p class="guide-desc">See exactly how much fund expense ratios and advisor fees silently cost you over 10, 20, or 30 years of investing.</p>
+        </a>
+        <a href="/lump-sum-vs-dca/" class="guide-card">
+          <h3>Lump Sum vs. DCA Calculator</h3>
+          <p class="guide-desc">Compare investing a lump sum all at once vs. dollar-cost averaging into the market over time — with historical data context.</p>
+        </a>
+        <a href="/pretax-vs-roth/" class="guide-card">
+          <h3>Pre-Tax vs. Roth Calculator</h3>
+          <p class="guide-desc">Decide whether traditional (pre-tax) or Roth contributions leave you with more money in retirement based on your tax situation.</p>
+        </a>
+        <a href="/asset-location/" class="guide-card">
+          <h3>Asset Location Calculator</h3>
+          <p class="guide-desc">Optimize which investments belong in your taxable vs. tax-advantaged accounts to minimize your lifetime tax drag.</p>
+        </a>
+        <a href="/401k-match-optimizer/" class="guide-card">
+          <h3>401(k) Match Optimizer</h3>
+          <p class="guide-desc">Find the contribution amount that captures your full employer match and maximizes your effective return on every dollar.</p>
+        </a>
+        <a href="/401k-paycheck-impact/" class="guide-card">
+          <h3>401(k) Paycheck Impact Calculator</h3>
+          <p class="guide-desc">See how increasing your 401(k) contribution affects your take-home pay after taxes — often far less than you'd expect.</p>
+        </a>
+      </div>
+      <div class="related-tools">
+        <div class="related-tools-label">📖 Related Guides</div>
+        <a href="/guides/how-compound-interest-works/">How Compound Interest Works</a>
+        <a href="/guides/what-is-dollar-cost-averaging-vs-lump-sum/">DCA vs. Lump Sum</a>
+        <a href="/guides/roth-ira-vs-traditional-ira/">Roth vs. Traditional IRA</a>
+        <a href="/guides/401k-contribution-guide/">401(k) Strategy Guide</a>
+        <a href="/guides/what-is-an-expense-ratio/">Expense Ratios Explained</a>
+      </div>
+    </div>
+
+    <!-- ===== SAVINGS & BUDGETING ===== -->
+    <div class="guide-category" id="savings">
+      <div class="guide-category-header">
+        <div class="guide-category-icon" style="background: #F0F9FF;">🏦</div>
+        <h2 class="guide-category-title">Savings &amp; Budgeting</h2>
+        <span class="guide-category-count">6 calculators</span>
+      </div>
+      <p class="guide-category-desc">Emergency funds, savings goals, budget math, and the true cost of a raise or side income.</p>
+      <div class="guide-list">
+        <a href="/savings-goal-calculator/" class="guide-card">
+          <h3>Savings Goal Calculator</h3>
+          <p class="guide-desc">Figure out exactly how much to save each month to hit any financial goal by your target date.</p>
+        </a>
+        <a href="/emergency-fund-calculator/" class="guide-card">
+          <h3>Emergency Fund Calculator</h3>
+          <p class="guide-desc">Calculate your ideal emergency fund target based on your monthly expenses, job stability, and risk tolerance.</p>
+        </a>
+        <a href="/emergency-fund-vs-debt/" class="guide-card">
+          <h3>Emergency Fund vs. Debt Payoff Calculator</h3>
+          <p class="guide-desc">Decide how to split extra cash between building an emergency fund and paying down high-interest debt.</p>
+        </a>
+        <a href="/budget-to-goal/" class="guide-card">
+          <h3>Budget to Goal Calculator</h3>
+          <p class="guide-desc">Work backward from a savings goal to find exactly where to cut spending and how to allocate your monthly budget.</p>
+        </a>
+        <a href="/raise-calculator/" class="guide-card">
+          <h3>Raise Calculator</h3>
+          <p class="guide-desc">See how a salary raise translates to your actual take-home pay after federal taxes, Social Security, and Medicare.</p>
+        </a>
+        <a href="/side-income-tax/" class="guide-card">
+          <h3>Side Income Tax Calculator</h3>
+          <p class="guide-desc">Estimate self-employment tax, quarterly payments, and net income for freelance or side hustle earnings.</p>
+        </a>
+      </div>
+      <div class="related-tools">
+        <div class="related-tools-label">📖 Related Guides</div>
+        <a href="/guides/how-much-emergency-fund/">How Much Emergency Fund?</a>
+        <a href="/guides/50-30-20-rule-explained/">50/30/20 Budget Rule</a>
+        <a href="/guides/how-to-stop-living-paycheck-to-paycheck/">Stop Living Paycheck to Paycheck</a>
+        <a href="/guides/side-hustle-tax-guide/">Side Hustle Tax Guide</a>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="guides-cta">
+      <h2>Want the full picture?</h2>
+      <p>Pair these calculators with our 68 free financial guides — plain-English advice on mortgages, investing, debt, taxes, and more.</p>
+      <a href="/guides/">Browse All Guides →</a>
+    </div>
+
+  </main>
+
+  <footer class="lw-footer">
+    <p>© 2026 PocketWise. 45 free financial calculators + 68 decision guides.</p>
+  </footer>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Financial Calculators — 45 Free Tools",
+    "description": "45 free financial calculators for mortgages, debt payoff, investing, retirement, and budgeting. No sign-ups, no paywalls.",
+    "url": "https://pocketwise.io/calculators/",
+    "publisher": {
+      "@type": "Organization",
+      "name": "PocketWise",
+      "url": "https://pocketwise.io"
+    }
+  }
+  </script>
+</body>
+</html>
