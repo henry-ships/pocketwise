@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EP402CZ1S3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EP402CZ1S3');
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Build a 3-Fund Portfolio: The Simple Strategy That Outperforms | PocketWise</title>
+  <meta name="description" content="Build a 3-fund portfolio with US stocks, international stocks, and bonds — the simple, low-cost investing strategy that outperforms most active managers.">
+  <link rel="canonical" href="https://pocketwise.io/guides/3-fund-portfolio/">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .guide-content {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      line-height: 1.8;
+      color: #1a1a2e;
+    }
+    .guide-content h2 {
+      margin-top: 48px;
+      margin-bottom: 16px;
+      color: #16213e;
+      font-size: 1.6rem;
+    }
+    .guide-content h3 {
+      margin-top: 32px;
+      margin-bottom: 12px;
+      color: #1a1a2e;
+      font-size: 1.25rem;
+    }
+    .guide-content p {
+      margin-bottom: 16px;
+      font-size: 1.05rem;
+    }
+    .guide-content ul, .guide-content ol {
+      margin-bottom: 16px;
+      padding-left: 24px;
+    }
+    .guide-content li {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+    }
+    .guide-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+    }
+    .guide-content th, .guide-content td {
+      padding: 12px 16px;
+      border: 1px solid #e0e0e0;
+      text-align: left;
+    }
+    .guide-content th {
+      background: #f0f4ff;
+      font-weight: 600;
+    }
+    .guide-content a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .guide-content a:hover {
+      text-decoration: underline;
+    }
+    .guide-breadcrumb {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 16px 24px 0;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .guide-breadcrumb a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+      /* Standard Nav */
+    .lw-nav {
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid #E2E8F0;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+    }
+    .lw-nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      height: 60px;
+      gap: 32px;
+    }
+    .lw-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: #0F172A;
+      text-decoration: none;
+    }
+    .lw-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #0EA5E9, #14B8A6);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 16px;
+    }
+    .lw-nav-links {
+      display: flex;
+      list-style: none;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+    }
+    .lw-nav-links a {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #475569;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+    .lw-nav-links a:hover {
+      background: #F1F5F9;
+      color: #0F172A;
+    }
+    .lw-hamburger {
+      display: none;
+      background: none;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 18px;
+      cursor: pointer;
+      margin-left: auto;
+    }
+    .lw-mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: white;
+      border-bottom: 1px solid #E2E8F0;
+      padding: 8px 24px 16px;
+    }
+    .lw-mobile-menu.open { display: flex; }
+    .lw-mobile-menu a {
+      padding: 12px 0;
+      color: #0F172A;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    @media (max-width: 768px) {
+      .lw-nav-links { display: none; }
+      .lw-hamburger { display: block; }
+    }
+  </style>
+</head>
+<body>
+    <nav class="lw-nav">
+    <div class="lw-nav-inner">
+      <a href="/" class="lw-logo">
+        <div class="lw-logo-icon">P</div>
+        PocketWise
+      </a>
+      <ul class="lw-nav-links">
+        <li><a href="/">Calculators</a></li>
+        <li><a href="/guides/">Guides</a></li>
+      </ul>
+      <button class="lw-hamburger" onclick="document.querySelector('.lw-mobile-menu').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+    </div>
+  </nav>
+  <div class="lw-mobile-menu">
+    <a href="/">Calculators</a>
+    <a href="/guides/">Guides</a>
+  </div>
+
+  <div class="guide-breadcrumb">
+    <a href="/">PocketWise</a> &rsaquo; <a href="/guides/">Guides</a> &rsaquo; 3-Fund Portfolio
+  </div>
+  <article class="guide-content">
+    <h1>How to Build a 3-Fund Portfolio: The Simple Investment Strategy That Outperforms Most Professionals</h1>
+    <h2>Why the 3-Fund Portfolio Beats Complexity Every Time</h2>
+
+<p>Most investors assume that better returns come from more complexity — more funds, more sectors, more moves. The data says otherwise. According to the <a href="https://www.spglobal.com/spdji/en/research-insights/spiva/" target="_blank" rel="noopener noreferrer">S&amp;P Dow Jones Indices SPIVA scorecard</a>, 88% of US stock funds underperformed their benchmark over the five years ending mid-2025. Not some — most.</p>
+
+<p>A 3-fund portfolio strips investing down to what actually works: own the entire US stock market, own the entire international stock market, own the total US bond market. Three funds. Done. No stock picking, no sector bets, no manager risk, no emotional selling at the worst possible time.</p>
+
+<p>The Boglehead community popularized this approach, and it's been stress-tested through bull markets, bear markets, and everything in between. The simplicity isn't a weakness — it's the whole point. Every extra fund you add is a decision you have to make, a line item you have to rebalance, and an excuse to tinker when you should be doing nothing.</p>
+
+<p>If you want a portfolio you can set up in an afternoon and ignore for a year, a 3-fund portfolio is the answer. Let's build one.</p>
+
+<h2>What Is a 3-Fund Portfolio?</h2>
+
+<p>A 3-fund portfolio holds exactly three index funds, each tracking a different asset class:</p>
+
+<ol>
+<li><strong>Total US Stock Market</strong> — Owns virtually every publicly traded company in the United States, from Apple to the smallest micro-cap.</li>
+<li><strong>Total International Stock Market</strong> — Owns thousands of companies across developed and emerging markets outside the US.</li>
+<li><strong>Total US Bond Market</strong> — Holds a broad mix of US government and investment-grade corporate bonds for stability and income.</li>
+</ol>
+
+<p>That's it. You choose your allocation between these three — say, 60% US stocks, 20% international stocks, 20% bonds — and you're invested. No need to research individual stocks. No need to guess which sector will outperform. You own the market itself.</p>
+
+<p>The strategy works because it captures the one thing that reliably drives returns: <strong>being invested in the market, at low cost, for a long time.</strong> Index funds charge expense ratios of 0.03% or less, compared to 0.5%&ndash;1.0% for many actively managed funds. Over decades, that fee difference compounds into tens of thousands of dollars. Our <a href="https://pocketwise.io/fee-drag-calculator/">fee drag calculator</a> shows exactly how much those small percentages cost you over time — it's usually shocking.</p>
+
+<h3>Why Not Add More Funds?</h3>
+
+<p>Plenty of people start with three funds and then think, "I should add a small-cap value fund" or "What about a REIT?" This is how you end up with 12 funds and a portfolio that's harder to manage, not better diversified.</p>
+
+<p>The total US stock market fund already includes small-cap, mid-cap, and value stocks. The international fund already includes emerging markets. The bond fund already includes corporate and government bonds. Adding funds that overlap with what you already own isn't diversification — it's complexity dressed up as sophistication.</p>
+
+<h2>Choosing Your Three Funds</h2>
+
+<p>The good news: every major brokerage offers low-cost total market index funds. The bad news: the ticker symbols differ by provider. Here are the three funds you need, broken out by the three most common brokerages.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Asset Class</th>
+      <th>Vanguard</th>
+      <th>Fidelity</th>
+      <th>Schwab</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Total US Stock Market</strong></td>
+      <td>VTI (0.03% ER)</td>
+      <td>FSKAX (0.015% ER)</td>
+      <td>SCHB (0.03% ER)</td>
+    </tr>
+    <tr>
+      <td><strong>Total International Stock Market</strong></td>
+      <td>VXUS (0.07% ER)</td>
+      <td>FTIHX (0.015% ER)</td>
+      <td>SCHY (0.06% ER)</td>
+    </tr>
+    <tr>
+      <td><strong>Total US Bond Market</strong></td>
+      <td>BND (0.03% ER)</td>
+      <td>FXNAX (0.025% ER)</td>
+      <td>SCHZ (0.03% ER)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Pick the row that matches your brokerage and buy those three. If your 401(k) doesn't offer these exact funds, look for the closest total market index option — many plans use institutional share classes with different tickers but the same underlying strategy.</p>
+
+<p>The expense ratios listed above are all under 0.10%. Compare that to the 0.75% average for actively managed stock funds. On a $100,000 portfolio, that's roughly $650 per year in savings. Over 30 years, the <a href="https://pocketwise.io/compound-interest-calculator/">compound interest calculator</a> shows that difference growing to well over $50,000 in lost returns — money that went to fund companies instead of your account.</p>
+
+<h2>Setting Your Asset Allocation</h2>
+
+<p>Asset allocation — the percentage you put in stocks versus bonds, and how you split stocks between US and international — is the single most important decision in your 3-fund portfolio. More than fund selection. More than timing. The research is clear: asset allocation explains over 90% of portfolio return variability.</p>
+
+<p>There's no universal "correct" allocation, but here are three starting points based on risk tolerance and time horizon:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Profile</th>
+      <th>US Stocks</th>
+      <th>International Stocks</th>
+      <th>Bonds</th>
+      <th>Who It Fits</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Aggressive</strong></td>
+      <td>63%</td>
+      <td>27%</td>
+      <td>10%</td>
+      <td>Investors 20+ years from retirement, high risk tolerance</td>
+    </tr>
+    <tr>
+      <td><strong>Moderate</strong></td>
+      <td>49%</td>
+      <td>21%</td>
+      <td>30%</td>
+      <td>Investors 10&ndash;20 years out, balanced risk/reward</td>
+    </tr>
+    <tr>
+      <td><strong>Conservative</strong></td>
+      <td>35%</td>
+      <td>15%</td>
+      <td>50%</td>
+      <td>Investors near or in retirement, priority on stability</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>A common rule of thumb: your bond percentage roughly equals your age. At 30, you might hold 30% bonds. At 55, closer to 55%. This automatically reduces risk as you approach retirement. It's not perfect, but it's a reasonable starting point you can adjust.</p>
+
+<p>The US vs. international split is more debated. Many Boglehead investors hold 20%&ndash;40% of their stock allocation in international funds. Vanguard's own target-date funds allocate roughly 40% of equities internationally. Going below 20% means you're making a strong bet on US outperformance continuing — a bet that hasn't always paid off historically.</p>
+
+<p>Don't overthink this. Pick an allocation you can stick with through a 30% market drop. A portfolio you'll abandon in a crash is worse than a slightly suboptimal allocation you hold for decades.</p>
+
+<h2>Step-by-Step: Building Your 3-Fund Portfolio</h2>
+
+<p>Here's how to go from zero to fully invested, in plain language.</p>
+
+<h3>Step 1 — Open or Use Your Existing Brokerage Account</h3>
+
+<p>If you already have a 401(k), IRA, or brokerage account, you might be able to build your 3-fund portfolio right there. Check your plan's fund menu for total market index options. Our <a href="https://pocketwise.io/401k-match-optimizer/">401(k) match optimizer</a> helps you make sure you're capturing every dollar of free employer money first — that's a guaranteed 50%&ndash;100% return before you invest a dime.</p>
+
+<h3>Step 2 — Fund the Account</h3>
+
+<p>Set up automatic contributions. Most brokerages let you schedule recurring transfers from your bank account. The amount matters less than the consistency. Even $200/month into a 3-fund portfolio builds real wealth over a decade.</p>
+
+<p>Wondering whether to invest a lump sum or spread it out? Research from Vanguard shows that lump-sum investing beats dollar-cost averaging about 68% of the time. But dollar-cost averaging feels better emotionally. Our <a href="https://pocketwise.io/lump-sum-vs-dca/">lump sum vs. DCA calculator</a> lets you run the numbers for your specific situation. Either way, the worst move is waiting for the "right time" — time in the market matters more than timing the market.</p>
+
+<h3>Step 3 — Buy Your Three Funds</h3>
+
+<p>Place buy orders for all three funds according to your target allocation. Example: $10,000 to invest with a moderate allocation (49/21/30):</p>
+
+<ul>
+<li>$4,900 &rarr; Total US Stock Market fund</li>
+<li>$2,100 &rarr; Total International Stock Market fund</li>
+<li>$3,000 &rarr; Total US Bond Market fund</li>
+</ul>
+
+<p>Most brokerages let you buy ETFs commission-free. Set your orders and move on.</p>
+
+<h3>Step 4 — Set Up Automatic Reinvestment</h3>
+
+<p>Turn on dividend reinvestment (DRIP) for all three funds. This automatically uses dividends to buy more shares, keeping your money fully invested without any action from you. Over decades, reinvested dividends account for a surprisingly large portion of total returns.</p>
+
+<h3>Step 5 — Automate Future Contributions</h3>
+
+<p>Set up recurring deposits and purchases. Most brokerages support automatic investing schedules that buy your ETFs or mutual funds on a set day each month. This eliminates the need to remember or decide — your 3-fund portfolio grows on autopilot.</p>
+
+<h2>Rebalancing: When and How</h2>
+
+<p>Over time, your allocation will drift. If US stocks have a great year, your 63% US allocation might grow to 70%. Rebalancing brings you back to your target — selling what's up and buying what's down.</p>
+
+<p>There are two common approaches:</p>
+
+<p><strong>Time-based rebalancing:</strong> Check your portfolio once a year (or once a quarter). If any fund is more than 5 percentage points away from its target, rebalance. This is simple and effective.</p>
+
+<p><strong>Threshold-based rebalancing:</strong> Rebalance whenever any fund drifts by a fixed percentage — typically 5% absolute or 25% relative. For example, if your target is 63% US stocks and it hits 68%, you rebalance.</p>
+
+<p>Which is better? The differences are small. Pick whichever method you'll actually follow. For a deeper dive, see our <a href="https://pocketwise.io/guides/how-to-rebalance-your-portfolio/">guide to portfolio rebalancing</a>.</p>
+
+<p>When rebalancing in taxable accounts, be mindful of tax consequences. Selling winners triggers capital gains tax. Two tax-smart alternatives:</p>
+
+<ul>
+<li><strong>Direct new contributions</strong> to underweight funds until they're back to target.</li>
+<li><strong>Rebalance in tax-advantaged accounts</strong> (401(k), IRA) where sales don't trigger taxes.</li>
+</ul>
+
+<p>This is where asset location matters — more on that below.</p>
+
+<h2>Tax-Efficient Placement: Which Fund Goes Where</h2>
+
+<p>If you have both taxable and tax-advantaged accounts (401(k), IRA), you can improve after-tax returns by placing funds in the right type of account. This is called asset location, and it's a free optimization — same funds, same allocation, better after-tax outcome.</p>
+
+<p>The principle is simple: <strong>put the least tax-efficient funds in tax-advantaged accounts, and the most tax-efficient funds in taxable accounts.</strong></p>
+
+<ul>
+<li><strong>Total US Stock Market (VTI/FSKAX/SCHB)</strong> &rarr; Taxable account. These funds are extremely tax-efficient because they have low turnover and qualified dividends taxed at the lower capital gains rate.</li>
+<li><strong>Total International Stock Market (VXUS/FTIHX/SCHY)</strong> &rarr; Taxable account. Also relatively tax-efficient, and you can claim the foreign tax credit on dividends — but only if held in a taxable account. This credit is lost in tax-advantaged accounts.</li>
+<li><strong>Total US Bond Market (BND/FXNAX/SCHZ)</strong> &rarr; Tax-advantaged account (401(k), IRA). Bond interest is taxed as ordinary income at your full rate. Shielding it from taxes is valuable.</li>
+</ul>
+
+<p>This isn't about changing your overall allocation — you still hold 60/20/20 or whatever your target is across all accounts combined. It's about where each fund physically sits. Our <a href="https://pocketwise.io/asset-location/">asset location tool</a> helps you model the tax savings from proper placement versus holding everything in one account type.</p>
+
+<p>One important consideration: don't let tax optimization override your 401(k) match. Always capture the employer match first, even if it means holding bonds in your 401(k) temporarily. Free money beats tax efficiency every time.</p>
+
+<p>For the full breakdown on how account types affect your investments, see our <a href="https://pocketwise.io/guides/tax-efficient-investing/">tax-efficient investing guide</a>.</p>
+
+<h2>Common Mistakes That Undermine a 3-Fund Portfolio</h2>
+
+<p>The strategy is simple, but people still find ways to mess it up. Here are the traps I see most often:</p>
+
+<p><strong>Adding "just one more fund."</strong> It starts with a small-cap fund. Then a sector ETF. Then a tactical allocation fund. Before long, you have 9 funds and no clarity. Every addition increases complexity without improving diversification — the total market funds already own everything. More funds means more rebalancing, more decisions, and more temptation to tinker.</p>
+
+<p><strong>Chasing recent performance.</strong> International stocks lag US stocks for five years, so people drop the international fund. Then the next decade, international outperforms. The 3-fund portfolio only works if you actually hold all three funds. Bailing on the underperformer at the wrong time is how investors underperform the market.</p>
+
+<p><strong>Market timing with cash.</strong> Holding cash because "the market feels high" or "I'm waiting for a pullback" means you're sitting on the sidelines during the market's best days. Missing the 10 best days in the S&amp;P 500 over a 20-year period cuts your returns nearly in half. Time in the market wins.</p>
+
+<p><strong>Ignoring expense ratios.</strong> Not all index funds are cheap. Some brokerages offer index funds with 0.30%&ndash;0.50% expense ratios. That's three to ten times what Vanguard, Fidelity, and Schwab charge. Over 30 years, the difference is real money. Always check the expense ratio before buying.</p>
+
+<p><strong>Not rebalancing.</strong> A 3-fund portfolio that's never rebalanced gradually drifts toward whatever performed best recently — usually stocks. By the time the next crash hits, you could be holding 85% stocks when you thought you were at 60%. Rebalancing once a year keeps your risk level where you intended it.</p>
+
+<p><strong>Overcomplicating the allocation.</strong> Spending weeks optimizing a 57.3/22.7/20.0 split is wasted effort. Round numbers work fine. 60/20/20 or 50/30/20 — the difference between these is much smaller than the difference between investing and not investing.</p>
+
+<h2>How the 3-Fund Portfolio Fits Your Financial Plan</h2>
+
+<p>A 3-fund portfolio isn't just a set of funds — it's the investment engine inside a broader financial strategy. Here's how it fits with other money decisions you're making:</p>
+
+<p><strong>Emergency fund first.</strong> Before you invest a single dollar, build your cash reserve. Three to six months of expenses in a high-yield savings account protects you from selling investments at a loss during a crisis.</p>
+
+<p><strong>Capture the 401(k) match.</strong> Free money from your employer is the highest guaranteed return available. Max the match before anything else.</p>
+
+<p><strong>Pay off high-interest debt.</strong> Credit cards at 20%+ interest will cost you more than your portfolio is likely to earn. Clear that first.</p>
+
+<p><strong>Then build the 3-fund portfolio.</strong> With your emergency fund in place, the match captured, and high-interest debt gone, the 3-fund portfolio becomes your primary wealth-building tool across your IRA and taxable accounts.</p>
+
+<p>For the full sequencing of what to do in what order, our <a href="https://pocketwise.io/guides/investing-basics/">investing basics guide</a> walks through the financial order of operations. And if you're deciding between pre-tax and Roth contributions for your 3-fund portfolio, the <a href="https://pocketwise.io/pretax-vs-roth/">pre-tax vs. Roth calculator</a> runs the numbers based on your current and expected tax brackets.</p>
+
+<h2>The Bottom Line</h2>
+
+<p>A 3-fund portfolio works because it does the three things that actually drive long-term returns: captures the full market, keeps costs near zero, and removes the behavioral mistakes that destroy most investors' performance. You don't need 15 funds. You don't need a financial advisor picking stocks. You need three low-cost index funds, a reasonable allocation, and the discipline to stay invested when markets get rough.</p>
+
+<p>Set it up. Automate contributions. Rebalance once a year. Go live your life. That's the strategy that beats 80%+ of professional money managers over time — and it takes about an hour a year to maintain.</p>
+
+<p>If you're just getting started with investing, read our <a href="https://pocketwise.io/guides/index-funds-vs-mutual-funds/">index funds vs. mutual funds guide</a> for the basics on why index investing works. And if you're mapping out a longer-term plan, the <a href="https://pocketwise.io/guides/retirement-planning-101/">retirement planning guide</a> shows you how to integrate your 3-fund portfolio into a complete retirement strategy.</p>
+
+<h2>You Might Also Enjoy</h2>
+
+<p>Ready to take the next step? These PocketWise tools and guides will help you put your 3-fund portfolio into action:</p>
+
+<ul>
+<li><a href="https://pocketwise.io/fee-drag-calculator/"><strong>Fee Drag Calculator</strong></a> — See exactly how much fund fees cost you over time. The difference between 0.03% and 0.75% will surprise you.</li>
+<li><a href="https://pocketwise.io/compound-interest-calculator/"><strong>Compound Interest Calculator</strong></a> — Model how your 3-fund portfolio grows over decades with consistent contributions.</li>
+<li><a href="https://pocketwise.io/asset-location/"><strong>Asset Location Tool</strong></a> — Optimize which funds go in taxable vs. tax-advantaged accounts for better after-tax returns.</li>
+<li><a href="https://pocketwise.io/guides/how-to-rebalance-your-portfolio/"><strong>How to Rebalance Your Portfolio</strong></a> — A detailed walkthrough on when and how to rebalance, with tax-smart strategies.</li>
+<li><a href="https://pocketwise.io/lump-sum-vs-dca/"><strong>Lump Sum vs. DCA Calculator</strong></a> — Decide whether to invest all at once or spread contributions over time.</li>
+</ul>
+  </article>
+</body>
+</html>

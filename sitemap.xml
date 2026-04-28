@@ -1399,4 +1399,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-<sm:url><sm:loc>https://pocketwise.io/guides/safe-withdrawal-rate/</sm:loc><sm:lastmod>2026-04-27</sm:lastmod><sm:changefreq>monthly</sm:changefreq><sm:priority>0.8</sm:priority></sm:url></urlset>
+<sm:url><sm:loc>https://pocketwise.io/guides/safe-withdrawal-rate/</sm:loc><sm:lastmod>2026-04-27</sm:lastmod><sm:changefreq>monthly</sm:changefreq><sm:priority>0.8</sm:priority></sm:url>
+  <url>
+    <loc>https://pocketwise.io/guides/3-fund-portfolio/</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>
