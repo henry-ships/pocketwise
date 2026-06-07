@@ -1557,4 +1557,10 @@
     <priority>0.7</priority>
   </url>
   <url><loc>https://pocketwise.io/guides/is-umbrella-insurance-worth-it/</loc></url>
+  <url>
+    <loc>https://pocketwise.io/guides/how-much-to-keep-in-checking/</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
